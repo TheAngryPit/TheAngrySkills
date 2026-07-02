@@ -12,10 +12,12 @@ Why should this repo accept the change?
 
 ## Checks run
 
+- [ ] I read `docs/pr-safety-minimums.md`
 - [ ] `node --check scripts/theangry-skills.mjs`
 - [ ] `python -m pytest -q tests`
 - [ ] `scripts/theangry-skills.mjs check --root skills --profile shared`
 - [ ] Security scan for touched skill or mirror, if relevant
+- [ ] Root security scan has no blocking findings
 
 ## License / provenance
 

@@ -45,12 +45,23 @@ jobs:
       - name: Validate shared skill catalog
         run: scripts/theangry-skills.mjs check --root skills --profile shared
 
-      - name: Advisory security scan
+      - name: Skill safety minimums
         run: |
-          set +e
           scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json
-          status=$?
-          set -e
-          echo "security_scan_exit=$status"
-          echo "The full scan is advisory in CI; review findings before promotion."
-          exit 0
+          node <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("/tmp/theangryskills-security-scan.json", "utf8"));
+          const summary = report.summary || {};
+          const blocking = Number(summary.blocking_skill_count || 0);
+          const review = Number(summary.review_skill_count || 0);
+          console.log(`security_verdict=${report.verdict}`);
+          console.log(`blocking_skill_count=${blocking}`);
+          console.log(`review_skill_count=${review}`);
+          if (blocking > 0) {
+            console.error("Blocking skill security findings are present. Review /tmp/theangryskills-security-scan.json.");
+            process.exit(1);
+          }
+          if (review > 0) {
+            console.log("Some skills need human review. This is allowed only with maintainer review.");
+          }
+          NODE

@@ -58,6 +58,9 @@ When touching mirrors or generated docs:
 
 ## Required checks
 
+Read [`docs/pr-safety-minimums.md`](docs/pr-safety-minimums.md) before opening
+a pull request.
+
 Run the focused checks that match your change:
 
 ```bash

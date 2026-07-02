@@ -130,6 +130,9 @@ Good issues and pull requests usually:
 skills, mirrors, generated docs, and install surfaces will not be merged just
 because they pass CI.
 
+Every PR must clear the minimum safety gate in
+[`docs/pr-safety-minimums.md`](docs/pr-safety-minimums.md).
+
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing changes.
 
 ## Security

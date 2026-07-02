@@ -57,5 +57,6 @@ When reviewing public content:
 - do not merge or publish a new mirror just because upstream looks popular
 - do not treat GitHub green checks, signed commits, or trusted publishing as a
   substitute for source review
-- keep branch protection, restricted PR creation, and CODEOWNERS aligned with
-  the operator-owned nature of this repo
+- keep branch protection, CODEOWNERS, and review requirements aligned with the
+  operator-owned nature of this repo
+- treat community PRs as untrusted input until reviewed, even when CI is green

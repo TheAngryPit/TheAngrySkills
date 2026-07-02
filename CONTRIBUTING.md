@@ -4,15 +4,14 @@ TheAngrySkills is a personal skill stack with a public-facing install surface.
 Contributions should make the stack safer, clearer, or easier to maintain
 without turning it into a generic skill registry.
 
-This repo is public for installability, review, and security analysis. It is not
-open contribution infrastructure. If GitHub allows the repository setting, pull
-request creation should be restricted to collaborators only. Everyone else
-should use issues for reports, proposals, and security concerns.
+This repo is open source for installability, review, reuse, and security
+analysis. Community issues and pull requests are welcome, but the stack remains
+curated. A PR is a proposal for the operator-owned install surface, not a right
+to add arbitrary skills.
 
 ## What fits
 
-Good issues, and collaborator pull requests when enabled, usually do one of
-these things:
+Good issues and pull requests usually do one of these things:
 
 - fix a broken `npx skills` install or update path
 - improve one existing skill while preserving its role
@@ -51,7 +50,7 @@ When touching mirrors or generated docs:
 
 ## Before changing files
 
-1. Read `README.md`, `catalog/README.md`, and `docs/skill-categories.md`.
+1. Read `README.md` and `docs/skill-categories.md`.
 2. Check whether the skill is owned, generated, mirrored, draft, or deprecated.
 3. Keep changes narrow. One skill, one mirror family, or one docs surface per pull request is best.
 4. Preserve upstream provenance for mirrored or generated content.
@@ -62,8 +61,6 @@ When touching mirrors or generated docs:
 Run the focused checks that match your change:
 
 ```bash
-node --check scripts/sync-skill-mirrors.mjs
-node --check scripts/sync-openclaw-agent-skills.mjs
 node --check scripts/theangry-skills.mjs
 python -m pytest -q tests
 scripts/theangry-skills.mjs check --root skills --profile shared
@@ -92,5 +89,14 @@ Every pull request should explain:
 Do not ask reviewers to infer safety from a green check alone. If a change affects install behavior, update behavior, external mirrors, scripts, or security scanning, spell out the path.
 
 Pull requests from non-collaborators are not the default contribution path. If
-you want to propose a change, open an issue first with the exact skill, mirror,
-or install path affected.
+you are proposing a new skill, mirror family, generated docs pack, or install
+surface, open an issue first with the exact source, skill name, prefix, license,
+and install path affected.
+
+## License expectations
+
+This repository uses the MIT License for owned TheAngrySkills content.
+
+Third-party mirrors, generated docs, copied examples, upstream READMEs, and
+adapted external skills must preserve upstream copyright, license, notices, and
+provenance. Do not assume the repo MIT license relicenses upstream material.

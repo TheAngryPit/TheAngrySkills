@@ -1,0 +1,6 @@
+interface:
+  display_name: "TheMindShift Publishing Prep Loop"
+  short_description: "Prepare the final issue package for manual publishing"
+  default_prompt: "Use $themindshift-publishing-prep-loop to assemble and check a TheMindShift issue publish package without publishing or locking it for Vitor."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,10 @@
+# source	skill	scope	agent	mode	notes
+# scope: wizard | global | project | none
+# agent: wizard | codex | none
+# mode: add
+https://github.com/vectorize-io/hindsight.git	hindsight-docs	wizard	wizard	add	Official Hindsight docs skill.
+https://github.com/mattpocock/skills.git	setup-matt-pocock-skills	wizard	wizard	add	Matt Pocock repo setup/context skill.
+https://github.com/mattpocock/skills.git	grill-me	wizard	wizard	add	Matt Pocock grilling skill.
+https://github.com/mattpocock/skills.git	grill-with-docs	wizard	wizard	add	Matt Pocock grilling skill with repo docs.
+https://github.com/mattpocock/skills.git	to-prd	wizard	wizard	add	Matt Pocock PRD conversion skill.
+https://github.com/mattpocock/skills.git	to-issues	wizard	wizard	add	Matt Pocock issue slicing skill.

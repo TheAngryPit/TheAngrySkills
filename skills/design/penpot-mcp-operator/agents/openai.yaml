@@ -1,0 +1,4 @@
+interface:
+  display_name: "Penpot MCP Operator"
+  short_description: "Use Penpot MCP safely and predictably."
+  default_prompt: "Use Penpot MCP Operator to inspect the active Penpot file, map the available API, make the smallest requested design change, and report proof without exposing tokens."

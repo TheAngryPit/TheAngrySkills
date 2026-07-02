@@ -1,0 +1,4 @@
+interface:
+  display_name: "Proof Orchestrator"
+  short_description: "Route claims to the right proof path"
+  default_prompt: "Use $proof-orchestrator to choose the right proof plan before claiming work is done."

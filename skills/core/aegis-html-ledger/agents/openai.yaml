@@ -1,0 +1,7 @@
+interface:
+  display_name: "Aegis HTML Ledger"
+  short_description: "Maintain compact project-local HTML checkpoint state"
+  default_prompt: "Use $aegis-html-ledger to keep project checkpoint state in a compact local HTML ledger."
+
+policy:
+  allow_implicit_invocation: false

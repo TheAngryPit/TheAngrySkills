@@ -1,0 +1,40 @@
+name: Skill or mirror proposal
+description: Propose a new skill, category change, mirror, or promotion.
+title: "[proposal] "
+labels: ["needs-triage"]
+body:
+  - type: textarea
+    id: capability
+    attributes:
+      label: Capability
+      description: What repeated workflow, failure, or install need does this solve?
+    validations:
+      required: true
+  - type: dropdown
+    id: target
+    attributes:
+      label: Proposed target
+      options:
+        - Owned skill
+        - Generated documentation skill
+        - Upstream mirror
+        - Catalog/status change
+        - Bootstrap/install-set change
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance
+      description: Link the upstream repo, existing local skill, source conversation, or evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety notes
+      description: Mention scripts, installs, network calls, credentials, hooks, or privileged behavior.
+    validations:
+      required: false
+

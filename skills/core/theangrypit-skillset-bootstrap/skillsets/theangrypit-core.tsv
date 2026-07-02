@@ -1,0 +1,16 @@
+# source	skill	scope	agent	mode	notes
+# scope: wizard | global | project | none
+# agent: wizard | codex | none
+# mode: add
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-communication-discipline	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-html-ledger	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-structured-execution	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	ask-pit	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	ask-theangrypit	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	hive-keep-codex-fast	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	karpathy-agentic-guidelines-full	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	karpathy-agentic-guidelines-q8	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	linear-workflow-router	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	proof-orchestrator	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	skill-catalog-curator	global	codex	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	theangrypit-skillset-bootstrap	global	codex	add	Default TheAngryPit core skill.

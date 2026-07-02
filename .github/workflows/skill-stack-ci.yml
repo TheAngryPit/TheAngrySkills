@@ -1,0 +1,56 @@
+name: Skill stack CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skill-stack-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate skill stack
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned test runner
+        run: python -m pip install --disable-pip-version-check pytest==9.1.1
+
+      - name: Syntax check scripts
+        run: |
+          node --check scripts/theangry-skills.mjs
+
+      - name: Run tests
+        run: python -m pytest -q tests
+
+      - name: Validate shared skill catalog
+        run: scripts/theangry-skills.mjs check --root skills --profile shared
+
+      - name: Advisory security scan
+        run: |
+          set +e
+          scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json
+          status=$?
+          set -e
+          echo "security_scan_exit=$status"
+          echo "The full scan is advisory in CI; review findings before promotion."
+          exit 0

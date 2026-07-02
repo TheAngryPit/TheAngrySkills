@@ -1,0 +1,4 @@
+interface:
+  display_name: "Echo Ingest Source Intake"
+  short_description: "Ingest sources into echo-ingest."
+  default_prompt: "Use $echo-ingest-source-intake to ingest a source into the echo-ingest knowledge workflow with manifest and normalized note outputs."

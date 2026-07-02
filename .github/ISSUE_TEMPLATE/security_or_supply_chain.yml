@@ -1,0 +1,31 @@
+name: Security or supply-chain concern
+description: Report suspicious skill behavior, dependency risk, or mirror provenance problems.
+title: "[security] "
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, tokens, private hostnames, exploit payloads, or live credential paths. If this needs private handling, say so and keep the public report minimal.
+  - type: textarea
+    id: concern
+    attributes:
+      label: Concern
+      description: What looks unsafe or suspicious?
+    validations:
+      required: true
+  - type: textarea
+    id: surface
+    attributes:
+      label: Affected surface
+      description: Skill path, mirror source, script, workflow, command, or install/update path.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Keep this sanitized. Link public advisories or commits when possible.
+    validations:
+      required: false
+

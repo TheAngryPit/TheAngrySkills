@@ -1,0 +1,4 @@
+interface:
+  display_name: "Echo Ingest Codex Runner"
+  short_description: "Run echo-ingest packets through Codex."
+  default_prompt: "Use $echo-ingest-codex-runner to execute a echo-ingest strategy packet with Codex and capture structured output."

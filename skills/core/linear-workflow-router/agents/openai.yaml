@@ -1,0 +1,6 @@
+interface:
+  display_name: "Linear Workflow Router"
+  short_description: "Route Linear, PR, and slice/task workflows"
+  default_prompt: "Use $linear-workflow-router to classify this repo's workflow mode before creating issues, PRs, or slice tasks."
+policy:
+  allow_implicit_invocation: true

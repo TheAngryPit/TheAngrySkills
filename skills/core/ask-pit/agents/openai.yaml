@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask-PIT"
+  short_description: "Router for the Hélio/PIT/Hive selected workflow skills."
+  default_prompt: "Ask PIT: escolhe o melhor skill ou sequência curta para esta tarefa. Primeiro faz-me perguntas, depois dá-me um plano pequeno e diz que prova devo pedir no fim."

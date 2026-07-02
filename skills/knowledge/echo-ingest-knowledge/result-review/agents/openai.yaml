@@ -1,0 +1,4 @@
+interface:
+  display_name: "Echo Ingest Result Review"
+  short_description: "Review echo-ingest outputs before promotion."
+  default_prompt: "Use $echo-ingest-result-review to review generated echo-ingest results and decide what can be promoted."

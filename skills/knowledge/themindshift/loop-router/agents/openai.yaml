@@ -1,0 +1,6 @@
+interface:
+  display_name: "TheMindShift Loop Router"
+  short_description: "Route TheMindShift work to the next loop or gate"
+  default_prompt: "Use $themindshift-loop-router to decide the next TheMindShift loop, gate, heartbeat, scheduled task, delegated worker, or blocked state."
+policy:
+  allow_implicit_invocation: true

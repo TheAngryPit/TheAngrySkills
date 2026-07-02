@@ -1,0 +1,4 @@
+interface:
+  display_name: "Echo Ingest Newsletter Workflow"
+  short_description: "Prepare newsletter knowledge ingest."
+  default_prompt: "Use $echo-ingest-workflow-newsletter to turn source material into governed newsletter-ready vault knowledge."

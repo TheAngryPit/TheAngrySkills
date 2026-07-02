@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Catalog Curator"
+  short_description: "Audit local skill catalog hygiene"
+  default_prompt: "Use $skill-catalog-curator to audit installed skills and find duplicates, drift, or stale metadata."

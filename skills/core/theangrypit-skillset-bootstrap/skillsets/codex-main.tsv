@@ -1,0 +1,22 @@
+# source	skill	scope	agent	mode	notes
+# scope: wizard | global | project | none
+# agent: wizard | codex | none
+# mode: add
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-communication-discipline	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-html-ledger	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	aegis-structured-execution	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	ask-pit	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	ask-theangrypit	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	hive-keep-codex-fast	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	karpathy-agentic-guidelines-full	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	karpathy-agentic-guidelines-q8	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	linear-workflow-router	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	proof-orchestrator	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	skill-catalog-curator	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/TheAngryPit/TheAngrySkills.git	theangrypit-skillset-bootstrap	wizard	wizard	add	Default TheAngryPit core skill.
+https://github.com/vectorize-io/hindsight.git	hindsight-docs	wizard	wizard	add	Official Hindsight docs skill.
+https://github.com/mattpocock/skills.git	setup-matt-pocock-skills	wizard	wizard	add	Matt Pocock repo setup/context skill.
+https://github.com/mattpocock/skills.git	grill-me	wizard	wizard	add	Matt Pocock grilling skill.
+https://github.com/mattpocock/skills.git	grill-with-docs	wizard	wizard	add	Matt Pocock grilling skill with repo docs.
+https://github.com/mattpocock/skills.git	to-prd	wizard	wizard	add	Matt Pocock PRD conversion skill.
+https://github.com/mattpocock/skills.git	to-issues	wizard	wizard	add	Matt Pocock issue slicing skill.

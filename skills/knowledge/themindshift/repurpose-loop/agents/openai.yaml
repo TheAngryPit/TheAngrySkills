@@ -1,0 +1,6 @@
+interface:
+  display_name: "TheMindShift Repurpose Loop"
+  short_description: "Create social derivatives after final lock"
+  default_prompt: "Use $themindshift-repurpose-loop to create TheMindShift repurpose assets only after the source package is locked and ready for derivative work."
+policy:
+  allow_implicit_invocation: true

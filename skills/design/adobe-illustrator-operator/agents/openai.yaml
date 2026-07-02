@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adobe Illustrator Operator"
+  short_description: "Safe Illustrator asset control"
+  default_prompt: "Use adobe-illustrator-operator to inspect, export, or reconstruct the Illustrator asset safely. For Penpot rebuilds, treat Illustrator as canonical and follow the source tree."

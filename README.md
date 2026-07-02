@@ -30,6 +30,12 @@ List available skills:
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --list
 ```
 
+List nested skill packs too:
+
+```bash
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --list --full-depth
+```
+
 Install one skill:
 
 ```bash

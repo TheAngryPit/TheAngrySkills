@@ -55,7 +55,7 @@ wrote it.
 | Engineering workflow | Skills that shape code work, PRDs, goals, docs, or skill quality | `skill-catalog-curator`, `theangrypit-goal-authoring` |
 | Design/operator | Skills for taste, brand, visual tooling, and creative execution | `thehive-branding-agent`, `penpot-mcp-operator` |
 | Knowledge loops | Source ingest, editorial loops, research, PRD, newsletter, publishing prep | `echo-ingest-*`, `themindshift-*` |
-| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | future `openclaw-*`, `taste-*`, `vercel-*` mirrors |
+| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-*`, `marketing-*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
 their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes
@@ -134,12 +134,32 @@ will happen, confirm the risky step, then make the result durable.
 
 See [`docs/skill-categories.md`](docs/skill-categories.md) for category rules.
 
-## Mirrors And Generated Docs
+## Mirrors And Documentation Skills
 
-External mirrors and generated documentation skills are not part of the initial
-public export. They stay in the private Workbench until their license,
-provenance, prefix, prompt-injection risk, local-path risk, and scanner findings
-are reviewed.
+Documentation skills are generated and maintained in the private Workbench, not
+published in this public install surface. They are still part of the operating
+model: when a tool or project matters, turn its docs into a searchable,
+attributed reference pack instead of forcing an agent to improvise from memory.
+Install those docs directly from the Workbench when needed.
+
+External mirrors are different. They are curated external skills, not generated
+docs. Only selected mirror families are promoted for public install. The public
+stack should not become a blind dump of every mirrored skill from every source.
+
+The currently accepted mirror families for public curation are:
+
+- OpenClaw skills, with `openclaw-` prefixes
+- Taste skills, with `taste-` prefixes
+- Vercel skills, with `vercel-` prefixes
+- Vercel Agent Skills, with `vercel-agent-` prefixes
+- Marketing skills, with `marketing-` prefixes
+- Looper skills, with `looper-` prefixes
+- Effective HTML skills, with `effective-` prefixes
+
+Cursor skills are intentionally excluded from this mirror set; install them
+directly from Cursor when needed. OpenAI and Figma remain accepted future mirror
+families, but they are not promoted here until their source/update path is
+explicit and reviewable.
 
 When mirrors are published here, they should:
 

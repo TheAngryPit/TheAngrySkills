@@ -50,13 +50,13 @@ use.
 
 ## Documentation skills
 
-`skills/documentation-skills/` is not included in the initial public export.
-Generated documentation skills are curated in the private Workbench until they
-pass public-export review.
+Documentation skills are generated reference packs for projects, tools,
+frameworks, and docs the operator wants available to agents.
 
-When published, these should remain opt-in reference packs. They can contain
-upstream commands, privileged examples, or unsafe text as quoted documentation.
-Do not treat them as active workflow defaults.
+They are maintained in the private Workbench and installed from there when
+needed, not published in this public install surface. They can contain upstream
+commands, privileged examples, or unsafe text as quoted documentation. Do not
+treat them as active workflow defaults.
 
 Documentation skills are not endorsement of every upstream command they contain.
 They are a searchable reference layer for operator use and agent routing. Keep
@@ -65,9 +65,9 @@ workflow rules unless a separate promotion decision accepts that logic.
 
 ## Mirrors
 
-`skills/mirrors-*` is not included in the initial public export. Mirrors are
-prepared in the private Workbench and should be published only after provenance,
-license, naming, and security review.
+Mirrors are curated external skills, not generated docs and not owned workflow
+logic. Public mirror promotion is selective: only accepted mirror families and
+selected skills become installable here.
 
 Prefixes are collision control. They keep a mirrored skill installable through
 this repo without pretending it is TheAngryPit-owned or hiding which upstream it
@@ -84,9 +84,15 @@ Approved mirror prefixes include:
 - `taste-`
 - `vercel-`
 - `vercel-agent-`
-- `cursor-`
 - `marketing-`
 - `looper-`
 - `effective-`
+
+Cursor is intentionally excluded from this public mirror family list. Install
+Cursor skills directly from Cursor's source when needed.
+
+OpenAI and Figma remain accepted future mirror families, but they should not be
+published until their source and update path are explicit, reviewable, and
+separate from local plugin cache state.
 
 Mirror folders are created only when that source is intentionally mirrored.

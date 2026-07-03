@@ -77,6 +77,121 @@
         "./skills/knowledge/themindshift/theme-approval-loop",
         "./skills/knowledge/themindshift/writer-loop"
       ]
+    },
+    {
+      "name": "mirrors-openclaw",
+      "skills": [
+        "./skills/mirrors-openclaw/openclaw-agent-transcript",
+        "./skills/mirrors-openclaw/openclaw-autoreview",
+        "./skills/mirrors-openclaw/openclaw-behavior-validator",
+        "./skills/mirrors-openclaw/openclaw-crabbox",
+        "./skills/mirrors-openclaw/openclaw-handoff",
+        "./skills/mirrors-openclaw/openclaw-session-viewer"
+      ]
+    },
+    {
+      "name": "mirrors-taste",
+      "skills": [
+        "./skills/mirrors-taste/taste-brandkit",
+        "./skills/mirrors-taste/taste-design-taste-frontend",
+        "./skills/mirrors-taste/taste-design-taste-frontend-v1",
+        "./skills/mirrors-taste/taste-full-output-enforcement",
+        "./skills/mirrors-taste/taste-gpt-taste",
+        "./skills/mirrors-taste/taste-high-end-visual-design",
+        "./skills/mirrors-taste/taste-image-to-code",
+        "./skills/mirrors-taste/taste-imagegen-frontend-mobile",
+        "./skills/mirrors-taste/taste-imagegen-frontend-web",
+        "./skills/mirrors-taste/taste-industrial-brutalist-ui",
+        "./skills/mirrors-taste/taste-minimalist-ui",
+        "./skills/mirrors-taste/taste-redesign-existing-projects",
+        "./skills/mirrors-taste/taste-stitch-design-taste"
+      ]
+    },
+    {
+      "name": "mirrors-vercel-skills",
+      "skills": [
+        "./skills/mirrors-vercel-skills/vercel-find-skills"
+      ]
+    },
+    {
+      "name": "mirrors-vercel-agent-skills",
+      "skills": [
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-deploy-to-vercel",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-cli-with-tokens",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-composition-patterns",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-optimize",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-best-practices",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-native-skills",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-view-transitions",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-web-design-guidelines",
+        "./skills/mirrors-vercel-agent-skills/vercel-agent-writing-guidelines"
+      ]
+    },
+    {
+      "name": "mirrors-marketing",
+      "skills": [
+        "./skills/mirrors-marketing/marketing-ab-testing",
+        "./skills/mirrors-marketing/marketing-ad-creative",
+        "./skills/mirrors-marketing/marketing-ads",
+        "./skills/mirrors-marketing/marketing-ai-seo",
+        "./skills/mirrors-marketing/marketing-analytics",
+        "./skills/mirrors-marketing/marketing-aso",
+        "./skills/mirrors-marketing/marketing-churn-prevention",
+        "./skills/mirrors-marketing/marketing-co-marketing",
+        "./skills/mirrors-marketing/marketing-cold-email",
+        "./skills/mirrors-marketing/marketing-community-marketing",
+        "./skills/mirrors-marketing/marketing-competitor-profiling",
+        "./skills/mirrors-marketing/marketing-competitors",
+        "./skills/mirrors-marketing/marketing-content-strategy",
+        "./skills/mirrors-marketing/marketing-copy-editing",
+        "./skills/mirrors-marketing/marketing-copywriting",
+        "./skills/mirrors-marketing/marketing-cro",
+        "./skills/mirrors-marketing/marketing-customer-research",
+        "./skills/mirrors-marketing/marketing-directory-submissions",
+        "./skills/mirrors-marketing/marketing-emails",
+        "./skills/mirrors-marketing/marketing-free-tools",
+        "./skills/mirrors-marketing/marketing-ideas",
+        "./skills/mirrors-marketing/marketing-image",
+        "./skills/mirrors-marketing/marketing-launch",
+        "./skills/mirrors-marketing/marketing-lead-magnets",
+        "./skills/mirrors-marketing/marketing-loops",
+        "./skills/mirrors-marketing/marketing-offers",
+        "./skills/mirrors-marketing/marketing-onboarding",
+        "./skills/mirrors-marketing/marketing-paywalls",
+        "./skills/mirrors-marketing/marketing-plan",
+        "./skills/mirrors-marketing/marketing-popups",
+        "./skills/mirrors-marketing/marketing-pricing",
+        "./skills/mirrors-marketing/marketing-product-marketing",
+        "./skills/mirrors-marketing/marketing-programmatic-seo",
+        "./skills/mirrors-marketing/marketing-prospecting",
+        "./skills/mirrors-marketing/marketing-psychology",
+        "./skills/mirrors-marketing/marketing-public-relations",
+        "./skills/mirrors-marketing/marketing-referrals",
+        "./skills/mirrors-marketing/marketing-revops",
+        "./skills/mirrors-marketing/marketing-sales-enablement",
+        "./skills/mirrors-marketing/marketing-schema",
+        "./skills/mirrors-marketing/marketing-seo-audit",
+        "./skills/mirrors-marketing/marketing-signup",
+        "./skills/mirrors-marketing/marketing-site-architecture",
+        "./skills/mirrors-marketing/marketing-sms",
+        "./skills/mirrors-marketing/marketing-social",
+        "./skills/mirrors-marketing/marketing-video"
+      ]
+    },
+    {
+      "name": "mirrors-looper",
+      "skills": [
+        "./skills/mirrors-looper/looper-looper",
+        "./skills/mirrors-looper/looper-pr-takeover"
+      ]
+    },
+    {
+      "name": "mirrors-effective-html",
+      "skills": [
+        "./skills/mirrors-effective-html/effective-html",
+        "./skills/mirrors-effective-html/effective-html-diagram",
+        "./skills/mirrors-effective-html/effective-html-plan"
+      ]
     }
   ]
 }

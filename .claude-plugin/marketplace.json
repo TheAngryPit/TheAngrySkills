@@ -108,12 +108,6 @@
       ]
     },
     {
-      "name": "mirrors-vercel-skills",
-      "skills": [
-        "./skills/mirrors-vercel-skills/vercel-find-skills"
-      ]
-    },
-    {
       "name": "mirrors-vercel-agent-skills",
       "skills": [
         "./skills/mirrors-vercel-agent-skills/vercel-agent-deploy-to-vercel",

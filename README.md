@@ -55,7 +55,7 @@ wrote it.
 | Engineering workflow | Skills that shape code work, PRDs, goals, docs, or skill quality | `skill-catalog-curator`, `theangrypit-goal-authoring` |
 | Design/operator | Skills for taste, brand, visual tooling, and creative execution | `thehive-branding-agent`, `penpot-mcp-operator` |
 | Knowledge loops | Source ingest, editorial loops, research, PRD, newsletter, publishing prep | `echo-ingest-*`, `themindshift-*` |
-| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-*`, `marketing-*` |
+| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
 their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes

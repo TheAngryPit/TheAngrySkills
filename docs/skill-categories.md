@@ -82,7 +82,6 @@ Approved mirror prefixes include:
 
 - `openclaw-`
 - `taste-`
-- `vercel-`
 - `vercel-agent-`
 - `marketing-`
 - `looper-`

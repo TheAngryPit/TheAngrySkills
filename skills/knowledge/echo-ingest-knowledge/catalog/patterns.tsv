@@ -1,7 +1,0 @@
-name	state	default_use	notes
-Fabric patterns	catalog_governed	config_driven	Pattern availability lives in the echo-ingest activation config, not in this skill pack.
-active_candidate	allowed	governed_runs	Can run in normal governed workflows when selected and hash-matched.
-active_manual_only	allowed_explicit	manual_named_runs	Can run only when explicitly named or supplied by a reviewed selection list.
-pending_review	blocked	none	Do not run until reviewed.
-quarantined	blocked	none	Do not run.
-blocked	blocked	none	Do not run.

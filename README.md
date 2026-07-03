@@ -20,10 +20,8 @@ This is my agent operating stack:
 - **proof discipline** so "done" means something specific
 - **skill hygiene** so useful workflows become reusable capability instead of
   one-off conversation residue
-- **design and brand operators** for frontend, visual systems, Penpot, and
+- **design operators** for frontend, visual systems, Penpot, and
   Illustrator-style work
-- **knowledge workflow packs** for source ingest, synthesis, editorial loops,
-  PRDs, and publishing prep
 - **curated external mirrors** when outside skills are useful but need prefixes,
   provenance, and install hygiene before sharing
 
@@ -51,10 +49,9 @@ wrote it.
 
 | Style | What it means | Examples |
 |---|---|---|
-| Operating core | Default agent discipline: routing, checkpoints, proof, install hygiene | `ask-theangrypit`, `proof-orchestrator`, `aegis-*` |
-| Engineering workflow | Skills that shape code work, PRDs, goals, docs, or skill quality | `skill-catalog-curator`, `theangrypit-goal-authoring` |
-| Design/operator | Skills for taste, brand, visual tooling, and creative execution | `thehive-branding-agent`, `penpot-mcp-operator` |
-| Knowledge loops | Source ingest, editorial loops, research, PRD, newsletter, publishing prep | `echo-ingest-*`, `themindshift-*` |
+| Operating core | Default agent discipline: checkpoints, proof, install hygiene | `proof-orchestrator`, `aegis-*` |
+| Engineering workflow | Skills that shape code work, docs, or skill quality | `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
+| Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
 | Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
@@ -70,7 +67,7 @@ and what is safe to install by default.
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --list
 ```
 
-Include nested packs such as `themindshift` and `echo-ingest-knowledge`:
+Include nested mirror packs:
 
 ```bash
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --list --full-depth
@@ -86,26 +83,6 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-c
 
 ```bash
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-catalog-curator -g -a codex
-```
-
-### 4. Bootstrap a curated set
-
-Install the bootstrap skill first:
-
-```bash
-npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill theangrypit-skillset-bootstrap -g -a codex
-```
-
-Then dry-run a curated skillset before applying it:
-
-```bash
-./skills/core/theangrypit-skillset-bootstrap/scripts/list-skillset.sh theangrypit-core.tsv
-```
-
-Apply only after reviewing the printed commands:
-
-```bash
-./skills/core/theangrypit-skillset-bootstrap/scripts/install-skillset.sh theangrypit-core.tsv --apply
 ```
 
 ## Wizard-Style Install Discipline
@@ -129,8 +106,8 @@ will happen, confirm the risky step, then make the result durable.
 |---|---|---|
 | Core workflow | `skills/core/` | execution discipline, routing, proof, communication, skill hygiene |
 | Engineering | `skills/engineering/` | code-facing helpers, skill authoring, docs and goal workflows |
-| Design/operator | `skills/design/` | visual, brand, Penpot, Illustrator, and creative operator skills |
-| Knowledge packs | `skills/knowledge/` | ingest, synthesis, editorial, PRD, and publishing loops |
+| Design/operator | `skills/design/` | visual, Penpot, Illustrator, and creative operator skills |
+| Founder GTM | `skills/founder-gtm/` | founder sales and outreach templates with human-gated use |
 
 See [`docs/skill-categories.md`](docs/skill-categories.md) for category rules.
 
@@ -145,6 +122,11 @@ Install those docs directly from the Workbench when needed.
 External mirrors are different. They are curated external skills, not generated
 docs. Only selected mirror families are promoted for public install. The public
 stack should not become a blind dump of every mirrored skill from every source.
+
+Private/operator-specific packs such as internal knowledge ingestion, personal
+voice machinery, live company branding, local Codex maintenance, and private
+skillset bootstrap logic stay in the private Workbench unless a sanitized public
+rewrite is reviewed and promoted deliberately.
 
 The currently accepted mirror families for public curation are:
 

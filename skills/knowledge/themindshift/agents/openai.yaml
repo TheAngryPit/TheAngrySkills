@@ -1,4 +1,0 @@
-interface:
-  display_name: "TheMindShift"
-  short_description: "Route TheMindShift writing, editorial, research, approval, repurpose, and publishing loops."
-  default_prompt: "Use $themindshift to choose the correct TheMindShift loop, then read only the nested procedure needed for the task."

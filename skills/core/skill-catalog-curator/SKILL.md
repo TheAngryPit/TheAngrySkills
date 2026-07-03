@@ -118,8 +118,8 @@ when needed.
 Common commands:
 
 ```bash
-python3 scripts/generate_trigger_tests.py skills/ask-pit
-python3 scripts/generate_trigger_tests.py skills/ask-pit --write tests
+python3 scripts/generate_trigger_tests.py skills/core/skill-catalog-curator
+python3 scripts/generate_trigger_tests.py skills/core/skill-catalog-curator --write tests
 ```
 
 This is stronger than static score alone because it creates concrete
@@ -209,14 +209,14 @@ does not install Sensei or mutate skills.
 When working inside the TheAngrySkills repo, prefer the repo CLI wrapper:
 
 ```bash
-scripts/theangry-skills.mjs score skills/ask-theangrypit
-scripts/theangry-skills.mjs audit skills/ask-theangrypit
+scripts/theangry-skills.mjs score skills/core/skill-catalog-curator
+scripts/theangry-skills.mjs audit skills/core/skill-catalog-curator
 scripts/theangry-skills.mjs check --root skills --profile shared
-scripts/theangry-skills.mjs trigger-tests skills/ask-pit --write tests
-scripts/theangry-skills.mjs security scan skills/ask-theangrypit --json
+scripts/theangry-skills.mjs trigger-tests skills/core/skill-catalog-curator --write tests
+scripts/theangry-skills.mjs security scan skills/core/skill-catalog-curator --json
 scripts/theangry-skills.mjs security scan-root skills --json
 scripts/theangry-skills.mjs security diff /tmp/old-skill /tmp/new-skill --json
-scripts/theangry-skills.mjs security skillspector skills/ask-theangrypit --report-dir /tmp/skillspector-report --json
+scripts/theangry-skills.mjs security skillspector skills/core/skill-catalog-curator --report-dir /tmp/skillspector-report --json
 scripts/theangry-skills.mjs update-plan --candidate-root skills --installed-root ~/.agents/skills --json
 scripts/theangry-skills.mjs update-apply --plan /tmp/skill-update-plan.json --only-safe --confirm
 scripts/theangry-skills.mjs quarantine suspicious-skill --root ~/.agents/skills --quarantine-root ~/.agents/quarantine --reason "blocked scan" --confirm

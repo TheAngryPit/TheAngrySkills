@@ -1,4 +1,0 @@
-interface:
-  display_name: "Echo Ingest Pattern Runner"
-  short_description: "Run governed echo-ingest patterns."
-  default_prompt: "Use $echo-ingest-pattern-runner to execute selected echo-ingest pattern packets safely."

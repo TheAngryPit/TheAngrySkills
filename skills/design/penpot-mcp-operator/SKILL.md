@@ -103,8 +103,8 @@ board.resize(1440, 900);
 board.fills = [{ fillColor: "#050505", fillOpacity: 1 }];
 penpot.root.appendChild(board);
 
-const text = penpot.createText("TheHive");
-text.name = "TITLE__TheHive";
+const text = penpot.createText("Example Brand");
+text.name = "TITLE__Example_Brand";
 text.x = 80;
 text.y = 80;
 text.resize(600, 90);

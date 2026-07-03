@@ -1,4 +1,0 @@
-interface:
-  display_name: "Hive Keep Codex Fast"
-  short_description: "Safe Codex local-state maintenance"
-  default_prompt: "Use $hive-keep-codex-fast to inspect Codex local state safely before any cleanup."

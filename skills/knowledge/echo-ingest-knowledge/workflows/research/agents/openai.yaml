@@ -1,4 +1,0 @@
-interface:
-  display_name: "Echo Ingest Research Workflow"
-  short_description: "Prepare research knowledge ingest."
-  default_prompt: "Use $echo-ingest-workflow-research to turn articles, posts, videos, and documents into governed research notes."

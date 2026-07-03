@@ -1,6 +1,0 @@
-interface:
-  display_name: "TheMindShift Theme Approval Loop"
-  short_description: "Prepare reviewable issue theme options"
-  default_prompt: "Use $themindshift-theme-approval-loop to prepare or revise a TheMindShift theme approval artifact without choosing the final theme for Vitor."
-policy:
-  allow_implicit_invocation: true

@@ -110,7 +110,7 @@ Examples:
 - `Brand_Guidelines_v8_Layered_Pit / Pag_01 / hero_title / title_text_001`
 - `Brand_Guidelines_v8_Layered_Pit / Pag_08 / dont_stretch_logo / logo_mark_group_001`
 - `Brand_Guidelines_v8_Layered_Pit / Pag_14 / final_composition / logo_red_hexagon_path_001`
-- `Logo_TheHive_Layered / Pag_09 / color_palette / swatch_cyan_rect_001`
+- `Logo_ExampleBrand_Layered / Pag_09 / color_palette / swatch_cyan_rect_001`
 
 Rejected final names:
 
@@ -161,4 +161,3 @@ Do not keep layering fixes on top of the wrong import.
 3. State why the method failed.
 4. Move to the next more faithful method.
 5. Re-test on one page before continuing.
-

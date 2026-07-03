@@ -106,7 +106,7 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
         auditor = load_auditor()
         with tempfile.TemporaryDirectory() as tmp:
             skill_dir = Path(tmp) / "skills" / "loop-router"
-            self.write_skill(skill_dir, "themindshift-loop-router")
+            self.write_skill(skill_dir, "sample-pack-router")
 
             result = auditor.audit_skill(skill_dir, "shared")
 
@@ -117,8 +117,8 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
     def test_grouped_skill_pack_allows_nested_matching_leaf_directory(self) -> None:
         auditor = load_auditor()
         with tempfile.TemporaryDirectory() as tmp:
-            skill_dir = Path(tmp) / "skills" / "themindshift-editorial" / "themindshift-loop-router"
-            self.write_skill(skill_dir, "themindshift-loop-router")
+            skill_dir = Path(tmp) / "skills" / "sample-pack" / "sample-pack-router"
+            self.write_skill(skill_dir, "sample-pack-router")
 
             result = auditor.audit_skill(skill_dir, "shared")
 
@@ -128,8 +128,8 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
     def test_grouped_skill_pack_allows_organizational_leaf_directory(self) -> None:
         auditor = load_auditor()
         with tempfile.TemporaryDirectory() as tmp:
-            skill_dir = Path(tmp) / "skills" / "themindshift-editorial" / "loop-router"
-            self.write_skill(skill_dir, "themindshift-loop-router")
+            skill_dir = Path(tmp) / "skills" / "sample-pack" / "loop-router"
+            self.write_skill(skill_dir, "sample-pack-router")
 
             result = auditor.audit_skill(skill_dir, "shared")
 
@@ -139,8 +139,8 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
     def test_categorized_pack_allows_organizational_leaf_directory(self) -> None:
         auditor = load_auditor()
         with tempfile.TemporaryDirectory() as tmp:
-            skill_dir = Path(tmp) / "skills" / "knowledge" / "themindshift" / "loop-router"
-            self.write_skill(skill_dir, "themindshift-loop-router")
+            skill_dir = Path(tmp) / "skills" / "knowledge" / "sample-pack" / "loop-router"
+            self.write_skill(skill_dir, "sample-pack-router")
 
             result = auditor.audit_skill(skill_dir, "shared")
 
@@ -151,7 +151,7 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
         auditor = load_auditor()
         with tempfile.TemporaryDirectory() as tmp:
             skill_dir = Path(tmp) / "skills" / "core" / "loop-router"
-            self.write_skill(skill_dir, "themindshift-loop-router")
+            self.write_skill(skill_dir, "sample-pack-router")
 
             result = auditor.audit_skill(skill_dir, "shared")
 
@@ -163,17 +163,17 @@ class SkillFrontmatterAuditTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "skills"
             flat_skill = root / "writing-ticks"
-            grouped_skill = root / "echo-ingest-knowledge" / "echo-ingest-source-intake"
+            grouped_skill = root / "sample-ingest-pack" / "sample-source-intake"
             self.write_skill(flat_skill, "writing-ticks")
-            self.write_skill(grouped_skill, "echo-ingest-source-intake")
-            project_skill = root / "TheMindShift" / "loop-router"
-            self.write_skill(project_skill, "themindshift-loop-router")
+            self.write_skill(grouped_skill, "sample-source-intake")
+            project_skill = root / "SamplePack" / "loop-router"
+            self.write_skill(project_skill, "sample-pack-router")
 
             discovered = auditor.find_skill_dirs(root)
 
         self.assertEqual(
             sorted(str(path.relative_to(root)) for path in discovered),
-            ["TheMindShift/loop-router", "echo-ingest-knowledge/echo-ingest-source-intake", "writing-ticks"],
+            ["SamplePack/loop-router", "sample-ingest-pack/sample-source-intake", "writing-ticks"],
         )
 
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Echo Ingest PRD Workflow"
-  short_description: "Prepare PRD and issue-context ingest."
-  default_prompt: "Use $echo-ingest-workflow-prd to turn source packs into governed PRD, issue, and implementation context."

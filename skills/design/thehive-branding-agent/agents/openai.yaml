@@ -1,4 +1,0 @@
-interface:
-  display_name: "TheHive Branding Agent"
-  short_description: "Loop-managed TheHive brand and design supervisor"
-  default_prompt: "Use thehive-branding-agent to manage this TheHive brand, design, website, deck, campaign, asset, or canon task with loop gates, source discipline, and proof."

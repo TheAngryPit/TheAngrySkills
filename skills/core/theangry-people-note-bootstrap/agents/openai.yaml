@@ -1,4 +1,0 @@
-interface:
-  display_name: "TheAngry People Note Bootstrap"
-  short_description: "Create public-safe people and agent notes without leaking private memory."
-  default_prompt: "Use $theangry-people-note-bootstrap to create or update a public-safe person or agent note, preserving privacy boundaries and source notes."

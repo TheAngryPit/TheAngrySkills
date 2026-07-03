@@ -1,4 +1,0 @@
-interface:
-  display_name: "TheAngry Loop"
-  short_description: "Create or update Codex heartbeat loops without bypassing human gates."
-  default_prompt: "Use $theangry-loop to create or update a bounded Codex heartbeat loop, with cadence, target, stop condition, and human-gate status."

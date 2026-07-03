@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ask-TheAngryPit"
-  short_description: "Global router for Codex skill workflows."
-  default_prompt: "Ask-TheAngryPit: choose the best skill or short skill chain for this task, explain why, give me the first prompt, and define the proof to ask for at the end."

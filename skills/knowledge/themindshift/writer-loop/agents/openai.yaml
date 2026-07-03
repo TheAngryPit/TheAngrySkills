@@ -1,6 +1,0 @@
-interface:
-  display_name: "TheMindShift Writer Loop"
-  short_description: "Draft a TheMindShift issue from approved research"
-  default_prompt: "Use $themindshift-writer-loop to draft or revise a TheMindShift issue from approved research while preserving Vitor voice and the current issue spine."
-policy:
-  allow_implicit_invocation: true

@@ -35,8 +35,8 @@ function usage(exitCode = 2) {
   theangry-skills sensei-version [--json]
 
 Examples:
-  scripts/theangry-skills.mjs score skills/core/ask-theangrypit
-  scripts/theangry-skills.mjs audit skills/core/ask-theangrypit
+  scripts/theangry-skills.mjs score skills/core/skill-catalog-curator
+  scripts/theangry-skills.mjs audit skills/core/skill-catalog-curator
   scripts/theangry-skills.mjs check --root skills --profile shared --strict
   scripts/theangry-skills.mjs check --root skills --emit-proof reports/skill-audit.md
 

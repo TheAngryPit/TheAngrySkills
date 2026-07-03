@@ -27,7 +27,7 @@ Do not open issues or pull requests that:
 - bulk-copy third-party skills without provenance and review
 - add secrets, private paths, tokens, credentials, or local machine details
 - rename installed skill names without migration notes
-- flatten approved packs such as `themindshift` or `echo-ingest-knowledge`
+- flatten nested packs or mirrors without a migration and install-surface review
 - treat generated documentation skills as default workflow skills
 - bypass the catalog, mirror, or security admission layers
 - submit unrelated third-party skill packs for inclusion by default

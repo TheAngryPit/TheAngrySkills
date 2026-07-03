@@ -1,6 +1,0 @@
-interface:
-  display_name: "TheMindShift Research Synthesis Loop"
-  short_description: "Synthesize research into an approval brief"
-  default_prompt: "Use $themindshift-research-synthesis-loop to synthesize TheMindShift issue research into a reviewable brief with a deep research verdict."
-policy:
-  allow_implicit_invocation: true

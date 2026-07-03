@@ -1,4 +1,0 @@
-interface:
-  display_name: "Echo Ingest Knowledge"
-  short_description: "Route Echo ingest source, pattern, Codex, review, newsletter, PRD, and research workflows."
-  default_prompt: "Use $echo-ingest-knowledge to choose and run the right Echo ingest workflow, then read only the nested procedure needed for the task."

@@ -1,13 +1,12 @@
 # Penpot MCP API Map
 
-Status: practical map for TheHive agent workflows. Verify live API members with `penpot_api_info` because Penpot MCP is version-sensitive.
+Status: practical map for agent-driven Penpot workflows. Verify live API members with `penpot_api_info` because Penpot MCP is version-sensitive.
 
 ## Primary Sources
 
 - Official help: `https://help.penpot.app/mcp/`
 - Official repository: `https://github.com/penpot/penpot/tree/develop/mcp`
 - Official AI workflow kit: `https://github.com/penpot/penpot-ai-kit`
-- Local setup note: `docs/thehive/PENPOT_WORKFLOW_SETUP.md`
 
 ## Tool Map
 

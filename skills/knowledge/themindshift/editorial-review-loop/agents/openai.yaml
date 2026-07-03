@@ -1,6 +1,0 @@
-interface:
-  display_name: "TheMindShift Editorial Review Loop"
-  short_description: "Review draft quality and voice fit"
-  default_prompt: "Use $themindshift-editorial-review-loop to review a TheMindShift draft for thesis, voice, structure, evidence, taste, and readiness for Vitor review."
-policy:
-  allow_implicit_invocation: true

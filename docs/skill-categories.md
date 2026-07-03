@@ -16,7 +16,7 @@ The category system exists for five practical reasons:
 
 ## Core
 
-`skills/core/` contains the default TheAngryPit workflow layer. These skills route work, structure long execution, manage proof, keep communication disciplined, and bootstrap the rest of the stack.
+`skills/core/` contains the public-safe TheAngryPit workflow layer. These skills structure long execution, manage proof, keep communication disciplined, and preserve install hygiene.
 
 Use this category when setting up a normal Codex machine or project workflow.
 
@@ -28,15 +28,15 @@ Use this category when the work is about shaping or executing code-facing workfl
 
 ## Design
 
-`skills/design/` contains visual, brand, and creative-tool operator skills.
+`skills/design/` contains visual and creative-tool operator skills.
 
-Use this category when the work touches frontend taste, design tools, brand systems, or visual execution.
+Use this category when the work touches frontend taste, design tools, or visual execution.
 
 ## Knowledge
 
-`skills/knowledge/` contains research, source-ingest, vault, publishing, and knowledge workflow packs.
+`skills/knowledge/` is reserved for knowledge workflow packs that are explicitly public-safe.
 
-Some knowledge entries are nested packs. The pack folder is an organization boundary; the nested skill frontmatter remains the install and routing name.
+Private source-ingest, vault, editorial, personal voice, company strategy, and publication machinery stays in the private Workbench unless Vitor explicitly approves a sanitized public rewrite. Some future public knowledge entries may be nested packs. The pack folder is an organization boundary; the nested skill frontmatter remains the install and routing name.
 
 ## Founder GTM
 

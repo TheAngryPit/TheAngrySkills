@@ -2,7 +2,7 @@
 
 Source: `https://github.com/penpot/penpot-ai-kit`
 
-Status: official Penpot-adjacent AI workflow kit, useful as reference material. Do not install or copy blindly into TheHive workflows without review.
+Status: official Penpot-adjacent AI workflow kit, useful as reference material. Do not install or copy blindly into live brand workflows without review.
 
 ## What It Adds
 
@@ -36,10 +36,10 @@ The upstream catalog includes patterns worth adapting:
 
 Use the upstream kit as structure and vocabulary, not as automatic authority.
 
-For TheHive work:
+For owned brand work:
 
-- preserve TheHive brand canon and visual DNA;
-- keep TheHiveOS, TheHive Labs, TheHiveMind and TheHiveGrid distinctions;
+- preserve brand canon and visual DNA;
+- keep product, lab, company, and community surfaces distinct;
 - keep public/internal boundaries;
 - do not expose MCP keys or private source material;
 - do not install the kit or mutate client config without explicit approval;
@@ -51,9 +51,9 @@ The local `penpot-mcp-operator` skill should remain the thin low-level operator 
 
 If Penpot becomes a main workflow, create or import a second layer later:
 
-- `penpot-foundations-thehive`
+- `penpot-foundations-brand`
 - `penpot-brandbook-builder`
 - `penpot-screen-builder`
 - `penpot-audit-and-handoff`
 
-Do this after validating that the upstream kit's skill format is compatible with the local Codex skill loader and TheHive repo conventions.
+Do this after validating that the upstream kit's skill format is compatible with the local Codex skill loader and the target repo conventions.

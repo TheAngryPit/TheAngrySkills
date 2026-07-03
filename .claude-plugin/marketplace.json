@@ -1,0 +1,82 @@
+{
+  "plugins": [
+    {
+      "name": "the-angry-core",
+      "skills": [
+        "./skills/core/aegis-communication-discipline",
+        "./skills/core/aegis-html-ledger",
+        "./skills/core/aegis-structured-execution",
+        "./skills/core/ask-pit",
+        "./skills/core/ask-theangrypit",
+        "./skills/core/hive-keep-codex-fast",
+        "./skills/core/karpathy-agentic-guidelines-full",
+        "./skills/core/karpathy-agentic-guidelines-q8",
+        "./skills/core/linear-workflow-router",
+        "./skills/core/proof-orchestrator",
+        "./skills/core/skill-catalog-curator",
+        "./skills/core/theangry-loop",
+        "./skills/core/theangry-people-note-bootstrap",
+        "./skills/core/theangrypit-skillset-bootstrap"
+      ]
+    },
+    {
+      "name": "the-angry-engineering",
+      "skills": [
+        "./skills/engineering/docs-skill-builder",
+        "./skills/engineering/theangry-ai-code-audit",
+        "./skills/engineering/theangry-project-bootstrap",
+        "./skills/engineering/theangry-write-like-vitor-bootstrap",
+        "./skills/engineering/theangrypit-goal-authoring",
+        "./skills/engineering/writing-ticks"
+      ]
+    },
+    {
+      "name": "the-angry-design",
+      "skills": [
+        "./skills/design/adobe-illustrator-operator",
+        "./skills/design/penpot-mcp-operator",
+        "./skills/design/thehive-branding-agent"
+      ]
+    },
+    {
+      "name": "founder-gtm",
+      "skills": [
+        "./skills/founder-gtm/gtm-cold-email",
+        "./skills/founder-gtm/gtm-design-play",
+        "./skills/founder-gtm/gtm-get-better",
+        "./skills/founder-gtm/gtm-linkedin-outreach",
+        "./skills/founder-gtm/gtm-playbook",
+        "./skills/founder-gtm/gtm-sales-pack",
+        "./skills/founder-gtm/gtm-setup",
+        "./skills/founder-gtm/gtm-warm-intro",
+        "./skills/founder-gtm/gtm-x-outreach"
+      ]
+    },
+    {
+      "name": "echo-ingest-knowledge",
+      "skills": [
+        "./skills/knowledge/echo-ingest-knowledge",
+        "./skills/knowledge/echo-ingest-knowledge/codex-runner",
+        "./skills/knowledge/echo-ingest-knowledge/pattern-runner",
+        "./skills/knowledge/echo-ingest-knowledge/result-review",
+        "./skills/knowledge/echo-ingest-knowledge/source-intake",
+        "./skills/knowledge/echo-ingest-knowledge/workflows/newsletter",
+        "./skills/knowledge/echo-ingest-knowledge/workflows/prd",
+        "./skills/knowledge/echo-ingest-knowledge/workflows/research"
+      ]
+    },
+    {
+      "name": "the-mind-shift",
+      "skills": [
+        "./skills/knowledge/themindshift",
+        "./skills/knowledge/themindshift/editorial-review-loop",
+        "./skills/knowledge/themindshift/loop-router",
+        "./skills/knowledge/themindshift/publishing-prep-loop",
+        "./skills/knowledge/themindshift/repurpose-loop",
+        "./skills/knowledge/themindshift/research-synthesis-loop",
+        "./skills/knowledge/themindshift/theme-approval-loop",
+        "./skills/knowledge/themindshift/writer-loop"
+      ]
+    }
+  ]
+}

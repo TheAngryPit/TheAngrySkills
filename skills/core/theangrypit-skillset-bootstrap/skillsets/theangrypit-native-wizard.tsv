@@ -1,0 +1,4 @@
+# source	skill	scope	agent	mode	notes
+# Run this when the operator wants the native picker UX: choose skills, choose compatible agents, choose global install, choose symlink.
+# scope and agent intentionally stay wizard so npx skills asks its native questions.
+https://github.com/TheAngryPit/TheAngrySkills.git	__wizard__	wizard	wizard	add	Native interactive TheAngrySkills install: select skills; choose compatible agents; choose global; choose symlink.

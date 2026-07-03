@@ -11,6 +11,10 @@ Default is dry-run. Use --apply to execute.
 Manifest columns:
   source<TAB>skill<TAB>scope<TAB>agent<TAB>mode<TAB>notes
 
+special skill values:
+  __wizard__  run native npx skills add <source> without --skill, so the
+              operator can choose skills, agents, scope, and symlink mode
+
 scope:
   wizard  leave install method to native npx skills wizard
   global  add -g
@@ -62,7 +66,11 @@ build_add_command() {
   local scope="$3"
   local agent="$4"
 
-  cmd=(npx skills add "$source" --skill "$skill")
+  cmd=(npx skills add "$source")
+
+  if [[ "$skill" != "__wizard__" && -n "$skill" ]]; then
+    cmd+=(--skill "$skill")
+  fi
 
   case "$scope" in
     wizard|none|"") ;;

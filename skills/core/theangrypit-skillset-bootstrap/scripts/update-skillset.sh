@@ -11,6 +11,7 @@ Default is dry-run. Use --apply to execute.
 Behavior:
   - named skills use: npx skills update
   - wildcard rows (skill=*) use: npx skills add <repo> --skill '*'
+  - wizard rows (skill=__wizard__) use: npx skills add <repo>
 
 The wildcard add path is intentional: it picks up newly-added skills from the
 remote repository, while native update only updates skills that are already
@@ -53,7 +54,11 @@ build_add_command() {
   local scope="$3"
   local agent="$4"
 
-  cmd=(npx skills add "$source" --skill "$skill")
+  cmd=(npx skills add "$source")
+
+  if [[ "$skill" != "__wizard__" && -n "$skill" ]]; then
+    cmd+=(--skill "$skill")
+  fi
 
   case "$scope" in
     wizard|none|"") ;;
@@ -126,7 +131,7 @@ while IFS=$'\t' read -r source skill scope agent mode notes || [[ -n "${source:-
   [[ -z "${source:-}" ]] && continue
   [[ "$source" == \#* ]] && continue
 
-  if [[ "$skill" == "*" ]]; then
+  if [[ "$skill" == "*" || "$skill" == "__wizard__" ]]; then
     cmd=()
     build_add_command "$source" "$skill" "${scope:-wizard}" "${agent:-wizard}"
   else

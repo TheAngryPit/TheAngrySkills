@@ -1,0 +1,4 @@
+interface:
+  display_name: "TheAngry Project Bootstrap"
+  short_description: "Bootstrap project folders, AGENTS.md, README, GOAL, RESULT, and operating scaffolds."
+  default_prompt: "Use $theangry-project-bootstrap to inspect the target project and propose the smallest durable scaffold before writing files."

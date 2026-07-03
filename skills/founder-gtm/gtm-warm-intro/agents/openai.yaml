@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Warm Intro"
+  short_description: "Prepare Founder GTM warm-intro requests"
+  default_prompt: "Use $gtm-warm-intro only for reviewed warm-intro planning and draft copy. Do not contact people, import private networks, or use external accounts without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Sales Pack"
+  short_description: "Build the founder sales-pack source of truth"
+  default_prompt: "Use $gtm-sales-pack to interview for a Founder GTM sales-pack. Keep outputs local and do not read Gmail or external accounts without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

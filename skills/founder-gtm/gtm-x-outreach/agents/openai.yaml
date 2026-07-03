@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM X Outreach"
+  short_description: "Prepare Founder GTM X/Twitter outreach"
+  default_prompt: "Use $gtm-x-outreach only for reviewed X/Twitter outreach planning or copy preparation. Do not send DMs, scrape accounts, or call external MCP/API tools without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

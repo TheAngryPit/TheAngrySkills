@@ -38,6 +38,16 @@ Use this category when the work touches frontend taste, design tools, brand syst
 
 Some knowledge entries are nested packs. The pack folder is an organization boundary; the nested skill frontmatter remains the install and routing name.
 
+## Founder GTM
+
+`skills/founder-gtm/` contains preserved founder-led outreach and sales workflow
+skills. These are curated local preservation skills, not a blind external mirror.
+
+Use this category when the work is GTM, sales copy, warm intros, LinkedIn/X
+outreach, or founder sales system design. Any outbound, email, social, CRM,
+credential, or automation action still requires explicit human approval before
+use.
+
 ## Documentation skills
 
 `skills/documentation-skills/` is not included in the initial public export.
@@ -76,7 +86,6 @@ Approved mirror prefixes include:
 - `vercel-agent-`
 - `cursor-`
 - `marketing-`
-- `dot-`
 - `looper-`
 - `effective-`
 

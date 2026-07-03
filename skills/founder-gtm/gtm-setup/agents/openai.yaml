@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Setup"
+  short_description: "Route first-run Founder GTM setup"
+  default_prompt: "Use $gtm-setup to review the Founder GTM setup sequence. Do not create accounts, send outreach, or mutate external systems without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

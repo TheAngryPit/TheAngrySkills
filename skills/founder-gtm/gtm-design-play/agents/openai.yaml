@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Design Play"
+  short_description: "Turn a working GTM motion into a reusable play"
+  default_prompt: "Use $gtm-design-play to document a reviewed Founder GTM play. Keep it local and do not create campaigns or external automation without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

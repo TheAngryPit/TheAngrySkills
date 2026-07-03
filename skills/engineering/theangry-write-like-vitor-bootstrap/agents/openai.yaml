@@ -1,0 +1,4 @@
+interface:
+  display_name: "TheAngry Write Like Vitor Bootstrap"
+  short_description: "Bootstrap privacy-gated writing-style profiles from approved Vitor-authored material."
+  default_prompt: "Use $theangry-write-like-vitor-bootstrap to define the voice lane, approved sources, privacy exclusions, and preview before writing any style profile."

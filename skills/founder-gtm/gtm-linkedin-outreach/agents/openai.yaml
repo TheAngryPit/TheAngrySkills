@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM LinkedIn Outreach"
+  short_description: "Prepare Founder GTM LinkedIn outreach"
+  default_prompt: "Use $gtm-linkedin-outreach only for reviewed LinkedIn outreach planning or copy preparation. Do not send messages or use automation accounts without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

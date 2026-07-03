@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Cold Email"
+  short_description: "Prepare Founder GTM cold email outreach"
+  default_prompt: "Use $gtm-cold-email only for reviewed outreach preparation. Do not send email, authenticate Gmail, or use production contacts without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

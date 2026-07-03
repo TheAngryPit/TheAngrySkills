@@ -1,0 +1,4 @@
+interface:
+  display_name: "TheAngry AI Code Audit"
+  short_description: "Review AI-assisted code for slop, fake safety, missing proof, and generated-code residue."
+  default_prompt: "Use $theangry-ai-code-audit to inspect changed files, surrounding source, repo instructions, and proof surfaces before reporting AI-code audit findings."

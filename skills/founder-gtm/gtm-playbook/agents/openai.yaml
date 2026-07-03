@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Playbook"
+  short_description: "Open or explain the Founder GTM playbook"
+  default_prompt: "Use $gtm-playbook to explain the preserved Founder GTM playbook and route to the right GTM skill. Do not trigger outreach or external actions."
+policy:
+  allow_implicit_invocation: false

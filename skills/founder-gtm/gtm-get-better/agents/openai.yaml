@@ -1,0 +1,6 @@
+interface:
+  display_name: "GTM Get Better"
+  short_description: "Review GTM outreach results and update learnings"
+  default_prompt: "Use $gtm-get-better to review GTM results and propose local learnings. Do not access external outreach logs or rewrite source GTM docs without explicit operator approval."
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,18 @@
 # Skill categories
 
-This repo uses categories so the install surface stays navigable as the stack grows. Categories describe how a skill should be used, not who wrote the original idea.
+This repo uses categories so the install surface stays navigable as the stack
+grows. Categories describe how a skill behaves in real work, not only who wrote
+the original idea.
+
+The category system exists for five practical reasons:
+
+- install ergonomics: install the narrowest useful set instead of everything
+- collision control: avoid ambiguous names like `handoff`, `review`, or `browser`
+- provenance: keep owned, mirrored, generated, and external material distinct
+- safety review: active scripts, plugins, MCP, hooks, and install paths need a
+  different gate than docs-only skills
+- public sharing: make the repo understandable to people who are not using the
+  private Workbench
 
 ## Core
 

@@ -2,7 +2,7 @@
 
 [![Skill stack CI](https://github.com/TheAngryPit/TheAngrySkills/actions/workflows/skill-stack-ci.yml/badge.svg)](https://github.com/TheAngryPit/TheAngrySkills/actions/workflows/skill-stack-ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![skills.sh](https://skills.sh/b/TheAngryPit/TheAngrySkills)](https://skills.sh/TheAngryPit/TheAngrySkills)
+[![npx skills](https://img.shields.io/badge/npx%20skills-TheAngrySkills-111111)](https://www.skills.sh/theangrypit/theangryskills)
 
 My public skill stack for Codex, `npx skills`, and agent workflows that need
 more discipline than a giant prompt.
@@ -11,6 +11,25 @@ This is not a universal skill registry. It is the installable public surface for
 skills I actually use, maintain, or curate. Drafts, risky experiments, generated
 docs, private reports, and raw upstream mirrors are reviewed in a private
 Workbench before anything is exported here.
+
+## The Short Version
+
+This is my agent operating stack:
+
+- **execution discipline** so long work does not dissolve into noisy chat
+- **proof discipline** so "done" means something specific
+- **skill hygiene** so useful workflows become reusable capability instead of
+  one-off conversation residue
+- **design and brand operators** for frontend, visual systems, Penpot, and
+  Illustrator-style work
+- **knowledge workflow packs** for source ingest, synthesis, editorial loops,
+  PRDs, and publishing prep
+- **curated external mirrors** when outside skills are useful but need prefixes,
+  provenance, and install hygiene before sharing
+
+The folder structure is part of the product. It keeps my owned workflow skills,
+design/operator skills, knowledge packs, generated docs, and external mirrors
+separate so they can be installed, reviewed, and updated without collisions.
 
 ## Why This Exists
 
@@ -24,6 +43,24 @@ Agents get better when useful workflow knowledge becomes durable:
 
 The point is not to collect every skill. The point is to keep a working stack
 that can be installed, audited, and improved without losing provenance.
+
+## How The Stack Is Organized
+
+TheAngrySkills is organized by how a skill behaves in real work, not just by who
+wrote it.
+
+| Style | What it means | Examples |
+|---|---|---|
+| Operating core | Default agent discipline: routing, checkpoints, proof, install hygiene | `ask-theangrypit`, `proof-orchestrator`, `aegis-*` |
+| Engineering workflow | Skills that shape code work, PRDs, goals, docs, or skill quality | `skill-catalog-curator`, `theangrypit-goal-authoring` |
+| Design/operator | Skills for taste, brand, visual tooling, and creative execution | `thehive-branding-agent`, `penpot-mcp-operator` |
+| Knowledge loops | Source ingest, editorial loops, research, PRD, newsletter, publishing prep | `echo-ingest-*`, `themindshift-*` |
+| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | future `openclaw-*`, `taste-*`, `vercel-*` mirrors |
+
+This matters because skill repos collide fast. Many packs eventually contain
+their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes
+and categories make it clear what is mine, what is mirrored, what is generated,
+and what is safe to install by default.
 
 ## Quickstart
 
@@ -134,6 +171,10 @@ Every PR must clear the minimum safety gate in
 [`docs/pr-safety-minimums.md`](docs/pr-safety-minimums.md).
 
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before proposing changes.
+
+Use [Discussions](https://github.com/TheAngryPit/TheAngrySkills/discussions)
+for broader questions, setup feedback, and ideas that are not yet concrete
+issues or PRs.
 
 ## Security
 

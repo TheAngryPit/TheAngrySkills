@@ -11,8 +11,8 @@ The category system exists for five practical reasons:
 - provenance: keep owned, mirrored, generated, and external material distinct
 - safety review: active scripts, plugins, MCP, hooks, and install paths need a
   different gate than docs-only skills
-- public sharing: make the repo understandable to people who are not using the
-  private Workbench
+- public sharing: make the repo understandable without requiring private local
+  context
 
 ## Core
 
@@ -36,7 +36,7 @@ Use this category when the work touches frontend taste, design tools, or visual 
 
 `skills/knowledge/` is reserved for knowledge workflow packs that are explicitly public-safe.
 
-Private source-ingest, vault, editorial, personal voice, company strategy, and publication machinery stays in the private Workbench unless Vitor explicitly approves a sanitized public rewrite. Some future public knowledge entries may be nested packs. The pack folder is an organization boundary; the nested skill frontmatter remains the install and routing name.
+Private source-ingest, vault, editorial, personal voice, company strategy, and publication machinery stays out of this public repo unless a sanitized public rewrite is reviewed and promoted. Some future public knowledge entries may be nested packs. The pack folder is an organization boundary; the nested skill frontmatter remains the install and routing name.
 
 ## Founder GTM
 
@@ -53,10 +53,9 @@ use.
 Documentation skills are generated reference packs for projects, tools,
 frameworks, and docs the operator wants available to agents.
 
-They are maintained in the private Workbench and installed from there when
-needed, not published in this public install surface. They can contain upstream
-commands, privileged examples, or unsafe text as quoted documentation. Do not
-treat them as active workflow defaults.
+They are not published in this public install surface by default. They can
+contain upstream commands, privileged examples, or unsafe text as quoted
+documentation. Do not treat them as active workflow defaults.
 
 Documentation skills are not endorsement of every upstream command they contain.
 They are a searchable reference layer for operator use and agent routing. Keep
@@ -86,12 +85,5 @@ Approved mirror prefixes include:
 - `marketing-`
 - `looper-`
 - `effective-`
-
-Cursor is intentionally excluded from this public mirror family list. Install
-Cursor skills directly from Cursor's source when needed.
-
-OpenAI and Figma remain accepted future mirror families, but they should not be
-published until their source and update path are explicit, reviewable, and
-separate from local plugin cache state.
 
 Mirror folders are created only when that source is intentionally mirrored.

@@ -46,9 +46,7 @@
       "name": "mirrors-openclaw",
       "skills": [
         "./skills/mirrors-openclaw/openclaw-agent-transcript",
-        "./skills/mirrors-openclaw/openclaw-autoreview",
         "./skills/mirrors-openclaw/openclaw-behavior-validator",
-        "./skills/mirrors-openclaw/openclaw-crabbox",
         "./skills/mirrors-openclaw/openclaw-handoff",
         "./skills/mirrors-openclaw/openclaw-session-viewer"
       ]
@@ -63,7 +61,6 @@
         "./skills/mirrors-taste/taste-gpt-taste",
         "./skills/mirrors-taste/taste-high-end-visual-design",
         "./skills/mirrors-taste/taste-image-to-code",
-        "./skills/mirrors-taste/taste-imagegen-frontend-mobile",
         "./skills/mirrors-taste/taste-imagegen-frontend-web",
         "./skills/mirrors-taste/taste-industrial-brutalist-ui",
         "./skills/mirrors-taste/taste-minimalist-ui",
@@ -74,10 +71,7 @@
     {
       "name": "mirrors-vercel-agent-skills",
       "skills": [
-        "./skills/mirrors-vercel-agent-skills/vercel-agent-deploy-to-vercel",
-        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-cli-with-tokens",
         "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-composition-patterns",
-        "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-optimize",
         "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-best-practices",
         "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-native-skills",
         "./skills/mirrors-vercel-agent-skills/vercel-agent-vercel-react-view-transitions",
@@ -116,7 +110,6 @@
         "./skills/mirrors-marketing/marketing-offers",
         "./skills/mirrors-marketing/marketing-onboarding",
         "./skills/mirrors-marketing/marketing-paywalls",
-        "./skills/mirrors-marketing/marketing-plan",
         "./skills/mirrors-marketing/marketing-popups",
         "./skills/mirrors-marketing/marketing-pricing",
         "./skills/mirrors-marketing/marketing-product-marketing",
@@ -139,7 +132,6 @@
     {
       "name": "mirrors-looper",
       "skills": [
-        "./skills/mirrors-looper/looper-looper",
         "./skills/mirrors-looper/looper-pr-takeover"
       ]
     },

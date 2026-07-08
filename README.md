@@ -9,8 +9,8 @@ more discipline than a giant prompt.
 
 This is not a universal skill registry. It is the installable public surface for
 skills I actually use, maintain, or curate. Drafts, risky experiments, generated
-docs, private reports, and raw upstream mirrors are reviewed in a private
-Workbench before anything is exported here.
+docs, raw upstream mirrors, and operator-specific material are kept out of this
+public repo unless they have been reviewed and deliberately promoted.
 
 ## The Short Version
 
@@ -97,8 +97,8 @@ Use this repo like a guided setup, not like a blind package install:
 | Install | Install the narrowest useful set | Prefer local/project scope unless global is intentional |
 | Verify | Run the skill once on a low-risk task | Promote to daily workflow only after it behaves correctly |
 
-This mirrors how the private Workbench operates: stage the procedure, show what
-will happen, confirm the risky step, then make the result durable.
+The workflow is simple: stage the procedure, show what will happen, confirm the
+risky step, then make the result durable.
 
 ## What Is Inside
 
@@ -113,35 +113,29 @@ See [`docs/skill-categories.md`](docs/skill-categories.md) for category rules.
 
 ## Mirrors And Documentation Skills
 
-Documentation skills are generated and maintained in the private Workbench, not
-published in this public install surface. They are still part of the operating
-model: when a tool or project matters, turn its docs into a searchable,
-attributed reference pack instead of forcing an agent to improvise from memory.
-Install those docs directly from the Workbench when needed.
+Documentation skills are not published here by default. They are still part of
+the operating model: when a tool or project matters, turn its docs into a
+searchable, attributed reference pack instead of forcing an agent to improvise
+from memory. Public documentation packs should be promoted deliberately, with
+clear provenance and safety review.
 
 External mirrors are different. They are curated external skills, not generated
 docs. Only selected mirror families are promoted for public install. The public
 stack should not become a blind dump of every mirrored skill from every source.
 
-Private/operator-specific packs such as internal knowledge ingestion, personal
-voice machinery, live company branding, local Codex maintenance, and private
-skillset bootstrap logic stay in the private Workbench unless a sanitized public
+Operator-specific packs, unpublished workflow experiments, private knowledge
+workflows, personal voice machinery, company/client strategy, and local
+maintenance helpers stay out of this public repo unless a sanitized public
 rewrite is reviewed and promoted deliberately.
 
 The currently accepted mirror families for public curation are:
 
 - OpenClaw skills, with `openclaw-` prefixes
 - Taste skills, with `taste-` prefixes
-- Vercel skills, with `vercel-` prefixes
 - Vercel Agent Skills, with `vercel-agent-` prefixes
 - Marketing skills, with `marketing-` prefixes
 - Looper skills, with `looper-` prefixes
 - Effective HTML skills, with `effective-` prefixes
-
-Cursor skills are intentionally excluded from this mirror set; install them
-directly from Cursor when needed. OpenAI and Figma remain accepted future mirror
-families, but they are not promoted here until their source/update path is
-explicit and reviewable.
 
 When mirrors are published here, they should:
 

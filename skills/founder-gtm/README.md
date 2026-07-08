@@ -1,17 +1,8 @@
 # Founder GTM Pack
 
-This package preserves the locally installed `founder-gtm` skills that were
-historically sourced from `cursor/plugins`.
-
-The upstream path recorded by the local inventory was:
-
-```text
-cursor/plugins :: founder-gtm/skills/<skill-name>/SKILL.md
-```
-
-The current `cursor/plugins` mirror no longer contains `founder-gtm`, so this is
-not treated as a live mirror. It is a curated local preservation pack inside the
-TheAngrySkills Workbench.
+This package preserves a curated founder-led GTM skill set for sales, outreach,
+positioning, and campaign planning. It is not treated as a live upstream mirror;
+it is a public, reviewed preservation pack with local safety rules.
 
 ## Included Skills
 
@@ -27,11 +18,9 @@ TheAngrySkills Workbench.
 
 ## Known Gap
 
-Several preserved skills reference `gtm-find-prospects`, but no local installed
-copy of that skill was found under `~/.agents/skills` or `~/.codex/skills`, and
-the current Cursor mirror does not contain the historical `founder-gtm` source.
-Treat prospect generation as missing until the source is recovered or a new
-TheAngrySkills-native replacement is explicitly designed.
+Several preserved skills reference prospect-generation workflows that are not
+published in this pack. Treat prospect generation as missing until a reviewed,
+public-safe replacement is explicitly added.
 
 ## Operating Notes
 

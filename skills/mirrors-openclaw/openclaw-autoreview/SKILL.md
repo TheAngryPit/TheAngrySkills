@@ -92,21 +92,21 @@ Choose one:
 
 ```bash
 # Project-local skill in the current repo:
-export AUTOREVIEW=".agents/mirrors/mirrors-openclaw/openclaw-autoreview/scripts/autoreview"
-export AUTOREVIEW_HARNESS=".agents/mirrors/mirrors-openclaw/openclaw-autoreview/scripts/test-review-harness"
+export AUTOREVIEW=".agents/skills/openclaw-autoreview/scripts/autoreview"
+export AUTOREVIEW_HARNESS=".agents/skills/openclaw-autoreview/scripts/test-review-harness"
 ```
 
 ```bash
 # Source checkout of openclaw/agent-skills:
-export AUTOREVIEW="mirrors/mirrors-openclaw/openclaw-autoreview/scripts/autoreview"
-export AUTOREVIEW_HARNESS="mirrors/mirrors-openclaw/openclaw-autoreview/scripts/test-review-harness"
+export AUTOREVIEW="skills/openclaw-autoreview/scripts/autoreview"
+export AUTOREVIEW_HARNESS="skills/openclaw-autoreview/scripts/test-review-harness"
 ```
 
 ```bash
 # Global skill:
 export AGENTS_HOME="${AGENTS_HOME:-$HOME/.agents}"
-export AUTOREVIEW="$AGENTS_HOME/mirrors/mirrors-openclaw/openclaw-autoreview/scripts/autoreview"
-export AUTOREVIEW_HARNESS="$AGENTS_HOME/mirrors/mirrors-openclaw/openclaw-autoreview/scripts/test-review-harness"
+export AUTOREVIEW="$AGENTS_HOME/skills/openclaw-autoreview/scripts/autoreview"
+export AUTOREVIEW_HARNESS="$AGENTS_HOME/skills/openclaw-autoreview/scripts/test-review-harness"
 ```
 
 When using Claude Code, set `AGENTS_HOME="$HOME/.claude"` for global skills. Project-local skills live under `.claude/skills/` in the current repo.

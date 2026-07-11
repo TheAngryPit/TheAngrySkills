@@ -26,13 +26,13 @@ Best-effort local-only provenance for OpenClaw PR/issue bodies. Use during agent
 ## Helper
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript --help
+skills/openclaw-agent-transcript/scripts/agent-transcript --help
 ```
 
 Find a likely local session:
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript find \
+skills/openclaw-agent-transcript/scripts/agent-transcript find \
   --query "$PR_TITLE $BRANCH_OR_PR_URL" \
   --cwd "$PWD" \
   --since-days 14
@@ -41,12 +41,12 @@ mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript find
 `find` scans the newest 400 matching local JSONL logs by default across Codex, Claude, Pi, and OpenClaw agent sessions. Use `--max-files N` for a wider local search.
 
 In a downstream repo that syncs shared skills under `.agents/skills`, replace
-`mirrors/mirrors-openclaw/openclaw-agent-transcript` with `.agents/mirrors/mirrors-openclaw/openclaw-agent-transcript`.
+`skills/openclaw-agent-transcript` with `.agents/skills/openclaw-agent-transcript`.
 
 Render a PR/issue body section:
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript render \
+skills/openclaw-agent-transcript/scripts/agent-transcript render \
   --session "$SESSION_JSONL" \
   --out /tmp/agent-transcript.md
 ```
@@ -54,7 +54,7 @@ mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript rend
 Preview one candidate session locally:
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript preview \
+skills/openclaw-agent-transcript/scripts/agent-transcript preview \
   --session "$SESSION_JSONL" \
   --out /tmp/agent-transcript-preview.html
 open /tmp/agent-transcript-preview.html
@@ -63,7 +63,7 @@ open /tmp/agent-transcript-preview.html
 Append/update a body file before `gh pr create --body-file` or connector PR creation:
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript append-body \
+skills/openclaw-agent-transcript/scripts/agent-transcript append-body \
   --body /tmp/pr-body.md \
   --session "$SESSION_JSONL" \
   --out /tmp/pr-body.with-transcript.md
@@ -84,7 +84,7 @@ mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript appe
 ## Validate
 
 ```bash
-node --test mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript.test.mjs
+node --test skills/openclaw-agent-transcript/scripts/agent-transcript.test.mjs
 ```
 
 ## Review Artifacts
@@ -92,7 +92,7 @@ node --test mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-tra
 For manual audits across many PR/session candidates, create a local HTML preview from a local JSON file. This is for maintainers only and is not part of the PR/issue workflow:
 
 ```bash
-mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript html \
+skills/openclaw-agent-transcript/scripts/agent-transcript html \
   --prs /tmp/recent-prs.json \
   --out /tmp/agent-transcript-preview.html
 ```

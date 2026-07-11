@@ -12,5 +12,5 @@ global skill-name collisions. The source-controlled mirror inventory stores
 `SKILL.md` as `SKILL.mirror.md` so native Skills CLI discovery does not
 treat the full mirror cache as the installable stack. The mirrored
 frontmatter `name` field, YAML-safe bounded `description`,
-and local `mirrors/mirrors-openclaw/<name>` path examples are intentionally rewritten;
+and installed `skills/<prefixed-name>` path examples are intentionally rewritten;
 other file contents are copied from upstream.

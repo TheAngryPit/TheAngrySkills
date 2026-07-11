@@ -775,7 +775,7 @@ test("CLI writes a one-file HTML export", async () => {
     "utf8",
   );
   await execFileAsync(process.execPath, [
-    "mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.ts",
+    "skills/openclaw-session-viewer/scripts/session-viewer.ts",
     input,
     "--out",
     output,

@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-const script = path.resolve("mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript");
+const script = path.resolve("skills/openclaw-agent-transcript/scripts/agent-transcript");
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "agent-transcript-test-"));

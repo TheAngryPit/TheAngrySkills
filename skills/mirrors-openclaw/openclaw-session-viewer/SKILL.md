@@ -12,7 +12,7 @@ Use when asked to view, export, inspect, or share a Codex, Claude Code, OpenClaw
 When the session path is not known and the `agent-transcript` skill is available, use it first to find the likely JSONL session:
 
 ```bash
-.agents/mirrors/mirrors-openclaw/openclaw-agent-transcript/scripts/agent-transcript find \
+.agents/skills/openclaw-agent-transcript/scripts/agent-transcript find \
   --query "$USER_GOAL_OR_TITLE $BRANCH_OR_URL" \
   --cwd "$PWD" \
   --since-days 14
@@ -23,19 +23,19 @@ Pick the highest-confidence `file` result, then render it with `session-viewer`.
 From a repo that has this skill:
 
 ```bash
-node mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --out /tmp/session.html --open
+node skills/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --out /tmp/session.html --open
 ```
 
 Useful modes:
 
 ```bash
-node mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --out session.html
-node mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --raw --out session.html
-node mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.ts --blank --out viewer.html --open
+node skills/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --out session.html
+node skills/openclaw-session-viewer/scripts/session-viewer.ts <session.jsonl> --raw --out session.html
+node skills/openclaw-session-viewer/scripts/session-viewer.ts --blank --out viewer.html --open
 ```
 
 In a downstream repo that syncs shared skills under `.agents/skills`, replace
-`mirrors/mirrors-openclaw/openclaw-session-viewer` with `.agents/mirrors/mirrors-openclaw/openclaw-session-viewer`.
+`skills/openclaw-session-viewer` with `.agents/skills/openclaw-session-viewer`.
 
 Defaults:
 
@@ -91,7 +91,7 @@ Importer ownership:
 Validate:
 
 ```bash
-pnpm exec tsgo -p mirrors/mirrors-openclaw/openclaw-session-viewer/tsconfig.json
-node --test mirrors/mirrors-openclaw/openclaw-session-viewer/scripts/session-viewer.test.ts
+pnpm exec tsgo -p skills/openclaw-session-viewer/tsconfig.json
+node --test skills/openclaw-session-viewer/scripts/session-viewer.test.ts
 scripts/validate-skills
 ```

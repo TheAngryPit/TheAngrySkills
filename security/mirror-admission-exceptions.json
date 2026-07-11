@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "exceptions": {
+    "openclaw-autoreview": {
+      "source_commit": "fbc765e208061abafe8cefa31f99a179201ada67",
+      "allowed_rule_ids": [
+        "bundled-script-review",
+        "executable-file",
+        "mcp-plugin-hook-install",
+        "nested-active-instructions",
+        "policy-bypass-instruction",
+        "symlink-present"
+      ],
+      "reason": "Reviewed upstream isolation and review harness; scanner flags documented isolation controls and bundled executable review surfaces."
+    },
+    "openclaw-crabbox": {
+      "source_commit": "fbc765e208061abafe8cefa31f99a179201ada67",
+      "allowed_rule_ids": [
+        "privilege-escalation"
+      ],
+      "reason": "Reviewed upstream remote-validation documentation; scanner flags explicit sudo examples that remain operator-gated."
+    }
+  }
+}

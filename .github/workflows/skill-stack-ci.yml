@@ -47,18 +47,54 @@ jobs:
 
       - name: Skill safety minimums
         run: |
-          scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json
+          scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json || true
           node <<'NODE'
           const fs = require("node:fs");
+          const path = require("node:path");
+          const { spawnSync } = require("node:child_process");
           const report = JSON.parse(fs.readFileSync("/tmp/theangryskills-security-scan.json", "utf8"));
+          const admission = JSON.parse(fs.readFileSync("security/mirror-admission-exceptions.json", "utf8"));
           const summary = report.summary || {};
           const blocking = Number(summary.blocking_skill_count || 0);
           const review = Number(summary.review_skill_count || 0);
           console.log(`security_verdict=${report.verdict}`);
           console.log(`blocking_skill_count=${blocking}`);
           console.log(`review_skill_count=${review}`);
-          if (blocking > 0) {
-            console.error("Blocking skill security findings are present. Review /tmp/theangryskills-security-scan.json.");
+
+          const blocked = (report.skills || []).filter((skill) =>
+            ["blocked_malicious", "quarantine"].includes(skill.verdict)
+          );
+          for (const skill of blocked) {
+            const exception = admission.exceptions?.[skill.name];
+            if (!exception) {
+              console.error(`Unapproved blocking skill: ${skill.name} (${skill.verdict})`);
+              process.exit(1);
+            }
+
+            const mirror = fs.readFileSync(path.join(skill.path, "MIRROR.md"), "utf8");
+            if (!mirror.includes(`Commit: ${exception.source_commit}`)) {
+              console.error(`Admission commit mismatch for ${skill.name}`);
+              process.exit(1);
+            }
+
+            const scan = spawnSync(
+              "scripts/theangry-skills.mjs",
+              ["security", "scan", skill.path, "--json"],
+              { encoding: "utf8" }
+            );
+            const detail = JSON.parse(scan.stdout);
+            const actualRules = [...new Set((detail.security_findings || []).map((finding) => finding.rule_id))].sort();
+            const allowedRules = [...exception.allowed_rule_ids].sort();
+            const unexpected = actualRules.filter((rule) => !allowedRules.includes(rule));
+            if (unexpected.length) {
+              console.error(`Unexpected security findings for ${skill.name}: ${unexpected.join(", ")}`);
+              process.exit(1);
+            }
+            console.log(`admitted_mirror=${skill.name}@${exception.source_commit}`);
+          }
+
+          if (blocked.length !== blocking) {
+            console.error(`Blocking count mismatch: summary=${blocking}, inspected=${blocked.length}`);
             process.exit(1);
           }
           if (review > 0) {

@@ -1,0 +1,120 @@
+schema_version = 1
+name = "vitor-opinionated"
+version = "2026.07.11.1"
+description = "Opinionated cost-aware routing: Luna for bounded volume, Terra for coordination, Sol for judgment, Spark for tiny mechanical work."
+
+[policy]
+availability_required = true
+lowest_sufficient_effort = true
+max_operator_only = true
+ultra_operator_only = true
+max_depth = 1
+max_threads = 3
+
+[routes.micro]
+role = "micro-coder"
+model = "gpt-5.3-codex-spark"
+effort = "medium"
+fallback_model = "gpt-5.6-luna"
+fallback_effort = "low"
+proof = "focused_check"
+
+[routes.exploration]
+role = "explorer"
+model = "gpt-5.6-luna"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "low"
+proof = "evidence_map"
+
+[routes.bounded_worker]
+role = "general-worker"
+model = "gpt-5.6-luna"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "low"
+proof = "task_contract"
+
+[routes.coordination]
+role = "coordinator"
+model = "gpt-5.6-terra"
+effort = "medium"
+fallback_model = "gpt-5.6-sol"
+fallback_effort = "low"
+proof = "integration_check"
+
+[routes.debugging]
+role = "debugger"
+model = "gpt-5.6-sol"
+effort = "low"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "medium"
+proof = "reproduction_and_fix_check"
+
+[routes.planning]
+role = "planner"
+model = "gpt-5.6-sol"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "medium"
+proof = "reviewable_plan"
+
+[routes.hard_implementation]
+role = "hard-coder"
+model = "gpt-5.6-sol"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "high"
+proof = "tests_and_supported_path"
+
+[routes.review]
+role = "reviewer"
+model = "gpt-5.6-sol"
+effort = "high"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "high"
+proof = "independent_review"
+
+[routes.audit]
+role = "auditor"
+model = "gpt-5.6-sol"
+effort = "high"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "high"
+proof = "claim_by_claim_audit"
+
+[routes.release]
+role = "release-checker"
+model = "gpt-5.6-sol"
+effort = "high"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "high"
+proof = "release_gate"
+
+[routes.memory_worker]
+role = "memory-worker"
+model = "gpt-5.6-luna"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "low"
+proof = "source_grounded_memory"
+
+[routes.memory_curator]
+role = "memory-curator"
+model = "gpt-5.6-sol"
+effort = "medium"
+fallback_model = "gpt-5.6-terra"
+fallback_effort = "medium"
+proof = "curation_review"
+
+[capabilities.web_ui]
+skills = ["managing-shadcn-typesets", "impeccable"]
+gate = "project_write_approval"
+
+[capabilities.skill_authoring]
+skills = ["skill-creator", "skill-catalog-curator"]
+gate = "source_repo_first"
+
+[capabilities.security_review]
+skills = ["security-scan", "threat-model"]
+gate = "independent_review"

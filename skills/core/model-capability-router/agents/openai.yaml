@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model Capability Router"
+  short_description: "Route tasks through an approved model preset"
+  default_prompt: "Use $model-capability-router to select a model, effort, role, capability flow, and fallback."

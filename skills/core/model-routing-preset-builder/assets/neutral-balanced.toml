@@ -1,0 +1,86 @@
+schema_version = 1
+name = "neutral-balanced"
+version = "2026.07.11.1"
+description = "Vendor-neutral template. Replace placeholder model identifiers with models proven available in the target runtime."
+
+[policy]
+availability_required = true
+lowest_sufficient_effort = true
+max_operator_only = true
+ultra_operator_only = true
+max_depth = 1
+max_threads = 3
+
+[routes.micro]
+role = "micro-worker"
+model = "fast-model"
+effort = "medium"
+fallback_model = "balanced-model"
+fallback_effort = "low"
+proof = "focused_check"
+
+[routes.exploration]
+role = "explorer"
+model = "balanced-model"
+effort = "medium"
+proof = "evidence_map"
+
+[routes.bounded_worker]
+role = "general-worker"
+model = "balanced-model"
+effort = "medium"
+proof = "task_contract"
+
+[routes.coordination]
+role = "coordinator"
+model = "coordinator-model"
+effort = "medium"
+proof = "integration_check"
+
+[routes.debugging]
+role = "debugger"
+model = "reasoning-model"
+effort = "low"
+proof = "reproduction_and_fix_check"
+
+[routes.planning]
+role = "planner"
+model = "reasoning-model"
+effort = "medium"
+proof = "reviewable_plan"
+
+[routes.hard_implementation]
+role = "hard-coder"
+model = "reasoning-model"
+effort = "medium"
+proof = "tests_and_supported_path"
+
+[routes.review]
+role = "reviewer"
+model = "reasoning-model"
+effort = "high"
+proof = "independent_review"
+
+[routes.audit]
+role = "auditor"
+model = "reasoning-model"
+effort = "high"
+proof = "claim_by_claim_audit"
+
+[routes.release]
+role = "release-checker"
+model = "reasoning-model"
+effort = "high"
+proof = "release_gate"
+
+[routes.memory_worker]
+role = "memory-worker"
+model = "balanced-model"
+effort = "medium"
+proof = "source_grounded_memory"
+
+[routes.memory_curator]
+role = "memory-curator"
+model = "reasoning-model"
+effort = "medium"
+proof = "curation_review"

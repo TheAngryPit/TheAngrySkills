@@ -20,6 +20,8 @@ This is my agent operating stack:
 - **proof discipline** so "done" means something specific
 - **skill hygiene** so useful workflows become reusable capability instead of
   one-off conversation residue
+- **model and capability routing** through portable, availability-aware presets
+  instead of hard-coded model choices scattered across prompts
 - **design operators** for frontend, visual systems, Penpot, and
   Illustrator-style work
 - **curated external mirrors** when outside skills are useful but need prefixes,
@@ -50,6 +52,7 @@ wrote it.
 | Style | What it means | Examples |
 |---|---|---|
 | Operating core | Default agent discipline: checkpoints, proof, install hygiene | `proof-orchestrator`, `aegis-*` |
+| Model routing | Build or apply portable model, effort, role, capability, and fallback policy | `model-routing-preset-builder`, `model-capability-router` |
 | Engineering workflow | Skills that shape code work, docs, or skill quality | `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
 | Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
 | Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*` |
@@ -84,6 +87,16 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-c
 ```bash
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-catalog-curator -g -a codex
 ```
+
+### 4. Use or customize my model-routing preset
+
+Install `model-capability-router` to use the included `vitor-opinionated`
+preset, or install `model-routing-preset-builder` to clone and adapt it to the
+models, usage budget, capabilities, and proof bar available in your own setup.
+The preset uses Spark for tiny work, Luna for bounded workers, Terra for
+coordination, and Sol for planning and review. When Spark is unavailable, its
+declared fallback is Luna Light (`low` in TOML). Runtime availability always
+outranks the example, and `max` or `ultra` remain explicit operator decisions.
 
 ## Wizard-Style Install Discipline
 

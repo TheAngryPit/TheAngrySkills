@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model Routing Preset Builder"
+  short_description: "Build a portable model routing preset"
+  default_prompt: "Use $model-routing-preset-builder to create or customize a model routing preset."

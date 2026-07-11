@@ -1,0 +1,20 @@
+{
+  "scenario": "Build and apply an opinionated portable model and capability routing preset",
+  "red": {
+    "model": "gpt-5.6-luna medium",
+    "observed_failures": [
+      "used Luna medium instead of the requested Spark fallback to Luna Light",
+      "omitted coordination, hard implementation, memory worker, and memory curator routes",
+      "combined model and effort into invented identifiers instead of valid TOML fields"
+    ]
+  },
+  "green": {
+    "automated_proof": [
+      "all twelve required routes validate",
+      "Spark unavailability resolves to gpt-5.6-luna with low effort",
+      "unknown model availability blocks",
+      "missing required capabilities block",
+      "inventory reads canonical frontmatter names"
+    ]
+  }
+}

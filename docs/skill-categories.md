@@ -16,7 +16,12 @@ The category system exists for five practical reasons:
 
 ## Core
 
-`skills/core/` contains the public-safe TheAngryPit workflow layer. These skills structure long execution, manage proof, keep communication disciplined, and preserve install hygiene.
+`skills/core/` contains the public-safe TheAngryPit workflow layer. These skills structure long execution, manage proof, keep communication disciplined, preserve install hygiene, and route models or capabilities through explicit presets.
+
+`model-routing-preset-builder` creates or adapts portable routing policy.
+`model-capability-router` applies an approved preset against current model and
+skill availability. The bundled `vitor-opinionated` preset is usable as-is or
+as a documented starting point; it is not silently adopted as user policy.
 
 Use this category when setting up a normal Codex machine or project workflow.
 

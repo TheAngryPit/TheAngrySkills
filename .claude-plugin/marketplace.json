@@ -9,6 +9,8 @@
         "./skills/core/karpathy-agentic-guidelines-full",
         "./skills/core/karpathy-agentic-guidelines-q8",
         "./skills/core/linear-workflow-router",
+        "./skills/core/model-capability-router",
+        "./skills/core/model-routing-preset-builder",
         "./skills/core/proof-orchestrator",
         "./skills/core/skill-catalog-curator"
       ]

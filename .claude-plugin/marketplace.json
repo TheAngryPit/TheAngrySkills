@@ -46,7 +46,9 @@
       "name": "mirrors-openclaw",
       "skills": [
         "./skills/mirrors-openclaw/openclaw-agent-transcript",
+        "./skills/mirrors-openclaw/openclaw-autoreview",
         "./skills/mirrors-openclaw/openclaw-behavior-validator",
+        "./skills/mirrors-openclaw/openclaw-crabbox",
         "./skills/mirrors-openclaw/openclaw-handoff",
         "./skills/mirrors-openclaw/openclaw-session-viewer"
       ]

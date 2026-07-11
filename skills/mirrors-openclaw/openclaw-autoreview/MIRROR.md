@@ -1,9 +1,9 @@
 # openclaw/agent-skills Skill Mirror
 
-Mirrored skill: behavior-validator
-Published skill: openclaw-behavior-validator
+Mirrored skill: autoreview
+Published skill: openclaw-autoreview
 Source: https://github.com/openclaw/agent-skills.git
-Source path: skills/behavior-validator
+Source path: skills/autoreview
 Branch: main
 Commit: fbc765e208061abafe8cefa31f99a179201ada67
 

@@ -1,9 +1,9 @@
 # openclaw/agent-skills Skill Mirror
 
-Mirrored skill: behavior-validator
-Published skill: openclaw-behavior-validator
+Mirrored skill: crabbox
+Published skill: openclaw-crabbox
 Source: https://github.com/openclaw/agent-skills.git
-Source path: skills/behavior-validator
+Source path: skills/crabbox
 Branch: main
 Commit: fbc765e208061abafe8cefa31f99a179201ada67
 

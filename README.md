@@ -55,7 +55,7 @@ wrote it.
 | Model routing | Build or apply portable model, effort, role, capability, and fallback policy | `model-routing-preset-builder`, `model-capability-router` |
 | Engineering workflow | Skills that shape code work, docs, or skill quality | `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
 | Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
-| Curated mirrors | External skills kept source-prefixed so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*` |
+| Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
 their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes
@@ -86,6 +86,12 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-c
 
 ```bash
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill skill-catalog-curator -g -a codex
+```
+
+Install the HyperFrames router only:
+
+```bash
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperframes
 ```
 
 ### 4. Use or customize my model-routing preset
@@ -149,10 +155,11 @@ The currently accepted mirror families for public curation are:
 - Marketing skills, with `marketing-` prefixes
 - Looper skills, with `looper-` prefixes
 - Effective HTML skills, with `effective-` prefixes
+- HyperFrames by HeyGen skills, preserving natural names and using `hyperframes-` for generic names
 
 When mirrors are published here, they should:
 
-- keep source-specific prefixes such as `openclaw-`, `taste-`, or `vercel-`
+- keep source-specific prefixes such as `openclaw-`, `taste-`, `vercel-`, or `hyperframes-`
 - preserve upstream README, license, copyright, and notices
 - avoid mixing owned TheAngrySkills workflow logic into upstream material
 - stay clearly marked as curated mirrors, not original work

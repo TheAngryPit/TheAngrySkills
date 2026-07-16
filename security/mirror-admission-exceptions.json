@@ -19,6 +19,59 @@
         "privilege-escalation"
       ],
       "reason": "Reviewed upstream remote-validation documentation; scanner flags explicit sudo examples that remain operator-gated."
+    },
+    "hyperframes-core": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": ["concealment-instruction"],
+      "reason": "Reviewed upstream workflow guidance at the pinned mirror commit."
+    },
+    "hyperframes-embedded-captions": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": [
+        "bundled-script-review",
+        "executable-file",
+        "inline-runtime-exec",
+        "privilege-escalation"
+      ],
+      "reason": "Reviewed bundled caption scripts and explicit runtime commands at the pinned mirror commit."
+    },
+    "hyperframes-figma": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": [
+        "bundled-script-review",
+        "concealment-instruction"
+      ],
+      "reason": "Reviewed upstream Figma integration guidance at the pinned mirror commit."
+    },
+    "hyperframes-media-use": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": [
+        "bundled-script-review",
+        "executable-file",
+        "global-package-install",
+        "remote-download-exec"
+      ],
+      "reason": "Reviewed bundled media helpers and installer guidance at the pinned mirror commit."
+    },
+    "hyperframes-website-to-video": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": [
+        "broad-filesystem-scan",
+        "bundled-script-review",
+        "concealment-instruction",
+        "inline-runtime-exec"
+      ],
+      "reason": "Reviewed website capture workflow and bundled scripts at the pinned mirror commit."
+    },
+    "remotion-to-hyperframes": {
+      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "allowed_rule_ids": [
+        "bundled-script-review",
+        "dependency-manifest-surface",
+        "executable-file",
+        "inline-runtime-exec"
+      ],
+      "reason": "Reviewed Remotion conversion scripts and dependency manifest at the pinned mirror commit."
     }
   }
 }

@@ -38,6 +38,10 @@ jobs:
       - name: Syntax check scripts
         run: |
           node --check scripts/theangry-skills.mjs
+          node --check scripts/sync-hyperframes-mirror.mjs
+
+      - name: Validate HyperFrames mirror invariants
+        run: node scripts/sync-hyperframes-mirror.mjs --check
 
       - name: Run tests
         run: python -m pytest -q tests

@@ -146,6 +146,31 @@
         "./skills/mirrors-effective-html/effective-html-diagram",
         "./skills/mirrors-effective-html/effective-html-plan"
       ]
+    },
+    {
+      "name": "mirrors-hyperframes",
+      "skills": [
+        "./skills/mirrors-hyperframes/hyperframes",
+        "./skills/mirrors-hyperframes/hyperframes-animation",
+        "./skills/mirrors-hyperframes/hyperframes-cli",
+        "./skills/mirrors-hyperframes/hyperframes-core",
+        "./skills/mirrors-hyperframes/hyperframes-creative",
+        "./skills/mirrors-hyperframes/hyperframes-embedded-captions",
+        "./skills/mirrors-hyperframes/hyperframes-faceless-explainer",
+        "./skills/mirrors-hyperframes/hyperframes-figma",
+        "./skills/mirrors-hyperframes/hyperframes-general-video",
+        "./skills/mirrors-hyperframes/hyperframes-keyframes",
+        "./skills/mirrors-hyperframes/hyperframes-media-use",
+        "./skills/mirrors-hyperframes/hyperframes-motion-graphics",
+        "./skills/mirrors-hyperframes/hyperframes-music-to-video",
+        "./skills/mirrors-hyperframes/hyperframes-pr-to-video",
+        "./skills/mirrors-hyperframes/hyperframes-product-launch-video",
+        "./skills/mirrors-hyperframes/hyperframes-registry",
+        "./skills/mirrors-hyperframes/hyperframes-slideshow",
+        "./skills/mirrors-hyperframes/hyperframes-talking-head-recut",
+        "./skills/mirrors-hyperframes/hyperframes-website-to-video",
+        "./skills/mirrors-hyperframes/remotion-to-hyperframes"
+      ]
     }
   ]
 }

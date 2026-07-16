@@ -1,0 +1,115 @@
+name: Sync HyperFrames Mirror
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 5 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-hyperframes-mirror
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Refresh reviewed HyperFrames mirror
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned test runner
+        run: python -m pip install --disable-pip-version-check pytest==9.1.1
+
+      - name: Refresh mirror from upstream
+        run: node scripts/sync-hyperframes-mirror.mjs
+
+      - name: Validate generated mirror and catalog
+        run: |
+          node --check scripts/sync-hyperframes-mirror.mjs
+          node scripts/sync-hyperframes-mirror.mjs --check
+          python -m pytest -q tests
+          scripts/theangry-skills.mjs check --root skills --profile shared
+
+      - name: Report security admission gates
+        run: |
+          scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json || true
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const report = JSON.parse(fs.readFileSync("/tmp/theangryskills-security-scan.json", "utf8"));
+          const admission = JSON.parse(fs.readFileSync("security/mirror-admission-exceptions.json", "utf8"));
+          const blocked = (report.skills || []).filter((skill) =>
+            skill.path.includes("skills/mirrors-hyperframes/") &&
+            ["blocked_malicious", "quarantine"].includes(skill.verdict)
+          );
+          const failures = [];
+          for (const skill of blocked) {
+            const exception = admission.exceptions?.[skill.name];
+            if (!exception) {
+              failures.push(`${skill.name}: no reviewed admission exception`);
+              continue;
+            }
+            const mirror = fs.readFileSync(path.join(skill.path, "MIRROR.md"), "utf8");
+            if (!mirror.includes(`Commit: ${exception.source_commit}`)) {
+              failures.push(`${skill.name}: source commit changed; human re-review required`);
+            }
+          }
+          if (failures.length) {
+            const summary = [
+              "## HyperFrames security review required",
+              "",
+              ...failures.map((failure) => `- ${failure}`),
+              "",
+              "The refresh PR will still be opened. The normal Skill stack CI remains fail-closed and must pass before merge.",
+            ].join("\n");
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
+            console.warn(failures.join("\n"));
+          } else {
+            console.log(`hyperframes_security_admission current blocked=${blocked.length}`);
+          }
+          NODE
+
+      - name: Open or update mirror refresh PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No HyperFrames mirror changes."
+            exit 0
+          fi
+
+          branch="automation/hyperframes-mirror"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch" || true
+          git switch -C "$branch"
+          git add .claude-plugin/marketplace.json skills/mirrors-hyperframes
+          git commit -m "Refresh HyperFrames skill mirror"
+          git push --force-with-lease origin "HEAD:$branch"
+
+          if gh pr view "$branch" --json number >/dev/null 2>&1; then
+            gh pr edit "$branch" --title "Refresh HyperFrames skill mirror"
+          else
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Refresh HyperFrames skill mirror" \
+              --body "Automated upstream refresh from heygen-com/hyperframes. Review the source diff, rewritten paths, executable scripts, and security admission before merge."
+          fi

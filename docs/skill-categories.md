@@ -90,5 +90,10 @@ Approved mirror prefixes include:
 - `marketing-`
 - `looper-`
 - `effective-`
+- `hyperframes-`
+
+An upstream name that is already product-namespaced may remain unchanged. The
+HyperFrames mirror preserves `hyperframes`, existing `hyperframes-*` names, and
+`remotion-to-hyperframes`; generic siblings receive the `hyperframes-` namespace.
 
 Mirror folders are created only when that source is intentionally mirrored.

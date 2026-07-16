@@ -22,7 +22,8 @@ const MARKETPLACE = path.join(REPO_ROOT, ".claude-plugin", "marketplace.json");
 const SOURCE_URL = "https://github.com/heygen-com/hyperframes.git";
 const PUBLIC_SOURCE = "https://github.com/TheAngryPit/TheAngrySkills.git";
 const PREFIX = "hyperframes-";
-const MAX_DESCRIPTION_CHARS = 1024;
+// Leave room for parser normalization differences between local and CI checkouts.
+const MAX_DESCRIPTION_CHARS = 980;
 const CORE_SOURCE_NAMES = [
   "hyperframes",
   "hyperframes-animation",
@@ -105,6 +106,22 @@ function normalizeDescription(text) {
   }
   lines.splice(index, end - index, `description: ${JSON.stringify(description)}`);
   return text.replace(match[1], lines.join(newline));
+}
+
+function normalizeMetadata(text) {
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  if (!match) return text;
+  const newline = text.startsWith("---\r\n") ? "\r\n" : "\n";
+  let frontmatter = match[1]
+    .replace(
+      /^metadata:\s*\{\s*"tags":\s*"([^"]*)"\s*\}\s*$/m,
+      `metadata:${newline}  tags: $1`,
+    )
+    .replace(
+      /^metadata:\s*\r?\n\s*\{\s*\r?\n\s*"tags":\s*"([^"]*)",?\s*\r?\n\s*\}\s*$/m,
+      `metadata:${newline}  tags: $1`,
+    );
+  return text.replace(match[1], frontmatter);
 }
 
 function skillsAddCommand(publishedNames) {
@@ -205,7 +222,7 @@ Do not run the HyperFrames CLI's skill install, check, or update commands from t
       .replace(new RegExp(`\`${escaped}\\s+skill\``, "gi"), `\`${published} skill\``)
       .replace(new RegExp(`\`${escaped}\`(?=\\s+skill\\b)`, "gi"), `\`${published}\``);
   }
-  return relativePath === "SKILL.md" ? normalizeDescription(result) : result;
+  return relativePath === "SKILL.md" ? normalizeMetadata(normalizeDescription(result)) : result;
 }
 
 function walkFiles(root) {

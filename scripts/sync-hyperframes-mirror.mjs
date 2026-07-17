@@ -188,6 +188,32 @@ function rewriteUpdateCommands(text, names) {
 
 function rewriteText(text, ownerSourceName, relativePath, names) {
   let result = rewriteUpdateCommands(text, names);
+  if (
+    ownerSourceName === "hyperframes-animation" &&
+    relativePath === "scripts/animation-map.test.mjs"
+  ) {
+    result = result.replace(
+      'resolve(dirname(fileURLToPath(import.meta.url)), "../../..")',
+      'resolve(dirname(fileURLToPath(import.meta.url)), "../../../..")',
+    ).replace(
+      /join\(REPO_ROOT, "skills", "hyperframes-(animation|creative)"/g,
+      'join(REPO_ROOT, "skills", "mirrors-hyperframes", "hyperframes-$1"',
+    );
+  }
+  if (
+    ownerSourceName === "media-use" &&
+    relativePath === "scripts/lib/bundled-sfx-provider.test.mjs"
+  ) {
+    result = result
+      .replace(
+        "    assert.match(health.fix, /hyperframes skills update media-use/);\n",
+        "",
+      )
+      .replace(
+        "        assert.match(error.message, /hyperframes skills update media-use/);",
+        "        assert.ok(error.message.includes(BUNDLED_SFX_RECOVERY_COMMAND));",
+      );
+  }
   if (ownerSourceName === "hyperframes" && relativePath === "SKILL.md") {
     const fullPack = skillsAddCommand(names.map(publishedName));
     const maintenance = `## Keeping skills current
@@ -306,6 +332,7 @@ function validateMirror(sourceNames) {
       const text = readFileSync(file, "utf8");
       const relative = path.relative(REPO_ROOT, file);
       if (/npx hyperframes skills update/.test(text)) failures.push(`${relative}: upstream self-update command`);
+      if (/hyperframes skills update/.test(text)) failures.push(`${relative}: stale upstream update assertion`);
       if (/npx hyperframes skills(?:\s|`|$)/.test(text)) failures.push(`${relative}: upstream skill manager command`);
       if (/npx skills add (?:https:\/\/github\.com\/)?heygen-com\/hyperframes/.test(text)) {
         failures.push(`${relative}: direct upstream skill install`);
@@ -314,6 +341,16 @@ function validateMirror(sourceNames) {
         failures.push(`${relative}: init can reinstall upstream skills`);
       }
       if (genericPattern && unresolvedPath.test(text)) failures.push(`${relative}: unresolved unprefixed sibling path`);
+      if (
+        directory === "hyperframes-animation" &&
+        path.relative(skillRoot, file) === "scripts/animation-map.test.mjs" &&
+        (
+          text.includes('resolve(dirname(fileURLToPath(import.meta.url)), "../../..")') ||
+          !text.includes('join(REPO_ROOT, "skills", "mirrors-hyperframes"')
+        )
+      ) {
+        failures.push(`${relative}: source-relative repository root`);
+      }
     }
   }
 

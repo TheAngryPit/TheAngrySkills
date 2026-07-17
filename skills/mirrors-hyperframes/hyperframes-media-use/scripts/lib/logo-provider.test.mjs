@@ -30,7 +30,7 @@ test("titleMatches ignores case, spacing, punctuation — and rejects lookalikes
 test("svgl queries include the alias forms the raw entity can't match", () => {
   assert.ok(svglQueriesFor("nextjs").includes("next.js"));
   assert.ok(svglQueriesFor("aws").includes("amazon web services"));
-  assert.deepEqual(svglQueriesFor("hyperframes-figma"), ["hyperframes-figma"]);
+  assert.deepEqual(svglQueriesFor("figma"), ["figma"]);
 });
 
 test("simple-icons slugs cover the renamed entries", () => {
@@ -61,10 +61,10 @@ const bin = (n) => new Response(new Uint8Array(n), { status: 200 });
 
 test("svglSearch returns the descriptor shape on an exact title hit", async (t) => {
   t.mock.method(globalThis, "fetch", async () =>
-    json([{ title: "Figma", route: "https://svgl.app/library/hyperframes-figma.svg" }]),
+    json([{ title: "Figma", route: "https://svgl.app/library/figma.svg" }]),
   );
   const res = await svglSearch("Figma logo", {});
-  assert.equal(res.url, "https://svgl.app/library/hyperframes-figma.svg");
+  assert.equal(res.url, "https://svgl.app/library/figma.svg");
   assert.equal(res.ext, ".svg");
   assert.equal(res.metadata.provider, "svgl");
 });

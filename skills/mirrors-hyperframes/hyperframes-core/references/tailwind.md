@@ -4,7 +4,7 @@ HyperFrames `init --tailwind` uses the Tailwind browser runtime pinned by the sc
 
 ## When To Use
 
-- The project was scaffolded with `HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init --tailwind`.
+- The project was scaffolded with `npx hyperframes init --tailwind`.
 - `index.html` contains `window.__tailwindReady`.
 - The task asks for Tailwind utility classes, `@theme`, custom utilities, or v3-to-v4 fixes in a composition.
 - Rendered frames have missing Tailwind styles or frame-0 flashes.
@@ -114,7 +114,7 @@ npx hyperframes render . --workers 1 --quality draft --output tailwind-proof.mp4
 
 When Tailwind styles don't apply in a render, check in order:
 
-1. Project scaffolded with `HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init --tailwind`?
+1. Project scaffolded with `npx hyperframes init --tailwind`?
 2. `index.html` `<head>` has `<script src="…@tailwindcss/browser@4.2.4…">` (not `cdn.tailwindcss.com`)?
 3. `window.__tailwindReady` Promise present in `<head>`?
 4. No v3 directives (`@tailwind base/components/utilities`) in the file?

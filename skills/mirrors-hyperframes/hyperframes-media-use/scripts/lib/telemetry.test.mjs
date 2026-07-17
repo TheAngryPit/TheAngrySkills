@@ -272,7 +272,7 @@ test("first run notice prints to stderr once and never stdout", async () => {
     await track("media_use_resolve", { type: "sfx" });
 
     assert.equal(stderr.length, 1);
-    assert.match(stderr[0], /hyperframes-media-use sends usage telemetry/);
+    assert.match(stderr[0], /media-use sends usage telemetry/);
     assert.equal(stdout.length, 0);
     // notice-shown lives in the shared config (config.telemetryNoticeShown), so
     // the CLI and media-use show it once per person — not a media-use-only marker.

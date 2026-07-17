@@ -168,7 +168,6 @@
         "./skills/mirrors-hyperframes/hyperframes-registry",
         "./skills/mirrors-hyperframes/hyperframes-slideshow",
         "./skills/mirrors-hyperframes/hyperframes-talking-head-recut",
-        "./skills/mirrors-hyperframes/hyperframes-website-to-video",
         "./skills/mirrors-hyperframes/remotion-to-hyperframes"
       ]
     }

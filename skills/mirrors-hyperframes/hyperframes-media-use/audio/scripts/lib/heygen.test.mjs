@@ -32,7 +32,7 @@ test("heygenAuthHeaders does not tag API-key requests as CLI traffic, but still 
     // every media-use call (any auth type) so the backend can isolate media-use.
     assert.deepEqual(heygenAuthHeaders(), {
       "X-Api-Key": "hg_test",
-      "X-HeyGen-Client-Source": "hyperframes-media-use",
+      "X-HeyGen-Client-Source": "media-use",
     });
   });
 });
@@ -54,7 +54,7 @@ test("heygenAuthHeaders tags OAuth requests as CLI traffic and with the media-us
       assert.deepEqual(heygenAuthHeaders(), {
         Authorization: "Bearer at_test",
         "X-HeyGen-Source": "cli",
-        "X-HeyGen-Client-Source": "hyperframes-media-use",
+        "X-HeyGen-Client-Source": "media-use",
       });
     } finally {
       rmSync(dir, { recursive: true, force: true });

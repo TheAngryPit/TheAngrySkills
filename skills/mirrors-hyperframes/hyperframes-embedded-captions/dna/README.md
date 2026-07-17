@@ -14,7 +14,7 @@ shallow presets — every render is already fitted to its footage.
 Every classic DNA's **home is Cinematic (column)** — that is where all ten were
 built and validated. (Standard/rail mode was retired 2026-06-12; the verbatim-rail
 need is served by the `anchor` theme. The old rail combos live in
-`~/Downloads/hyperframes-embedded-captions-archive/`.)
+`~/Downloads/embedded-captions-archive/`.)
 
 ## The ten
 

@@ -17,7 +17,7 @@ Not fully anonymous by design; pseudonymous before sign-in, account-linked after
 
 ## Event catalog (verified present in-project)
 
-Every event carries `surface: "hyperframes-media-use"`. Event **properties are coarse** —
+Every event carries `surface: "media-use"`. Event **properties are coarse** —
 never intent text, file names, or paths.
 
 | Event                                                                  | Fires on                                  | Key properties                                                         |

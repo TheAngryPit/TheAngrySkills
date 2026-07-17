@@ -45,18 +45,30 @@
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { hyperframesPackageSpec, importPackagesOrBootstrap } from "./package-loader.mjs";
+import {
+  bundleCompositionForCapture,
+  hyperframesPackageSpec,
+  importPackagesOrBootstrap,
+  initializeSessionWithRetry,
+} from "./package-loader.mjs";
 
-// Use the producer's file server — it auto-injects the HyperFrames runtime
-// and render-seek bridge, so raw authoring HTML works without a build step.
-const packages = await importPackagesOrBootstrap(["@hyperframes/producer", "sharp"], {
-  npmPackages: [hyperframesPackageSpec("@hyperframes/producer"), "sharp@0.34.5"],
-});
+// Bundle first so mounted sub-compositions are inlined before the producer's
+// file server injects the HyperFrames runtime and render-seek bridge.
+const packages = await importPackagesOrBootstrap(
+  ["@hyperframes/producer", "@hyperframes/core", "@hyperframes/core/compiler", "sharp"],
+  {
+    npmPackages: [
+      hyperframesPackageSpec("@hyperframes/producer"),
+      hyperframesPackageSpec("@hyperframes/core"),
+      "sharp@0.34.5",
+    ],
+  },
+);
 const sharp = packages.sharp.default;
+const { parseFps } = packages["@hyperframes/core"];
 const {
   createFileServer,
   createCaptureSession,
-  initializeSession,
   closeCaptureSession,
   captureFrameToBuffer,
   getCompositionDuration,
@@ -71,23 +83,39 @@ const SAMPLES = Number(args.samples ?? 10);
 const OUT_DIR = resolve(args.out ?? ".hyperframes/contrast");
 const WIDTH = Number(args.width ?? 1920);
 const HEIGHT = Number(args.height ?? 1080);
-const FPS = Number(args.fps ?? 30);
+const parsedFps = parseFps(args.fps ?? 30);
+if (!parsedFps.ok) die(`Invalid --fps "${args.fps ?? ""}": ${parsedFps.reason}`);
+const FPS = parsedFps.value;
 const COMP_DIR = resolve(args.composition);
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 await mkdir(OUT_DIR, { recursive: true });
 
-const server = await createFileServer({ projectDir: COMP_DIR, port: 0 });
-const session = await createCaptureSession(
-  server.url,
-  OUT_DIR,
-  { width: WIDTH, height: HEIGHT, fps: FPS, format: "png" },
-  null,
-);
-await initializeSession(session);
-
+const bundle = await bundleCompositionForCapture(packages["@hyperframes/core/compiler"], COMP_DIR);
+let server;
+let session;
 try {
+  server = await createFileServer({
+    projectDir: COMP_DIR,
+    compiledDir: bundle.compiledDir,
+    port: 0,
+  });
+  // Canonical transient-init retry/cleanup (mirrors the render pipeline's
+  // probeStage) — same reasoning as animation-map.mjs: don't false-fail a
+  // valid modular project whose sub-composition timelines land a beat late.
+  session = await initializeSessionWithRetry(
+    packages["@hyperframes/producer"],
+    () =>
+      createCaptureSession(
+        server.url,
+        OUT_DIR,
+        { width: WIDTH, height: HEIGHT, fps: FPS, format: "png" },
+        null,
+      ),
+    { log: (message) => console.error(`contrast-report: ${message}`) },
+  );
+
   const duration = await getCompositionDuration(session);
   const times = Array.from(
     { length: SAMPLES },
@@ -135,8 +163,9 @@ try {
   printSummary(report);
   process.exitCode = report.summary.failAA > 0 ? 1 : 0;
 } finally {
-  await closeCaptureSession(session).catch(() => {});
-  server.close();
+  if (session) await closeCaptureSession(session).catch(() => {});
+  server?.close();
+  bundle.cleanup();
 }
 
 // ─── DOM probe + text-hide (runs in the page) ────────────────────────────────

@@ -39,7 +39,7 @@ For public or user-facing generated projects, make this wrapper the root `index.
       as custom elements — no import map needed.
     -->
     <script src="../../../packages/player/dist/hyperframes-player.global.js"></script>
-    <script src="../../../packages/player/dist/hyperframes-slideshow/hyperframes-slideshow.global.js"></script>
+    <script src="../../../packages/player/dist/slideshow/hyperframes-slideshow.global.js"></script>
 
     <style>
       *,

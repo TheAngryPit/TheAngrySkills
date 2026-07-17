@@ -309,7 +309,7 @@ Step 3 only TAGS the candidate id and writes the shaped VO. Step 4 (visual desig
 2. Use only filenames listed there; write as `assets/<basename>`.
 3. One line, candidates separated by semicolons, a short description after `—`.
 4. Prefer `[video]` assets when motion proves the product better than a still.
-5. Use content assets (UI, screenshots, product photos, charts, demos). Skip tiny icons, favicons, badges, decorative chrome, repeated logo variants — unless the beat needs them. Partner / third-party logos come from `/hyperframes-media-use` (`resolve --type logo --entity <brand>`) — never redrawn by hand.
+5. Use content assets (UI, screenshots, product photos, charts, demos). Skip tiny icons, favicons, badges, decorative chrome, repeated logo variants — unless the beat needs them. Partner / third-party logos come from `/media-use` (`resolve --type logo --entity <brand>`) — never redrawn by hand.
 6. Pure-typography beats may use an empty asset list. Do not use nested lists.
 
 Example:
@@ -331,6 +331,13 @@ The five registry types:
 - **`squeeze`** — outgoing compresses to a line on one edge as incoming expands from the other; a snappy, mechanical beat change.
 
 Pick a small set and repeat them: default to `crossfade` (or `blur-crossfade` when the backgrounds clash), and reach for `zoom-through` at section boundaries. Frame 1's `transition_in` is a placeholder.
+
+## Music & silence
+
+The storyboard's top YAML block carries a `music:` field — the BGM mood the audio step retrieves against (e.g. `music: confident minimal tech underscore`). Omitting it falls back to `message:` → `arc:` → a neutral default, so BGM plays unless turned off explicitly.
+
+- **`music: none`** — BGM off (narration, if any, still runs).
+- **`music: none` + no `SCRIPT.md`** — the canonical **fully-silent marker**: no narration, no BGM, no SFX. `audio.mjs` generates nothing and Step 3.1 is a clean skip. Use exactly this spelling when the user asks for a silent / music-free video.
 
 ## Frame template
 

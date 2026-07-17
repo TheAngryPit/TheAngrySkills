@@ -35,8 +35,21 @@ import {
   flushHeygenFailureTracking,
   versionLessThan,
 } from "./lib/heygen-cli.mjs";
+import { BundledSfxAssetsError, inspectBundledSfxAssets } from "./lib/bundled-sfx-provider.mjs";
 
-const INGEST_TYPES = [...listTypes(), "video"];
+const INGEST_TYPES = listTypes();
+const DEFAULT_EXT = {
+  bgm: ".wav",
+  sfx: ".mp3",
+  voice: ".wav",
+  image: ".jpg",
+  icon: ".svg",
+  logo: ".svg",
+  brand: ".png",
+  video: ".mp4",
+  grade: ".cube",
+  lut: ".cube",
+};
 
 // resolve shells `fetch`/`freezeUrl` and modern ESM; 18 is the floor where those
 // exist without flags. Named so the --doctor node check verifies something real
@@ -61,6 +74,8 @@ const { values: args } = parseArgs({
     for: { type: "string" },
     "local-only": { type: "boolean", default: false },
     provider: { type: "string" },
+    "avatar-id": { type: "string" },
+    "voice-id": { type: "string" },
     json: { type: "boolean", default: false },
     help: { type: "boolean", short: "h", default: false },
   },
@@ -95,6 +110,8 @@ Options:
                   suggestions (grade only)
   --local-only    Offline: skip every network provider
   --provider      Force one generator (e.g. codex, mflux, kokoro, heygen)
+  --avatar-id     Override the default avatar for heygen.video generation
+  --voice-id      Override the default voice for voice/heygen.video generation
   --json          Output JSON instead of one-line result
   --help, -h      Show this help`);
   process.exit(0);
@@ -172,6 +189,32 @@ if (args.reuse !== undefined) {
 if (args.from) {
   await ingest(args.from);
   process.exit(0);
+}
+
+// Recipes: folder-based named bundles resolved by entity name — no providers,
+// no content hashing (an evolving versioned bundle, not an immutable file).
+// Delegates to lib/recipe-store.mjs the way grade/lut delegate to resolveColor;
+// freeze/list live in scripts/recipe.mjs.
+if (type === "recipe") {
+  const { useRecipe } = await import("./lib/recipe-store.mjs");
+  const name = (entity || intent || "").trim();
+  if (!name) exitError("--type recipe needs --entity <name> (or --intent <name>)", 2);
+  try {
+    const used = useRecipe({ projectDir, name });
+    if (args.json) {
+      console.log(JSON.stringify({ ok: true, ...used }));
+    } else {
+      console.log(
+        `resolved recipe ${used.recipe.name} (v${used.recipe.version}, ${used.recipe.workflow})`,
+      );
+      console.log(`  frame spec → ${used.frameSpecPath} (copied over)`);
+      console.log(`  storyboard skeleton → ${used.skeletonPath}`);
+      if (used.briefSkeletonPath) console.log(`  brief skeleton → ${used.briefSkeletonPath}`);
+    }
+    process.exit(0);
+  } catch (err) {
+    exitError(err.message, 1);
+  }
 }
 
 if (args.params !== undefined) {
@@ -315,7 +358,14 @@ async function run() {
   // Offline guard: --local-only skips every remote provider (HeyGen catalog),
   // leaving the project + global cache and any local provider.
   const localOnly = args["local-only"];
-  const ctx = { entity, projectDir, localOnly, provider: args.provider };
+  const ctx = {
+    entity,
+    projectDir,
+    localOnly,
+    provider: args.provider,
+    avatarId: args["avatar-id"],
+    voiceId: args["voice-id"],
+  };
 
   // Adherence nudge (offline, no auto-reuse): the exact-cache floor missed and
   // we're about to fetch/generate. If lexically-similar assets already exist,
@@ -339,9 +389,11 @@ async function run() {
 
   // 3. provider search — registry tries providers in order (heygen-CLI first)
   let searchResult = null;
+  let providerFailure = null;
   try {
     searchResult = await runCapability(type, "search", intent, ctx);
-  } catch {
+  } catch (error) {
+    providerFailure = error;
     // search failed, try generate
   }
 
@@ -349,7 +401,8 @@ async function run() {
   if (!searchResult) {
     try {
       searchResult = await runCapability(type, "generate", intent, ctx);
-    } catch {
+    } catch (error) {
+      providerFailure ??= error;
       // generate failed too
     }
   }
@@ -377,13 +430,23 @@ async function run() {
     // brand stays local: no frame.md/design.md -> upsell the HyperFrames design
     // flow rather than reporting a generic miss (B5).
     const msg =
-      type === "brand"
-        ? "no brand spec found — add a frame.md or design.md (colors/font/logo) to this project. Run the HyperFrames design flow to create one; brand tokens are read locally for deterministic rendering."
-        : args.provider
-          ? `provider "${args.provider}" could not resolve ${type}: "${intent}"${localOnly ? " (--local-only skips network providers; drop it or the --provider override)" : ""}`
-          : `no provider could resolve ${type}: "${intent}"`;
+      providerFailure instanceof BundledSfxAssetsError
+        ? providerFailure.message
+        : type === "brand"
+          ? "no brand spec found — add a frame.md or design.md (colors/font/logo) to this project. Run the HyperFrames design flow to create one; brand tokens are read locally for deterministic rendering."
+          : args.provider
+            ? `provider "${args.provider}" could not resolve ${type}: "${intent}"${localOnly ? " (--local-only skips network providers; drop it or the --provider override)" : ""}`
+            : `no provider could resolve ${type}: "${intent}"`;
     if (args.json) {
-      console.log(JSON.stringify({ ok: false, error: msg }));
+      console.log(
+        JSON.stringify({
+          ok: false,
+          ...(providerFailure instanceof BundledSfxAssetsError
+            ? { code: providerFailure.code, fix: providerFailure.fix }
+            : {}),
+          error: msg,
+        }),
+      );
     } else {
       console.error(`error: ${msg}`);
     }
@@ -852,6 +915,13 @@ function heygenAuthCheck() {
 
 function runDoctor() {
   const checks = [];
+  const bundledSfx = inspectBundledSfxAssets();
+  checks.push({
+    name: "bundled SFX assets",
+    ok: bundledSfx.ok,
+    detail: bundledSfx.detail,
+    fix: bundledSfx.fix,
+  });
   const heygenVersionProbe = runCommand("heygen", ["--version"]);
   const heygenOnPath = heygenVersionProbe.status === 0;
   const heygenVersionText = commandText(heygenVersionProbe);
@@ -952,7 +1022,7 @@ function runDoctor() {
   // missing and then break at the first probe call.
   const ffmpeg = checks.find((check) => check.name === "ffmpeg on PATH");
   const ffprobe = checks.find((check) => check.name === "ffprobe on PATH");
-  return { ok: !!ffmpeg?.ok && !!ffprobe?.ok, checks };
+  return { ok: bundledSfx.ok && !!ffmpeg?.ok && !!ffprobe?.ok, checks };
 }
 
 function printDoctor(checks) {
@@ -1139,19 +1209,6 @@ function extFromUrl(url) {
     return null;
   }
 }
-
-const DEFAULT_EXT = {
-  bgm: ".wav",
-  sfx: ".mp3",
-  voice: ".wav",
-  image: ".jpg",
-  icon: ".svg",
-  logo: ".svg",
-  brand: ".png",
-  video: ".mp4",
-  grade: ".cube",
-  lut: ".cube",
-};
 
 function defaultExt(type) {
   return DEFAULT_EXT[type] || ".bin";

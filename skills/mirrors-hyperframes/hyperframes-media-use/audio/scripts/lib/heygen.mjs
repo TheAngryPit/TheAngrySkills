@@ -14,7 +14,7 @@ export const HEYGEN_CLI_SOURCE_HEADERS = { "X-HeyGen-Source": "cli" };
 // the backend can isolate media-use consumption from other free TTS / avatar video.
 // Unconditional — a paying user's media-use call is still media-use — unlike the
 // OAuth-only cli-source header above, which also gates the free allowance.
-export const HEYGEN_CLIENT_SOURCE_HEADERS = { "X-HeyGen-Client-Source": "hyperframes-media-use" };
+export const HEYGEN_CLIENT_SOURCE_HEADERS = { "X-HeyGen-Client-Source": "media-use" };
 
 // Walk up ≤5 dirs from startDir; load the first .env (shell env always wins).
 export function loadEnvFromDir(startDir) {

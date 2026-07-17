@@ -44,7 +44,7 @@ export function resolvePrToVideoProjectDir({
   return join(
     cacheRoot,
     "hyperframes",
-    "hyperframes-pr-to-video",
+    "pr-to-video",
     ref.owner,
     ref.repo,
     `${ref.repo}-pr-${ref.number}`,

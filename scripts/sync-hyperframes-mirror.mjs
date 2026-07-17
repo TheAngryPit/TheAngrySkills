@@ -132,6 +132,10 @@ function rewriteText(text, ownerSourceName, relativePath, names) {
     result = result
       .replace(new RegExp(`((?:\\.\\./)+)${escaped}(?=/|\\b)`, "g"), `$1${published}`)
       .replace(new RegExp(`(skills/)${escaped}(?=/|\\b)`, "g"), `$1${published}`)
+      .replace(
+        new RegExp(`(join\\(HERE,\\s*["']\\.\\.["'],\\s*["']\\.\\.["'],\\s*["'])${escaped}(["'],)`, "g"),
+        `$1${published}$2`,
+      )
       .replace(new RegExp(`(?<![\\w-])\\$${escaped}(?![A-Za-z0-9-])`, "g"), `$${published}`);
   }
   return relativePath === "SKILL.md" ? normalizeMetadata(normalizeDescription(result)) : result;
@@ -201,6 +205,9 @@ function validateMirror(sourceNames) {
   const genericNames = sourceNames.filter((name) => publishedName(name) !== name);
   const genericPattern = genericNames.map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
   const unresolvedPath = new RegExp(`(?:(?:\\.\\./)+|skills/|\\$)(?:${genericPattern})(?:/|\\b)`);
+  const unresolvedJoinPath = new RegExp(
+    `join\\(HERE,\\s*["']\\.\\.["'],\\s*["']\\.\\.["'],\\s*["'](?:${genericPattern})["'],`,
+  );
   for (const directory of actual) {
     const skillRoot = path.join(DESTINATION_ROOT, directory);
     const skillFile = path.join(skillRoot, "SKILL.md");
@@ -214,6 +221,9 @@ function validateMirror(sourceNames) {
       const text = readFileSync(file, "utf8");
       const relative = path.relative(REPO_ROOT, file);
       if (genericPattern && unresolvedPath.test(text)) failures.push(`${relative}: unresolved unprefixed sibling path`);
+      if (genericPattern && unresolvedJoinPath.test(text)) {
+        failures.push(`${relative}: unresolved unprefixed join(HERE) sibling path`);
+      }
     }
   }
 

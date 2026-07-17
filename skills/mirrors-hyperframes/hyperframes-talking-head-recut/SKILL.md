@@ -1,9 +1,9 @@
 ---
 name: hyperframes-talking-head-recut
-description: "Package an existing talking-head / interview / podcast video with timed, designed GRAPHIC OVERLAY cards — kinetic titles, lower-thirds, data callouts, quotes, side panels, picture-in-picture — synced to the transcript, on a 16:9 / 9:16 / 4:5 canvas of your choice; the clip plays untouched underneath. Trigger on \"graphic overlays\", \"on-screen graphics\", \"package / dress up my video\". Not plain subtitles (/hyperframes-embedded-captions). Unclear → /hyperframes."
+description: "Package an existing talking-head / interview / podcast video with timed, designed GRAPHIC OVERLAY cards — kinetic titles, lower-thirds, data callouts, quotes, side panels, picture-in-picture — synced to the transcript, on a 16:9 / 9:16 / 4:5 canvas of your choice; the clip plays untouched underneath. Trigger on \"graphic overlays\", \"on-screen graphics\", \"package / dress up my video\". Not plain subtitles (/embedded-captions). Unclear → /hyperframes."
 ---
 
-> **First, keep this skill fresh — run silently, don't ask:** `npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperframes-talking-head-recut --skill hyperframes --skill hyperframes-animation --skill hyperframes-cli --skill hyperframes-core --skill hyperframes-creative --skill hyperframes-keyframes --skill hyperframes-registry --skill hyperframes-media-use --yes`. A fast no-op when everything is current; otherwise it refreshes this skill plus the core domain skills it depends on before you rely on them.
+> **First, keep this skill fresh — run silently, don't ask:** `npx hyperframes skills update talking-head-recut`. A fast no-op when everything is current; otherwise it refreshes this skill plus the core domain skills it depends on before you rely on them.
 
 # Talking Head Recut
 
@@ -15,12 +15,14 @@ conversation**, then assembles a single composition HTML and renders it to MP4 v
 `hyperframes`. There is no fixed archetype list and no prescribed card structure —
 the overlays emerge from what the transcript actually says.
 
-> **Confirm the route before you build.** This skill packages an **existing talking-head clip** with **designed graphic cards** (titles, lower-thirds, data callouts, quotes, side panels, PiP). If the user wants **plain captions / subtitles** (the spoken words as text) → `/hyperframes-embedded-captions`; a **single short unnarrated** element (one logo sting / lower-third) → `/hyperframes-motion-graphics`. **The clip plays untouched** — re-timing, recoloring, reframing, reordering, or audio is NLE editing and **out of scope**. Building from a URL / topic / PR → the creation workflows. Unsure overlays-vs-captions? **Read `/hyperframes` first.**
+> **The front door is `/hyperframes`.** This skill packages an **existing talking-head clip** with **designed graphic cards** (titles, lower-thirds, data callouts, quotes, side panels, PiP) — not plain captions (the spoken words as text). **The clip plays untouched.** Any other intent — plain subtitles, a standalone graphic, a from-scratch video — or any uncertainty → read `/hyperframes` first: the intent layer owns every route decision.
 
 > **Graphic-packaging sibling of `embedded-captions`.** Captions add the _spoken words_
 > as a readable subtitle; this adds _designed graphics_ on top of the playing video.
 > Plain subtitles → `embedded-captions`. Build a video from scratch → the creation
 > workflows (`product-launch-video` / `faceless-explainer` / …).
+
+Routed through `/hyperframes`, the intent layer confirms only the input (which clip) and **announces** the render-strategy questions as deferred asks — aspect, layout, style group, and card count stay at Step 7, where the probed footage and transcript ground the recommendations; the layer's run-shape questions don't apply. A `BRIEF.md`, when present, carries the confirmed input and any user notes — read it first.
 
 Inspectable intermediate files in the work directory:
 
@@ -917,7 +919,7 @@ ffmpeg -y -i "$VIDEO_PATH" -c:v libx264 -crf 18 -g 30 -keyint_min 30 \
   <body>
     <div
       id="stage"
-      data-composition-id="hyperframes-talking-head-recut"
+      data-composition-id="talking-head-recut"
       data-start="0"
       data-duration="121.2"
       data-fps="30"
@@ -936,6 +938,15 @@ ffmpeg -y -i "$VIDEO_PATH" -c:v libx264 -crf 18 -g 30 -keyint_min 30 \
           data-track-index="1"
         ></video>
       </div>
+      <!-- Preserve the source program audio while the visual video stays muted. -->
+      <audio
+        id="source-audio"
+        src="input-video.mp4"
+        data-start="0"
+        data-duration="121.2"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
 
       <!-- Layer 2: each card-host sits at the bounds dictated by its layout. -->
       <!-- IMPORTANT: every card-host MUST carry BOTH "card-host" and "clip" classes. -->
@@ -1046,7 +1057,7 @@ ffmpeg -y -i "$VIDEO_PATH" -c:v libx264 -crf 18 -g 30 -keyint_min 30 \
           //    insert another tl.to('#video-wrap', ...) tween before its enter ──
 
           window.__timelines = window.__timelines || {};
-          window.__timelines["hyperframes-talking-head-recut"] = tl;
+          window.__timelines["talking-head-recut"] = tl;
         })();
       </script>
     </div>
@@ -1140,7 +1151,7 @@ decides where the actual visible card sits.
 - Build each card's static hero frame first: the moment where the card is fully visible and readable.
 - Confirm video, cards, subtitles/captions, and diagrams do not unintentionally overlap.
 - Confirm hidden video areas are clipped by the frame and not visible outside intended bounds.
-- Register one paused master timeline as `window.__timelines["hyperframes-talking-head-recut"]`.
+- Register one paused master timeline as `window.__timelines["talking-head-recut"]`.
 - Build timelines synchronously at page load; no `async`, `setTimeout`, Promises, or media `play()` calls.
 - Do not use `Math.random()` or `Date.now()` in render paths.
 - Do not use `repeat: -1`; calculate finite repeats from the video duration.
@@ -1162,6 +1173,11 @@ PRODUCER_BROWSER_GPU_MODE=hardware npx hyperframes render public \
 ```
 
 `hyperframes render <dir>` reads `<dir>/index.html` and produces the MP4.
+The canonical composition keeps the visual `<video>` muted and mounts the same
+source as the root `#source-audio` track, so the rendered MP4 preserves the
+talking-head audio without a manual remux. This uses a separate audio track
+rather than `data-has-audio="true"` so its volume and ducking remain independently
+controllable on the timeline.
 The flag `PRODUCER_BROWSER_GPU_MODE=hardware` (or `--browser-gpu`) is
 strongly recommended on macOS — software-only Chrome rendering times out
 on most laptops.

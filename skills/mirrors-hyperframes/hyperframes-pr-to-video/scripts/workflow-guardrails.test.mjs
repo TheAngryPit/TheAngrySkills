@@ -27,7 +27,7 @@ test("default project directory is durable and outside the caller repository", (
     join(
       cache,
       "hyperframes",
-      "hyperframes-pr-to-video",
+      "pr-to-video",
       "everyinc",
       "compound-engineering-plugin",
       "compound-engineering-plugin-pr-1092",

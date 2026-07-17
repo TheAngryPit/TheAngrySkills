@@ -21,12 +21,12 @@
       "reason": "Reviewed upstream remote-validation documentation; scanner flags explicit sudo examples that remain operator-gated."
     },
     "hyperframes-core": {
-      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "source_commit": "c268f5ba85f2c9af751db1f33819fcb60c7848b0",
       "allowed_rule_ids": ["concealment-instruction"],
       "reason": "Reviewed upstream workflow guidance at the pinned mirror commit."
     },
     "hyperframes-embedded-captions": {
-      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "source_commit": "c268f5ba85f2c9af751db1f33819fcb60c7848b0",
       "allowed_rule_ids": [
         "bundled-script-review",
         "executable-file",
@@ -36,7 +36,7 @@
       "reason": "Reviewed bundled caption scripts and explicit runtime commands at the pinned mirror commit."
     },
     "hyperframes-figma": {
-      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "source_commit": "c268f5ba85f2c9af751db1f33819fcb60c7848b0",
       "allowed_rule_ids": [
         "bundled-script-review",
         "concealment-instruction"
@@ -44,7 +44,7 @@
       "reason": "Reviewed upstream Figma integration guidance at the pinned mirror commit."
     },
     "hyperframes-media-use": {
-      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "source_commit": "c268f5ba85f2c9af751db1f33819fcb60c7848b0",
       "allowed_rule_ids": [
         "bundled-script-review",
         "executable-file",
@@ -64,7 +64,7 @@
       "reason": "Reviewed website capture workflow and bundled scripts at the pinned mirror commit."
     },
     "remotion-to-hyperframes": {
-      "source_commit": "4a4903b49a8e1c8cf5ffa91add6c1d9032e79317",
+      "source_commit": "c268f5ba85f2c9af751db1f33819fcb60c7848b0",
       "allowed_rule_ids": [
         "bundled-script-review",
         "dependency-manifest-surface",

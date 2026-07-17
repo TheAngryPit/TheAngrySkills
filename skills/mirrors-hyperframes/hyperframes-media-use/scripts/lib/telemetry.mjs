@@ -184,7 +184,7 @@ async function postEvent(event, properties, distinctId) {
   await postBatch([
     {
       event,
-      properties: { ...properties, surface: "hyperframes-media-use", $ip: null },
+      properties: { ...properties, surface: "media-use", $ip: null },
       distinct_id: distinctId,
       timestamp: new Date().toISOString(),
     },

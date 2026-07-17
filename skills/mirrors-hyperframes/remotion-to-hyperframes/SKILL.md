@@ -1,13 +1,13 @@
 ---
 name: remotion-to-hyperframes
-description: "Port an existing Remotion (React) composition's source to HyperFrames HTML. Use ONLY on an explicit ask to port/convert/migrate/translate a Remotion source — one-way, Remotion-only. A passing Remotion mention, reference-only code, or \"make something like my Remotion video\" is a fresh build (/hyperframes-general-video). Unclear → /hyperframes."
+description: "Port an existing Remotion (React) composition's source to HyperFrames HTML. Use ONLY on an explicit ask to port/convert/migrate/translate a Remotion source — one-way, Remotion-only. A passing Remotion mention, reference-only code, or \"make something like my Remotion video\" is a fresh build (/general-video). Unclear → /hyperframes."
 ---
 
-> **First, keep this skill fresh — run silently, don't ask:** `npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill remotion-to-hyperframes --skill hyperframes --skill hyperframes-animation --skill hyperframes-cli --skill hyperframes-core --skill hyperframes-creative --skill hyperframes-keyframes --skill hyperframes-registry --skill hyperframes-media-use --yes`. A fast no-op when everything is current; otherwise it refreshes this skill plus the core domain skills it depends on before you rely on them.
+> **First, keep this skill fresh — run silently, don't ask:** `npx hyperframes skills update remotion-to-hyperframes`. A fast no-op when everything is current; otherwise it refreshes this skill plus the core domain skills it depends on before you rely on them.
 
 # Remotion to HyperFrames
 
-> **Confirm the route before you build.** Use this **only** to port an existing **Remotion** (React) composition's source into HyperFrames. Authoring a **new** composition (even one inspired by a Remotion video) → the creation workflows / `/hyperframes-general-video`. **Out of scope** (one-way, Remotion-only): no reverse export (HyperFrames → Remotion or any framework), and a **non-Remotion** source (After Effects, Framer Motion, plain React / CSS) has no Remotion source to translate → re-create via `/hyperframes-general-video`. Unsure, or only a passing Remotion mention? **Read `/hyperframes` first.**
+> **The front door is `/hyperframes`.** Use this **only** to port an existing **Remotion** (React) composition's source into HyperFrames, one way. Authoring a **new** composition, re-creating from a non-Remotion source (After Effects, Framer Motion, plain React / CSS — there is no Remotion source to translate), a passing Remotion mention, or any uncertainty → read `/hyperframes` first: the intent layer owns every route decision.
 
 ## Overview
 
@@ -35,9 +35,9 @@ The skill ships with a **tiered test corpus** (T1–T4, 4 fixtures total) that g
 **NOT SUPPORTED (decline — this is not what this skill does):**
 
 - **The reverse direction.** Exporting a HyperFrames composition back out _to_ Remotion (or to any other framework) is not a workflow — the translation is Remotion → HyperFrames only. Say so plainly.
-- **Non-Remotion sources.** An After Effects project (`.aep`), a Framer Motion / plain-React / CSS animation, or any other tool's source is not a Remotion composition — there is no Remotion source to translate. Re-create it natively via `/hyperframes-general-video`, or decline if HyperFrames can't represent it.
+- **Non-Remotion sources.** An After Effects project (`.aep`), a Framer Motion / plain-React / CSS animation, or any other tool's source is not a Remotion composition — there is no Remotion source to translate. Re-create it natively via `/general-video`, or decline if HyperFrames can't represent it.
 
-When in doubt, default to authoring a native HyperFrames composition with `/hyperframes-general-video` (the general HyperFrames authoring flow) instead.
+When in doubt, default to authoring a native HyperFrames composition with `/general-video` (the general HyperFrames authoring flow) instead.
 
 ## Workflow
 

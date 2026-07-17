@@ -5,13 +5,13 @@ Scaffolding commands. Use these instead of creating files by hand — they set u
 ## init
 
 ```bash
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video                                    # TTY: interactive wizard
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --example warm-grain               # pick an example
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --example blank --resolution portrait
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --video clip.mp4                   # with video file
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --audio track.mp3                  # with audio file
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --example blank --tailwind         # Tailwind v4 browser runtime
-HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init my-video --non-interactive --example blank  # CI/agents — flag-only
+npx hyperframes init my-video                                    # TTY: interactive wizard
+npx hyperframes init my-video --example warm-grain               # pick an example
+npx hyperframes init my-video --example blank --resolution portrait
+npx hyperframes init my-video --video clip.mp4                   # with video file
+npx hyperframes init my-video --audio track.mp3                  # with audio file
+npx hyperframes init my-video --example blank --tailwind         # Tailwind v4 browser runtime
+npx hyperframes init my-video --non-interactive --example blank  # CI/agents — flag-only
 ```
 
 **Default depends on TTY**: in a terminal, the CLI prompts for example/options. Outside a TTY (CI, agents, piped output) it auto-switches to non-interactive and **requires `--example`** (the CLI errors with a usage example if missing). Pass `--non-interactive` to force flag-only mode even on a TTY.
@@ -27,7 +27,7 @@ Other useful flags:
 
 When using `--tailwind`, invoke the `hyperframes-core` (Tailwind reference) skill before editing classes or theme tokens. The scaffold uses Tailwind v4 browser runtime patterns, not Studio's Tailwind v3 setup.
 
-When `--audio` or `--video` is supplied, `init` transcribes the file with Whisper. For voice/model selection see the `hyperframes-media-use` skill.
+When `--audio` or `--video` is supplied, `init` transcribes the file with Whisper. For voice/model selection see the `media-use` skill.
 
 ## capture
 
@@ -45,7 +45,7 @@ Captures a live URL as an editable HyperFrames project: screenshots become layer
 ## skills
 
 ```bash
-npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperframes-embedded-captions --skill hyperframes-faceless-explainer --skill hyperframes-figma --skill hyperframes-general-video --skill hyperframes --skill hyperframes-animation --skill hyperframes-cli --skill hyperframes-core --skill hyperframes-creative --skill hyperframes-keyframes --skill hyperframes-registry --skill hyperframes-media-use --skill hyperframes-motion-graphics --skill hyperframes-music-to-video --skill hyperframes-pr-to-video --skill hyperframes-product-launch-video --skill remotion-to-hyperframes --skill hyperframes-slideshow --skill hyperframes-talking-head-recut --skill hyperframes-website-to-video --yes    # install HyperFrames skills for AI coding tools
+npx hyperframes skills    # install HyperFrames skills for AI coding tools
 ```
 
 One-time setup that adds the HyperFrames skill pack (`hyperframes-core`, `-creative`, `-animation`, `-cli`, `-registry`, `-media`, plus the `product-launch-video` and `hyperframes` orchestrators) to the local AI coding environment so agents follow the framework conventions. Re-run after major HyperFrames upgrades.

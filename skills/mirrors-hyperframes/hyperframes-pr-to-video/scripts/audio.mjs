@@ -29,7 +29,7 @@ import { fileURLToPath } from "node:url";
 import { parseStoryboard } from "./lib/storyboard.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_ENGINE = join(HERE, "..", "..", "media-use", "audio", "scripts", "audio.mjs");
+const DEFAULT_ENGINE = join(HERE, "..", "..", "hyperframes-media-use", "audio", "scripts", "audio.mjs");
 
 const flag = (argv, name, def) => {
   const i = argv.indexOf(`--${name}`);

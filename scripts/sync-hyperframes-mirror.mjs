@@ -41,12 +41,13 @@ const checkOnly = process.argv.includes("--check");
 let temporaryRoot = "";
 
 function run(command, args, options = {}) {
-  return execFileSync(command, args, {
+  const output = execFileSync(command, args, {
     cwd: options.cwd ?? REPO_ROOT,
     encoding: "utf8",
     stdio: options.stdio ?? "pipe",
     env: options.env ?? process.env,
-  }).trim();
+  });
+  return typeof output === "string" ? output.trim() : "";
 }
 
 function resolveSourceRoot() {
@@ -58,7 +59,10 @@ function resolveSourceRoot() {
   if (process.env.HYPERFRAMES_SOURCE_DIR) return path.resolve(process.env.HYPERFRAMES_SOURCE_DIR);
   temporaryRoot = mkdtempSync(path.join(os.tmpdir(), "theangryskills-hyperframes-"));
   const checkout = path.join(temporaryRoot, "source");
-  run("git", ["clone", "--depth", "1", SOURCE_URL, checkout], { stdio: "inherit" });
+  run("git", ["clone", "--depth", "1", SOURCE_URL, checkout], {
+    stdio: "inherit",
+    env: { ...process.env, GIT_LFS_SKIP_SMUDGE: "1" },
+  });
   return checkout;
 }
 
@@ -154,14 +158,14 @@ function rewriteUpdateCommands(text, names) {
   }
   result = result
     .replace(
-      /npx hyperframes skills update <workflow-name>/g,
+      /npx hyperframes skills update <(?:workflow-name|that-workflow)>/g,
       placeholderInstallCommand(),
     )
-    .replace(/npx hyperframes skills update(?!\s+[A-Za-z0-9<])/g, "npx skills update")
+    .replace(/npx hyperframes skills update(?![ \t]+[A-Za-z0-9<])/g, "npx skills update")
     .replace(/npx hyperframes skills check(?: --json)?/g, "npx skills update")
     .replace(/npx skills add (?:https:\/\/github\.com\/)?heygen-com\/hyperframes --skill <workflow-name>/g, placeholderInstallCommand())
     .replace(/npx skills add (?:https:\/\/github\.com\/)?heygen-com\/hyperframes --all/g, skillsAddCommand(names.map(publishedName)))
-    .replace(/npx hyperframes skills(?!\s+[A-Za-z0-9<])/g, skillsAddCommand(names.map(publishedName)))
+    .replace(/npx hyperframes skills(?![ \t]+[A-Za-z0-9<])/g, skillsAddCommand(names.map(publishedName)))
     .replace(/(?<!HYPERFRAMES_SKIP_SKILLS=1 )npx hyperframes init/g, "HYPERFRAMES_SKIP_SKILLS=1 npx hyperframes init")
     .replace(
       /Manual fallback \(no HyperFrames CLI available\): `[^`]+`; everything at once: `[^`]+`\./g,

@@ -15,7 +15,8 @@ REQUIRED_ROUTES = {
     "planning", "hard_implementation", "review", "audit", "release",
     "memory_worker", "memory_curator",
 }
-EFFORTS = {"minimal", "low", "medium", "high", "xhigh"}
+EFFORTS = {"minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
+OPERATOR_ONLY_EFFORTS = {"max", "ultra"}
 
 
 def load_preset(path: str) -> dict:
@@ -39,6 +40,11 @@ def errors_for(preset: dict) -> list[str]:
             errors.append(f"{name} has invalid effort")
         if bool(route.get("fallback_model")) != bool(route.get("fallback_effort")):
             errors.append(f"{name} fallback model and effort must be paired")
+        if route.get("fallback_effort") and route.get("fallback_effort") not in EFFORTS:
+            errors.append(f"{name} has invalid fallback effort")
+        route_efforts = {route.get("effort"), route.get("fallback_effort")}
+        if route_efforts & OPERATOR_ONLY_EFFORTS and not route.get("operator_authorization_required"):
+            errors.append(f"{name} uses max or ultra without operator authorization requirement")
     policy = preset.get("policy", {})
     if not policy.get("max_operator_only") or not policy.get("ultra_operator_only"):
         errors.append("max and ultra must remain operator-only")
@@ -81,6 +87,16 @@ def cmd_resolve(args: argparse.Namespace) -> int:
     route = preset["routes"].get(args.route)
     if not route:
         print(json.dumps({"status": "blocked", "errors": ["unknown route"]}, indent=2))
+        return 1
+    if route.get("operator_authorization_required") and not args.operator_authorized:
+        print(json.dumps({
+            "status": "blocked",
+            "preset": {"name": preset.get("name"), "version": preset.get("version")},
+            "route": args.route,
+            "role": route["role"],
+            "proof": route["proof"],
+            "error": "operator authorization is required for this route",
+        }, indent=2))
         return 1
     available_models = set(args.available_model)
     selected = None
@@ -129,6 +145,11 @@ def parser() -> argparse.ArgumentParser:
     resolve.add_argument("--available-model", action="append", default=[])
     resolve.add_argument("--skill-root", action="append", default=[])
     resolve.add_argument("--capability")
+    resolve.add_argument(
+        "--operator-authorized",
+        action="store_true",
+        help="Confirm explicit current-task operator authorization for a max or ultra route.",
+    )
     resolve.set_defaults(func=cmd_resolve)
     return root
 

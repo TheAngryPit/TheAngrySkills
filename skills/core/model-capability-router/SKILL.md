@@ -31,11 +31,17 @@ python3 scripts/route.py resolve \
 6. If no valid model or required capability exists, return `blocked`; do not
    substitute an unlisted model or generic skill.
 
+For a route whose preset sets `operator_authorization_required = true`, resolve
+it only after explicit authorization in the current task and pass
+`--operator-authorized`. Without that flag the router must return `blocked`.
+
 ## Escalation
 
 Escalate one route at a time when fresh evidence shows the current route cannot
 meet the proof bar. `max` and `ultra` require explicit operator authorization in
 the current task and never expand permissions, targets, credentials, or scope.
+The preset must also mark every route that can select either effort with
+`operator_authorization_required = true`.
 
 ## Output Contract
 

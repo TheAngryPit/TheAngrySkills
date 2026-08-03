@@ -41,6 +41,71 @@ class RouteTests(unittest.TestCase):
         )
         self.assertEqual(result["status"], "blocked")
 
+    def test_operator_only_route_blocks_without_current_authorization(self):
+        preset = PRESET.read_text(encoding="utf-8").replace(
+            'version = "2026.07.11.1"',
+            'version = "test"',
+        ) + '''
+
+[routes.exceptional_coding_batch]
+role = "exceptional-batch-worker"
+model = "gpt-5.6-luna"
+effort = "max"
+proof = "bounded_batch"
+operator_authorization_required = true
+'''
+        with tempfile.NamedTemporaryFile("w", suffix=".toml") as handle:
+            handle.write(preset)
+            handle.flush()
+            result = self.run_cli(
+                "resolve", "--preset", handle.name,
+                "--route", "exceptional_coding_batch",
+                "--available-model", "gpt-5.6-luna",
+                expected=1,
+            )
+        self.assertEqual(result["status"], "blocked")
+        self.assertIn("operator authorization", result["error"])
+
+    def test_operator_only_route_resolves_with_current_authorization(self):
+        preset = PRESET.read_text(encoding="utf-8") + '''
+
+[routes.exceptional_coding_batch]
+role = "exceptional-batch-worker"
+model = "gpt-5.6-luna"
+effort = "max"
+proof = "bounded_batch"
+operator_authorization_required = true
+'''
+        with tempfile.NamedTemporaryFile("w", suffix=".toml") as handle:
+            handle.write(preset)
+            handle.flush()
+            result = self.run_cli(
+                "resolve", "--preset", handle.name,
+                "--route", "exceptional_coding_batch",
+                "--available-model", "gpt-5.6-luna",
+                "--operator-authorized",
+            )
+        self.assertEqual(result["status"], "ready")
+        self.assertEqual(result["selection"]["effort"], "max")
+
+    def test_operator_only_effort_requires_guard_in_preset(self):
+        preset = PRESET.read_text(encoding="utf-8") + '''
+
+[routes.unguarded_exceptional_batch]
+role = "exceptional-batch-worker"
+model = "gpt-5.6-luna"
+effort = "max"
+proof = "bounded_batch"
+'''
+        with tempfile.NamedTemporaryFile("w", suffix=".toml") as handle:
+            handle.write(preset)
+            handle.flush()
+            result = self.run_cli("validate", "--preset", handle.name, expected=1)
+        self.assertIn(
+            "unguarded_exceptional_batch uses max or ultra without operator authorization requirement",
+            result["errors"],
+        )
+
     def test_missing_capability_blocks(self):
         with tempfile.TemporaryDirectory() as directory:
             result = self.run_cli(

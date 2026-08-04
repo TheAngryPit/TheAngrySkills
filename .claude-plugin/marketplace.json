@@ -18,6 +18,7 @@
     {
       "name": "the-angry-engineering",
       "skills": [
+        "./skills/engineering/continuity-handoff",
         "./skills/engineering/docs-skill-builder",
         "./skills/engineering/theangry-ai-code-audit",
         "./skills/engineering/writing-ticks"

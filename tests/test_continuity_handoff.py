@@ -79,7 +79,9 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertEqual(result["evidence"][0]["match_line"], 4)
             self.assertIn("session_index.thread_name", result["evidence"][0]["messages"][1]["text"])
             self.assertNotIn("internal instruction", completed.stdout)
-            self.assertFalse(result["mutation_performed"])
+            self.assertFalse(result["logical_codex_state_mutated"])
+            self.assertTrue(result["live_sqlite_snapshot_used"])
+            self.assertTrue(result["temporary_snapshot_removed"])
             self.assertEqual(before, tree_snapshot(codex_home))
             self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
             self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
@@ -279,6 +281,16 @@ class ContinuityHandoffTests(unittest.TestCase):
         )
         self.assertNotEqual(completed.returncode, 0)
         self.assertIn("Unknown option: --matchrole", completed.stderr)
+
+    def test_zero_length_evidence_limit_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--thread-id", "x", "--query", "safe", "--codex-home", directory, "--max-message-chars", "0"],
+                capture_output=True,
+                text=True,
+            )
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertIn("--max-message-chars must be at least 256", completed.stderr)
 
 
 if __name__ == "__main__":

@@ -82,6 +82,10 @@ and caps output. Historical evidence is not rewritten or censored. It never
 writes logical Codex source state and never requires the operator to close the
 app.
 
+The result reports logical source mutation, live snapshot use, and temporary
+snapshot cleanup separately. SQLite's live coordination files are not presented
+as immutable application data.
+
 Use `--match-role user` for an operator report and `--match-role assistant` for
 an earlier agent conclusion. Internal system/developer messages are never
 returned. If no narrow literal exists, ask the operator for a better locator

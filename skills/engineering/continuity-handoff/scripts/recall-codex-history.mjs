@@ -40,6 +40,7 @@ function parseArgs(argv) {
     if (!Number.isInteger(args[key]) || args[key] < 0) fail(`--${key} must be a non-negative integer`);
   }
   if (args.maxMatches < 1 || args.maxMatches > 10) fail("--max-matches must be between 1 and 10");
+  if (args.maxMessageChars < 256) fail("--max-message-chars must be at least 256");
   if (args.before > 10 || args.after > 20) fail("Context window is too broad");
   if (args.maxOutputChars < 1000 || args.maxOutputChars > 50000) fail("--max-output-chars must be between 1000 and 50000");
   if (args.date && !/^\d{4}-\d{2}-\d{2}$/.test(args.date)) fail("--date must use YYYY-MM-DD");
@@ -227,7 +228,9 @@ export async function run(argv) {
       matched_windows: scan.match_count,
     },
     evidence: scan.captures,
-    mutation_performed: false,
+    logical_codex_state_mutated: false,
+    live_sqlite_snapshot_used: true,
+    temporary_snapshot_removed: true,
   };
   process.stdout.write(boundedJson(result, args.maxOutputChars));
 }

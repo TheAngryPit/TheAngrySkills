@@ -164,7 +164,7 @@ function sessionTitle(codexHome, threadId, fallback) {
   return title;
 }
 
-function messageFromRow(row, lineNumber, maxChars) {
+function messageFromRow(row, lineNumber) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
   const fullText = (row.payload.content || [])
@@ -178,7 +178,6 @@ function messageFromRow(row, lineNumber, maxChars) {
       line: lineNumber,
       timestamp: row.timestamp || null,
       role: row.payload.role || "unknown",
-      text: boundedMessageText(fullText, maxChars),
     },
   };
 }
@@ -204,9 +203,9 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
       continue;
     }
     if (row.type === "session_meta" && !embeddedId) embeddedId = row.payload?.id || null;
-    const record = messageFromRow(row, lineNumber, maxMessageChars);
+    const record = messageFromRow(row, lineNumber);
     if (!record) continue;
-    const message = record.evidence;
+    const message = { ...record.evidence, fullText: record.fullText, matchIndex: null };
     messageCount += 1;
 
     for (const capture of captures) {
@@ -226,7 +225,7 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
         remaining: after,
         messages: [
           ...previous,
-          { ...message, text: boundedMessageText(record.fullText, maxMessageChars, matchIndex) },
+          { ...message, matchIndex },
         ],
       });
     }
@@ -259,9 +258,19 @@ export async function run(argv) {
     ? resolved.row.rollout_path
     : path.resolve(args.codexHome, resolved.row.rollout_path);
   const scan = await scanRollout({ ...args, rolloutPath });
+  const safeQuery = redactor.redact(args.query);
   const safeEvidence = scan.captures.map((capture) => ({
     ...capture,
-    messages: capture.messages.map((message) => ({ ...message, text: redactor.redact(message.text) })),
+    messages: capture.messages.map(({ fullText, matchIndex, ...message }) => {
+      const safeText = redactor.redact(fullText);
+      const safeMatchIndex = matchIndex === null
+        ? null
+        : safeText.toLocaleLowerCase().indexOf(safeQuery.toLocaleLowerCase());
+      return {
+        ...message,
+        text: boundedMessageText(safeText, args.maxMessageChars, safeMatchIndex === -1 ? null : safeMatchIndex),
+      };
+    }),
   }));
   const result = {
     mode: "bounded_read_only_recall",
@@ -277,7 +286,7 @@ export async function run(argv) {
       rollout_path: redactor.redact(rolloutPath),
       archived: Boolean(resolved.row.archived),
     },
-    query: { literal: redactor.redact(args.query), date: args.date || null, match_role: args.matchRole },
+    query: { literal: safeQuery, date: args.date || null, match_role: args.matchRole },
     scope: {
       before_messages: args.before,
       after_messages: args.after,

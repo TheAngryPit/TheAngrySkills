@@ -318,6 +318,53 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertIn('curl -H "Authorization: [REDACTED:AUTHORIZATION]"', returned_text)
             self.assertIn("access_token=[REDACTED:SECRET_VALUE]&decision=accepted#result", returned_text)
 
+    def test_long_quoted_secret_is_redacted_before_evidence_truncation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-long-secret"
+            long_secret = "s" * 5000
+            target = "decision after long secret"
+            previous_text = f'password = "{long_secret}"'
+            matching_text = f'client_secret = "{long_secret}"\n{target}'
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": previous_text}]}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": matching_text}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Long secret", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                [
+                    "node", str(SCRIPT),
+                    "--codex-home", str(codex_home),
+                    "--thread-id", thread_id,
+                    "--query", target,
+                    "--before", "1",
+                    "--max-message-chars", "2400",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            result = json.loads(completed.stdout)
+            returned_text = "\n".join(message["text"] for message in result["evidence"][0]["messages"])
+
+            self.assertNotIn(long_secret[:2400], completed.stdout)
+            self.assertIn('password = "[REDACTED:SECRET_VALUE]"', returned_text)
+            self.assertIn('client_secret = "[REDACTED:SECRET_VALUE]"', returned_text)
+            self.assertIn(target, returned_text)
+
     def test_matching_uses_full_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"

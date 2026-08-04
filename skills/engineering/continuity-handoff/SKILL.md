@@ -32,8 +32,8 @@ proves that the destination does not inherit material transcript weight.
 6. Resolve the source `rollout_path` while Codex remains open. The bundled
    reader takes a consistent temporary snapshot through SQLite's Online Backup
    API, queries that snapshot with immutable read-only semantics, and removes
-   it before returning. The reader accesses only the selected state database,
-   session index, and rollout; it never opens separate credential stores.
+   it before returning. The reader's file allowlist is the selected
+   `state_5.sqlite`, `session_index.jsonl`, and resolved rollout only.
 7. Fill [the packet template](references/packet-template.md). Save it in the OS
    temporary directory unless the operator requests a durable project file.
 8. If the operator explicitly asks to create a new task, deliver the packet to
@@ -105,9 +105,9 @@ Do not paste raw tool output into the destination when the capsule is enough.
 
 - Packet generation and recall never rewrite existing source or destination
   history. Normal task messages may continue while the skill runs.
-- Never open or copy `auth.json`, Keychain material, browser stores, or other
-  credential sources. Recall may faithfully return sensitive text already
-  present in the explicitly selected historical window.
+- File access is limited to `state_5.sqlite`, `session_index.jsonl`, and the
+  resolved rollout. Recall returns the explicitly selected historical window
+  faithfully, including any sensitive text already present there.
 - Never query another profile or device by guessing a nearby path.
 - Never rewrite SQLite, JSONL, titles, indexes, goals, or project bindings.
 - Never treat packet absence as proof that an event did not happen.

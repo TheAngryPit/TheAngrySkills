@@ -430,6 +430,52 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertIn('client_secret = "[REDACTED:SECRET_VALUE]"', returned_text)
             self.assertIn(target, returned_text)
 
+    def test_credential_query_keeps_the_raw_match_window_after_redaction(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-redacted-query-offset"
+            earlier_token = "ghp_" + ("A" * 24)
+            queried_token = "ghp_" + ("B" * 24)
+            decision = "actual matched decision remains visible"
+            long_text = f"early credential {earlier_token}\n{'x' * 3000}\nrequested credential {queried_token}\n{decision}"
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": long_text}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Redacted query offset", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                [
+                    "node", str(SCRIPT),
+                    "--codex-home", str(codex_home),
+                    "--thread-id", thread_id,
+                    "--query", queried_token,
+                    "--max-message-chars", "400",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            result = json.loads(completed.stdout)
+            returned_text = result["evidence"][0]["messages"][0]["text"]
+
+            self.assertNotIn(earlier_token, completed.stdout)
+            self.assertNotIn(queried_token, completed.stdout)
+            self.assertNotIn("early credential", returned_text)
+            self.assertIn("requested credential [REDACTED:API_TOKEN]", returned_text)
+            self.assertIn(decision, returned_text)
+
     def test_matching_uses_full_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"

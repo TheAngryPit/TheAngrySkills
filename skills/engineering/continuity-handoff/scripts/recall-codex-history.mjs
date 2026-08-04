@@ -69,47 +69,75 @@ function createRedactor() {
     counts.set(type, (counts.get(type) || 0) + 1);
     return `[REDACTED:${type}]`;
   };
-  const redact = (value) => {
-    if (typeof value !== "string" || value.length === 0) return value;
-    return value
-      .replace(
+  const redactWithOffset = (value, trackedOffset = null) => {
+    if (typeof value !== "string" || value.length === 0) return { text: value, offset: trackedOffset };
+    let state = { text: value, offset: trackedOffset };
+    const replace = (pattern, replacer) => {
+      const sourceOffset = state.offset;
+      let deltaBeforeOffset = 0;
+      let mappedOffset = sourceOffset;
+      let offsetMappedInsideReplacement = false;
+      const text = state.text.replace(pattern, (...args) => {
+        const match = args[0];
+        const matchStart = args[args.length - 2];
+        const replacement = replacer(...args);
+        if (sourceOffset !== null && !offsetMappedInsideReplacement) {
+          const matchEnd = matchStart + match.length;
+          if (matchEnd <= sourceOffset) {
+            deltaBeforeOffset += replacement.length - match.length;
+          } else if (matchStart <= sourceOffset && sourceOffset < matchEnd) {
+            mappedOffset = matchStart + deltaBeforeOffset;
+            offsetMappedInsideReplacement = true;
+          }
+        }
+        return replacement;
+      });
+      if (sourceOffset !== null && !offsetMappedInsideReplacement) {
+        mappedOffset = sourceOffset + deltaBeforeOffset;
+      }
+      state = { text, offset: mappedOffset };
+    };
+
+    replace(
         /-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----[\s\S]*?-----END(?: [A-Z0-9]+)? PRIVATE KEY-----/g,
         () => record("PRIVATE_KEY"),
-      )
-      .replace(
+      );
+    replace(
         /(["'])(\s*(?:set-cookie|cookie)\s*:\s*)(.*?)\1/gi,
         (_, quote, prefix) => `${quote}${prefix}${record("COOKIE")}${quote}`,
-      )
-      .replace(/^(\s*(?:set-cookie|cookie)\s*:\s*).+$/gim, (_, prefix) => `${prefix}${record("COOKIE")}`)
-      .replace(
+      );
+    replace(/^(\s*(?:set-cookie|cookie)\s*:\s*).+$/gim, (_, prefix) => `${prefix}${record("COOKIE")}`);
+    replace(
         /(\b(?:proxy-)?authorization\s*:\s*)(?:bearer|basic)\s+[^\s"'`;|&]+/gi,
         (_, prefix) => `${prefix}${record("AUTHORIZATION")}`,
-      )
-      .replace(
+      );
+    replace(
         /(\b[a-z][a-z0-9+.-]*:\/\/)([^/\s:@]*):([^@\s/]+)@/gi,
         (_, scheme) => `${scheme}${record("URL_CREDENTIALS")}@`,
-      )
-      .replace(
+      );
+    replace(
         quotedSecretValue,
         (_, prefix, quote) => `${prefix}${quote}${record("SECRET_VALUE")}${quote}`,
-      )
-      .replace(
+      );
+    replace(
         unquotedSecretValue,
         (_, prefix) => `${prefix}${record("SECRET_VALUE")}`,
-      )
-      .replace(/\bgithub_pat_[A-Za-z0-9_]{20,}\b/g, () => record("API_TOKEN"))
-      .replace(/\bgh[pousr]_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"))
-      .replace(/\bnpm_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"))
-      .replace(/\bsk-[A-Za-z0-9_-]{16,}\b/g, () => record("API_TOKEN"))
-      .replace(/\bAKIA[0-9A-Z]{16}\b/g, () => record("API_TOKEN"))
-      .replace(/\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g, () => record("API_TOKEN"));
+      );
+    replace(/\bgithub_pat_[A-Za-z0-9_]{20,}\b/g, () => record("API_TOKEN"));
+    replace(/\bgh[pousr]_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"));
+    replace(/\bnpm_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"));
+    replace(/\bsk-[A-Za-z0-9_-]{16,}\b/g, () => record("API_TOKEN"));
+    replace(/\bAKIA[0-9A-Z]{16}\b/g, () => record("API_TOKEN"));
+    replace(/\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g, () => record("API_TOKEN"));
+    return state;
   };
+  const redact = (value) => redactWithOffset(value).text;
   const summary = () => ({
     applied: counts.size > 0,
     count: [...counts.values()].reduce((total, count) => total + count, 0),
     types: Object.fromEntries([...counts.entries()].sort(([left], [right]) => left.localeCompare(right))),
   });
-  return { redact, summary };
+  return { redact, redactWithOffset, summary };
 }
 
 function immutableDatabaseLocation(dbPath) {
@@ -265,13 +293,10 @@ export async function run(argv) {
   const safeEvidence = scan.captures.map((capture) => ({
     ...capture,
     messages: capture.messages.map(({ fullText, matchIndex, ...message }) => {
-      const safeText = redactor.redact(fullText);
-      const safeMatchIndex = matchIndex === null
-        ? null
-        : safeText.toLocaleLowerCase().indexOf(safeQuery.toLocaleLowerCase());
+      const { text: safeText, offset: safeMatchIndex } = redactor.redactWithOffset(fullText, matchIndex);
       return {
         ...message,
-        text: boundedMessageText(safeText, args.maxMessageChars, safeMatchIndex === -1 ? null : safeMatchIndex),
+        text: boundedMessageText(safeText, args.maxMessageChars, safeMatchIndex),
       };
     }),
   }));

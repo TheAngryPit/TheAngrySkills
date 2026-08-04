@@ -29,10 +29,10 @@ proves that the destination does not inherit material transcript weight.
    not paste their full contents.
 5. Record accepted decisions, rejected directions with reasons, protected
    state, open gates, known historical gaps, and the exact resume point.
-6. Resolve the source `rollout_path` from a quiescent `state_5.sqlite` opened
-   with immutable read-only semantics when local access is authorized. If a
-   `-wal` or `-shm` sidecar exists, close Codex and retry. Never include
-   credentials or secret-bearing files.
+6. Resolve the source `rollout_path` while Codex remains open. The bundled
+   reader takes a consistent temporary snapshot through SQLite's Online Backup
+   API, queries that snapshot with immutable read-only semantics, and removes
+   it before returning. Never include credentials or secret-bearing files.
 7. Fill [the packet template](references/packet-template.md). Save it in the OS
    temporary directory unless the operator requests a durable project file.
 8. If the operator explicitly asks to create a new task, deliver the packet to
@@ -74,10 +74,11 @@ node scripts/recall-codex-history.mjs \
   --max-matches 3
 ```
 
-Run the script from this skill directory. It refuses non-quiescent SQLite,
-opens the database with `mode=ro&immutable=1`, validates the rollout identity,
-streams JSONL, sanitizes every returned message, and caps output. It never
-writes source state.
+Run the script from this skill directory while Codex remains open. It snapshots
+the live SQLite database consistently, opens only that snapshot with
+`mode=ro&immutable=1`, validates the rollout identity, streams JSONL, redacts
+secrets from every returned message, and caps output. It never writes logical
+Codex source state and never requires the operator to close the app.
 
 Use `--match-role user` for an operator report and `--match-role assistant` for
 an earlier agent conclusion. Internal system/developer messages are never
@@ -100,7 +101,8 @@ Do not paste raw tool output into the destination when the capsule is enough.
 
 ## Safety
 
-- Source and destination tasks are immutable during packet generation and recall.
+- Packet generation and recall never rewrite existing source or destination
+  history. Normal task messages may continue while the skill runs.
 - Never copy `auth.json`, credentials, cookies, passwords, tokens, Keychain
   material, or unrelated conversation.
 - Never query another profile or device by guessing a nearby path.

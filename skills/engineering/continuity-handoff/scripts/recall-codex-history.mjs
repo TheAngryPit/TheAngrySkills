@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
-import { DatabaseSync } from "node:sqlite";
+import { backup, DatabaseSync } from "node:sqlite";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 function fail(message) {
@@ -55,7 +55,7 @@ function tableExists(db, name) {
 
 const SENSITIVE_KEY = String.raw`(?:password|passwd|secret|api[-_ ]?key|access[-_ ]?token|refresh[-_ ]?token|auth(?:orization)?|cookie|set-cookie)`;
 
-function sanitizeText(value) {
+function redactSecretsFromOutput(value) {
   return String(value)
     .replace(/-----BEGIN ([A-Z0-9 ]*PRIVATE KEY(?: BLOCK)?)-----[\s\S]*?-----END \1-----/gi, "[REDACTED_PRIVATE_KEY]")
     .replace(/^(\s*(?:Cookie|Set-Cookie)\s*:\s*).*$/gim, "$1[REDACTED]")
@@ -67,8 +67,8 @@ function sanitizeText(value) {
     .replace(new RegExp(`(${SENSITIVE_KEY}\\s*[:=]\\s*)([^\\s,;]+)`, "gi"), "$1[REDACTED]");
 }
 
-function sanitizeOptional(value) {
-  return typeof value === "string" ? sanitizeText(value) : null;
+function redactOptionalOutput(value) {
+  return typeof value === "string" ? redactSecretsFromOutput(value) : null;
 }
 
 function boundedMessageText(text, maxChars, matchIndex = null) {
@@ -80,29 +80,42 @@ function boundedMessageText(text, maxChars, matchIndex = null) {
 }
 
 function immutableDatabaseLocation(dbPath) {
-  for (const suffix of ["-wal", "-shm"]) {
-    if (fs.existsSync(`${dbPath}${suffix}`)) {
-      fail(`State database is not quiescent (${path.basename(dbPath)}${suffix}); close Codex and retry`);
-    }
-  }
   const location = pathToFileURL(dbPath);
   location.searchParams.set("mode", "ro");
   location.searchParams.set("immutable", "1");
   return location;
 }
 
-function resolveThread(codexHome, threadId) {
+function removeSnapshot(snapshotPath, snapshotDirectory) {
+  if (fs.existsSync(snapshotPath)) fs.unlinkSync(snapshotPath);
+  fs.rmdirSync(snapshotDirectory);
+}
+
+async function resolveThread(codexHome, threadId) {
   const dbPath = path.join(codexHome, "state_5.sqlite");
   if (!fs.existsSync(dbPath)) fail(`Missing state database: ${dbPath}`);
-  const db = new DatabaseSync(immutableDatabaseLocation(dbPath), { readOnly: true });
+  const snapshotDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "continuity-recall-"));
+  const snapshotPath = path.join(snapshotDirectory, "state.sqlite");
   try {
-    if (!tableExists(db, "threads")) fail("State database has no threads table");
-    const row = db.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
-    if (!row) fail(`No thread row for ${threadId}`);
-    if (!row.rollout_path) fail("Thread row has no rollout_path");
-    return { dbPath, row };
+    const source = new DatabaseSync(dbPath, { readOnly: true });
+    try {
+      await backup(source, snapshotPath);
+    } finally {
+      source.close();
+    }
+
+    const snapshot = new DatabaseSync(immutableDatabaseLocation(snapshotPath), { readOnly: true });
+    try {
+      if (!tableExists(snapshot, "threads")) fail("State database has no threads table");
+      const row = snapshot.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
+      if (!row) fail(`No thread row for ${threadId}`);
+      if (!row.rollout_path) fail("Thread row has no rollout_path");
+      return { dbPath, row };
+    } finally {
+      snapshot.close();
+    }
   } finally {
-    db.close();
+    removeSnapshot(snapshotPath, snapshotDirectory);
   }
 }
 
@@ -124,7 +137,7 @@ function sessionTitle(codexHome, threadId, fallback) {
 function messageFromRow(row, lineNumber, maxChars) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
-  const fullText = sanitizeText((row.payload.content || [])
+  const fullText = redactSecretsFromOutput((row.payload.content || [])
     .filter((item) => item?.type === "input_text" || item?.type === "output_text")
     .map((item) => item.text || "")
     .join("\n"));
@@ -210,7 +223,7 @@ function boundedJson(value, maxChars) {
 
 export async function run(argv) {
   const args = parseArgs(argv);
-  const resolved = resolveThread(path.resolve(args.codexHome), args.threadId);
+  const resolved = await resolveThread(path.resolve(args.codexHome), args.threadId);
   const rolloutPath = path.isAbsolute(resolved.row.rollout_path)
     ? resolved.row.rollout_path
     : path.resolve(args.codexHome, resolved.row.rollout_path);
@@ -218,13 +231,13 @@ export async function run(argv) {
   const result = {
     mode: "bounded_read_only_recall",
     identity: {
-      title: sanitizeOptional(sessionTitle(args.codexHome, args.threadId, resolved.row.title || null)),
+      title: redactOptionalOutput(sessionTitle(args.codexHome, args.threadId, resolved.row.title || null)),
       thread_id: args.threadId,
-      cwd: sanitizeOptional(resolved.row.cwd),
-      rollout_path: sanitizeText(rolloutPath),
+      cwd: redactOptionalOutput(resolved.row.cwd),
+      rollout_path: redactSecretsFromOutput(rolloutPath),
       archived: Boolean(resolved.row.archived),
     },
-    query: { literal: sanitizeText(args.query), date: args.date || null, match_role: args.matchRole },
+    query: { literal: redactSecretsFromOutput(args.query), date: args.date || null, match_role: args.matchRole },
     scope: {
       before_messages: args.before,
       after_messages: args.after,

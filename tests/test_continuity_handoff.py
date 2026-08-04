@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -83,7 +84,7 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
             self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
 
-    def test_all_returned_context_is_sanitized(self):
+    def test_secrets_are_redacted_from_all_returned_context(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -135,7 +136,7 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertGreaterEqual(completed.stdout.count("[REDACTED"), 4)
             self.assertEqual(before, tree_snapshot(codex_home))
 
-    def test_identity_metadata_is_sanitized(self):
+    def test_secrets_are_redacted_from_returned_identity_metadata(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -170,7 +171,7 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertNotIn(metadata_secret, completed.stdout)
             self.assertIn("[REDACTED_TOKEN]", completed.stdout)
 
-    def test_matching_uses_full_sanitized_text_before_evidence_truncation(self):
+    def test_matching_uses_full_redacted_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -206,24 +207,63 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertIn(literal, evidence)
             self.assertTrue(evidence.startswith("[TRUNCATED PREFIX]"))
 
-    def test_non_quiescent_database_fails_without_touching_sidecars(self):
+    def test_live_wal_database_is_recalled_while_writer_remains_open(self):
         with tempfile.TemporaryDirectory() as directory:
-            codex_home = pathlib.Path(directory)
+            root = pathlib.Path(directory)
+            codex_home = root / "codex"
+            codex_home.mkdir()
             database = codex_home / "state_5.sqlite"
-            database.write_bytes(b"not opened")
-            wal = codex_home / "state_5.sqlite-wal"
-            wal.write_bytes(b"preserve me")
-            before = tree_snapshot(codex_home)
-
-            completed = subprocess.run(
-                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "x", "--query", "safe"],
-                capture_output=True,
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-live-wal"
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T11:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "live continuity lookup"}]}}),
+            ]) + "\n")
+            writer_source = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(database))});
+              db.exec("PRAGMA journal_mode=WAL");
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Live task", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              process.stdout.write("ready\\n");
+              setInterval(() => {{}}, 1000);
+            '''
+            writer = subprocess.Popen(
+                ["node", "-e", writer_source],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
             )
+            try:
+                self.assertEqual(writer.stdout.readline().strip(), "ready")
+                self.assertTrue((codex_home / "state_5.sqlite-wal").exists())
+                self.assertTrue((codex_home / "state_5.sqlite-shm").exists())
+                before = tree_snapshot(codex_home)
 
-            self.assertNotEqual(completed.returncode, 0)
-            self.assertIn("State database is not quiescent", completed.stderr)
-            self.assertEqual(before, tree_snapshot(codex_home))
+                completed = subprocess.run(
+                    ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "live continuity lookup"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    env={**os.environ, "TMPDIR": str(root)},
+                )
+                result = json.loads(completed.stdout)
+                after = tree_snapshot(codex_home)
+
+                self.assertEqual(result["identity"]["title"], "Live task")
+                self.assertEqual(result["scope"]["matched_windows"], 1)
+                self.assertIsNone(writer.poll())
+                self.assertEqual(set(before), set(after))
+                for name in ["rollout.jsonl", "state_5.sqlite", "state_5.sqlite-wal"]:
+                    self.assertEqual(before[name], after[name])
+                self.assertFalse(any(root.glob("continuity-recall-*")))
+            finally:
+                writer.terminate()
+                writer.wait(timeout=5)
+                writer.stdout.close()
+                writer.stderr.close()
 
     def test_sensitive_history_query_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

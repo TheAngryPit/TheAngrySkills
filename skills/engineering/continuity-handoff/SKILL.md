@@ -32,7 +32,8 @@ proves that the destination does not inherit material transcript weight.
 6. Resolve the source `rollout_path` while Codex remains open. The bundled
    reader takes a consistent temporary snapshot through SQLite's Online Backup
    API, queries that snapshot with immutable read-only semantics, and removes
-   it before returning. Never include credentials or secret-bearing files.
+   it before returning. The reader accesses only the selected state database,
+   session index, and rollout; it never opens separate credential stores.
 7. Fill [the packet template](references/packet-template.md). Save it in the OS
    temporary directory unless the operator requests a durable project file.
 8. If the operator explicitly asks to create a new task, deliver the packet to
@@ -76,9 +77,10 @@ node scripts/recall-codex-history.mjs \
 
 Run the script from this skill directory while Codex remains open. It snapshots
 the live SQLite database consistently, opens only that snapshot with
-`mode=ro&immutable=1`, validates the rollout identity, streams JSONL, redacts
-secrets from every returned message, and caps output. It never writes logical
-Codex source state and never requires the operator to close the app.
+`mode=ro&immutable=1`, validates the rollout identity, streams JSONL verbatim,
+and caps output. Historical evidence is not rewritten or censored. It never
+writes logical Codex source state and never requires the operator to close the
+app.
 
 Use `--match-role user` for an operator report and `--match-role assistant` for
 an earlier agent conclusion. Internal system/developer messages are never
@@ -103,8 +105,9 @@ Do not paste raw tool output into the destination when the capsule is enough.
 
 - Packet generation and recall never rewrite existing source or destination
   history. Normal task messages may continue while the skill runs.
-- Never copy `auth.json`, credentials, cookies, passwords, tokens, Keychain
-  material, or unrelated conversation.
+- Never open or copy `auth.json`, Keychain material, browser stores, or other
+  credential sources. Recall may faithfully return sensitive text already
+  present in the explicitly selected historical window.
 - Never query another profile or device by guessing a nearby path.
 - Never rewrite SQLite, JSONL, titles, indexes, goals, or project bindings.
 - Never treat packet absence as proof that an event did not happen.

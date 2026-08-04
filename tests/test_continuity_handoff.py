@@ -84,25 +84,25 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
             self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
 
-    def test_secrets_are_redacted_from_all_returned_context(self):
+    def test_selected_historical_window_is_returned_verbatim(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
             rollout = codex_home / "rollout.jsonl"
-            thread_id = "019f-test-redaction"
-            secrets = [
-                "first-cookie-must-not-leak",
-                "second-cookie-must-not-leak",
-                "basic-auth-must-not-leak",
-                "json-token-must-not-leak",
+            thread_id = "019f-test-verbatim"
+            exact_values = [
+                "first-cookie-value",
+                "second-cookie-value",
+                "basic-auth-value",
+                "json-token-value",
                 "github_pat_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                "-----BEGIN OPENSSH PRIVATE KEY-----\nprivate-key-body-must-not-leak\n-----END OPENSSH PRIVATE KEY-----",
+                "-----BEGIN OPENSSH PRIVATE KEY-----\nprivate-key-body\n-----END OPENSSH PRIVATE KEY-----",
             ]
             rows = [
                 {"type": "session_meta", "payload": {"id": thread_id}},
-                {"timestamp": "2026-08-04T10:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"Cookie: session={secrets[0]}; csrftoken={secrets[1]}\nAuthorization: Basic {secrets[2]}"}]}},
+                {"timestamp": "2026-08-04T10:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"Cookie: session={exact_values[0]}; csrftoken={exact_values[1]}\nAuthorization: Basic {exact_values[2]}"}]}},
                 {"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "find the accepted continuity decision"}]}},
-                {"timestamp": "2026-08-04T10:02:00Z", "type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": f'Context follows {{"access_token":"{secrets[3]}"}} and {secrets[4]}\n{secrets[5]}'}]}},
+                {"timestamp": "2026-08-04T10:02:00Z", "type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": f'Context follows {{"access_token":"{exact_values[3]}"}} and {exact_values[4]}\n{exact_values[5]}'}]}},
             ]
             rollout.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
             setup = f'''
@@ -131,12 +131,18 @@ class ContinuityHandoffTests(unittest.TestCase):
                 text=True,
             )
 
-            for secret in secrets:
-                self.assertNotIn(secret, completed.stdout)
-            self.assertGreaterEqual(completed.stdout.count("[REDACTED"), 4)
+            result = json.loads(completed.stdout)
+            returned_text = "\n".join(
+                message["text"]
+                for capture in result["evidence"]
+                for message in capture["messages"]
+            )
+            for value in exact_values:
+                self.assertIn(value, returned_text)
+            self.assertNotIn("[REDACTED", completed.stdout)
             self.assertEqual(before, tree_snapshot(codex_home))
 
-    def test_secrets_are_redacted_from_returned_identity_metadata(self):
+    def test_identity_metadata_is_returned_verbatim(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -168,10 +174,10 @@ class ContinuityHandoffTests(unittest.TestCase):
                 text=True,
             )
 
-            self.assertNotIn(metadata_secret, completed.stdout)
-            self.assertIn("[REDACTED_TOKEN]", completed.stdout)
+            self.assertIn(metadata_secret, completed.stdout)
+            self.assertNotIn("[REDACTED", completed.stdout)
 
-    def test_matching_uses_full_redacted_text_before_evidence_truncation(self):
+    def test_matching_uses_full_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -264,16 +270,6 @@ class ContinuityHandoffTests(unittest.TestCase):
                 writer.wait(timeout=5)
                 writer.stdout.close()
                 writer.stderr.close()
-
-    def test_sensitive_history_query_is_rejected(self):
-        with tempfile.TemporaryDirectory() as directory:
-            completed = subprocess.run(
-                ["node", str(SCRIPT), "--thread-id", "x", "--query", "find password", "--codex-home", directory],
-                capture_output=True,
-                text=True,
-            )
-            self.assertNotEqual(completed.returncode, 0)
-            self.assertIn("Sensitive-history queries are not allowed", completed.stderr)
 
     def test_unknown_option_is_rejected(self):
         completed = subprocess.run(

@@ -44,31 +44,11 @@ function parseArgs(argv) {
   if (args.maxOutputChars < 1000 || args.maxOutputChars > 50000) fail("--max-output-chars must be between 1000 and 50000");
   if (args.date && !/^\d{4}-\d{2}-\d{2}$/.test(args.date)) fail("--date must use YYYY-MM-DD");
   if (!["any", "user", "assistant"].includes(args.matchRole)) fail("--match-role must be any, user, or assistant");
-  const sensitive = /(password|credential|secret|auth\.json|cookie|api[- ]?key|access[- ]?token|refresh[- ]?token)/i;
-  if (sensitive.test(args.query)) fail("Sensitive-history queries are not allowed");
   return args;
 }
 
 function tableExists(db, name) {
   return Boolean(db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?").get(name));
-}
-
-const SENSITIVE_KEY = String.raw`(?:password|passwd|secret|api[-_ ]?key|access[-_ ]?token|refresh[-_ ]?token|auth(?:orization)?|cookie|set-cookie)`;
-
-function redactSecretsFromOutput(value) {
-  return String(value)
-    .replace(/-----BEGIN ([A-Z0-9 ]*PRIVATE KEY(?: BLOCK)?)-----[\s\S]*?-----END \1-----/gi, "[REDACTED_PRIVATE_KEY]")
-    .replace(/^(\s*(?:Cookie|Set-Cookie)\s*:\s*).*$/gim, "$1[REDACTED]")
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
-    .replace(/\bBasic\s+[A-Za-z0-9+/=]+/gi, "Basic [REDACTED]")
-    .replace(/\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|npm_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,})\b/g, "[REDACTED_TOKEN]")
-    .replace(/\b(https?:\/\/[^\s:/@]+:)[^\s/@]+@/gi, "$1[REDACTED]@")
-    .replace(new RegExp(`(["']?${SENSITIVE_KEY}["']?\\s*[:=]\\s*["'])([^"'\\r\\n]+)(["'])`, "gi"), "$1[REDACTED]$3")
-    .replace(new RegExp(`(${SENSITIVE_KEY}\\s*[:=]\\s*)([^\\s,;]+)`, "gi"), "$1[REDACTED]");
-}
-
-function redactOptionalOutput(value) {
-  return typeof value === "string" ? redactSecretsFromOutput(value) : null;
 }
 
 function boundedMessageText(text, maxChars, matchIndex = null) {
@@ -137,10 +117,10 @@ function sessionTitle(codexHome, threadId, fallback) {
 function messageFromRow(row, lineNumber, maxChars) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
-  const fullText = redactSecretsFromOutput((row.payload.content || [])
+  const fullText = (row.payload.content || [])
     .filter((item) => item?.type === "input_text" || item?.type === "output_text")
     .map((item) => item.text || "")
-    .join("\n"));
+    .join("\n");
   if (!fullText) return null;
   return {
     fullText,
@@ -231,13 +211,13 @@ export async function run(argv) {
   const result = {
     mode: "bounded_read_only_recall",
     identity: {
-      title: redactOptionalOutput(sessionTitle(args.codexHome, args.threadId, resolved.row.title || null)),
+      title: sessionTitle(args.codexHome, args.threadId, resolved.row.title || null),
       thread_id: args.threadId,
-      cwd: redactOptionalOutput(resolved.row.cwd),
-      rollout_path: redactSecretsFromOutput(rolloutPath),
+      cwd: resolved.row.cwd || null,
+      rollout_path: rolloutPath,
       archived: Boolean(resolved.row.archived),
     },
-    query: { literal: redactSecretsFromOutput(args.query), date: args.date || null, match_role: args.matchRole },
+    query: { literal: args.query, date: args.date || null, match_role: args.matchRole },
     scope: {
       before_messages: args.before,
       after_messages: args.after,

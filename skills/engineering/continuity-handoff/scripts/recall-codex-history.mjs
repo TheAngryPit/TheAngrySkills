@@ -62,6 +62,9 @@ function boundedMessageText(text, maxChars, matchIndex = null) {
 
 function createRedactor() {
   const counts = new Map();
+  const secretKey = String.raw`(?:[A-Za-z0-9]+[_-])*(?:password|passwd|secret[_-]?access[_-]?key|api[_-]?key|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key|secret|token)`;
+  const quotedSecretValue = new RegExp(`(["']?${secretKey}["']?\\s*[:=]\\s*)(["'])(.*?)\\2`, "gi");
+  const unquotedSecretValue = new RegExp(`(["']?${secretKey}["']?\\s*[:=]\\s*)([^"'\\s,;}\\]&#]+)`, "gi");
   const record = (type) => {
     counts.set(type, (counts.get(type) || 0) + 1);
     return `[REDACTED:${type}]`;
@@ -83,15 +86,15 @@ function createRedactor() {
         (_, prefix) => `${prefix}${record("AUTHORIZATION")}`,
       )
       .replace(
-        /(\b[a-z][a-z0-9+.-]*:\/\/)([^/\s:@]+):([^@\s/]+)@/gi,
+        /(\b[a-z][a-z0-9+.-]*:\/\/)([^/\s:@]*):([^@\s/]+)@/gi,
         (_, scheme) => `${scheme}${record("URL_CREDENTIALS")}@`,
       )
       .replace(
-        /(["']?\b(?:password|passwd|secret|api[_-]?key|token|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key)\b["']?\s*[:=]\s*)(["'])(.*?)\2/gi,
+        quotedSecretValue,
         (_, prefix, quote) => `${prefix}${quote}${record("SECRET_VALUE")}${quote}`,
       )
       .replace(
-        /(["']?\b(?:password|passwd|secret|api[_-]?key|token|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key)\b["']?\s*[:=]\s*)([^"'\s,;}\]&#]+)/gi,
+        unquotedSecretValue,
         (_, prefix) => `${prefix}${record("SECRET_VALUE")}`,
       )
       .replace(/\bgithub_pat_[A-Za-z0-9_]{20,}\b/g, () => record("API_TOKEN"))

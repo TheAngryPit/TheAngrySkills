@@ -277,6 +277,71 @@ class ContinuityHandoffTests(unittest.TestCase):
                 {"API_TOKEN", "AUTHORIZATION", "COOKIE", "SECRET_VALUE", "URL_CREDENTIALS"},
             )
 
+    def test_prefixed_secret_keys_and_password_only_urls_are_redacted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-credential-shape-matrix"
+            secrets = [
+                "redis-password-value",
+                "database-password-value",
+                "openai-key-value",
+                "github-token-value",
+                "aws-secret-value",
+                "quoted-redis-secret",
+                "powershell-secret",
+                "json-token-value",
+                "yaml-client-secret",
+            ]
+            sensitive_text = "\n".join([
+                f"redis://:{secrets[0]}@cache.example.test/0",
+                f"DATABASE_PASSWORD={secrets[1]}",
+                f"OPENAI_API_KEY={secrets[2]}",
+                f"GITHUB_TOKEN={secrets[3]}",
+                f"AWS_SECRET_ACCESS_KEY={secrets[4]}",
+                f"export REDIS_PASSWORD='{secrets[5]}'",
+                f'$env:OPENAI_API_KEY = "{secrets[6]}"',
+                f'{{"service_access_token":"{secrets[7]}"}}',
+                f"deployment_client_secret: {secrets[8]}",
+                "password_policy=strict",
+                "token_count=42",
+                "decision=accepted",
+            ])
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"credential matrix lookup\n{sensitive_text}"}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Credential matrix", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "credential matrix lookup"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            for secret in secrets:
+                self.assertNotIn(secret, completed.stdout)
+            result = json.loads(completed.stdout)
+            returned_text = result["evidence"][0]["messages"][0]["text"]
+            self.assertIn("redis://[REDACTED:URL_CREDENTIALS]@cache.example.test/0", returned_text)
+            self.assertIn("DATABASE_PASSWORD=[REDACTED:SECRET_VALUE]", returned_text)
+            self.assertIn('OPENAI_API_KEY = "[REDACTED:SECRET_VALUE]"', returned_text)
+            self.assertIn("AWS_SECRET_ACCESS_KEY=[REDACTED:SECRET_VALUE]", returned_text)
+            self.assertIn("password_policy=strict", returned_text)
+            self.assertIn("token_count=42", returned_text)
+            self.assertIn("decision=accepted", returned_text)
+
     def test_embedded_authorization_and_url_query_suffix_are_handled_safely(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"

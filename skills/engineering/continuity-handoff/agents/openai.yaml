@@ -1,4 +1,4 @@
 interface:
   display_name: "Continuity Handoff"
   short_description: "Fresh-task handoff with bounded legacy recall"
-  default_prompt: "Create a compact continuity packet for a fresh native task. Preserve goals, decisions, proof, protected state, and a bounded read-only handle to legacy history without copying the transcript."
+  default_prompt: "Use $continuity-handoff to create a compact packet for a fresh native task. Preserve goals, decisions, proof, protected state, and a bounded read-only handle to legacy history without copying the transcript."

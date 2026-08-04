@@ -95,12 +95,13 @@ class ContinuityHandoffTests(unittest.TestCase):
                 "basic-auth-must-not-leak",
                 "json-token-must-not-leak",
                 "github_pat_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "-----BEGIN OPENSSH PRIVATE KEY-----\nprivate-key-body-must-not-leak\n-----END OPENSSH PRIVATE KEY-----",
             ]
             rows = [
                 {"type": "session_meta", "payload": {"id": thread_id}},
                 {"timestamp": "2026-08-04T10:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"Cookie: session={secrets[0]}; csrftoken={secrets[1]}\nAuthorization: Basic {secrets[2]}"}]}},
                 {"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "find the accepted continuity decision"}]}},
-                {"timestamp": "2026-08-04T10:02:00Z", "type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": f'Context follows {{"access_token":"{secrets[3]}"}} and {secrets[4]}'}]}},
+                {"timestamp": "2026-08-04T10:02:00Z", "type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": f'Context follows {{"access_token":"{secrets[3]}"}} and {secrets[4]}\n{secrets[5]}'}]}},
             ]
             rollout.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
             setup = f'''
@@ -201,8 +202,9 @@ class ContinuityHandoffTests(unittest.TestCase):
             result = json.loads(completed.stdout)
 
             self.assertEqual(result["scope"]["matched_windows"], 1)
-            self.assertTrue(result["evidence"][0]["messages"][0]["text"].endswith("[TRUNCATED]"))
-            self.assertNotIn(literal, result["evidence"][0]["messages"][0]["text"])
+            evidence = result["evidence"][0]["messages"][0]["text"]
+            self.assertIn(literal, evidence)
+            self.assertTrue(evidence.startswith("[TRUNCATED PREFIX]"))
 
     def test_non_quiescent_database_fails_without_touching_sidecars(self):
         with tempfile.TemporaryDirectory() as directory:

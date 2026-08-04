@@ -57,6 +57,7 @@ const SENSITIVE_KEY = String.raw`(?:password|passwd|secret|api[-_ ]?key|access[-
 
 function sanitizeText(value) {
   return String(value)
+    .replace(/-----BEGIN ([A-Z0-9 ]*PRIVATE KEY(?: BLOCK)?)-----[\s\S]*?-----END \1-----/gi, "[REDACTED_PRIVATE_KEY]")
     .replace(/^(\s*(?:Cookie|Set-Cookie)\s*:\s*).*$/gim, "$1[REDACTED]")
     .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
     .replace(/\bBasic\s+[A-Za-z0-9+/=]+/gi, "Basic [REDACTED]")
@@ -68,6 +69,14 @@ function sanitizeText(value) {
 
 function sanitizeOptional(value) {
   return typeof value === "string" ? sanitizeText(value) : null;
+}
+
+function boundedMessageText(text, maxChars, matchIndex = null) {
+  if (text.length <= maxChars) return text;
+  if (matchIndex === null) return `${text.slice(0, maxChars)}\n[TRUNCATED]`;
+  const start = Math.max(0, Math.min(matchIndex - Math.floor(maxChars / 2), text.length - maxChars));
+  const end = Math.min(text.length, start + maxChars);
+  return `${start > 0 ? "[TRUNCATED PREFIX]\n" : ""}${text.slice(start, end)}${end < text.length ? "\n[TRUNCATED SUFFIX]" : ""}`;
 }
 
 function immutableDatabaseLocation(dbPath) {
@@ -126,7 +135,7 @@ function messageFromRow(row, lineNumber, maxChars) {
       line: lineNumber,
       timestamp: row.timestamp || null,
       role: row.payload.role || "unknown",
-      text: fullText.length > maxChars ? `${fullText.slice(0, maxChars)}\n[TRUNCATED]` : fullText,
+      text: boundedMessageText(fullText, maxChars),
     },
   };
 }
@@ -165,13 +174,17 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
     }
 
     const dateMatches = !date || String(message.timestamp || "").startsWith(date);
-    const queryMatches = record.fullText.toLocaleLowerCase().includes(needle);
+    const matchIndex = record.fullText.toLocaleLowerCase().indexOf(needle);
+    const queryMatches = matchIndex !== -1;
     const roleMatches = matchRole === "any" || message.role === matchRole;
     if (captures.length < maxMatches && dateMatches && queryMatches && roleMatches) {
       captures.push({
         matchLine: message.line,
         remaining: after,
-        messages: [...previous, message],
+        messages: [
+          ...previous,
+          { ...message, text: boundedMessageText(record.fullText, maxMessageChars, matchIndex) },
+        ],
       });
     }
 

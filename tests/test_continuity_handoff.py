@@ -277,6 +277,47 @@ class ContinuityHandoffTests(unittest.TestCase):
                 {"API_TOKEN", "AUTHORIZATION", "COOKIE", "SECRET_VALUE", "URL_CREDENTIALS"},
             )
 
+    def test_embedded_authorization_and_url_query_suffix_are_handled_safely(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-embedded-credentials"
+            bearer_secret = "embedded-bearer-secret"
+            query_secret = "query-secret-value"
+            evidence = (
+                f'Run curl -H "Authorization: Bearer {bearer_secret}" '
+                f'"https://example.test/api?access_token={query_secret}&decision=accepted#result"'
+            )
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": evidence}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Embedded credentials", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "decision=accepted"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            result = json.loads(completed.stdout)
+            returned_text = result["evidence"][0]["messages"][0]["text"]
+
+            self.assertNotIn(bearer_secret, completed.stdout)
+            self.assertNotIn(query_secret, completed.stdout)
+            self.assertIn('curl -H "Authorization: [REDACTED:AUTHORIZATION]"', returned_text)
+            self.assertIn("access_token=[REDACTED:SECRET_VALUE]&decision=accepted#result", returned_text)
+
     def test_matching_uses_full_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"

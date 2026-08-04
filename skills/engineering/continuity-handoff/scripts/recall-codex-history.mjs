@@ -73,9 +73,13 @@ function createRedactor() {
         /-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----[\s\S]*?-----END(?: [A-Z0-9]+)? PRIVATE KEY-----/g,
         () => record("PRIVATE_KEY"),
       )
+      .replace(
+        /(["'])(\s*(?:set-cookie|cookie)\s*:\s*)(.*?)\1/gi,
+        (_, quote, prefix) => `${quote}${prefix}${record("COOKIE")}${quote}`,
+      )
       .replace(/^(\s*(?:set-cookie|cookie)\s*:\s*).+$/gim, (_, prefix) => `${prefix}${record("COOKIE")}`)
       .replace(
-        /^(\s*(?:proxy-)?authorization\s*:\s*)(?:bearer|basic)\s+[^\r\n]+$/gim,
+        /(\b(?:proxy-)?authorization\s*:\s*)(?:bearer|basic)\s+[^\s"'`;|&]+/gi,
         (_, prefix) => `${prefix}${record("AUTHORIZATION")}`,
       )
       .replace(
@@ -87,7 +91,7 @@ function createRedactor() {
         (_, prefix, quote) => `${prefix}${quote}${record("SECRET_VALUE")}${quote}`,
       )
       .replace(
-        /(["']?\b(?:password|passwd|secret|api[_-]?key|token|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key)\b["']?\s*[:=]\s*)([^"'\s,;}\]]+)/gi,
+        /(["']?\b(?:password|passwd|secret|api[_-]?key|token|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key)\b["']?\s*[:=]\s*)([^"'\s,;}\]&#]+)/gi,
         (_, prefix) => `${prefix}${record("SECRET_VALUE")}`,
       )
       .replace(/\bgithub_pat_[A-Za-z0-9_]{20,}\b/g, () => record("API_TOKEN"))

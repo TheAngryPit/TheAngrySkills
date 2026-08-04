@@ -57,12 +57,17 @@ const SENSITIVE_KEY = String.raw`(?:password|passwd|secret|api[-_ ]?key|access[-
 
 function sanitizeText(value) {
   return String(value)
+    .replace(/^(\s*(?:Cookie|Set-Cookie)\s*:\s*).*$/gim, "$1[REDACTED]")
     .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
     .replace(/\bBasic\s+[A-Za-z0-9+/=]+/gi, "Basic [REDACTED]")
     .replace(/\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|npm_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,})\b/g, "[REDACTED_TOKEN]")
     .replace(/\b(https?:\/\/[^\s:/@]+:)[^\s/@]+@/gi, "$1[REDACTED]@")
     .replace(new RegExp(`(["']?${SENSITIVE_KEY}["']?\\s*[:=]\\s*["'])([^"'\\r\\n]+)(["'])`, "gi"), "$1[REDACTED]$3")
     .replace(new RegExp(`(${SENSITIVE_KEY}\\s*[:=]\\s*)([^\\s,;]+)`, "gi"), "$1[REDACTED]");
+}
+
+function sanitizeOptional(value) {
+  return typeof value === "string" ? sanitizeText(value) : null;
 }
 
 function immutableDatabaseLocation(dbPath) {
@@ -110,16 +115,19 @@ function sessionTitle(codexHome, threadId, fallback) {
 function messageFromRow(row, lineNumber, maxChars) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
-  const text = sanitizeText((row.payload.content || [])
+  const fullText = sanitizeText((row.payload.content || [])
     .filter((item) => item?.type === "input_text" || item?.type === "output_text")
     .map((item) => item.text || "")
     .join("\n"));
-  if (!text) return null;
+  if (!fullText) return null;
   return {
-    line: lineNumber,
-    timestamp: row.timestamp || null,
-    role: row.payload.role || "unknown",
-    text: text.length > maxChars ? `${text.slice(0, maxChars)}\n[TRUNCATED]` : text,
+    fullText,
+    evidence: {
+      line: lineNumber,
+      timestamp: row.timestamp || null,
+      role: row.payload.role || "unknown",
+      text: fullText.length > maxChars ? `${fullText.slice(0, maxChars)}\n[TRUNCATED]` : fullText,
+    },
   };
 }
 
@@ -144,8 +152,9 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
       continue;
     }
     if (row.type === "session_meta" && !embeddedId) embeddedId = row.payload?.id || null;
-    const message = messageFromRow(row, lineNumber, maxMessageChars);
-    if (!message) continue;
+    const record = messageFromRow(row, lineNumber, maxMessageChars);
+    if (!record) continue;
+    const message = record.evidence;
     messageCount += 1;
 
     for (const capture of captures) {
@@ -156,7 +165,7 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
     }
 
     const dateMatches = !date || String(message.timestamp || "").startsWith(date);
-    const queryMatches = message.text.toLocaleLowerCase().includes(needle);
+    const queryMatches = record.fullText.toLocaleLowerCase().includes(needle);
     const roleMatches = matchRole === "any" || message.role === matchRole;
     if (captures.length < maxMatches && dateMatches && queryMatches && roleMatches) {
       captures.push({
@@ -196,10 +205,10 @@ export async function run(argv) {
   const result = {
     mode: "bounded_read_only_recall",
     identity: {
-      title: sessionTitle(args.codexHome, args.threadId, resolved.row.title || null),
+      title: sanitizeOptional(sessionTitle(args.codexHome, args.threadId, resolved.row.title || null)),
       thread_id: args.threadId,
-      cwd: resolved.row.cwd || null,
-      rollout_path: rolloutPath,
+      cwd: sanitizeOptional(resolved.row.cwd),
+      rollout_path: sanitizeText(rolloutPath),
       archived: Boolean(resolved.row.archived),
     },
     query: { literal: sanitizeText(args.query), date: args.date || null, match_role: args.matchRole },

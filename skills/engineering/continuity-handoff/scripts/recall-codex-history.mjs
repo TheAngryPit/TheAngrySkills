@@ -60,86 +60,6 @@ function boundedMessageText(text, maxChars, matchIndex = null) {
   return `${start > 0 ? "[TRUNCATED PREFIX]\n" : ""}${text.slice(start, end)}${end < text.length ? "\n[TRUNCATED SUFFIX]" : ""}`;
 }
 
-function createRedactor() {
-  const counts = new Map();
-  const secretKey = String.raw`(?:[A-Za-z0-9]+[_-])*(?:password|passwd|secret[_-]?access[_-]?key|api[_-]?key|auth[_-]?token|access[_-]?token|refresh[_-]?token|client[_-]?secret|private[_-]?key|secret|token)`;
-  const quotedSecretValue = new RegExp(`(["']?${secretKey}["']?\\s*[:=]\\s*)(["'])(.*?)\\2`, "gi");
-  const unquotedSecretValue = new RegExp(`(["']?${secretKey}["']?\\s*[:=]\\s*)([^"'\\s,;}\\]&#]+)`, "gi");
-  const record = (type) => {
-    counts.set(type, (counts.get(type) || 0) + 1);
-    return `[REDACTED:${type}]`;
-  };
-  const redactWithOffset = (value, trackedOffset = null) => {
-    if (typeof value !== "string" || value.length === 0) return { text: value, offset: trackedOffset };
-    let state = { text: value, offset: trackedOffset };
-    const replace = (pattern, replacer) => {
-      const sourceOffset = state.offset;
-      let deltaBeforeOffset = 0;
-      let mappedOffset = sourceOffset;
-      let offsetMappedInsideReplacement = false;
-      const text = state.text.replace(pattern, (...args) => {
-        const match = args[0];
-        const matchStart = args[args.length - 2];
-        const replacement = replacer(...args);
-        if (sourceOffset !== null && !offsetMappedInsideReplacement) {
-          const matchEnd = matchStart + match.length;
-          if (matchEnd <= sourceOffset) {
-            deltaBeforeOffset += replacement.length - match.length;
-          } else if (matchStart <= sourceOffset && sourceOffset < matchEnd) {
-            mappedOffset = matchStart + deltaBeforeOffset;
-            offsetMappedInsideReplacement = true;
-          }
-        }
-        return replacement;
-      });
-      if (sourceOffset !== null && !offsetMappedInsideReplacement) {
-        mappedOffset = sourceOffset + deltaBeforeOffset;
-      }
-      state = { text, offset: mappedOffset };
-    };
-
-    replace(
-        /-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----[\s\S]*?-----END(?: [A-Z0-9]+)? PRIVATE KEY-----/g,
-        () => record("PRIVATE_KEY"),
-      );
-    replace(
-        /(["'])(\s*(?:set-cookie|cookie)\s*:\s*)(.*?)\1/gi,
-        (_, quote, prefix) => `${quote}${prefix}${record("COOKIE")}${quote}`,
-      );
-    replace(/^(\s*(?:set-cookie|cookie)\s*:\s*).+$/gim, (_, prefix) => `${prefix}${record("COOKIE")}`);
-    replace(
-        /(\b(?:proxy-)?authorization\s*:\s*)(?:bearer|basic)\s+[^\s"'`;|&]+/gi,
-        (_, prefix) => `${prefix}${record("AUTHORIZATION")}`,
-      );
-    replace(
-        /(\b[a-z][a-z0-9+.-]*:\/\/)([^/\s:@]*):([^@\s/]+)@/gi,
-        (_, scheme) => `${scheme}${record("URL_CREDENTIALS")}@`,
-      );
-    replace(
-        quotedSecretValue,
-        (_, prefix, quote) => `${prefix}${quote}${record("SECRET_VALUE")}${quote}`,
-      );
-    replace(
-        unquotedSecretValue,
-        (_, prefix) => `${prefix}${record("SECRET_VALUE")}`,
-      );
-    replace(/\bgithub_pat_[A-Za-z0-9_]{20,}\b/g, () => record("API_TOKEN"));
-    replace(/\bgh[pousr]_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"));
-    replace(/\bnpm_[A-Za-z0-9]{20,}\b/g, () => record("API_TOKEN"));
-    replace(/\bsk-[A-Za-z0-9_-]{16,}\b/g, () => record("API_TOKEN"));
-    replace(/\bAKIA[0-9A-Z]{16}\b/g, () => record("API_TOKEN"));
-    replace(/\bxox[baprs]-[A-Za-z0-9-]{10,}\b/g, () => record("API_TOKEN"));
-    return state;
-  };
-  const redact = (value) => redactWithOffset(value).text;
-  const summary = () => ({
-    applied: counts.size > 0,
-    count: [...counts.values()].reduce((total, count) => total + count, 0),
-    types: Object.fromEntries([...counts.entries()].sort(([left], [right]) => left.localeCompare(right))),
-  });
-  return { redact, redactWithOffset, summary };
-}
-
 function immutableDatabaseLocation(dbPath) {
   const location = pathToFileURL(dbPath);
   location.searchParams.set("mode", "ro");
@@ -195,7 +115,7 @@ function sessionTitle(codexHome, threadId, fallback) {
   return title;
 }
 
-function messageFromRow(row, lineNumber) {
+function messageFromRow(row, lineNumber, maxChars) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
   const fullText = (row.payload.content || [])
@@ -209,6 +129,7 @@ function messageFromRow(row, lineNumber) {
       line: lineNumber,
       timestamp: row.timestamp || null,
       role: row.payload.role || "unknown",
+      text: boundedMessageText(fullText, maxChars),
     },
   };
 }
@@ -234,9 +155,9 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
       continue;
     }
     if (row.type === "session_meta" && !embeddedId) embeddedId = row.payload?.id || null;
-    const record = messageFromRow(row, lineNumber);
+    const record = messageFromRow(row, lineNumber, maxMessageChars);
     if (!record) continue;
-    const message = { ...record.evidence, fullText: record.fullText, matchIndex: null };
+    const message = record.evidence;
     messageCount += 1;
 
     for (const capture of captures) {
@@ -256,7 +177,7 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
         remaining: after,
         messages: [
           ...previous,
-          { ...message, matchIndex },
+          { ...message, text: boundedMessageText(record.fullText, maxMessageChars, matchIndex) },
         ],
       });
     }
@@ -283,38 +204,21 @@ function boundedJson(value, maxChars) {
 
 export async function run(argv) {
   const args = parseArgs(argv);
-  const redactor = createRedactor();
   const resolved = await resolveThread(path.resolve(args.codexHome), args.threadId);
   const rolloutPath = path.isAbsolute(resolved.row.rollout_path)
     ? resolved.row.rollout_path
     : path.resolve(args.codexHome, resolved.row.rollout_path);
   const scan = await scanRollout({ ...args, rolloutPath });
-  const safeQuery = redactor.redact(args.query);
-  const safeEvidence = scan.captures.map((capture) => ({
-    ...capture,
-    messages: capture.messages.map(({ fullText, matchIndex, ...message }) => {
-      const { text: safeText, offset: safeMatchIndex } = redactor.redactWithOffset(fullText, matchIndex);
-      return {
-        ...message,
-        text: boundedMessageText(safeText, args.maxMessageChars, safeMatchIndex),
-      };
-    }),
-  }));
   const result = {
     mode: "bounded_read_only_recall",
-    historical_content_policy: {
-      trust: "untrusted_historical_data",
-      use: "quoted_evidence_only",
-      instructions_executable: false,
-    },
     identity: {
-      title: redactor.redact(sessionTitle(args.codexHome, args.threadId, resolved.row.title || null)),
+      title: sessionTitle(args.codexHome, args.threadId, resolved.row.title || null),
       thread_id: args.threadId,
-      cwd: redactor.redact(resolved.row.cwd || null),
-      rollout_path: redactor.redact(rolloutPath),
+      cwd: resolved.row.cwd || null,
+      rollout_path: rolloutPath,
       archived: Boolean(resolved.row.archived),
     },
-    query: { literal: safeQuery, date: args.date || null, match_role: args.matchRole },
+    query: { literal: args.query, date: args.date || null, match_role: args.matchRole },
     scope: {
       before_messages: args.before,
       after_messages: args.after,
@@ -323,8 +227,7 @@ export async function run(argv) {
       messages_scanned: scan.messages_scanned,
       matched_windows: scan.match_count,
     },
-    evidence: safeEvidence,
-    redactions: redactor.summary(),
+    evidence: scan.captures,
     logical_codex_state_mutated: false,
     live_sqlite_snapshot_used: true,
     temporary_snapshot_removed: true,

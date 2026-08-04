@@ -15,6 +15,14 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def tree_snapshot(root):
+    return {
+        str(path.relative_to(root)): digest(path)
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
 @unittest.skipIf(shutil.which("node") is None, "node is required")
 class ContinuityHandoffTests(unittest.TestCase):
     def test_bounded_recall_is_read_only_and_evidence_located(self):
@@ -46,8 +54,7 @@ class ContinuityHandoffTests(unittest.TestCase):
               db.close();
             '''
             subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
-            protected = [rollout, codex_home / "state_5.sqlite", index]
-            before = {file: digest(file) for file in protected}
+            before = tree_snapshot(codex_home)
 
             completed = subprocess.run(
                 [
@@ -72,7 +79,78 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertIn("session_index.thread_name", result["evidence"][0]["messages"][1]["text"])
             self.assertNotIn("internal instruction", completed.stdout)
             self.assertFalse(result["mutation_performed"])
-            self.assertEqual(before, {file: digest(file) for file in protected})
+            self.assertEqual(before, tree_snapshot(codex_home))
+            self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
+            self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
+
+    def test_all_returned_context_is_sanitized(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-redaction"
+            secrets = [
+                "cookie-value-must-not-leak",
+                "basic-auth-must-not-leak",
+                "json-token-must-not-leak",
+                "github_pat_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            ]
+            rows = [
+                {"type": "session_meta", "payload": {"id": thread_id}},
+                {"timestamp": "2026-08-04T10:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"Cookie: session={secrets[0]}\nAuthorization: Basic {secrets[1]}"}]}},
+                {"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "find the accepted continuity decision"}]}},
+                {"timestamp": "2026-08-04T10:02:00Z", "type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": f'Context follows {{"access_token":"{secrets[2]}"}} and {secrets[3]}'}]}},
+            ]
+            rollout.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Continuity", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+            before = tree_snapshot(codex_home)
+
+            completed = subprocess.run(
+                [
+                    "node", str(SCRIPT),
+                    "--codex-home", str(codex_home),
+                    "--thread-id", thread_id,
+                    "--query", "accepted continuity decision",
+                    "--before", "1",
+                    "--after", "1",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            for secret in secrets:
+                self.assertNotIn(secret, completed.stdout)
+            self.assertGreaterEqual(completed.stdout.count("[REDACTED"), 4)
+            self.assertEqual(before, tree_snapshot(codex_home))
+
+    def test_non_quiescent_database_fails_without_touching_sidecars(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory)
+            database = codex_home / "state_5.sqlite"
+            database.write_bytes(b"not opened")
+            wal = codex_home / "state_5.sqlite-wal"
+            wal.write_bytes(b"preserve me")
+            before = tree_snapshot(codex_home)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "x", "--query", "safe"],
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("State database is not quiescent", completed.stderr)
+            self.assertEqual(before, tree_snapshot(codex_home))
 
     def test_sensitive_history_query_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

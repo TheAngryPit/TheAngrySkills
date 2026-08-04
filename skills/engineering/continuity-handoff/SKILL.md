@@ -29,8 +29,10 @@ proves that the destination does not inherit material transcript weight.
    not paste their full contents.
 5. Record accepted decisions, rejected directions with reasons, protected
    state, open gates, known historical gaps, and the exact resume point.
-6. Resolve the source `rollout_path` from `state_5.sqlite` read-only when local
-   access is authorized. Never include credentials or secret-bearing files.
+6. Resolve the source `rollout_path` from a quiescent `state_5.sqlite` opened
+   with immutable read-only semantics when local access is authorized. If a
+   `-wal` or `-shm` sidecar exists, close Codex and retry. Never include
+   credentials or secret-bearing files.
 7. Fill [the packet template](references/packet-template.md). Save it in the OS
    temporary directory unless the operator requests a durable project file.
 8. If the operator explicitly asks to create a new task, deliver the packet to
@@ -72,8 +74,10 @@ node scripts/recall-codex-history.mjs \
   --max-matches 3
 ```
 
-Run the script from this skill directory. It opens SQLite read-only, validates
-the rollout identity, streams JSONL, and caps output. It never writes state.
+Run the script from this skill directory. It refuses non-quiescent SQLite,
+opens the database with `mode=ro&immutable=1`, validates the rollout identity,
+streams JSONL, sanitizes every returned message, and caps output. It never
+writes source state.
 
 Use `--match-role user` for an operator report and `--match-role assistant` for
 an earlier agent conclusion. Internal system/developer messages are never

@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 import { DatabaseSync } from "node:sqlite";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 function fail(message) {
   throw new Error(message);
@@ -53,10 +53,34 @@ function tableExists(db, name) {
   return Boolean(db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?").get(name));
 }
 
+const SENSITIVE_KEY = String.raw`(?:password|passwd|secret|api[-_ ]?key|access[-_ ]?token|refresh[-_ ]?token|auth(?:orization)?|cookie|set-cookie)`;
+
+function sanitizeText(value) {
+  return String(value)
+    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [REDACTED]")
+    .replace(/\bBasic\s+[A-Za-z0-9+/=]+/gi, "Basic [REDACTED]")
+    .replace(/\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|npm_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,})\b/g, "[REDACTED_TOKEN]")
+    .replace(/\b(https?:\/\/[^\s:/@]+:)[^\s/@]+@/gi, "$1[REDACTED]@")
+    .replace(new RegExp(`(["']?${SENSITIVE_KEY}["']?\\s*[:=]\\s*["'])([^"'\\r\\n]+)(["'])`, "gi"), "$1[REDACTED]$3")
+    .replace(new RegExp(`(${SENSITIVE_KEY}\\s*[:=]\\s*)([^\\s,;]+)`, "gi"), "$1[REDACTED]");
+}
+
+function immutableDatabaseLocation(dbPath) {
+  for (const suffix of ["-wal", "-shm"]) {
+    if (fs.existsSync(`${dbPath}${suffix}`)) {
+      fail(`State database is not quiescent (${path.basename(dbPath)}${suffix}); close Codex and retry`);
+    }
+  }
+  const location = pathToFileURL(dbPath);
+  location.searchParams.set("mode", "ro");
+  location.searchParams.set("immutable", "1");
+  return location;
+}
+
 function resolveThread(codexHome, threadId) {
   const dbPath = path.join(codexHome, "state_5.sqlite");
   if (!fs.existsSync(dbPath)) fail(`Missing state database: ${dbPath}`);
-  const db = new DatabaseSync(dbPath, { readOnly: true });
+  const db = new DatabaseSync(immutableDatabaseLocation(dbPath), { readOnly: true });
   try {
     if (!tableExists(db, "threads")) fail("State database has no threads table");
     const row = db.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
@@ -86,12 +110,10 @@ function sessionTitle(codexHome, threadId, fallback) {
 function messageFromRow(row, lineNumber, maxChars) {
   if (row.type !== "response_item" || row.payload?.type !== "message") return null;
   if (!["user", "assistant"].includes(row.payload.role)) return null;
-  const text = (row.payload.content || [])
+  const text = sanitizeText((row.payload.content || [])
     .filter((item) => item?.type === "input_text" || item?.type === "output_text")
     .map((item) => item.text || "")
-    .join("\n")
-    .replace(/Bearer\s+[A-Za-z0-9._~+\/-]+=*/gi, "Bearer [REDACTED]")
-    .replace(/(password|secret|api[-_ ]?key|access[-_ ]?token|refresh[-_ ]?token)(\s*[:=]\s*)\S+/gi, "$1$2[REDACTED]");
+    .join("\n"));
   if (!text) return null;
   return {
     line: lineNumber,
@@ -180,7 +202,7 @@ export async function run(argv) {
       rollout_path: rolloutPath,
       archived: Boolean(resolved.row.archived),
     },
-    query: { literal: args.query, date: args.date || null, match_role: args.matchRole },
+    query: { literal: sanitizeText(args.query), date: args.date || null, match_role: args.matchRole },
     scope: {
       before_messages: args.before,
       after_messages: args.after,

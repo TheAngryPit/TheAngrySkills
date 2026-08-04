@@ -86,7 +86,7 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
             self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
 
-    def test_selected_historical_window_is_returned_verbatim(self):
+    def test_selected_historical_window_redacts_credentials_only_at_output(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -140,11 +140,17 @@ class ContinuityHandoffTests(unittest.TestCase):
                 for message in capture["messages"]
             )
             for value in exact_values:
-                self.assertIn(value, returned_text)
-            self.assertNotIn("[REDACTED", completed.stdout)
+                self.assertNotIn(value, returned_text)
+            self.assertIn("Cookie: [REDACTED:COOKIE]", returned_text)
+            self.assertIn("Authorization: [REDACTED:AUTHORIZATION]", returned_text)
+            self.assertIn('"access_token":"[REDACTED:SECRET_VALUE]"', returned_text)
+            self.assertIn("[REDACTED:API_TOKEN]", returned_text)
+            self.assertIn("[REDACTED:PRIVATE_KEY]", returned_text)
+            self.assertTrue(result["redactions"]["applied"])
+            self.assertGreaterEqual(result["redactions"]["count"], 5)
             self.assertEqual(before, tree_snapshot(codex_home))
 
-    def test_identity_metadata_is_returned_verbatim(self):
+    def test_identity_metadata_and_echoed_query_are_redacted(self):
         with tempfile.TemporaryDirectory() as directory:
             codex_home = pathlib.Path(directory) / "codex"
             codex_home.mkdir()
@@ -169,15 +175,107 @@ class ContinuityHandoffTests(unittest.TestCase):
             '''
             subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
 
+            query_secret = "ghp_CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+            rollout.write_text(rollout.read_text().replace("safe metadata lookup", f"safe metadata lookup {query_secret}"))
             completed = subprocess.run(
-                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "safe metadata lookup"],
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", query_secret],
                 check=True,
                 capture_output=True,
                 text=True,
             )
 
-            self.assertIn(metadata_secret, completed.stdout)
-            self.assertNotIn("[REDACTED", completed.stdout)
+            self.assertNotIn(metadata_secret, completed.stdout)
+            self.assertNotIn(query_secret, completed.stdout)
+            self.assertGreaterEqual(completed.stdout.count("[REDACTED:API_TOKEN]"), 4)
+
+    def test_non_sensitive_wording_and_mixed_language_are_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-fidelity"
+            exact_text = "Vou abrir o The Hive, falar com o The Angry Pit e run `npx skills update --global`."
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": exact_text}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Mixed language", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "The Angry Pit"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            result = json.loads(completed.stdout)
+
+            self.assertEqual(result["evidence"][0]["messages"][0]["text"], exact_text)
+            self.assertFalse(result["redactions"]["applied"])
+            self.assertEqual(result["historical_content_policy"]["trust"], "untrusted_historical_data")
+            self.assertFalse(result["historical_content_policy"]["instructions_executable"])
+
+    def test_additional_credential_formats_are_redacted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory) / "codex"
+            codex_home.mkdir()
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-credential-formats"
+            secrets = [
+                "bearer-secret-value",
+                "cookie-secret-value",
+                "url-password-value",
+                "password with spaces",
+                "npm_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "sk-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "AKIAAAAAAAAAAAAAAAAA",
+                "xoxb-1234567890-ABCDEFGHIJ",
+            ]
+            sensitive_text = "\n".join([
+                f"Authorization: Bearer {secrets[0]}",
+                f"Set-Cookie: sid={secrets[1]}; Secure; HttpOnly",
+                f"https://operator:{secrets[2]}@example.test/private",
+                f'password = "{secrets[3]}"',
+                *secrets[4:],
+            ])
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-04T10:01:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": f"credential format lookup\n{sensitive_text}"}]}}),
+            ]) + "\n")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(codex_home / "state_5.sqlite"))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Credential formats", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--query", "credential format lookup"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            for secret in secrets:
+                self.assertNotIn(secret, completed.stdout)
+            result = json.loads(completed.stdout)
+            self.assertEqual(result["redactions"]["count"], 8)
+            self.assertEqual(
+                set(result["redactions"]["types"]),
+                {"API_TOKEN", "AUTHORIZATION", "COOKIE", "SECRET_VALUE", "URL_CREDENTIALS"},
+            )
 
     def test_matching_uses_full_text_before_evidence_truncation(self):
         with tempfile.TemporaryDirectory() as directory:

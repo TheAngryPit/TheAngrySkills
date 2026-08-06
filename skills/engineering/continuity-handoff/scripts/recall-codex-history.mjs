@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs";
+import crypto from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
@@ -11,13 +12,17 @@ function fail(message) {
   throw new Error(message);
 }
 
+function sourceUnavailable(message) {
+  fail(`recall_source_unavailable: ${message}`);
+}
+
 function parseArgs(argv) {
   const allowed = new Set([
     "codexHome", "threadId", "query", "date", "matchRole", "before", "after",
-    "maxMatches", "maxMessageChars", "maxOutputChars",
+    "maxMatches", "maxMessageChars", "maxOutputChars", "profile", "device",
+    "project", "work", "rolloutPath",
   ]);
   const args = {
-    codexHome: process.env.CODEX_HOME || path.join(os.homedir(), ".codex"),
     before: 1,
     after: 5,
     maxMatches: 3,
@@ -32,7 +37,7 @@ function parseArgs(argv) {
     if (!allowed.has(key)) fail(`Unknown option: ${arg}`);
     args[key] = argv[++index];
   }
-  for (const key of ["threadId", "query"]) {
+  for (const key of ["codexHome", "threadId", "rolloutPath", "query"]) {
     if (!args[key]) fail(`--${key.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)} is required`);
   }
   for (const key of ["before", "after", "maxMatches", "maxMessageChars", "maxOutputChars"]) {
@@ -74,7 +79,7 @@ function removeSnapshot(snapshotPath, snapshotDirectory) {
 
 async function resolveThread(codexHome, threadId) {
   const dbPath = path.join(codexHome, "state_5.sqlite");
-  if (!fs.existsSync(dbPath)) fail(`Missing state database: ${dbPath}`);
+  if (!fs.existsSync(dbPath)) sourceUnavailable(`Missing recorded state database: ${dbPath}`);
   const snapshotDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "continuity-recall-"));
   const snapshotPath = path.join(snapshotDirectory, "state.sqlite");
   try {
@@ -87,14 +92,17 @@ async function resolveThread(codexHome, threadId) {
 
     const snapshot = new DatabaseSync(immutableDatabaseLocation(snapshotPath), { readOnly: true });
     try {
-      if (!tableExists(snapshot, "threads")) fail("State database has no threads table");
+      if (!tableExists(snapshot, "threads")) sourceUnavailable("Recorded state database has no threads table");
       const row = snapshot.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
-      if (!row) fail(`No thread row for ${threadId}`);
-      if (!row.rollout_path) fail("Thread row has no rollout_path");
+      if (!row) sourceUnavailable(`No exact thread row for ${threadId}`);
+      if (!row.rollout_path) sourceUnavailable("Exact thread row has no rollout_path");
       return { dbPath, row };
     } finally {
       snapshot.close();
     }
+  } catch (error) {
+    if (String(error?.message || "").startsWith("recall_source_unavailable:")) throw error;
+    sourceUnavailable(`Cannot read recorded state database ${dbPath}`);
   } finally {
     removeSnapshot(snapshotPath, snapshotDirectory);
   }
@@ -135,7 +143,7 @@ function messageFromRow(row, lineNumber, maxChars) {
 }
 
 async function scanRollout({ rolloutPath, threadId, query, date, before, after, maxMatches, maxMessageChars, matchRole }) {
-  if (!fs.existsSync(rolloutPath)) fail(`Missing rollout: ${rolloutPath}`);
+  if (!fs.existsSync(rolloutPath)) sourceUnavailable(`Missing recorded rollout: ${rolloutPath}`);
   const stream = fs.createReadStream(rolloutPath, { encoding: "utf8" });
   const lines = readline.createInterface({ input: stream, crlfDelay: Infinity });
   const needle = query.toLocaleLowerCase();
@@ -186,7 +194,8 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
     if (previous.length > before) previous.shift();
   }
 
-  if (embeddedId !== threadId) fail(`Rollout identity mismatch: expected ${threadId}, found ${embeddedId || "none"}`);
+  if (embeddedId !== threadId) sourceUnavailable(`Rollout identity mismatch: expected ${threadId}, found ${embeddedId || "none"}`);
+  if (captures.length === 0) fail(`recall_evidence_not_found: no exact match for the bounded query in ${rolloutPath}`);
   return {
     embedded_thread_id: embeddedId,
     lines_scanned: lineNumber,
@@ -194,6 +203,17 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
     match_count: captures.length,
     captures: captures.map(({ matchLine, messages }) => ({ match_line: matchLine, messages })),
   };
+}
+
+function sha256File(filePath) {
+  if (!fs.existsSync(filePath)) sourceUnavailable(`Missing recorded rollout: ${filePath}`);
+  const hash = crypto.createHash("sha256");
+  hash.update(fs.readFileSync(filePath));
+  return hash.digest("hex");
+}
+
+function threadRowFingerprint(row) {
+  return crypto.createHash("sha256").update(JSON.stringify(row)).digest("hex");
 }
 
 function boundedJson(value, maxChars) {
@@ -208,15 +228,35 @@ export async function run(argv) {
   const rolloutPath = path.isAbsolute(resolved.row.rollout_path)
     ? resolved.row.rollout_path
     : path.resolve(args.codexHome, resolved.row.rollout_path);
+  const expectedRolloutPath = path.resolve(args.rolloutPath);
+  if (rolloutPath !== expectedRolloutPath) {
+    sourceUnavailable(`Recorded rollout mismatch: expected ${expectedRolloutPath}, exact thread row points to ${rolloutPath}`);
+  }
+  const beforeProof = {
+    thread_row_sha256: threadRowFingerprint(resolved.row),
+    rollout_sha256: sha256File(rolloutPath),
+  };
   const scan = await scanRollout({ ...args, rolloutPath });
+  const afterResolved = await resolveThread(path.resolve(args.codexHome), args.threadId);
+  const afterProof = {
+    thread_row_sha256: threadRowFingerprint(afterResolved.row),
+    rollout_sha256: sha256File(rolloutPath),
+  };
   const result = {
     mode: "bounded_read_only_recall",
     identity: {
+      work: args.work || null,
       title: sessionTitle(args.codexHome, args.threadId, resolved.row.title || null),
       thread_id: args.threadId,
+      profile: args.profile || null,
+      device: args.device || null,
+      project: args.project || null,
       cwd: resolved.row.cwd || null,
-      rollout_path: rolloutPath,
       archived: Boolean(resolved.row.archived),
+    },
+    device_observation: {
+      codex_home: path.resolve(args.codexHome),
+      rollout_path: rolloutPath,
     },
     query: { literal: args.query, date: args.date || null, match_role: args.matchRole },
     scope: {
@@ -231,6 +271,12 @@ export async function run(argv) {
     logical_codex_state_mutated: false,
     live_sqlite_snapshot_used: true,
     temporary_snapshot_removed: true,
+    source_proof: {
+      before: beforeProof,
+      after: afterProof,
+      unchanged: beforeProof.thread_row_sha256 === afterProof.thread_row_sha256
+        && beforeProof.rollout_sha256 === afterProof.rollout_sha256,
+    },
   };
   process.stdout.write(boundedJson(result, args.maxOutputChars));
 }

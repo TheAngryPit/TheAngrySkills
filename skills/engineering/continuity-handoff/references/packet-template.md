@@ -15,7 +15,7 @@ sources:
     resource: "<commit, issue, URL, or document title>"
     title: "<human anchor title>"
 continuity:
-  schema_version: "0.1"
+  schema_version: "0.2"
   source_mode: legacy-task
   destination_mode: fresh-native-task
   transcript_inherited: false
@@ -27,21 +27,40 @@ continuity:
 
 <One paragraph describing the current outcome, not the whole project history.>
 
+# Work
+
+- Work: <portable human-readable work identity>.
+- Work slug: `<stable-lowercase-slug>`.
+
 # Current Goal And Resume Checkpoint
 
 - Active goal: <goal or explicitly none>.
 - Completed checkpoint: <last proven checkpoint>.
 - Resume point: <one exact next action>.
 - Authorization boundary: <what this packet does and does not authorize>.
+- Inherited goal lineage: <source goal ID/state/usage, or explicitly none>.
 
-# Orientation
+# Source Thread And Portable Identity
 
-- Product/project: <name>.
-- Repository: <portable owner/name or verified local checkout>.
+- Thread ID: `<source-thread-id>`.
+- Human title: <source title>.
+- Profile: <source profile name>.
+- Profile Placement: <primary, secondary, or another explicit placement>.
+- Device: <stable device name>.
+- Project Binding: <portable project/repository identity>.
+- Repository: <portable owner/name>.
 - Branch: `<branch>`.
 - HEAD: `<commit>`.
-- Source task: **<title>** (`<id>`), <profile>, <device>, <project/CWD>.
 - This is semantic continuation, not transcript migration.
+
+# Device Observations
+
+These paths are local observations for the recorded Device. They are not
+canonical Work identity and must not be guessed on another Device.
+
+- CWD: `<verified source cwd>`.
+- CODEX_HOME: `<exact source profile CODEX_HOME>`.
+- rollout_path: `<exact resolved source rollout path>`.
 
 # Accepted Decisions
 
@@ -64,16 +83,26 @@ continuity:
 # Historical Recall Handle
 
 ```yaml
+work: "<portable work identity>"
 title: "<human source title>"
 thread_id: "<source task id>"
 profile: "<profile>"
+profile_placement: "<primary or secondary>"
 device: "<device>"
-project: "<project>"
-cwd: "<source cwd>"
-codex_home: "<source CODEX_HOME>"
-rollout_path: "<verified rollout path>"
+project_binding: "<portable project identity>"
+device_observation:
+  cwd: "<source cwd>"
+  codex_home: "<source CODEX_HOME>"
+  rollout_path: "<verified rollout path>"
 access_policy: "bounded-read-only-question-driven"
 ```
+
+# Inherited Usage And Evidence Lineage
+
+- Source usage observation: <exact source usage evidence or unavailable>.
+- Target native counters: separate; record only after Target creation.
+- Evidence Lineage: <source goal, proof, timestamps, and retrieval locators>.
+- Do not add Source usage to Target native counters.
 
 # Known Historical Gaps
 
@@ -87,7 +116,13 @@ the smallest relevant implementation surface. Stop on contradiction.
 
 # Validation
 
-- <Exact proof required before continuation is accepted.>
+- Target Thread ID: `<assigned only after fresh native creation>`.
+- Target ID differs from Source ID: <pending/pass>.
+- Required acknowledgement: <pending/pass>.
+- Exact-source bounded Recall: <pending/pass and evidence locator>.
+- Project Binding validation: <pending/pass>.
+- Source unchanged proof: <pending/pass and before/after evidence>.
+- The handoff is not accepted while any item is pending.
 
 # Suggested Skills
 

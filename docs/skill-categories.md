@@ -27,7 +27,10 @@ Use this category when setting up a normal Codex machine or project workflow.
 
 ## Engineering
 
-`skills/engineering/` contains development workflow skills that help create docs, goals, implementation plans, or skill improvements.
+`skills/engineering/` contains development workflow skills that help create
+docs, goals, implementation plans, durable cross-profile continuity packets, or
+skill improvements. `continuity-handoff` keeps packet identity portable while
+recording device-local recall paths as non-canonical observations.
 
 Use this category when the work is about shaping or executing code-facing workflow, not when you only need reference docs.
 

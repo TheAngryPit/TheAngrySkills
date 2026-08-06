@@ -53,7 +53,7 @@ wrote it.
 |---|---|---|
 | Operating core | Default agent discipline: checkpoints, proof, install hygiene | `proof-orchestrator`, `aegis-*` |
 | Model routing | Build or apply portable model, effort, role, capability, and fallback policy | `model-routing-preset-builder`, `model-capability-router` |
-| Engineering workflow | Skills that shape code work, docs, or skill quality | `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
+| Engineering workflow | Skills that shape code work, docs, continuity, or skill quality | `continuity-handoff`, `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
 | Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
 | Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
 
@@ -103,6 +103,14 @@ The preset uses Spark for tiny work, Luna for bounded workers, Terra for
 coordination, and Sol for planning and review. When Spark is unavailable, its
 declared fallback is Luna Light (`low` in TOML). Runtime availability always
 outranks the example, and `max` or `ultra` remain explicit operator decisions.
+
+### 5. Continue work in a fresh task
+
+Install `continuity-handoff` to create a durable packet under
+`.traverse/continuity/`, move between primary and secondary profiles without
+forking a bloated transcript, and perform one bounded recall against the exact
+recorded source. Packet creation never commits, archives, deletes, or mutates
+the source task automatically.
 
 ## Wizard-Style Install Discipline
 

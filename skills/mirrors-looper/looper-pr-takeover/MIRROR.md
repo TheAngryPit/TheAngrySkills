@@ -5,12 +5,6 @@ Published skill: looper-pr-takeover
 Source: https://github.com/nexu-io/looper.git
 Source path: skills/pr-takeover
 Branch: main
-Commit: 7f9b4459316683b62917fe9783182f563a891dfa
+Commit: 0ade75122dbfa0dd85bd296b58ceb3d91615fbc1
 
-This skill is vendored from nexu-io/looper with a `looper-` prefix to avoid
-global skill-name collisions. The source-controlled mirror inventory stores
-`SKILL.md` as `SKILL.mirror.md` so native Skills CLI discovery does not
-treat the full mirror cache as the installable stack. The mirrored
-frontmatter `name` field, YAML-safe bounded `description`,
-and local `mirrors/mirrors-looper/<name>` path examples are intentionally rewritten;
-other file contents are copied from upstream.
+This skill is vendored from upstream with a `looper-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

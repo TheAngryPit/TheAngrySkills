@@ -154,13 +154,13 @@ Poll on an interval instead of spinning. Use your agent's own loop/scheduler if 
 ## More detail
 
 Extended `gh` / GraphQL recipes: `references/github-commands.md` (when installed as a skill), or fetch
-`https://raw.githubusercontent.com/nexu-io/looper/main/mirrors/mirrors-looper/looper-pr-takeover/references/github-commands.md`.
+`https://raw.githubusercontent.com/nexu-io/looper/main/skills/looper-looper-looper-pr-takeover/references/github-commands.md`.
 
 ## One universal prompt (for a bot to post under a PR)
 
 Works in any agent, with or without this skill installed — it just points the agent at this file:
 
-> Take over this PR until it merges — read https://raw.githubusercontent.com/nexu-io/looper/main/mirrors/mirrors-looper/looper-pr-takeover/SKILL.md and follow it.
+> Take over this PR until it merges — read https://raw.githubusercontent.com/nexu-io/looper/main/skills/looper-looper-looper-pr-takeover/SKILL.md and follow it.
 
 If your agent can't fetch URLs, paste this instead:
 

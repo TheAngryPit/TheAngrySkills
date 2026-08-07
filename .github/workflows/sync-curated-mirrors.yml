@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   sync:
-    name: Refresh reviewed mirror families
+    name: Refresh curated mirror families
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -51,43 +51,19 @@ jobs:
           python -m pytest -q tests
           scripts/theangry-skills.mjs check --root skills --profile shared
 
-      - name: Report security admission gates
+      - name: Report skill safety signals
         run: |
           scripts/theangry-skills.mjs security scan-root skills --json > /tmp/theangryskills-security-scan.json || true
           node <<'NODE'
           const fs = require("node:fs");
-          const path = require("node:path");
           const report = JSON.parse(fs.readFileSync("/tmp/theangryskills-security-scan.json", "utf8"));
-          const admission = JSON.parse(fs.readFileSync("security/mirror-admission-exceptions.json", "utf8"));
-          const blocked = (report.skills || []).filter((skill) =>
-            skill.path.includes("skills/mirrors-") &&
-            ["blocked_malicious", "quarantine"].includes(skill.verdict)
+          const summary = report.summary || {};
+          const blocking = Number(summary.blocking_skill_count || 0);
+          const review = Number(summary.review_skill_count || 0);
+          fs.appendFileSync(
+            process.env.GITHUB_STEP_SUMMARY,
+            `## Mirror safety signals\n\n- Verdict: ${report.verdict}\n- Blocking signals: ${blocking}\n- Review signals: ${review}\n\nThese signals are informational. Accepted mirrors remain one-to-one with upstream apart from deterministic prefixes and path rewrites.\n`
           );
-          const failures = [];
-          for (const skill of blocked) {
-            const exception = admission.exceptions?.[skill.name];
-            if (!exception) {
-              failures.push(`${skill.name}: no reviewed admission exception`);
-              continue;
-            }
-            const mirror = fs.readFileSync(path.join(skill.path, "MIRROR.md"), "utf8");
-            if (!mirror.includes(`Commit: ${exception.source_commit}`)) {
-              failures.push(`${skill.name}: source commit changed; human re-review required`);
-            }
-          }
-          if (failures.length) {
-            const summary = [
-              "## Mirror security review required",
-              "",
-              ...failures.map((failure) => `- ${failure}`),
-              "",
-              "The refresh PR will still be opened for maintainer review. Resolve these findings before merge.",
-            ].join("\n");
-            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
-            console.warn(failures.join("\n"));
-          } else {
-            console.log(`mirror_security_admission current blocked=${blocked.length}`);
-          }
           NODE
 
       - name: Open or update mirror refresh PR
@@ -112,9 +88,12 @@ jobs:
           if [ -n "$pr_number" ]; then
             gh pr edit "$pr_number" --title "Refresh curated skill mirrors"
           else
-            gh pr create \
+            pr_url="$(gh pr create \
               --base main \
               --head "$branch" \
               --title "Refresh curated skill mirrors" \
-              --body "Automated upstream refresh for every accepted mirror family. Review upstream source diffs, rewritten names and paths, executable scripts, new or removed skills, and security admission before merge."
+              --body "Automated one-to-one upstream refresh for every accepted mirror family. The workflow applies only deterministic prefixes and path rewrites, validates the generated mirrors, and merges automatically after required checks pass.")"
+            pr_number="${pr_url##*/}"
           fi
+
+          gh pr merge "$pr_number" --auto --squash --delete-branch

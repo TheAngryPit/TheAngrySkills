@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "effective-html",
+      "repository": "https://github.com/plannotator/effective-html.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-effective-html",
+      "prefix": "effective-"
+    },
+    {
+      "id": "looper",
+      "repository": "https://github.com/nexu-io/looper.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-looper",
+      "prefix": "looper-"
+    },
+    {
+      "id": "marketing",
+      "repository": "https://github.com/coreyhaines31/marketingskills.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-marketing",
+      "prefix": "marketing-"
+    },
+    {
+      "id": "openclaw",
+      "repository": "https://github.com/openclaw/agent-skills.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-openclaw",
+      "prefix": "openclaw-"
+    },
+    {
+      "id": "taste",
+      "repository": "https://github.com/Leonxlnx/taste-skill.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-taste",
+      "prefix": "taste-"
+    },
+    {
+      "id": "vercel-agent-skills",
+      "repository": "https://github.com/vercel-labs/agent-skills.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-vercel-agent-skills",
+      "prefix": "vercel-agent-"
+    }
+  ]
+}

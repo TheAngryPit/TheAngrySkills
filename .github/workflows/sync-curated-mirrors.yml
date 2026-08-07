@@ -1,4 +1,4 @@
-name: Sync HyperFrames Mirror
+name: Sync Curated Mirrors
 
 on:
   workflow_dispatch:
@@ -10,12 +10,12 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: sync-hyperframes-mirror
+  group: sync-curated-mirrors
   cancel-in-progress: false
 
 jobs:
   sync:
-    name: Refresh reviewed HyperFrames mirror
+    name: Refresh reviewed mirror families
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -37,12 +37,16 @@ jobs:
       - name: Install pinned test runner
         run: python -m pip install --disable-pip-version-check pytest==9.1.1
 
-      - name: Refresh mirror from upstream
-        run: node scripts/sync-hyperframes-mirror.mjs
+      - name: Refresh mirrors from upstream
+        run: |
+          node scripts/sync-curated-mirrors.mjs
+          node scripts/sync-hyperframes-mirror.mjs
 
       - name: Validate generated mirror and catalog
         run: |
           node --check scripts/sync-hyperframes-mirror.mjs
+          node --check scripts/sync-curated-mirrors.mjs
+          node scripts/sync-curated-mirrors.mjs --check
           node scripts/sync-hyperframes-mirror.mjs --check
           python -m pytest -q tests
           scripts/theangry-skills.mjs check --root skills --profile shared
@@ -56,7 +60,7 @@ jobs:
           const report = JSON.parse(fs.readFileSync("/tmp/theangryskills-security-scan.json", "utf8"));
           const admission = JSON.parse(fs.readFileSync("security/mirror-admission-exceptions.json", "utf8"));
           const blocked = (report.skills || []).filter((skill) =>
-            skill.path.includes("skills/mirrors-hyperframes/") &&
+            skill.path.includes("skills/mirrors-") &&
             ["blocked_malicious", "quarantine"].includes(skill.verdict)
           );
           const failures = [];
@@ -73,7 +77,7 @@ jobs:
           }
           if (failures.length) {
             const summary = [
-              "## HyperFrames security review required",
+              "## Mirror security review required",
               "",
               ...failures.map((failure) => `- ${failure}`),
               "",
@@ -82,7 +86,7 @@ jobs:
             fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
             console.warn(failures.join("\n"));
           } else {
-            console.log(`hyperframes_security_admission current blocked=${blocked.length}`);
+            console.log(`mirror_security_admission current blocked=${blocked.length}`);
           }
           NODE
 
@@ -91,25 +95,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$(git status --porcelain)" ]; then
-            echo "No HyperFrames mirror changes."
+            echo "No curated mirror changes."
             exit 0
           fi
 
-          branch="automation/hyperframes-mirror"
+          branch="automation/curated-mirrors"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch" || true
           git switch -C "$branch"
-          git add .claude-plugin/marketplace.json skills/mirrors-hyperframes
-          git commit -m "Refresh HyperFrames skill mirror"
+          git add .claude-plugin/marketplace.json skills/mirrors-*
+          git commit -m "Refresh curated skill mirrors"
           git push --force-with-lease origin "HEAD:$branch"
 
-          if gh pr view "$branch" --json number >/dev/null 2>&1; then
-            gh pr edit "$branch" --title "Refresh HyperFrames skill mirror"
+          pr_number="$(gh pr list --state open --head "$branch" --json number --jq '.[0].number // empty')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --title "Refresh curated skill mirrors"
           else
             gh pr create \
               --base main \
               --head "$branch" \
-              --title "Refresh HyperFrames skill mirror" \
-              --body "Automated upstream refresh from heygen-com/hyperframes. Review the source diff, rewritten paths, executable scripts, and security admission before merge."
+              --title "Refresh curated skill mirrors" \
+              --body "Automated upstream refresh for every accepted mirror family. Review upstream source diffs, rewritten names and paths, executable scripts, new or removed skills, and security admission before merge."
           fi

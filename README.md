@@ -172,6 +172,13 @@ When mirrors are published here, they should:
 - avoid mixing owned TheAngrySkills workflow logic into upstream material
 - stay clearly marked as curated mirrors, not original work
 
+All accepted mirror families are refreshed daily by the `Sync Curated Mirrors`
+workflow. It discovers valid upstream skill directories, preserves the family
+naming policy, rewrites only frontmatter names and internal skill paths needed
+by the prefix, validates the complete catalog, and opens or updates one review
+PR when upstream changes exist. New or removed upstream skills and changed
+executable surfaces remain visible in that PR and are never merged automatically.
+
 This matters because different skill packs often collide on names like
 `handoff`, `review`, or `browser`. Prefixes keep installs legible.
 

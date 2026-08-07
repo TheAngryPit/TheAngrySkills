@@ -6,7 +6,6 @@ on:
     - cron: "37 5 * * *"
 
 permissions:
-  actions: write
   contents: write
   pull-requests: write
 
@@ -97,5 +96,4 @@ jobs:
             pr_number="${pr_url##*/}"
           fi
 
-          gh workflow run skill-stack-ci.yml --ref "$branch"
           gh pr merge "$pr_number" --auto --squash --delete-branch

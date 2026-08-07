@@ -81,7 +81,7 @@ jobs:
               "",
               ...failures.map((failure) => `- ${failure}`),
               "",
-              "The refresh PR will still be opened. The normal Skill stack CI remains fail-closed and must pass before merge.",
+              "The refresh PR will still be opened for maintainer review. Resolve these findings before merge.",
             ].join("\n");
             fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
             console.warn(failures.join("\n"));

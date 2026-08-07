@@ -273,11 +273,11 @@ The user should maintain a list of sources somewhere persistent at `.agents/list
 
 ```bash
 # Plugin / marketplace install (most common):
-cp .agents/mirrors/mirrors-marketing/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
+cp .agents/skills/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
 # .claude/ install:
-cp .claude/mirrors/mirrors-marketing/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
+cp .claude/skills/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
 # Working inside the marketingskills repo:
-cp mirrors/mirrors-marketing/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
+cp skills/marketing-social/references/listening-sources-template.md .agents/listening-sources.md
 ```
 
 The template covers: brand/category, ICP (for scoring), target accounts per platform, intent keywords, subreddits, saved-search URLs, and a do-not-engage list.

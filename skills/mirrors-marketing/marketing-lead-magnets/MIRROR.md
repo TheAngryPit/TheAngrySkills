@@ -5,12 +5,6 @@ Published skill: marketing-lead-magnets
 Source: https://github.com/coreyhaines31/marketingskills.git
 Source path: skills/lead-magnets
 Branch: main
-Commit: 30dbd7f793b86f0ec2f007757b333afac93c24db
+Commit: 7868cb9251fad80a73d26e488a5ad5f6c4a9f335
 
-This skill is vendored from coreyhaines31/marketingskills with a `marketing-` prefix to avoid
-global skill-name collisions. The source-controlled mirror inventory stores
-`SKILL.md` as `SKILL.mirror.md` so native Skills CLI discovery does not
-treat the full mirror cache as the installable stack. The mirrored
-frontmatter `name` field, YAML-safe bounded `description`,
-and local `mirrors/mirrors-marketing/<name>` path examples are intentionally rewritten;
-other file contents are copied from upstream.
+This skill is vendored from upstream with a `marketing-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

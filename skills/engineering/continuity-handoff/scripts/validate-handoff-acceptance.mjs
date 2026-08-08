@@ -61,6 +61,48 @@ function readEvidence(filePath, label) {
   return { path: resolved, value };
 }
 
+function nonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function directoryExists(directory) {
+  try {
+    return fs.statSync(directory).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function isWithin(parent, candidate) {
+  const relative = path.relative(parent, candidate);
+  return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+function samePath(left, right) {
+  const resolvedLeft = path.resolve(left);
+  const resolvedRight = path.resolve(right);
+  return process.platform === "win32"
+    ? resolvedLeft.toLowerCase() === resolvedRight.toLowerCase()
+    : resolvedLeft === resolvedRight;
+}
+
+function validateProjectBinding(value, targetThreadId) {
+  if (value.valid !== true || value.target_thread_id !== targetThreadId) return false;
+  if (!nonEmptyString(value.project_binding)) return false;
+  if (!["single-root", "project-root-with-nested-repo"].includes(value.binding_model)) return false;
+  if (![value.codex_project_root, value.canonical_repo_root, value.operational_cwd].every(nonEmptyString)) return false;
+
+  const projectRoot = path.resolve(value.codex_project_root);
+  const repoRoot = path.resolve(value.canonical_repo_root);
+  const operationalCwd = path.resolve(value.operational_cwd);
+  if (![projectRoot, repoRoot, operationalCwd].every(directoryExists)) return false;
+  if (!fs.existsSync(path.join(repoRoot, ".git"))) return false;
+  if (!isWithin(projectRoot, repoRoot) || !isWithin(repoRoot, operationalCwd)) return false;
+  if (value.binding_model === "single-root" && !samePath(projectRoot, repoRoot)) return false;
+  if (value.binding_model === "project-root-with-nested-repo" && samePath(projectRoot, repoRoot)) return false;
+  return true;
+}
+
 export function run(argv) {
   const args = parseArgs(argv);
   if (args.sourceThreadId === args.targetThreadId) {
@@ -75,10 +117,7 @@ export function run(argv) {
     recall_completed: recall.mode === "bounded_read_only_recall"
       && recall.identity?.thread_id === args.sourceThreadId
       && Number(recall.scope?.matched_windows) > 0,
-    project_binding_valid: projectBinding.value.valid === true
-      && projectBinding.value.target_thread_id === args.targetThreadId
-      && typeof projectBinding.value.project_binding === "string"
-      && projectBinding.value.project_binding.length > 0,
+    project_binding_valid: validateProjectBinding(projectBinding.value, args.targetThreadId),
     source_unchanged: recall.source_proof?.unchanged === true,
   };
   const failed = Object.entries(gates).filter(([, passed]) => !passed).map(([name]) => name);
@@ -93,6 +132,12 @@ export function run(argv) {
     evidence_files: {
       acknowledgement: acknowledgement.path,
       project_binding: projectBinding.path,
+    },
+    project_binding: {
+      binding_model: projectBinding.value.binding_model,
+      codex_project_root: projectBinding.value.codex_project_root,
+      canonical_repo_root: projectBinding.value.canonical_repo_root,
+      operational_cwd: projectBinding.value.operational_cwd,
     },
     recall_proof: recall.source_proof,
   }, null, 2)}\n`);

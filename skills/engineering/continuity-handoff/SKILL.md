@@ -23,7 +23,9 @@ proves that the destination does not inherit material transcript weight.
 
 1. Read the current repo instructions and current task state.
 2. Identify the source task by Work, human title, Thread ID, Profile, Profile
-   Placement, Device, and Project Binding. Never identify it by ID alone.
+   Placement, Device, and Project Binding. Record the Codex Project Root,
+   Canonical Repo Root, and Operational CWD separately. Never identify the task
+   by ID alone or assume that the saved project root is itself a Git repository.
 3. Capture the current goal or explicitly state that no active goal exists.
 4. Reference existing commits, specs, ledgers, issues, and proof artefacts. Do
    not paste their full contents.
@@ -143,7 +145,7 @@ Do not accept the handoff or begin implementation until all of these are true:
    read-only action, and protected Source state;
 2. the Target Thread ID is present and differs from the Source Thread ID;
 3. one real bounded Recall query succeeds against the exact recorded Source;
-4. the Target validates its Project Binding against the packet and live repo;
+4. the Target validates its Project Binding against the packet and live roots;
 5. fresh before/after evidence shows the Source Thread database row and rollout
    were not changed by the handoff or recall.
 
@@ -164,10 +166,17 @@ The validator consumes evidence files rather than caller-supplied booleans and
 runs a fresh bounded Recall itself against the exact recorded Source.
 The acknowledgement must bind `acknowledged: true` to the new Target Thread
 ID. The fresh Recall must contain at least one matched window and prove the
-source unchanged. The Project Binding file must bind `valid: true` and a non-empty
-`project_binding` to the Target Thread ID. The validator does not create a
-Target Task or manufacture runtime proof. Keep the handoff pending until the
-real Target Task supplies every gate.
+source unchanged. The Project Binding file must bind `valid: true`, a non-empty
+`project_binding`, and one supported `binding_model` to the Target Thread ID.
+It must record `codex_project_root`, `canonical_repo_root`, and
+`operational_cwd`. The validator proves that these are live directories, that
+the canonical repo has a `.git` marker, that the repo is contained by the saved
+project root, and that the operational CWD is inside the repo. Use
+`single-root` when all work lives at one Git root, or
+`project-root-with-nested-repo` when Codex saves an outer project directory and
+the Git repository lives below it. The validator does not create a Target Task
+or manufacture runtime proof. Keep the handoff pending until the real Target
+Task supplies every gate.
 
 Carry the Source goal and previous usage only as Evidence Lineage. Target
 native token, time, and usage counters start separately and must never be

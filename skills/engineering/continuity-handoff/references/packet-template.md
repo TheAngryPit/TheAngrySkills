@@ -15,7 +15,7 @@ sources:
     resource: "<commit, issue, URL, or document title>"
     title: "<human anchor title>"
 continuity:
-  schema_version: "0.2"
+  schema_version: "0.3"
   source_mode: legacy-task
   destination_mode: fresh-native-task
   transcript_inherited: false
@@ -47,7 +47,7 @@ continuity:
 - Profile: <source profile name>.
 - Profile Placement: <primary, secondary, or another explicit placement>.
 - Device: <stable device name>.
-- Project Binding: <portable project/repository identity>.
+- Project Binding: <portable project identity>.
 - Repository: <portable owner/name>.
 - Branch: `<branch>`.
 - HEAD: `<commit>`.
@@ -58,7 +58,10 @@ continuity:
 These paths are local observations for the recorded Device. They are not
 canonical Work identity and must not be guessed on another Device.
 
-- CWD: `<verified source cwd>`.
+- Binding Model: `<single-root or project-root-with-nested-repo>`.
+- Codex Project Root: `<outer directory saved by the Codex project>`.
+- Canonical Repo Root: `<directory containing .git and AGENTS.md>`.
+- Operational CWD: `<working directory inside the canonical repo>`.
 - CODEX_HOME: `<exact source profile CODEX_HOME>`.
 - rollout_path: `<exact resolved source rollout path>`.
 
@@ -91,7 +94,10 @@ profile_placement: "<primary or secondary>"
 device: "<device>"
 project_binding: "<portable project identity>"
 device_observation:
-  cwd: "<source cwd>"
+  binding_model: "<single-root or project-root-with-nested-repo>"
+  codex_project_root: "<saved Codex project root>"
+  canonical_repo_root: "<Git root containing .git>"
+  operational_cwd: "<working directory inside canonical repo>"
   codex_home: "<source CODEX_HOME>"
   rollout_path: "<verified rollout path>"
 access_policy: "bounded-read-only-question-driven"
@@ -120,7 +126,7 @@ the smallest relevant implementation surface. Stop on contradiction.
 - Target ID differs from Source ID: <pending/pass>.
 - Required acknowledgement: <pending/pass>.
 - Exact-source bounded Recall: <pending/pass and evidence locator>.
-- Project Binding validation: <pending/pass>.
+- Project Binding validation: <pending/pass; include model and all three roots>.
 - Source unchanged proof: <pending/pass and before/after evidence>.
 - The handoff is not accepted while any item is pending.
 

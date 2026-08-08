@@ -205,11 +205,15 @@ async function scanRollout({ rolloutPath, threadId, query, date, before, after, 
   };
 }
 
-function sha256File(filePath) {
+async function sha256File(filePath) {
   if (!fs.existsSync(filePath)) sourceUnavailable(`Missing recorded rollout: ${filePath}`);
-  const hash = crypto.createHash("sha256");
-  hash.update(fs.readFileSync(filePath));
-  return hash.digest("hex");
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash("sha256");
+    const stream = fs.createReadStream(filePath);
+    stream.on("data", (chunk) => hash.update(chunk));
+    stream.on("error", (error) => reject(new Error(`recall_source_unavailable: Cannot hash recorded rollout: ${error.message}`)));
+    stream.on("end", () => resolve(hash.digest("hex")));
+  });
 }
 
 function threadRowFingerprint(row) {
@@ -234,13 +238,13 @@ export async function run(argv) {
   }
   const beforeProof = {
     thread_row_sha256: threadRowFingerprint(resolved.row),
-    rollout_sha256: sha256File(rolloutPath),
+    rollout_sha256: await sha256File(rolloutPath),
   };
   const scan = await scanRollout({ ...args, rolloutPath });
   const afterResolved = await resolveThread(path.resolve(args.codexHome), args.threadId);
   const afterProof = {
     thread_row_sha256: threadRowFingerprint(afterResolved.row),
-    rollout_sha256: sha256File(rolloutPath),
+    rollout_sha256: await sha256File(rolloutPath),
   };
   const result = {
     mode: "bounded_read_only_recall",

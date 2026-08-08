@@ -650,6 +650,11 @@ class ContinuityHandoffTests(unittest.TestCase):
             evidence = pathlib.Path(directory)
             acknowledgement = evidence / "ack.json"
             binding = evidence / "binding.json"
+            project_root = evidence / "project"
+            repo_root = project_root / "repo" / "TheAngrySkills"
+            operational_cwd = repo_root / "skills"
+            operational_cwd.mkdir(parents=True)
+            (repo_root / ".git").mkdir()
             codex_home = evidence / "source-codex-home"
             codex_home.mkdir()
             rollout = codex_home / "rollout.jsonl"
@@ -672,6 +677,10 @@ class ContinuityHandoffTests(unittest.TestCase):
                 "valid": True,
                 "target_thread_id": "target-id",
                 "project_binding": "TheAngrySkills",
+                "binding_model": "project-root-with-nested-repo",
+                "codex_project_root": str(project_root),
+                "canonical_repo_root": str(repo_root),
+                "operational_cwd": str(operational_cwd),
             }))
 
             common = [
@@ -708,6 +717,40 @@ class ContinuityHandoffTests(unittest.TestCase):
             result = json.loads(distinct_ids.stdout)
             self.assertTrue(result["target_identity_is_fresh"])
             self.assertEqual(result["status"], "handoff_accepted")
+            self.assertEqual(result["project_binding"]["binding_model"], "project-root-with-nested-repo")
+            self.assertEqual(result["project_binding"]["canonical_repo_root"], str(repo_root))
+
+            binding.write_text(json.dumps({
+                "valid": True,
+                "target_thread_id": "target-id",
+                "project_binding": "TheAngrySkills",
+                "binding_model": "project-root-with-nested-repo",
+                "codex_project_root": str(repo_root),
+                "canonical_repo_root": str(project_root),
+                "operational_cwd": str(operational_cwd),
+            }))
+            invalid_roots = subprocess.run(
+                [
+                    "node", str(VALIDATOR),
+                    "--source-thread-id", "source-id",
+                    "--target-thread-id", "target-id",
+                    *common,
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(invalid_roots.returncode, 0)
+            self.assertIn("project_binding_valid", invalid_roots.stderr)
+
+            binding.write_text(json.dumps({
+                "valid": True,
+                "target_thread_id": "target-id",
+                "project_binding": "TheAngrySkills",
+                "binding_model": "project-root-with-nested-repo",
+                "codex_project_root": str(project_root),
+                "canonical_repo_root": str(repo_root),
+                "operational_cwd": str(operational_cwd),
+            }))
 
             acknowledgement.write_text(json.dumps({"acknowledged": True, "target_thread_id": "invented-id"}))
             self_attested = subprocess.run(

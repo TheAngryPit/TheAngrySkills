@@ -48,6 +48,11 @@ def tree_snapshot(root):
 
 @unittest.skipIf(shutil.which("node") is None, "node is required")
 class ContinuityHandoffTests(unittest.TestCase):
+    def test_rollout_hashing_streams_instead_of_loading_the_file(self):
+        source = SCRIPT.read_text()
+        self.assertIn("fs.createReadStream(filePath)", source)
+        self.assertNotIn("fs.readFileSync(filePath)", source)
+
     def test_create_writes_durable_versionable_packet_without_committing(self):
         with tempfile.TemporaryDirectory() as directory:
             root = pathlib.Path(directory)

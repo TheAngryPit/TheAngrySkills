@@ -5,6 +5,6 @@ Published skill: hyperframes-motion-graphics
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/motion-graphics
 Branch: main
-Commit: b08cefea631b2c13697b6cb31075bf5a9b7c738d
+Commit: b4bd670402b82f25c1f5e0343336e21455284f80
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

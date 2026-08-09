@@ -5,6 +5,7 @@ import pathlib
 import shutil
 import subprocess
 import tempfile
+import time
 import unittest
 
 
@@ -243,14 +244,22 @@ class ContinuityHandoffTests(unittest.TestCase):
             )
             result = json.loads(completed.stdout)
 
+            self.assertEqual(result["output_schema_version"], 2)
+            self.assertEqual(result["legacy_snapshot_flags_migration"], "schema_v2_false_means_no_snapshot_was_created")
             self.assertEqual(result["identity"]["title"], "Traverse Origin")
             self.assertEqual(result["scope"]["matched_windows"], 1)
             self.assertEqual(result["evidence"][0]["match_line"], 4)
             self.assertIn("session_index.thread_name", result["evidence"][0]["messages"][1]["text"])
             self.assertNotIn("internal instruction", completed.stdout)
             self.assertFalse(result["logical_codex_state_mutated"])
-            self.assertTrue(result["live_sqlite_snapshot_used"])
-            self.assertTrue(result["temporary_snapshot_removed"])
+            self.assertFalse(result["live_sqlite_snapshot_used"])
+            self.assertFalse(result["temporary_snapshot_removed"])
+            self.assertEqual(result["sqlite_read"]["method"], "bounded_read_only_wal_aware_query")
+            self.assertTrue(result["sqlite_read"]["read_only"])
+            self.assertTrue(result["sqlite_read"]["query_only"])
+            self.assertFalse(result["sqlite_read"]["wal_present"])
+            self.assertFalse(result["sqlite_read"]["shm_present"])
+            self.assertTrue(result["sqlite_read"]["shm_is_coordination_state"])
             self.assertEqual(before, tree_snapshot(codex_home))
             self.assertFalse((codex_home / "state_5.sqlite-wal").exists())
             self.assertFalse((codex_home / "state_5.sqlite-shm").exists())
@@ -432,11 +441,216 @@ class ContinuityHandoffTests(unittest.TestCase):
 
                 self.assertEqual(result["identity"]["title"], "Live task")
                 self.assertEqual(result["scope"]["matched_windows"], 1)
+                self.assertTrue(result["sqlite_read"]["wal_present"])
+                self.assertTrue(result["sqlite_read"]["shm_present"])
+                self.assertTrue(result["sqlite_read"]["shm_is_coordination_state"])
                 self.assertIsNone(writer.poll())
                 self.assertEqual(set(before), set(after))
                 for name in ["rollout.jsonl", "state_5.sqlite", "state_5.sqlite-wal"]:
                     self.assertEqual(before[name], after[name])
                 self.assertFalse(any(root.glob("continuity-recall-*")))
+            finally:
+                writer.terminate()
+                writer.wait(timeout=5)
+                writer.stdout.close()
+                writer.stderr.close()
+
+    def test_live_wal_database_is_recalled_while_another_connection_keeps_writing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = pathlib.Path(directory)
+            codex_home = root / "codex"
+            codex_home.mkdir()
+            database = codex_home / "state_5.sqlite"
+            rollout = codex_home / "rollout.jsonl"
+            thread_id = "019f-test-live-wal-writes"
+            rollout.write_text("\n".join([
+                json.dumps({"type": "session_meta", "payload": {"id": thread_id}}),
+                json.dumps({"timestamp": "2026-08-09T12:00:00Z", "type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "continuous WAL continuity lookup"}]}}),
+            ]) + "\n")
+            writer_source = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(database))});
+              db.exec("PRAGMA journal_mode=WAL");
+              db.exec("PRAGMA wal_autocheckpoint=0");
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT, cwd TEXT, rollout_path TEXT, archived INTEGER)");
+              db.exec("CREATE TABLE churn (value INTEGER NOT NULL)");
+              db.exec("INSERT INTO churn VALUES (0)");
+              db.exec("CREATE TABLE padding (payload BLOB NOT NULL)");
+              db.exec("WITH RECURSIVE counter(x) AS (VALUES(1) UNION ALL SELECT x + 1 FROM counter WHERE x < 4096) INSERT INTO padding SELECT randomblob(4096) FROM counter");
+              db.prepare("INSERT INTO threads VALUES (?, ?, ?, ?, ?)").run(
+                {json.dumps(thread_id)}, "Live writing task", "/repo", {json.dumps(str(rollout))}, 0
+              );
+              const update = db.prepare("UPDATE churn SET value = value + 1");
+              process.stdout.write("ready\\n");
+              setInterval(() => update.run(), 0);
+            '''
+            writer = subprocess.Popen(
+                ["node", "-e", writer_source],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            try:
+                self.assertEqual(writer.stdout.readline().strip(), "ready")
+                before = tree_snapshot(codex_home)
+
+                completed = subprocess.run(
+                    ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", thread_id, "--rollout-path", str(rollout), "--query", "continuous WAL continuity lookup"],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=8,
+                    env={**os.environ, "TMPDIR": str(root)},
+                )
+                result = json.loads(completed.stdout)
+                after = tree_snapshot(codex_home)
+
+                self.assertEqual(result["identity"]["title"], "Live writing task")
+                self.assertEqual(result["scope"]["matched_windows"], 1)
+                self.assertTrue(result["sqlite_read"]["wal_present"])
+                self.assertTrue(result["sqlite_read"]["shm_present"])
+                self.assertEqual(result["sqlite_read"]["watchdog"], "child_process_sigkill")
+                self.assertLessEqual(result["sqlite_read"]["deadline_ms"], 750)
+                self.assertTrue(result["sqlite_read"]["observed_file_set_equality"]["first_query_boundaries_equal"])
+                self.assertTrue(result["sqlite_read"]["observed_file_set_equality"]["between_queries_equal"])
+                self.assertTrue(result["sqlite_read"]["observed_file_set_equality"]["second_query_boundaries_equal"])
+                self.assertTrue(result["sqlite_read"]["database_and_wal_bytes_may_change_due_to_external_writer"])
+                self.assertEqual(result["source_proof"]["scope"], "exact_thread_row_and_rollout")
+                self.assertFalse(result["source_proof"]["sqlite_database_bytes_immutable_claimed"])
+                self.assertTrue(result["source_proof"]["unchanged"])
+                self.assertIsNone(writer.poll())
+                self.assertEqual(set(before), set(after))
+                self.assertEqual(before["rollout.jsonl"], after["rollout.jsonl"])
+                self.assertFalse(any(root.glob("continuity-recall-*")))
+            finally:
+                writer.terminate()
+                writer.wait(timeout=5)
+                writer.stdout.close()
+                writer.stderr.close()
+
+    def test_incomplete_wal_sidecars_fail_closed_without_opening_the_database(self):
+        for sidecar in ["-wal", "-shm"]:
+            with self.subTest(sidecar=sidecar), tempfile.TemporaryDirectory() as directory:
+                codex_home = pathlib.Path(directory)
+                database = codex_home / "state_5.sqlite"
+                rollout = codex_home / "rollout.jsonl"
+                rollout.write_text("")
+                setup = f'''
+                  const {{ DatabaseSync }} = require("node:sqlite");
+                  const db = new DatabaseSync({json.dumps(str(database))});
+                  db.exec("PRAGMA journal_mode=WAL");
+                  db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, rollout_path TEXT)");
+                  db.close();
+                '''
+                subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+                self.assertEqual(database.read_bytes()[18:20], b"\x02\x02")
+                pathlib.Path(f"{database}{sidecar}").write_bytes(b"sidecar")
+                before = tree_snapshot(codex_home)
+
+                completed = subprocess.run(
+                    ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "exact-thread", "--rollout-path", str(rollout), "--query", "bounded"],
+                    capture_output=True,
+                    text=True,
+                )
+
+                self.assertNotEqual(completed.returncode, 0)
+                self.assertIn("recall_source_unavailable: WAL-mode recorded state database requires existing readable -wal and -shm sidecars", completed.stderr)
+                self.assertEqual(before, tree_snapshot(codex_home))
+
+    def test_quiescent_wal_without_sidecars_fails_without_creating_them(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory)
+            database = codex_home / "state_5.sqlite"
+            rollout = codex_home / "rollout.jsonl"
+            rollout.write_text("")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(database))});
+              db.exec("PRAGMA journal_mode=WAL");
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, rollout_path TEXT)");
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+            self.assertEqual(database.read_bytes()[18:20], b"\x02\x02")
+            self.assertFalse(pathlib.Path(f"{database}-wal").exists())
+            self.assertFalse(pathlib.Path(f"{database}-shm").exists())
+            before = tree_snapshot(codex_home)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "exact-thread", "--rollout-path", str(rollout), "--query", "bounded"],
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("recall_source_unavailable: WAL-mode recorded state database requires existing readable -wal and -shm sidecars", completed.stderr)
+            self.assertEqual(before, tree_snapshot(codex_home))
+            self.assertFalse(pathlib.Path(f"{database}-wal").exists())
+            self.assertFalse(pathlib.Path(f"{database}-shm").exists())
+
+    def test_missing_exact_thread_row_fails_closed_without_source_mutation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory)
+            database = codex_home / "state_5.sqlite"
+            rollout = codex_home / "rollout.jsonl"
+            rollout.write_text("")
+            setup = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(database))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, rollout_path TEXT)");
+              db.close();
+            '''
+            subprocess.run(["node", "-e", setup], check=True, capture_output=True, text=True)
+            before = tree_snapshot(codex_home)
+
+            completed = subprocess.run(
+                ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "missing-exact-thread", "--rollout-path", str(rollout), "--query", "bounded"],
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotEqual(completed.returncode, 0)
+            self.assertIn("recall_source_unavailable: No exact thread row for missing-exact-thread", completed.stderr)
+            self.assertEqual(before, tree_snapshot(codex_home))
+
+    def test_locked_database_is_terminated_within_the_watchdog_deadline(self):
+        with tempfile.TemporaryDirectory() as directory:
+            codex_home = pathlib.Path(directory)
+            database = codex_home / "state_5.sqlite"
+            rollout = codex_home / "rollout.jsonl"
+            rollout.write_text("")
+            writer_source = f'''
+              const {{ DatabaseSync }} = require("node:sqlite");
+              const db = new DatabaseSync({json.dumps(str(database))});
+              db.exec("CREATE TABLE threads (id TEXT PRIMARY KEY, rollout_path TEXT)");
+              db.exec("BEGIN EXCLUSIVE");
+              process.stdout.write("locked\\n");
+              setInterval(() => {{}}, 1000);
+            '''
+            writer = subprocess.Popen(
+                ["node", "-e", writer_source],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            try:
+                self.assertEqual(writer.stdout.readline().strip(), "locked")
+                before = tree_snapshot(codex_home)
+                started_at = time.monotonic()
+
+                completed = subprocess.run(
+                    ["node", str(SCRIPT), "--codex-home", str(codex_home), "--thread-id", "exact-thread", "--rollout-path", str(rollout), "--query", "bounded"],
+                    capture_output=True,
+                    text=True,
+                    timeout=3,
+                )
+
+                self.assertLess(time.monotonic() - started_at, 1.5)
+                self.assertNotEqual(completed.returncode, 0)
+                self.assertIn("recall_source_unavailable: Timed out reading recorded state database", completed.stderr)
+                self.assertNotIn("database is locked", completed.stderr)
+                self.assertEqual(before, tree_snapshot(codex_home))
+                self.assertIsNone(writer.poll())
             finally:
                 writer.terminate()
                 writer.wait(timeout=5)

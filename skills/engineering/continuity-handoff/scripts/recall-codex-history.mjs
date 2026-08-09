@@ -2,11 +2,15 @@
 
 import fs from "node:fs";
 import crypto from "node:crypto";
-import os from "node:os";
+import { fork } from "node:child_process";
 import path from "node:path";
 import readline from "node:readline";
-import { backup, DatabaseSync } from "node:sqlite";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { DatabaseSync } from "node:sqlite";
+import { fileURLToPath } from "node:url";
+
+const OUTPUT_SCHEMA_VERSION = 2;
+const SQLITE_BUSY_TIMEOUT_MS = 5000;
+const SQLITE_READ_DEADLINE_MS = 750;
 
 function fail(message) {
   throw new Error(message);
@@ -65,47 +69,139 @@ function boundedMessageText(text, maxChars, matchIndex = null) {
   return `${start > 0 ? "[TRUNCATED PREFIX]\n" : ""}${text.slice(start, end)}${end < text.length ? "\n[TRUNCATED SUFFIX]" : ""}`;
 }
 
-function immutableDatabaseLocation(dbPath) {
-  const location = pathToFileURL(dbPath);
-  location.searchParams.set("mode", "ro");
-  location.searchParams.set("immutable", "1");
-  return location;
+function sqliteHeaderMode(dbPath) {
+  const header = Buffer.alloc(20);
+  let descriptor;
+  try {
+    descriptor = fs.openSync(dbPath, "r");
+    if (fs.readSync(descriptor, header, 0, header.length, 0) !== header.length
+      || header.subarray(0, 16).toString("binary") !== "SQLite format 3\0") {
+      sourceUnavailable(`Invalid recorded SQLite database header: ${dbPath}`);
+    }
+  } catch (error) {
+    if (String(error?.message || "").startsWith("recall_source_unavailable:")) throw error;
+    sourceUnavailable(`Cannot read recorded SQLite database header: ${dbPath}`);
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+  }
+  const writeVersion = header[18];
+  const readVersion = header[19];
+  if (writeVersion === 2 && readVersion === 2) return "wal";
+  if (writeVersion === 1 && readVersion === 1) return "rollback";
+  sourceUnavailable(`Unsupported SQLite read/write version ${readVersion}/${writeVersion}: ${dbPath}`);
 }
 
-function removeSnapshot(snapshotPath, snapshotDirectory) {
-  if (fs.existsSync(snapshotPath)) fs.unlinkSync(snapshotPath);
-  fs.rmdirSync(snapshotDirectory);
+function readableFile(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.R_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function sqliteObservation(dbPath) {
+  const walPath = `${dbPath}-wal`;
+  const shmPath = `${dbPath}-shm`;
+  return {
+    header_mode: sqliteHeaderMode(dbPath),
+    wal_present: fs.existsSync(walPath),
+    wal_readable: readableFile(walPath),
+    shm_present: fs.existsSync(shmPath),
+    shm_readable: readableFile(shmPath),
+  };
+}
+
+function assertAdmissibleSqliteSource(dbPath, observation) {
+  if (observation.header_mode === "wal"
+    && !(observation.wal_present && observation.wal_readable
+      && observation.shm_present && observation.shm_readable)) {
+    sourceUnavailable(`WAL-mode recorded state database requires existing readable -wal and -shm sidecars: ${dbPath}`);
+  }
+  if (observation.header_mode === "rollback"
+    && (observation.wal_present || observation.shm_present)) {
+    sourceUnavailable(`Rollback-mode recorded state database has unexpected WAL sidecars: ${dbPath}`);
+  }
+}
+
+function sameObservedFileSet(left, right) {
+  return left.header_mode === right.header_mode
+    && left.wal_present === right.wal_present
+    && left.shm_present === right.shm_present;
+}
+
+function queryThreadRow(dbPath, threadId, busyTimeoutMs) {
+  let source;
+  try {
+    source = new DatabaseSync(dbPath, {
+      readOnly: true,
+      timeout: busyTimeoutMs,
+    });
+    source.exec("PRAGMA query_only = ON");
+    if (!tableExists(source, "threads")) sourceUnavailable("Recorded state database has no threads table");
+    const row = source.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
+    if (!row) sourceUnavailable(`No exact thread row for ${threadId}`);
+    if (!row.rollout_path) sourceUnavailable("Exact thread row has no rollout_path");
+    return row;
+  } catch (error) {
+    if (String(error?.message || "").startsWith("recall_source_unavailable:")) throw error;
+    sourceUnavailable(`Cannot read recorded state database ${dbPath}`);
+  } finally {
+    source?.close();
+  }
 }
 
 async function resolveThread(codexHome, threadId) {
   const dbPath = path.join(codexHome, "state_5.sqlite");
   if (!fs.existsSync(dbPath)) sourceUnavailable(`Missing recorded state database: ${dbPath}`);
-  const snapshotDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "continuity-recall-"));
-  const snapshotPath = path.join(snapshotDirectory, "state.sqlite");
-  try {
-    const source = new DatabaseSync(dbPath, { readOnly: true });
-    try {
-      await backup(source, snapshotPath);
-    } finally {
-      source.close();
-    }
+  const before = sqliteObservation(dbPath);
+  assertAdmissibleSqliteSource(dbPath, before);
 
-    const snapshot = new DatabaseSync(immutableDatabaseLocation(snapshotPath), { readOnly: true });
-    try {
-      if (!tableExists(snapshot, "threads")) sourceUnavailable("Recorded state database has no threads table");
-      const row = snapshot.prepare("SELECT * FROM threads WHERE id=?").get(threadId);
-      if (!row) sourceUnavailable(`No exact thread row for ${threadId}`);
-      if (!row.rollout_path) sourceUnavailable("Exact thread row has no rollout_path");
-      return { dbPath, row };
-    } finally {
-      snapshot.close();
-    }
-  } catch (error) {
-    if (String(error?.message || "").startsWith("recall_source_unavailable:")) throw error;
-    sourceUnavailable(`Cannot read recorded state database ${dbPath}`);
-  } finally {
-    removeSnapshot(snapshotPath, snapshotDirectory);
+  const row = await new Promise((resolve, reject) => {
+    const child = fork(fileURLToPath(import.meta.url), [], {
+      serialization: "advanced",
+      stdio: ["ignore", "ignore", "ignore", "ipc"],
+    });
+    let settled = false;
+    const finish = (callback, value, signal = null) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(watchdog);
+      if (signal) child.kill(signal);
+      callback(value);
+    };
+    const watchdog = setTimeout(() => {
+      finish(
+        reject,
+        new Error(`recall_source_unavailable: Timed out reading recorded state database ${dbPath}`),
+        "SIGKILL",
+      );
+    }, SQLITE_READ_DEADLINE_MS);
+    child.once("message", (message) => {
+      if (message?.ok) finish(resolve, message.row);
+      else finish(reject, new Error(message?.error || `recall_source_unavailable: Cannot read recorded state database ${dbPath}`));
+    });
+    child.once("error", () => {
+      finish(reject, new Error(`recall_source_unavailable: Cannot read recorded state database ${dbPath}`));
+    });
+    child.once("exit", () => {
+      if (!settled) {
+        finish(reject, new Error(`recall_source_unavailable: Cannot read recorded state database ${dbPath}`));
+      }
+    });
+    child.send({
+      operation: "exact_thread_row",
+      dbPath,
+      threadId,
+      busyTimeoutMs: SQLITE_BUSY_TIMEOUT_MS,
+    });
+  });
+
+  const after = sqliteObservation(dbPath);
+  if (!sameObservedFileSet(before, after)) {
+    sourceUnavailable(`SQLite file set changed across exact-row query boundaries: ${dbPath}`);
   }
+  return { dbPath, row, observation: { before, after } };
 }
 
 function sessionTitle(codexHome, threadId, fallback) {
@@ -246,7 +342,22 @@ export async function run(argv) {
     thread_row_sha256: threadRowFingerprint(afterResolved.row),
     rollout_sha256: await sha256File(rolloutPath),
   };
+  const fileSetComparison = {
+    first_query_boundaries_equal: sameObservedFileSet(
+      resolved.observation.before,
+      resolved.observation.after,
+    ),
+    between_queries_equal: sameObservedFileSet(
+      resolved.observation.after,
+      afterResolved.observation.before,
+    ),
+    second_query_boundaries_equal: sameObservedFileSet(
+      afterResolved.observation.before,
+      afterResolved.observation.after,
+    ),
+  };
   const result = {
+    output_schema_version: OUTPUT_SCHEMA_VERSION,
     mode: "bounded_read_only_recall",
     identity: {
       work: args.work || null,
@@ -273,11 +384,34 @@ export async function run(argv) {
     },
     evidence: scan.captures,
     logical_codex_state_mutated: false,
-    live_sqlite_snapshot_used: true,
-    temporary_snapshot_removed: true,
+    sqlite_read: {
+      method: "bounded_read_only_wal_aware_query",
+      read_only: true,
+      query_only: true,
+      busy_timeout_ms: SQLITE_BUSY_TIMEOUT_MS,
+      deadline_ms: SQLITE_READ_DEADLINE_MS,
+      watchdog: "child_process_sigkill",
+      header_mode: resolved.observation.before.header_mode,
+      wal_present: resolved.observation.before.wal_present,
+      shm_present: resolved.observation.before.shm_present,
+      shm_is_coordination_state: true,
+      observations: {
+        before_first_query: resolved.observation.before,
+        after_first_query: resolved.observation.after,
+        before_second_query: afterResolved.observation.before,
+        after_second_query: afterResolved.observation.after,
+      },
+      observed_file_set_equality: fileSetComparison,
+      database_and_wal_bytes_may_change_due_to_external_writer: true,
+    },
+    live_sqlite_snapshot_used: false,
+    temporary_snapshot_removed: false,
+    legacy_snapshot_flags_migration: "schema_v2_false_means_no_snapshot_was_created",
     source_proof: {
       before: beforeProof,
       after: afterProof,
+      scope: "exact_thread_row_and_rollout",
+      sqlite_database_bytes_immutable_claimed: false,
       unchanged: beforeProof.thread_row_sha256 === afterProof.thread_row_sha256
         && beforeProof.rollout_sha256 === afterProof.rollout_sha256,
     },
@@ -285,7 +419,16 @@ export async function run(argv) {
   process.stdout.write(boundedJson(result, args.maxOutputChars));
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (typeof process.send === "function") {
+  process.once("message", (message) => {
+    try {
+      const row = queryThreadRow(message.dbPath, message.threadId, message.busyTimeoutMs);
+      process.send({ ok: true, row }, () => process.disconnect());
+    } catch (error) {
+      process.send({ ok: false, error: String(error?.message || error) }, () => process.disconnect());
+    }
+  });
+} else if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   run(process.argv.slice(2)).catch((error) => {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 1;

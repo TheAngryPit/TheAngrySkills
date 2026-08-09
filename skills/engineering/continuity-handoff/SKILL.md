@@ -33,10 +33,12 @@ proves that the destination does not inherit material transcript weight.
    state, open gates, known historical gaps, and the exact resume point.
 6. Resolve the source `CODEX_HOME` and `rollout_path` while Codex remains open.
    Record these under Device Observations, never as portable Work identity. The
-   bundled reader takes a consistent temporary snapshot through SQLite's Online
-   Backup API, queries that snapshot with immutable read-only semantics, and
-   removes it before returning. The reader's file allowlist is the selected
-   `state_5.sqlite`, `session_index.jsonl`, and resolved rollout only.
+   bundled reader admits the selected live SQLite database from its header and
+   existing sidecars, then performs a short read-only exact-Thread-row lookup
+   in a disposable child process with a wall-clock termination deadline. It
+   closes the connection and child immediately. It does not copy the database. The reader's file
+   allowlist is the selected `state_5.sqlite`, its existing WAL coordination
+   sidecars, `session_index.jsonl`, and the resolved rollout only.
 7. Fill [the packet template](references/packet-template.md) completely,
    including goal, checkpoint, accepted decisions, failures not to repeat,
    references, inherited usage, resume point, and Evidence Lineage.
@@ -100,12 +102,17 @@ node scripts/recall-codex-history.mjs \
   --max-matches 3
 ```
 
-Run the script from this skill directory while Codex remains open. It snapshots
-the live SQLite database consistently, opens only that snapshot with
-`mode=ro&immutable=1`, validates the rollout identity, streams JSONL verbatim,
-and caps output. Historical evidence is not rewritten or censored. It never
-writes logical Codex source state and never requires the operator to close the
-app.
+Run the script from this skill directory while Codex remains open. It opens the
+SQLite header before opening it. WAL header mode requires both existing,
+readable `-wal` and `-shm` sidecars; the reader fails closed when either or both
+are absent and never opens first to create them. The disposable lookup process
+opens read-only with a bounded busy timeout, enables `query_only`, reads only
+the exact Thread row, and is terminated if the strict wall-clock deadline
+expires. The parent validates the rollout identity, streams JSONL verbatim, and
+caps output. `-shm` is coordination state, not immutable application content.
+Historical evidence is not rewritten or censored. The reader never writes
+logical Codex source state, never copies the database, and never requires the
+operator to close the app.
 
 Use the exact recorded Device Observation even when the Target Thread is in a
 different Profile on the same Device. A primary Target may therefore query an
@@ -114,9 +121,14 @@ database, Thread row, or rollout is unavailable, the reader returns
 `recall_source_unavailable`. Stop there. Never scan sibling homes, nearby
 databases, indexes, or rollout directories to guess a replacement source.
 
-The result reports logical source mutation, live snapshot use, and temporary
-snapshot cleanup separately. SQLite's live coordination files are not presented
-as immutable application data.
+Output schema v2 reports logical source mutation, the bounded SQLite read
+method, header and sidecar observations at each query boundary, computed
+file-set equality between those observations, and exact Thread-row/rollout
+fingerprints separately. The legacy snapshot booleans remain for validator
+compatibility and are explicitly marked with their schema-v2 meaning. The
+reader does not claim unobservable continuous preservation or that database or
+WAL bytes remain fixed while an external writer is active. SQLite's live
+coordination files are not presented as immutable application data.
 
 Use `--match-role user` for an operator report and `--match-role assistant` for
 an earlier agent conclusion. Internal system/developer messages are never

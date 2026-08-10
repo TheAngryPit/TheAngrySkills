@@ -1,111 +1,274 @@
-schema_version = 1
+schema_version = 2
 name = "vitor-opinionated"
-version = "2026.07.11.1"
-description = "Opinionated cost-aware routing: Luna for bounded volume, Terra for coordination, Sol for judgment, Spark for tiny mechanical work."
+version = "2026.08.10.1"
+description = "Channel-aware orchestration: Sol master and judgment, Terra field coordination and bounded workers, Luna user-owned tasks, and vanilla selection when pinning is unnecessary."
 
 [policy]
 availability_required = true
 lowest_sufficient_effort = true
 max_operator_only = true
 ultra_operator_only = true
-max_depth = 1
-max_threads = 3
+max_concurrent_threads_per_session = 6
+delegation_depth = "root_only_instruction"
+multi_agent_backend = "model_catalog"
+concurrency_semantics = "spawned_subagents_excluding_primary"
+task_creation_requires_current_user_request = true
+task_archive_requires_current_user_request = true
+visual_badges_authoritative = false
+fork_thread_allowed = false
+handoff_thread_routing_allowed = false
+handoff_requires_explicit_relocation_request = true
+
+[routes.master_orchestration]
+execution_kind = "current_task"
+channel = "current_task"
+selection_mode = "pinned"
+role = "master-orchestrator"
+model = "gpt-5.6-sol"
+effort = "medium"
+proof = "operator_loop_integration_and_final_validation"
+stop_condition = "operator_goal_completed_or_named_human_gate_reached"
+escalation_trigger = "unresolved_high_impact_contradiction_or_scope_change"
 
 [routes.micro]
-role = "micro-coder"
-model = "gpt-5.3-codex-spark"
-effort = "medium"
-fallback_model = "gpt-5.6-luna"
-fallback_effort = "low"
+execution_kind = "current_task"
+channel = "current_task"
+selection_mode = "vanilla"
 proof = "focused_check"
+stop_condition = "focused_check_returned"
+required_signals = ["deterministic", "small_context", "cheap_failure", "focused_proof"]
+blocked_signals = ["ambiguity", "large_context", "security_judgment", "external_side_effect", "host_mutation", "credentials", "release_authority"]
+
+[routes.vanilla_subagent]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "vanilla"
+proof = "bounded_task_contract"
+stop_condition = "bounded_contract_result_and_proof_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.exploration]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "explorer"
-model = "gpt-5.6-luna"
-effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "low"
-proof = "evidence_map"
-
-[routes.bounded_worker]
-role = "general-worker"
-model = "gpt-5.6-luna"
-effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "low"
-proof = "task_contract"
-
-[routes.coordination]
-role = "coordinator"
 model = "gpt-5.6-terra"
 effort = "medium"
-fallback_model = "gpt-5.6-sol"
-fallback_effort = "low"
-proof = "integration_check"
+proof = "evidence_map"
+stop_condition = "evidence_map_complete_with_uncertainties"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.bounded_worker]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
+role = "general-worker"
+model = "gpt-5.6-terra"
+effort = "medium"
+proof = "task_contract"
+stop_condition = "bounded_result_and_proof_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.bounded_coding]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
+role = "coder"
+model = "gpt-5.6-sol"
+effort = "low"
+proof = "tests_and_focused_diff"
+stop_condition = "focused_tests_pass_and_diff_remains_bounded"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.deep_batch_worker]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "luna-subtask"
+model = "gpt-5.6-luna"
+effort = "xhigh"
+proof = "bounded_batch_and_stop_condition"
+stop_condition = "one_batch_result_and_proof_returned"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "field-coordinator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
+
+[routes.exceptional_coding_batch]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "luna-subtask"
+model = "gpt-5.6-luna"
+effort = "max"
+proof = "bounded_batch_tests_stop_condition_and_operator_review"
+stop_condition = "authorized_batch_proven_and_operator_review_point_reached"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+operator_authorization_required = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "field-coordinator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
+
+[routes.coordination]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "field-coordinator"
+model = "gpt-5.6-terra"
+effort = "medium"
+proof = "execution_integration_and_closure_report"
+stop_condition = "accepted_plan_complete_or_blocked_at_named_gate"
+escalation_trigger = "scope_change_human_gate_or_unresolved_cross_worker_conflict"
+lifecycle = "reusable"
+reuse_scope = "project_ticket_or_small_bundle"
+creation_requires_user_authorization = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "master-orchestrator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
 
 [routes.debugging]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "debugger"
 model = "gpt-5.6-sol"
 effort = "low"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "medium"
 proof = "reproduction_and_fix_check"
+stop_condition = "reproduction_passes_after_fix_or_root_blocker_is_proven"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.mechanical_debugging]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
+role = "mechanical-debugger"
+model = "gpt-5.6-terra"
+effort = "medium"
+proof = "bounded_reproduction_and_focused_fix_check"
+stop_condition = "mechanical_reproduction_passes_or_ambiguity_requires_escalation"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.planning]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "planner"
 model = "gpt-5.6-sol"
-effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "medium"
+effort = "high"
 proof = "reviewable_plan"
+stop_condition = "reviewable_plan_with_gates_and_proof_steps_returned"
+escalation_trigger = "architecture_remains_materially_ambiguous"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.hard_implementation]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "hard-coder"
 model = "gpt-5.6-sol"
 effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "high"
 proof = "tests_and_supported_path"
+stop_condition = "supported_path_is_proven_or_named_blocker_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.review]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "reviewer"
 model = "gpt-5.6-sol"
 effort = "high"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "high"
 proof = "independent_review"
+stop_condition = "findings_verdict_and_proof_gaps_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.audit]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "auditor"
 model = "gpt-5.6-sol"
 effort = "high"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "high"
 proof = "claim_by_claim_audit"
+stop_condition = "claims_mapped_to_evidence_and_contradictions"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.release]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "release-checker"
 model = "gpt-5.6-sol"
 effort = "high"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "high"
 proof = "release_gate"
+stop_condition = "release_verdict_rollback_and_gaps_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.luna_subtask]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "luna-subtask"
+model = "gpt-5.6-luna"
+effort = "high"
+proof = "bounded_result_and_stop_condition"
+stop_condition = "one_bounded_result_returned_then_stop"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "field-coordinator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
+
+[routes.luna_worker]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "luna-worker"
+model = "gpt-5.6-luna"
+effort = "high"
+proof = "reusable_worker_contract_and_incremental_results"
+stop_condition = "current_batch_returned_and_task_state_reported"
+lifecycle = "reusable"
+reuse_scope = "project_and_purpose"
+creation_requires_user_authorization = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "field-coordinator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
 
 [routes.memory_worker]
-role = "memory-worker"
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "luna-worker"
 model = "gpt-5.6-luna"
 effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "low"
 proof = "source_grounded_memory"
+stop_condition = "current_memory_batch_returned_with_provenance"
+lifecycle = "reusable"
+reuse_scope = "project_and_memory_purpose"
+creation_requires_user_authorization = true
+native_relationship = "peer_user_owned_task"
+logical_parent = "field-coordinator"
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+lifecycle_tools = ["set_thread_archived"]
 
 [routes.memory_curator]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "memory-curator"
 model = "gpt-5.6-sol"
 effort = "medium"
-fallback_model = "gpt-5.6-terra"
-fallback_effort = "medium"
 proof = "curation_review"
+stop_condition = "curation_verdict_and_evidence_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [capabilities.web_ui]
 skills = ["managing-shadcn-typesets", "impeccable"]

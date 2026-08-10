@@ -1,4 +1,4 @@
 interface:
   display_name: "Model Capability Router"
-  short_description: "Route tasks through an approved model preset"
-  default_prompt: "Use $model-capability-router to select a model, effort, role, capability flow, and fallback."
+  short_description: "Route work across Codex subagents and user-owned tasks"
+  default_prompt: "Use $model-capability-router to select a channel-aware model, effort, role, lifecycle, capability flow, fallback, and proof bar."

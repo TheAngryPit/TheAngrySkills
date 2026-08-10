@@ -1,86 +1,246 @@
-schema_version = 1
+schema_version = 2
 name = "neutral-balanced"
-version = "2026.07.11.1"
-description = "Vendor-neutral template. Replace placeholder model identifiers with models proven available in the target runtime."
+version = "2026.08.10.1"
+description = "Vendor-neutral channel-aware template. Replace placeholders only with models proven available on each execution channel."
 
 [policy]
 availability_required = true
 lowest_sufficient_effort = true
 max_operator_only = true
 ultra_operator_only = true
-max_depth = 1
-max_threads = 3
+max_concurrent_threads_per_session = 6
+delegation_depth = "root_only_instruction"
+task_creation_requires_current_user_request = true
+task_archive_requires_current_user_request = true
+visual_badges_authoritative = false
+fork_thread_allowed = false
+handoff_thread_routing_allowed = false
+handoff_requires_explicit_relocation_request = true
+
+[routes.master_orchestration]
+execution_kind = "current_task"
+channel = "current_task"
+selection_mode = "pinned"
+role = "master-orchestrator"
+model = "reasoning-model"
+effort = "medium"
+proof = "operator_loop_integration_and_final_validation"
+stop_condition = "operator_goal_completed_or_named_human_gate_reached"
 
 [routes.micro]
-role = "micro-worker"
-model = "fast-model"
-effort = "medium"
-fallback_model = "balanced-model"
-fallback_effort = "low"
+execution_kind = "current_task"
+channel = "current_task"
+selection_mode = "vanilla"
 proof = "focused_check"
+stop_condition = "focused_check_returned"
+
+[routes.vanilla_subagent]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "vanilla"
+proof = "bounded_task_contract"
+stop_condition = "bounded_contract_result_and_proof_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.exploration]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "explorer"
 model = "balanced-model"
 effort = "medium"
 proof = "evidence_map"
+stop_condition = "evidence_map_complete_with_uncertainties"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.bounded_worker]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "general-worker"
 model = "balanced-model"
 effort = "medium"
 proof = "task_contract"
+stop_condition = "bounded_result_and_proof_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.bounded_coding]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
+role = "coder"
+model = "reasoning-model"
+effort = "low"
+proof = "tests_and_focused_diff"
+stop_condition = "focused_tests_pass_and_diff_remains_bounded"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.deep_batch_worker]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "task-subtask"
+model = "task-worker-model"
+effort = "xhigh"
+proof = "bounded_batch_and_stop_condition"
+stop_condition = "one_batch_result_and_proof_returned"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+
+[routes.exceptional_coding_batch]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "task-subtask"
+model = "task-worker-model"
+effort = "max"
+proof = "bounded_batch_tests_stop_condition_and_operator_review"
+stop_condition = "authorized_batch_proven_and_operator_review_point_reached"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+operator_authorization_required = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
 
 [routes.coordination]
-role = "coordinator"
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "field-coordinator"
 model = "coordinator-model"
 effort = "medium"
-proof = "integration_check"
+proof = "execution_integration_and_closure_report"
+stop_condition = "accepted_plan_complete_or_blocked_at_named_gate"
+lifecycle = "reusable"
+reuse_scope = "project_ticket_or_small_bundle"
+creation_requires_user_authorization = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
 
 [routes.debugging]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "debugger"
 model = "reasoning-model"
 effort = "low"
 proof = "reproduction_and_fix_check"
+stop_condition = "reproduction_passes_after_fix_or_root_blocker_is_proven"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.mechanical_debugging]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
+role = "mechanical-debugger"
+model = "balanced-model"
+effort = "medium"
+proof = "bounded_reproduction_and_focused_fix_check"
+stop_condition = "mechanical_reproduction_passes_or_ambiguity_requires_escalation"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.planning]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "planner"
 model = "reasoning-model"
-effort = "medium"
+effort = "high"
 proof = "reviewable_plan"
+stop_condition = "reviewable_plan_with_gates_and_proof_steps_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.hard_implementation]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "hard-coder"
 model = "reasoning-model"
 effort = "medium"
 proof = "tests_and_supported_path"
+stop_condition = "supported_path_is_proven_or_named_blocker_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.review]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "reviewer"
 model = "reasoning-model"
 effort = "high"
 proof = "independent_review"
+stop_condition = "findings_verdict_and_proof_gaps_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.audit]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "auditor"
 model = "reasoning-model"
 effort = "high"
 proof = "claim_by_claim_audit"
+stop_condition = "claims_mapped_to_evidence_and_contradictions"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
 
 [routes.release]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "release-checker"
 model = "reasoning-model"
 effort = "high"
 proof = "release_gate"
+stop_condition = "release_verdict_rollback_and_gaps_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]
+
+[routes.luna_subtask]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "task-subtask"
+model = "task-worker-model"
+effort = "high"
+proof = "bounded_result_and_stop_condition"
+stop_condition = "one_bounded_result_returned_then_stop"
+lifecycle = "ephemeral"
+creation_requires_user_authorization = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
+
+[routes.luna_worker]
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "task-worker"
+model = "task-worker-model"
+effort = "high"
+proof = "reusable_worker_contract_and_incremental_results"
+stop_condition = "current_batch_returned_and_task_state_reported"
+lifecycle = "reusable"
+reuse_scope = "project_and_purpose"
+creation_requires_user_authorization = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
 
 [routes.memory_worker]
-role = "memory-worker"
-model = "balanced-model"
+execution_kind = "native_task"
+channel = "create_thread"
+selection_mode = "pinned"
+role = "task-worker"
+model = "task-worker-model"
 effort = "medium"
 proof = "source_grounded_memory"
+stop_condition = "current_memory_batch_returned_with_provenance"
+lifecycle = "reusable"
+reuse_scope = "project_and_memory_purpose"
+creation_requires_user_authorization = true
+required_tools = ["create_thread", "list_threads", "read_thread", "send_message_to_thread", "wait_threads"]
 
 [routes.memory_curator]
+execution_kind = "native_subagent"
+channel = "spawn_agent"
+selection_mode = "pinned"
 role = "memory-curator"
 model = "reasoning-model"
 effort = "medium"
 proof = "curation_review"
+stop_condition = "curation_verdict_and_evidence_returned"
+required_tools = ["spawn_agent", "followup_task", "send_message", "wait_agent", "list_agents", "interrupt_agent"]

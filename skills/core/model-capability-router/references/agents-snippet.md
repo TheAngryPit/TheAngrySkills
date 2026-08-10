@@ -5,10 +5,11 @@ Keep the instruction compact; the preset contains the policy.
 ```md
 For model, reasoning-effort, agent-role, or capability selection, use
 `model-capability-router` with the nearest operator-approved routing preset.
-Verify current availability before routing. Treat bundled presets as examples
-until explicitly adopted; max and ultra require current operator authorization.
+Verify availability on the exact `current_task`, `spawn_agent`, or
+`create_thread` channel before routing. Treat bundled presets as examples until
+explicitly adopted. Native task creation and max or ultra require current
+operator authorization.
 ```
 
-Do not paste the full route table into every project. Projects may override the
-global preset with a nearer approved preset when their runtime or proof bar is
-materially different.
+Keep the full route table in the preset. A project may use a nearer approved
+preset when its runtime or proof bar is materially different.

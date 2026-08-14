@@ -167,6 +167,7 @@
       "skills": [
         "./skills/mirrors-hyperframes/hyperframes",
         "./skills/mirrors-hyperframes/hyperframes-animation",
+        "./skills/mirrors-hyperframes/hyperframes-audio",
         "./skills/mirrors-hyperframes/hyperframes-cli",
         "./skills/mirrors-hyperframes/hyperframes-core",
         "./skills/mirrors-hyperframes/hyperframes-creative",

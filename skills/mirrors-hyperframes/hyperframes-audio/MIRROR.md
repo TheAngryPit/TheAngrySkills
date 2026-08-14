@@ -1,9 +1,9 @@
 # heygen-com/hyperframes Skill Mirror
 
-Mirrored skill: hyperframes-animation
-Published skill: hyperframes-animation
+Mirrored skill: hyperframes-audio
+Published skill: hyperframes-audio
 Source: https://github.com/heygen-com/hyperframes.git
-Source path: skills/hyperframes-animation
+Source path: skills/hyperframes-audio
 Branch: main
 Commit: 532caf7aa24fef382cb103013f6414bb547a4129
 

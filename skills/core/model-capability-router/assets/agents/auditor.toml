@@ -1,7 +1,5 @@
 name = "auditor"
 description = "Audit specialist for authority, boundary, proof-level, leakage, bookkeeping, and reachability checks."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
 developer_instructions = """

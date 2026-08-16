@@ -1,7 +1,5 @@
 name = "coder"
 description = "Coding worker for normal implementation, debugging fixes, and bounded refactors."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """

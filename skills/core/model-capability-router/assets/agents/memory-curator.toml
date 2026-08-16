@@ -1,7 +1,5 @@
 name = "memory-curator"
 description = "Durable memory curation reviewer for promotion, merge, pruning, and important memory decisions."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
 developer_instructions = """

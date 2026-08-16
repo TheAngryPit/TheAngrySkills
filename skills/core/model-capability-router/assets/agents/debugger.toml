@@ -1,7 +1,5 @@
 name = "debugger"
 description = "Debugging specialist for reproducing failures, isolating root causes, and proposing minimal fixes."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """

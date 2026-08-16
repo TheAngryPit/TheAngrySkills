@@ -1,24 +1,33 @@
 {
-  "scenario": "Route Codex work across master, field coordinator, native subagent, and native task lanes",
+  "scenario": "Route Codex work by topology, role, compute, Fleet, and user-owned task relationship",
   "red": {
     "observed_failures": [
       "treated a model listed in TOML as spawnable on every channel",
-      "attempted to launch Luna through spawn_agent",
-      "collapsed the Sol master orchestrator and Terra field coordinator into one role",
-      "pinned every worker and prevented vanilla Codex selection",
-      "presented user-owned create_thread tasks as native child subagents"
+      "blocked Luna from native spawn_agent after the runtime gained support",
+      "duplicated model and effort across many routes and role TOML files",
+      "collapsed the Sol master and reusable Terra field coordinator into one role",
+      "presented every user-owned platform peer as either a native child or an independent task",
+      "used full-history forks as a routing or delegation primitive"
     ]
   },
   "green": {
     "automated_proof": [
-      "schema 2 channel-aware presets validate",
-      "master orchestration resolves to current-task Sol Medium",
-      "planning resolves only to native-subagent Sol High",
-      "vanilla subagent routing emits no model, effort, or role pin",
-      "field coordination resolves to a reusable Terra task with a creation gate",
-      "Luna routes require the create_thread channel",
-      "ephemeral Luna tasks cannot be reused",
-      "missing native controls, role mismatches, and missing skills block"
+      "schema 3 topology-first presets validate",
+      "single resolves to the Sol Medium master",
+      "planner resolves to a direct Sol High native subagent",
+      "role templates accept any explicitly supported model and effort unless intentionally pinned",
+      "direct Fleet defaults to three Luna Medium direct children, caps at eight, and reduces effective fan-out to live free slots",
+      "Luna low, medium, high, and xhigh worker efforts resolve on spawn_agent",
+      "field Fleet resolves only over a live-reconciled reusable Terra coordinator with its own model, control, and capacity evidence",
+      "field Fleet uses a fresh structured coordinator receipt and does not reuse caller-side create-thread or role-binding evidence",
+      "delegated user-owned subtasks remain distinct from independent parallel user-owned tasks",
+      "native routing works without gstack while the explicit gstack overlay enforces phase, role, topology, skill, and context requirements",
+      "gstack context is labelled unverified preflight input and cannot be reported as completed proof",
+      "planner, reviewer, auditor, and release roles reject compute downgrades that would preserve an invalid stronger proof requirement",
+      "delegated and parallel user-owned tasks may be ephemeral or reusable without changing their logical relationship",
+      "schema-two-to-three migration preflight binds the exact legacy and target hashes as one coordinated release unit",
+      "task creation and max or ultra remain explicit operator gates",
+      "runtime rejection, missing controls, conflicting pins, and missing skills block"
     ]
   }
 }

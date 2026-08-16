@@ -1,4 +1,4 @@
 interface:
   display_name: "Model Capability Router"
-  short_description: "Route work across Codex subagents and user-owned tasks"
-  default_prompt: "Use $model-capability-router to select a channel-aware model, effort, role, lifecycle, capability flow, fallback, and proof bar."
+  short_description: "Route Codex tasks, subagents, coordinators, and Fleets"
+  default_prompt: "Use $model-capability-router to choose the topology, model, effort, role, lifecycle, Fleet capacity, capability flow, gates, and proof bar; preserve native operation unless gstack explicitly owns the workflow."

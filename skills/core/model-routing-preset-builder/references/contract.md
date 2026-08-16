@@ -1,31 +1,30 @@
 # Preset Contract
 
-Presets use TOML and `schema_version = 2`.
+Presets use TOML and `schema_version = 3`. Top-level fields identify the preset;
+`policy` defines operator gates and Fleet capacity; `profiles.<name>` defines
+stable orchestration defaults; `roles.<name>` defines default compute and proof
+for a functional role; and `routes.<name>` defines topology and lifecycle.
+Optional `capabilities.<name>` entries define required skill names and a gate.
 
-Each `routes.<name>` entry declares:
+Effort values are technical config values. Write `Light` in explanatory prose
+and `low` in TOML. Treat model identifiers as runtime-specific strings whose
+availability must be proven at routing time.
 
-- `execution_kind`: `current_task`, `native_subagent`, or `native_task`;
-- `channel`: respectively `current_task`, `spawn_agent`, or `create_thread`;
-- `selection_mode`: `vanilla` or `pinned`;
-- `role`, `model`, and `effort` for pinned routes;
-- `required_tools`, `proof`, and a checkable `stop_condition`;
-- `lifecycle` and `creation_requires_user_authorization = true` for native
-  tasks.
+Role and compute are independent. Role TOML should normally omit `model` and
+`model_reasoning_effort`; explicit route selection or the runtime default then
+applies. A pinned role file is valid only when its pins match the selected route.
+Proof-bearing roles such as planner, reviewer, auditor, and release checker
+should set `compute_override_allowed = false` unless the preset defines an
+equally strong explicit constraint. A user override must not downgrade compute
+while retaining the stronger proof requirement.
 
-Model availability is channel-specific. A model listed in a catalog, TOML, or
-UI badge is not proof that a particular execution channel can run it.
-
-Use reader-facing Light in prose and `low` in TOML. Max and Ultra routes must
-declare `operator_authorization_required = true`.
-
-Reusable native tasks must state a reuse scope. Their logical parent does not
-create a native parent-child relationship.
-
-The opinionated preset's approved Sol/Terra custom-agent templates live under
-`model-capability-router/assets/agents/`. Normal subagent registration excludes
-Luna and Spark; model availability on another channel does not make either a
-valid `spawn_agent` role.
-
-Every schema 2 preset excludes `fork_thread` and `handoff_thread` from model
-routing. Forking creates a new copied-history lineage. Handoff is a separate,
-explicitly requested relocation of an existing task and associated Git state.
+Every native task is a user-owned platform peer. Record whether it is logically
+a `delegated_subtask` with a parent or an `independent_parallel_task` without
+one. Never infer logical independence from the platform peer relationship.
+Fleet ceilings are not runtime availability. A resolver must fail closed
+without live capacity and active-child evidence. A field Fleet additionally
+requires an existing verified coordinator and capability evidence collected in
+that coordinator, not inherited from the master.
+The preset must bound `coordinator_receipt_max_age_seconds`; callers may tighten
+but never enlarge that window. Receipt claims remain structured attestation,
+not independent proof.

@@ -1,85 +1,136 @@
 # Orchestration Contract
 
-## Topology
+## Topology and Authority
 
-The master orchestrator is the user-facing Sol Medium task. It owns planning,
-operator dialogue, routing decisions, integration, independent validation, and
-the final status.
+The user-facing master is Sol Medium. It owns operator dialogue, the accepted
+plan, routing, integration, independent validation, and final status. For
+substantial or ambiguous work it asks a Sol High `planner` for a bounded plan
+before execution.
 
-The field coordinator is a separate, reusable Terra Medium user-owned task. It
-is logically directed by the master but remains a native peer task. Its bounded
-contract names the project or ticket, accepted plan, protected state, allowed
-mutations, proof bar, stop conditions, and reporting cadence.
+A field coordinator is a separate, reusable Terra Medium user-owned task. The
+platform treats it as a peer. In the operator's nomenclature it is a `subtask`
+because it works for the master, receives steering, and reports closure back to
+that logical parent.
 
-The field coordinator may use direct native subagents for Sol/Terra work. Only
-the root of that task delegates; subagents remain direct children and must not
-spawn further agents.
+A normal parallel user-owned task is also a platform peer, but it has no logical
+parent. It belongs directly to the operator and must not be relabelled as a
+subtask merely because it shares a project or exchanges information.
 
-The router bundles the approved Sol/Terra custom-agent templates under
-`assets/agents/`. Luna and Spark are intentionally absent from that native
-subagent registry; their model availability on another channel does not make
-them valid `spawn_agent` roles.
+Record both axes explicitly:
 
-## Native Subagent Controls
+| Surface | Platform relationship | Logical relationship |
+| --- | --- | --- |
+| Native subagent | child | delegated child |
+| Fleet worker | child | owned workstream |
+| Field coordinator | user-owned peer | delegated subtask |
+| Delegated user-owned worker | user-owned peer | delegated subtask |
+| Parallel user-owned task | user-owned peer | independent parallel task |
 
-Use the current native controls when exposed:
+The master does not transfer authority to any child or peer. A coordinator owns
+integration only inside its accepted contract. All human, permission, install,
+release, secret, and destructive-action gates remain unchanged.
 
-- `spawn_agent` to start one bounded named or vanilla subagent;
-- `followup_task` or `send_message` to steer it;
-- `wait_agent` to wait without polling noise;
-- `list_agents` to reconcile live state;
-- `interrupt_agent` to stop unnecessary work.
+## Role and Compute Binding
 
-Prefer the smallest useful fan-out. Wait for required children to complete and
-interrupt unnecessary work before the field coordinator submits its closure
-report.
+Role describes the contract; model and effort describe compute. Keep them
+separate. Custom role TOML may omit model and `model_reasoning_effort`, allowing
+an explicit native spawn selection or runtime default to apply. If a role file
+pins either value, the selected route must match it.
 
-## Native Task Controls
+Configuration and tool metadata are preflight evidence, not runtime proof.
+Attempt a resolved named role once. If the runtime rejects it, preserve the
+exact role and error, feed the rejection back to the resolver, and classify the
+route as blocked for the active task. Do not retry through a parent clone or
+silently choose another role.
 
-Use native task controls only after the current user authorizes task creation:
+## Native Subagent and Fleet Controls
 
-- `create_thread` to create a field coordinator or Luna task;
-- `list_threads` and `read_thread` to find and verify a reusable task;
-- `send_message_to_thread` to direct follow-up work;
-- `wait_threads` for bounded progress snapshots;
-- `set_thread_archived` only after current user authorization.
+Use current native controls when exposed:
 
-`set_thread_title` and `set_thread_pinned` change user-visible metadata; they do
-not route work.
+- `spawn_agent` starts one bounded named or vanilla child;
+- `followup_task` gives an idle child another bounded unit and triggers work;
+- `send_message` steers a running child without creating a new turn;
+- `wait_agent` waits for mailbox updates without noisy polling;
+- `list_agents` reconciles live state;
+- `interrupt_agent` stops work that is no longer needed.
 
-`fork_thread` is prohibited inside this router. It copies completed history and
-creates a new task lineage, so it must never implement a field coordinator,
-subtask, worker, retry, reuse, or continuation.
+Fleet work must be separable. Start with two or three direct children and add
+only workstreams that can run independently. Eight is the approved session
+ceiling for spawned subagent threads; it is not a default target. Assign exact
+ownership, expected output, proof, and stop condition. Use no full-history
+clone: prefer no inherited turns or a small bounded slice.
 
-`handoff_thread` is not a router operation. It moves an existing task and its
-associated Git state between execution locations and interrupts it when running.
-Use it only when the user explicitly requests that relocation, after verifying
-the source task, destination host or checkout, dirty/running state, and resume
-point. A handoff does not create a logical child or change the task's routing
-role.
+The ceiling is policy, not live capacity. Reconcile the runtime limit and active
+spawned children before resolving each expansion. Effective fan-out is
+`min(requested, policy ceiling, runtime capacity - active children)`. Fail
+closed when capacity evidence is missing or no slot is free.
 
-A task is reusable only when project binding, purpose, lifecycle, and ownership
-match. A title match alone is insufficient.
+The coordinator waits for required results, resolves contradictions, stops
+unnecessary workers, and reports mutations, proof, gaps, gates, and worker
+state. A worker never spawns another agent.
 
-## Luna Lifecycles
+## User-Owned Task Controls
 
-`luna-subtask` is ephemeral and one-shot. Create it for one bounded result with
-a stop condition. Do not reuse it. Archive it only after its result is accepted
-and the user authorizes archival.
+Use native task controls only after the current user explicitly authorizes a
+new task:
 
-`luna-worker` is reusable for one project and stable purpose. Before creation,
-look for an active compatible task. Re-message the same task for later batches;
-do not create duplicates merely because another Luna pass is needed.
+- `create_thread` creates a field coordinator, delegated subtask, or parallel task;
+- `list_threads` and `read_thread` verify a reusable task;
+- `send_message_to_thread` directs follow-up work;
+- `wait_threads` produces bounded progress snapshots;
+- `set_thread_archived` requires current user authorization.
 
-The field coordinator reports logical lineage explicitly because the platform
-does not make these Luna tasks native children.
+`set_thread_title` and `set_thread_pinned` change presentation, not routing.
+A title match never proves compatibility.
+
+A delegated subtask is reusable only when project, purpose, ownership, logical
+parent, and lifecycle all match. A parallel task is reusable only when project,
+purpose, ownership, and lifecycle match and it remains independent. Never reuse
+one relationship as the other merely to avoid task creation.
+
+The resolver does not treat a supplied task ID as verification. Inspect the
+task live, then pass its ID with explicit reuse verification. Delegated routes
+also carry the verified logical parent task ID; independent parallel tasks must
+not carry one.
+
+`field_fleet` is deliberately two-stage. First create or reuse the Terra task
+through `field_coordinator`. After it is live, reconcile that coordinator's own
+model channel, subagent controls, active-child count, and runtime capacity.
+Write that readback as a short-lived structured receipt containing task and
+parent IDs, observation time, Terra role/model/effort binding, worker
+role/model/effort binding, relationship, lifecycle, project/purpose/ownership
+verification, channel models, controls, runtime capacity, active children, and
+`verification_method=list_threads+read_thread+coordinator_readback`. Only then
+resolve `field_fleet` against the existing verified task. Never use the
+master's model catalog, role files, controls, or free slots as evidence for the
+Terra task's ability to command workers.
+
+The preset sets the maximum receipt age; a route may only tighten it. Include
+the coordinator's own `runtime_role_rejections` object and ignore master-side
+role rejection evidence for this topology. A receipt hash proves byte identity,
+not platform authenticity. Classify the binding as `receipt_claimed_match` and
+the reuse evidence as `caller_supplied_structured_coordinator_attestation` until
+a native task-readback signature or identifier exists.
+
+`preflight_ready` is not proof. It means only that the routing contract can be
+executed. The result carries `proof_requirement` and `proof_state=not_started`;
+the native receipt and requested validation must still be collected. Generic
+reuse uses caller-attested preflight unless a stronger receipt is present and
+must never be described as independently verified.
+
+`fork_thread` is prohibited inside this router. It copies history and creates a
+new lineage; it must not implement a subtask, parallel task, coordinator,
+worker, retry, reuse, or continuation.
+
+`handoff_thread` is not routing. It moves an existing task and associated Git
+state between execution locations. Use it only for an explicit relocation
+request after verifying source, destination, running state, dirty state, and
+resume point.
 
 ## Closure
 
-The field coordinator waits for required child results, reconciles conflicts,
-stops unnecessary children, and returns: mutations, proof, contradictions,
-remaining debt, open gates, and reusable-task state.
-
-The master independently checks closure-bearing claims. It may use separate
-Sol/Terra review subagents, but it does not silently take ownership of the field
-coordinator's children.
+A field coordinator or delegated subtask returns its result to its logical
+parent. A parallel task reports directly to the operator unless the operator
+explicitly asks it to collaborate with another task. The master independently
+checks closure-bearing claims before reporting them and does not silently take
+ownership of a coordinator's live workers.

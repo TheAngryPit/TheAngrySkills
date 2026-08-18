@@ -5,6 +5,6 @@ Published skill: hyperframes-audio
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/hyperframes-audio
 Branch: main
-Commit: 67edb01bf4aa2f5931e838e46e14e0f51a5809ee
+Commit: 406bf316a38d8a6ff24c00696d9e537ee85997d4
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

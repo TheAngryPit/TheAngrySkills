@@ -5,6 +5,6 @@ Published skill: hyperframes-registry
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/hyperframes-registry
 Branch: main
-Commit: 406bf316a38d8a6ff24c00696d9e537ee85997d4
+Commit: 634df5a5af7aad3e529035d62d324aca1512df35
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

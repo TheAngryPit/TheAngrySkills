@@ -5,6 +5,6 @@ Published skill: vercel-agent-vercel-cli-with-tokens
 Source: https://github.com/vercel-labs/agent-skills.git
 Source path: skills/vercel-cli-with-tokens
 Branch: main
-Commit: b8caa260a420a73042e35521de4b5c8baf6446cc
+Commit: dd089a8c752c966dee8bf0f27cb625ba193ffd9e
 
 This skill is vendored from upstream with a `vercel-agent-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

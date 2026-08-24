@@ -30,7 +30,7 @@ TASK_TOOLS = [
 ]
 FLEET_CAPACITY_ARGS = [
     "--runtime-capacity",
-    "8",
+    "6",
     "--active-subagents",
     "0",
 ]
@@ -175,18 +175,18 @@ class RouteTests(unittest.TestCase):
             self.assertNotIn("model", config, path.name)
             self.assertNotIn("model_reasoning_effort", config, path.name)
 
-    def test_fleet_policy_is_adaptive_with_ceiling_eight(self):
+    def test_fleet_policy_is_adaptive_with_operator_ceiling_six(self):
         import tomllib
 
         preset = tomllib.loads(PRESET.read_text(encoding="utf-8"))
         self.assertEqual(preset["policy"]["fleet_initial_fanout"], 3)
         self.assertEqual(
-            preset["policy"]["max_concurrent_threads_per_session"], 8
+            preset["policy"]["max_concurrent_threads_per_session"], 6
         )
 
     def test_concurrency_above_eight_is_rejected(self):
         preset = PRESET.read_text(encoding="utf-8").replace(
-            "max_concurrent_threads_per_session = 8",
+            "max_concurrent_threads_per_session = 6",
             "max_concurrent_threads_per_session = 9",
             1,
         )
@@ -375,7 +375,7 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(result["fleet"]["model"], "gpt-5.6-luna")
         self.assertEqual(result["fleet"]["effort"], "medium")
         self.assertEqual(result["fleet"]["fanout"], 3)
-        self.assertEqual(result["fleet"]["max_fanout"], 8)
+        self.assertEqual(result["fleet"]["max_fanout"], 6)
         self.assertEqual(result["fleet"]["delegation_depth"], "direct_children_only")
         self.assertEqual(result["workflow"]["owner"], "native")
         self.assertNotIn("gstack", result["required_skills"])
@@ -402,7 +402,7 @@ class RouteTests(unittest.TestCase):
                 )
                 self.assertEqual(result["fleet"]["effort"], effort)
 
-    def test_fleet_allows_eight_and_rejects_nine(self):
+    def test_fleet_allows_six_and_rejects_above_operator_ceiling(self):
         base = [
             "resolve",
             "--preset",
@@ -418,11 +418,11 @@ class RouteTests(unittest.TestCase):
             *FLEET_CAPACITY_ARGS,
             *self.tool_args(SUBAGENT_TOOLS),
         ]
-        self.assertEqual(self.run_cli(*base, "--fanout", "8")["fleet"]["fanout"], 8)
-        result = self.run_cli(*base, "--fanout", "9", expected=2)
-        self.assertIn("between 1 and 8", result["error"])
+        self.assertEqual(self.run_cli(*base, "--fanout", "6")["fleet"]["fanout"], 6)
+        result = self.run_cli(*base, "--fanout", "7", expected=2)
+        self.assertIn("between 1 and 6", result["error"])
         result = self.run_cli(*base, "--fanout", "0", expected=2)
-        self.assertIn("between 1 and 8", result["error"])
+        self.assertIn("between 1 and 6", result["error"])
 
     def test_fleet_effective_fanout_uses_live_free_slots(self):
         result = self.run_cli(
@@ -432,9 +432,9 @@ class RouteTests(unittest.TestCase):
             "--route",
             "direct_fleet",
             "--fanout",
-            "8",
+            "6",
             "--runtime-capacity",
-            "8",
+            "6",
             "--active-subagents",
             "3",
             "--channel-model",
@@ -445,9 +445,9 @@ class RouteTests(unittest.TestCase):
             str(AGENT_ASSETS),
             *self.tool_args(SUBAGENT_TOOLS),
         )
-        self.assertEqual(result["fleet"]["requested_fanout"], 8)
-        self.assertEqual(result["fleet"]["fanout"], 5)
-        self.assertEqual(result["fleet"]["free_slots"], 5)
+        self.assertEqual(result["fleet"]["requested_fanout"], 6)
+        self.assertEqual(result["fleet"]["fanout"], 3)
+        self.assertEqual(result["fleet"]["free_slots"], 3)
         self.assertTrue(result["fleet"]["capacity_limited"])
 
     def test_fleet_requires_capacity_evidence_and_a_free_slot(self):
@@ -702,7 +702,7 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(result["native_relationship"], "peer_user_owned_task")
         self.assertEqual(result["logical_relationship"], "delegated_subtask")
         self.assertEqual(result["logical_parent"], "master-orchestrator")
-        self.assertEqual(result["fleet"]["max_fanout"], 8)
+        self.assertEqual(result["fleet"]["max_fanout"], 6)
 
     def test_field_fleet_cannot_claim_unproven_coordinator_capability(self):
         result = self.run_cli(

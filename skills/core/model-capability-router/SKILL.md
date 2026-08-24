@@ -81,7 +81,7 @@ python3 scripts/route.py resolve \
   --preset <preset.toml> \
   --route direct_fleet \
   --fanout 3 \
-  --runtime-capacity 8 \
+  --runtime-capacity 6 \
   --active-subagents <live-count> \
   --channel-model current_task=gpt-5.6-sol \
   --channel-model spawn_agent=gpt-5.6-luna \
@@ -147,7 +147,7 @@ outside its creator's gstack hierarchy.
 ## Fleet Rules
 
 - Use only independent workstreams with explicit ownership and proof.
-- Start with two or three workers. The approved ceiling is eight spawned
+- Start with two or three workers. The operator preset ceiling is six spawned
   subagent threads, excluding the primary task; capacity is not a target.
 - Before each expansion, reconcile the live runtime ceiling and active spawned
   children. Effective fan-out is the smallest of requested fan-out, the

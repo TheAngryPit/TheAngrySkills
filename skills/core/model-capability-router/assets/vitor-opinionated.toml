@@ -1,6 +1,6 @@
 schema_version = 3
 name = "vitor-opinionated"
-version = "2026.08.16.2"
+version = "2026.08.24.1"
 description = "Topology-first Codex routing: Sol master, Sol High planner, reusable Terra field coordination, native Luna fleets, and explicit delegated-versus-parallel user-owned tasks."
 
 [policy]
@@ -8,7 +8,7 @@ availability_required = true
 lowest_sufficient_effort = true
 max_operator_only = true
 ultra_operator_only = true
-max_concurrent_threads_per_session = 8
+max_concurrent_threads_per_session = 6
 fleet_initial_fanout = 3
 coordinator_receipt_max_age_seconds = 300
 delegation_depth = "direct_children_only"

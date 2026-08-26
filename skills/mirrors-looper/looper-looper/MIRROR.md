@@ -5,6 +5,6 @@ Published skill: looper-looper
 Source: https://github.com/nexu-io/looper.git
 Source path: skills/looper
 Branch: main
-Commit: 8c2e62fab1d5b9e9766feb15b1cbadefb5449354
+Commit: 6b6df842d776caf240afd76fa23bd36f42d03ee1
 
 This skill is vendored from upstream with a `looper-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

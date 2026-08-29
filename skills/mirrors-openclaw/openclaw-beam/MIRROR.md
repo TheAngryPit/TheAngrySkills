@@ -5,6 +5,6 @@ Published skill: openclaw-beam
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/beam
 Branch: main
-Commit: 3ccaa24e9f311ff7acef55581f3d9547f831370c
+Commit: d3d13322f1f1cc07c40b4125087d37c1b8abef87
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

@@ -5,6 +5,6 @@ Published skill: openclaw-handoff
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/handoff
 Branch: main
-Commit: fe73c380c0faeff30b52e01376f7de7b47d8dd60
+Commit: 6aa7eb7d51c4ac8292fb8429c7f992ac71301f26
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

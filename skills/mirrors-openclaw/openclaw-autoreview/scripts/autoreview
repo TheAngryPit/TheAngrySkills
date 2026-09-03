@@ -34,25 +34,6 @@ from typing import Any, BinaryIO, Callable, NamedTuple
 
 ENGINES = ("codex", "claude", "amp", "pi", "kimi")
 ENGINE_CHOICES = ENGINES
-SAFE_GIT_CONFIG_ARGS = (
-    "-c",
-    "core.fsmonitor=false",
-    "-c",
-    "core.pager=cat",
-    "-c",
-    "diff.external=",
-    "-c",
-    "diff.renames=false",
-    "-c",
-    "pager.diff=cat",
-    "-c",
-    "pager.log=cat",
-    "-c",
-    "pager.show=cat",
-)
-SAFE_DIFF_FLAGS = ("--no-ext-diff", "--no-textconv", "--no-renames")
-COMMIT_DIFF_FLAGS = (*SAFE_DIFF_FLAGS, "--root", "--no-commit-id", "-r")
-DIFF_HUNK_CONTENT_BOUNDARY = "\0autoreview-diff-hunk-boundary\0"
 ENGINE_GIT_CONFIG_OVERRIDES = (
     ("core.fsmonitor", "false"),
     ("core.pager", "cat"),
@@ -62,6 +43,13 @@ ENGINE_GIT_CONFIG_OVERRIDES = (
     ("pager.log", "cat"),
     ("pager.show", "cat"),
 )
+# Machine-parsed diffs require space-prefixed empty context lines.
+SAFE_GIT_CONFIG_ARGS = tuple(
+    arg for key, value in ENGINE_GIT_CONFIG_OVERRIDES for arg in ("-c", f"{key}={value}")
+) + ("-c", "diff.suppressBlankEmpty=false")
+SAFE_DIFF_FLAGS = ("--no-ext-diff", "--no-textconv", "--no-renames", "--no-color")
+COMMIT_DIFF_FLAGS = (*SAFE_DIFF_FLAGS, "--root", "--no-commit-id", "-r")
+DIFF_HUNK_CONTENT_BOUNDARY = "\0autoreview-diff-hunk-boundary\0"
 SENSITIVE_PATH_PARTS = {
     ".aws",
     ".azure",
@@ -472,7 +460,7 @@ SCHEMA: dict[str, Any] = {
                                     "source_id": {"type": "string"},
                                     "side": {"type": "string", "enum": ["present", "removed"]},
                                     "column": {"type": "integer", "minimum": 1},
-                                    "excerpt": {"type": "string", "minLength": 1},
+                                    "excerpt": {"type": "string"},
                                 },
                             },
                         ],
@@ -548,24 +536,15 @@ def global_excludes_file(repo: Path) -> Path | None:
     home = Path(env["HOME"]).expanduser()
     if not external_env_path(repo, str(home)):
         return None
-    result = run(
-        [
-            resolve_command("git", repo),
-            "--no-optional-locks",
-            *SAFE_GIT_CONFIG_ARGS,
-            "config",
-            "--global",
-            "--path",
-            "--get",
-            "core.excludesFile",
-        ],
+    result = git_result(
         repo,
+        "config", "--global", "--path", "--get", "core.excludesFile",
         check=False,
         env=env,
     )
     if result.returncode != 0:
         return None
-    raw_path = result.stdout.strip()
+    raw_path = result.stdout.removesuffix("\n")
     if not raw_path:
         return None
     candidate = Path(raw_path).expanduser()
@@ -1450,14 +1429,16 @@ def git_result(
     repo: Path,
     *args: str,
     check: bool = True,
+    env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     try:
-        return run(
-            [resolve_command("git", repo), "--no-optional-locks", *SAFE_GIT_CONFIG_ARGS, *args],
-            repo,
-            check=check,
-            env=safe_git_env(repo),
-            text_errors="strict",
+        # Text-mode pipes alias CR/CRLF pathnames to LF and alter patch bytes.
+        # Decode the shared binary capture without newline translation.
+        result = git_bytes(repo, *args, check=check, env=env)
+        return subprocess.CompletedProcess(
+            result.args, result.returncode,
+            result.stdout.decode(SUBPROCESS_TEXT_ENCODING),
+            result.stderr.decode(SUBPROCESS_TEXT_ENCODING),
         )
     except UnicodeDecodeError as exc:
         raise SystemExit(
@@ -1477,24 +1458,12 @@ def git_path_list(repo: Path, *args: str, check: bool = True) -> list[str]:
 def repo_root() -> Path:
     start = Path.cwd().resolve()
     unsafe_root = discover_repo_root(start) or start
-    git_bin = find_command("git", unsafe_root)
-    if not git_bin:
+    if not find_command("git", unsafe_root):
         raise SystemExit("git executable not found. Install Git or add it to PATH.")
-    try:
-        result = subprocess.run(
-            [git_bin, "--no-optional-locks", *SAFE_GIT_CONFIG_ARGS, "rev-parse", "--show-toplevel"],
-            text=True,
-            encoding=SUBPROCESS_TEXT_ENCODING,
-            errors="strict",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            env=safe_git_env(unsafe_root),
-        )
-    except UnicodeDecodeError as exc:
-        raise SystemExit("repository root is not valid UTF-8") from exc
+    result = git_result(unsafe_root, "rev-parse", "--show-toplevel", check=False)
     if result.returncode != 0:
         raise SystemExit("autoreview must run inside a git repository")
-    return Path(result.stdout.strip()).resolve()
+    return Path(result.stdout.removesuffix("\n")).resolve()
 
 
 def discover_repo_root(start: Path) -> Path | None:
@@ -1634,6 +1603,7 @@ def git_bytes(
     repo: Path,
     *args: str,
     check: bool = True,
+    env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[bytes]:
     result = subprocess.run(
         [
@@ -1645,7 +1615,7 @@ def git_bytes(
         cwd=repo,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        env=safe_git_env(repo),
+        env=env if env is not None else safe_git_env(repo),
     )
     if check and result.returncode != 0:
         detail = (result.stderr or result.stdout).decode(
@@ -2301,19 +2271,21 @@ def mixed_source_text(path: str, version: str, data: bytes) -> str:
 
 
 def git_source_version(repo: Path, path: str, ref: str | None) -> SourceVersion:
-    pathspec = f":(literal){path}"
-    if ref is None:
-        entries = git_path_list(repo, "ls-files", "--stage", "-z", "--", pathspec)
-    else:
-        entries = git_path_list(repo, "ls-tree", "-z", ref, "--", path)
+    command = ("ls-files", "--stage", "-z") if ref is None else ("ls-tree", "-z", ref)
+    entries = git_path_list(repo, "--literal-pathspecs", *command, "--", path)
+    # Directory queries return a tree or its descendants, not a blob here.
+    # Keep only exact entries, preserving their conflict stages and unsafe modes.
+    entries = [
+        metadata for metadata, actual in (entry.split("\t", 1) for entry in entries)
+        if actual == path and not (ref is not None and metadata.startswith("040000 tree "))
+    ]
     if not entries:
         return SourceVersion("absent", None, None)
     if len(entries) != 1:
         raise SystemExit(f"unmerged mixed source: {display_escape(path, 500)}")
-    metadata, actual = entries[0].split("\t", 1)
-    mode, middle, last = metadata.split()
+    mode, middle, last = entries[0].split()
     oid = middle if ref is None else last
-    if actual != path or (ref is None and last != "0") or mode not in {"100644", "100755"}:
+    if (ref is None and last != "0") or mode not in {"100644", "100755"}:
         raise SystemExit(f"unsafe mixed source mode: {display_escape(path, 500)} ({mode})")
     return SourceVersion(f"git:{oid}:{mode}", mode, None)
 
@@ -2443,13 +2415,8 @@ def local_bundle(repo: Path, base_ref: str | None = None) -> CapturedBundle:
     if base_ref is not None:
         base_ref = validate_git_ref(repo, base_ref, "base", pin=True)
     staged_base = ("--end-of-options", base_ref) if base_ref is not None else ()
-    # Text-mode subprocess output normalizes CRLF, which cannot serve as an
-    # exact source anchor. Keep the original transition bytes in local capture.
-    try:
-        staged_patch = git_bytes(repo, "diff", *SAFE_DIFF_FLAGS, "--cached", "--patch", *staged_base).stdout.decode("utf-8")
-        unstaged_patch = git_bytes(repo, "diff", *SAFE_DIFF_FLAGS, "--patch").stdout.decode("utf-8")
-    except UnicodeDecodeError:
-        raise SystemExit("refusing non-UTF-8 Git output in local patch") from None
+    staged_patch = git(repo, "diff", *SAFE_DIFF_FLAGS, "--cached", "--patch", *staged_base)
+    unstaged_patch = git(repo, "diff", *SAFE_DIFF_FLAGS, "--patch")
     require_no_binary_diff(
         "local staged diff",
         git(repo, "diff", *SAFE_DIFF_FLAGS, "--cached", "--numstat", "-z", *staged_base),
@@ -3412,9 +3379,10 @@ def render_mixed_context(chunk: ReviewChunk) -> str:
         actionable even when corrected in working_tree; label it INDEX-only.
         Findings on these paths REQUIRE source_attribution: target, record_id,
         source_id, side, column and excerpt. code_location.line is a 1-based source
-        line; column is a 1-based Unicode character offset. excerpt must be a
-        nonempty exact substring of that physical line (no LF). Use present for
-        current target source, removed only for a listed removed line from its
+        line; column is a 1-based Unicode character offset. excerpt must be an
+        exact substring of that physical line (no LF). Empty excerpts require
+        an empty line and column 1; a present zero-byte source uses virtual line 1.
+        Use present for target content, removed only for a listed removed line from its
         predecessor. Never claim removed index text is present in working_tree.
         Any line in a selected file is in scope, including unchanged context.
         Null attribution is permitted only for paths without mixed records.
@@ -5730,7 +5698,6 @@ def validate_attribution_shape(value: Any, index: int) -> None:
     if (value["target"] not in {"index", "working_tree"}
             or value["side"] not in {"present", "removed"}
             or not all(isinstance(value[key], str) for key in ("record_id", "source_id", "excerpt"))
-            or not value["excerpt"]
             or not isinstance(value["column"], int) or isinstance(value["column"], bool)
             or value["column"] < 1):
         raise SystemExit(f"finding {index} has invalid source_attribution")
@@ -5760,13 +5727,15 @@ def mixed_attribution_error(
             return "anchor is not a genuinely removed line of this transition"
         text = lines[line]
     else:
-        lines = literal_lf_lines(source.content or "")
+        # Present empty blobs still need a file-level anchor; absent sources were rejected above.
+        lines = literal_lf_lines(source.content or "") or [""]
         if line > len(lines):
             return "source anchor line is out of range"
         text = lines[line - 1].removesuffix("\n")
     column = attribution["column"] - 1
     excerpt = attribution["excerpt"]
-    if "\n" in excerpt or text[column:column + len(excerpt)] != excerpt:
+    if ((not excerpt and (text != "" or column != 0))
+            or "\n" in excerpt or text[column:column + len(excerpt)] != excerpt):
         return "source anchor excerpt does not match exactly at line/column"
     return None
 
@@ -5835,9 +5804,9 @@ def _validate_report(
                 f"{sorted(location)}"
             )
         raw_file_path = location.get("file_path")
-        if not isinstance(raw_file_path, str) or not raw_file_path.strip():
+        if not isinstance(raw_file_path, str) or not raw_file_path:
             raise SystemExit(f"finding {index} has invalid location: {location}")
-        raw_rel = raw_file_path.strip()
+        raw_rel = raw_file_path
         normalized_rel = raw_rel if raw_rel in changed_paths else raw_rel.replace("\\", "/")
         while normalized_rel.startswith("./"):
             normalized_rel = normalized_rel[2:]

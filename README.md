@@ -112,6 +112,34 @@ forking a bloated transcript, and perform one bounded recall against the exact
 recorded source. Packet creation never commits, archives, deletes, or mutates
 the source task automatically.
 
+### 6. Validate an OpenClaw PR or custom build
+
+Install the [custom-build validation skill](skills/engineering/openclaw-custom-build-validation/SKILL.md):
+
+```bash
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill openclaw-custom-build-validation
+```
+
+Ask your agent to validate a specific PR head, compose an ordered patch stack,
+or refresh a custom build onto a chosen upstream commit. The skill records the
+exact candidate, uses OpenClaw Manager (`ocm`) for local test environments, and
+uses `openclaw-crabbox` when remote reproduction adds useful evidence. Install
+that companion separately if remote testing is needed.
+
+You need Git, the candidate's build tools, and OCM for local validation. The
+bundled helpers use Node.js; source checks and approved PR comments use an
+authenticated GitHub CLI. Remote tests also require an authorized provider.
+Installing this skill does not install those tools or start any services.
+
+Validation preserves the personal installation. Adoption, optional telemetry,
+and publishing comments require the user's authorization. Reports distinguish
+source inspection, automated tests, runtime checks, and human confirmation.
+This is a TheAngrySkills workflow, not an official OpenClaw release campaign.
+
+The helpers have regression tests and a secrets scan. The complete OCM/Crabbox
+workflow has not yet been validated end to end; a passing helper test is not
+evidence that a particular OpenClaw build works.
+
 ## Wizard-Style Install Discipline
 
 Use this repo like a guided setup, not like a blind package install:

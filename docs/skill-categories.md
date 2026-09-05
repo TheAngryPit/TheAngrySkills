@@ -32,6 +32,11 @@ docs, goals, implementation plans, durable cross-profile continuity packets, or
 skill improvements. `continuity-handoff` keeps packet identity portable while
 recording device-local recall paths as non-canonical observations.
 
+`openclaw-custom-build-validation` validates PR heads, patch stacks, and custom
+OpenClaw builds using OCM-managed local environments and conditional Crabbox
+proof. It is owned workflow guidance, not an upstream mirror, despite sharing
+the OpenClaw namespace. Official release campaigns remain separate.
+
 Use this category when the work is about shaping or executing code-facing workflow, not when you only need reference docs.
 
 ## Design

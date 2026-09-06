@@ -26,6 +26,17 @@ Baseline reproduction gaps and untested platforms must remain visible in the
 summary. A local dirty patch must be represented by the recorded candidateTree
 and ordered patch evidence; do not attribute it to candidateSha alone.
 
+Test results describe whether each named validation check met its expectation.
+For example, `Baseline reproduces lost completion` passes when that loss was
+observed as expected; preserve the actual baseline failure in the worksheet and
+summary. Do not relabel an unexpected candidate failure as successful reproduction.
+Keep candidate recovery as a separate check. Reserve `retained` for intentional
+retention; give the reason and any remaining action without private paths.
+If attempted cleanup fails, use `failed`, including when other artifacts were
+intentionally retained. Do not relabel failed, unknown, or unfinished cleanup as
+retention. Use `complete` for completed cleanup and `not-required` when none was
+required; keep unattempted required cleanup explicit before final closeout.
+
 Render before review (stdout is the complete comment draft):
 
 ```sh

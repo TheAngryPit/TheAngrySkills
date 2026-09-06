@@ -15,7 +15,31 @@ Every PR must pass `Skill stack CI`, which runs:
 3. Shared skill catalog/frontmatter audit.
 4. Skill root security scan.
 
-The security scan must produce `blocking_skill_count = 0`.
+The security scan must produce `blocking_skill_count = 0`, except for unchanged
+baseline findings reviewed under the conditions below. The current CI reports
+security signals; it does not enforce this maintainer gate automatically.
+
+### Existing baseline findings
+
+An unrelated PR does not have to repair pre-existing findings to merge. Before
+accepting that baseline, the maintainer must:
+
+- scan clean trees at the exact base and candidate commits with the same scanner
+  and options, and record both identities and results;
+- compare findings by skill, file, rule, severity and evidence, not just totals;
+- confirm that every touched owned skill has zero blocking findings and inspect
+  its review signals directly;
+- keep every new, aggravated or unattributable finding blocked pending review
+  and resolution; an incomplete scan cannot establish an unchanged baseline.
+
+Record this comparison in the PR. Existing findings remain unresolved; accepting
+an unrelated change is not approval to install the flagged content. Scanner or
+policy changes require explicit maintainer review and must not hide findings to
+make their own comparison pass.
+
+The separate automated-mirror exception remains limited to one-to-one refreshes
+of accepted upstream mirrors with the approved deterministic transformations.
+It does not extend to owned skills or arbitrary mirror changes.
 
 If the scan reports `needs_human_review`, the PR may still be reviewed, but it
 is not automatically safe. The reviewer must inspect the affected skill,
@@ -52,7 +76,8 @@ Before merging, the reviewer should confirm:
 - the PR template names touched skills/categories/mirrors
 - upstream license and provenance are preserved where relevant
 - no private paths or secrets appear in the diff
-- CI passed without blocking security findings
+- CI passed and blocking security findings are absent or satisfy the documented
+  unchanged-baseline conditions
 - any `needs_human_review` scanner output was inspected directly
 - install commands remain narrow and reviewable
 

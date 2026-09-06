@@ -110,9 +110,11 @@ feed, or beta status. Preserve the vanilla app as the user's working base.
 Use official OCM runtime build/verify and upgrade-preview operations supported
 by the installed version. Verify their actual semantics before execution; do
 not assume an old example or inferred flag exists. Select only the candidate's
-runtime for the fixture. Check readiness with live health plus a task-relevant
-CLI/API request, plugin inventory and required tools. A process PID, loaded
-service, HTTP shell, or green build alone is not readiness.
+runtime for the fixture. For Gateway-dependent deliverables, check live health
+plus a task-relevant CLI/API request, plugin inventory and required tools. For
+CLI-only work, exercise the requested command; Gateway readiness is required
+only when that command depends on it. A process PID, loaded service, HTTP shell,
+or green build alone is not readiness.
 
 ## Prove behavior, locally and remotely
 
@@ -130,6 +132,9 @@ For a bug fix, reproduce on the relevant baseline and test the same path on the
 candidate. If baseline reproduction is unavailable, say so; green candidate
 tests alone do not establish causation. For stateful bugs, include persistence
 and restart/reconnect behavior when these are in scope.
+For pending-completion recovery or duplicate delivery across Gateway restarts,
+read [references/stateful-restart.md](references/stateful-restart.md) before
+choosing the reproduction. Record its checkpoints in the existing worksheet.
 
 Use Crabbox whenever clean-machine, remote, platform-specific, packaging,
 credential-free, or independent reproduction meaningfully improves the proof.

@@ -1,1 +1,1 @@
-/tmp/theangryskills-mirrors-KmlH8m/openclaw/skills/autoreview/AGENTS.md
+/tmp/theangryskills-mirrors-gAvnnJ/openclaw/skills/autoreview/AGENTS.md

@@ -5,6 +5,6 @@ Published skill: openclaw-behavior-validator
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/behavior-validator
 Branch: main
-Commit: 1a1b2c457857e01202da4d4b6a10890af2706aea
+Commit: b86a9121adde5f949135841e92037f9593b7c694
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

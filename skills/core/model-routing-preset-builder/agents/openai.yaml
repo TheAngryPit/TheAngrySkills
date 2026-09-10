@@ -1,4 +1,4 @@
 interface:
-  display_name: "Model Routing Preset Builder"
-  short_description: "Build a portable model routing preset"
-  default_prompt: "Use $model-routing-preset-builder to create or customize a model routing preset."
+  display_name: "Native Routing Policy Builder"
+  short_description: "Five native profiles without mandatory routing stages"
+  default_prompt: "Use $model-routing-preset-builder for the requested native model-routing decision, respecting the selected main model and current channel availability."

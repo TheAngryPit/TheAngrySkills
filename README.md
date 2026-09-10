@@ -96,13 +96,16 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperfr
 
 ### 4. Use or customize my model-routing preset
 
-Install `model-capability-router` to use the included `vitor-opinionated`
-preset, or install `model-routing-preset-builder` to clone and adapt it to the
-models, usage budget, capabilities, and proof bar available in your own setup.
-The preset uses Spark for tiny work, Luna for bounded workers, Terra for
-coordination, and Sol for planning and review. When Spark is unavailable, its
-declared fallback is Luna Light (`low` in TOML). Runtime availability always
-outranks the example, and `max` or `ultra` remain explicit operator decisions.
+Install `model-capability-router` for five native profiles: Spark Low, Luna
+XHigh, Luna Max, Astra Medium and Astra XHigh. Choose directly for the task;
+there is no mandatory escalation ladder, resolver or coordinator stage.
+Respect the selected main model and live channel availability. The optional
+`model-routing-preset-builder` customises this same policy, not a second runtime.
+Both skills are installed only from this repository, never Workbench.
+
+```bash
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git -g -a codex -y -s model-capability-router -s model-routing-preset-builder
+```
 
 ### 5. Continue work in a fresh task
 

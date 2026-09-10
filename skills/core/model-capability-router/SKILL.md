@@ -1,187 +1,80 @@
 ---
 name: model-capability-router
-description: Use when routing Codex work by topology, model, reasoning effort, role, lifecycle, or proof bar across the current task, native subagents and fleets, delegated user-owned subtasks, independent parallel user-owned tasks, and reusable Terra field coordinators. Covers master orchestration, Sol High planning, Luna fleets, task versus subtask decisions, overrides, reuse, steering, waiting, fallback, and Max/Ultra gates.
+description: "Use when explicitly asked to choose or configure native Codex models and reasoning effort, or when authorised delegation needs a compute choice. Provides Spark, Luna XHigh/Max and Astra Medium/XHigh profiles without mandatory routing stages or wrappers."
 ---
 
-# Model Capability Router
+# Native Model Routing
 
-Choose the smallest topology and cheapest compute that can meet the proof bar.
-The preset is operator policy; current channel metadata is preflight; a successful
-native call is runtime truth. UI badges are never routing evidence.
+Use native Codex model, effort and agent selection. Respect the operator's
+selected main model and effort; this skill does not switch an active task.
+Keep small or tightly coupled work local. Delegation is optional and must be
+permitted by the current task and runtime instructions.
 
-## Route
+## Five profiles
 
-1. Locate the nearest operator-approved schema 3 preset. In the operator's
-   installation, bundled `assets/vitor-opinionated.toml` is the coherent
-   baseline. Treat any external copy as a compatibility mirror only when its
-   schema and checksum match. Other bundled presets remain examples until adopted.
-2. Classify topology before selecting compute:
-   - `single`: keep the work in the user-facing master task;
-   - `direct_subagent`: delegate one bounded contract to one native child;
-   - `direct_fleet`: let the current master command independent native workers;
-   - `field_coordinator`: create or reuse a Terra coordinator for a project or ticket;
-   - `field_fleet`: let that coordinator command independent native workers;
-   - `delegated_subtask`: create or reuse a user-owned task that works for a
-     named master or coordinator;
-   - `parallel_task`: create or reuse an independent user-owned task in the same project;
-   - `max_single`: one operator-authorized, unusually hard non-parallel problem;
-   - `ultra_auto`: operator-authorized automatic multi-agent execution.
-   A delegated or parallel user-owned task may be `ephemeral` or `reusable`;
-   field coordinators remain reusable. Lifecycle does not determine whether a
-   task is logically delegated or independent.
-3. Keep platform relationship separate from logical relationship:
-   - native subagents and Fleet workers are real children;
-   - every `create_thread` result is a platform peer and user-owned;
-   - in the operator's nomenclature, a platform peer working for another task
-     is a `subtask`; an autonomous peer in the same project is a normal `task`.
-4. Select role and compute independently. The preset supplies defaults, not
-   immutable bindings:
-   - Spark for tiny deterministic work when the channel exposes it;
-   - Luna Medium for bounded volume and exploration;
-   - Luna High for bounded logic, synthesis, and mechanical debugging;
-   - Luna XHigh for bounded coding or deep batches;
-   - Terra Medium for persistent field coordination;
-   - Sol Light (`low` in TOML) for difficult root-cause debugging;
-   - Sol Medium for the master loop, difficult implementation, and substantial planning;
-   - Sol High for the `planner`, review, audit, security, and release gates.
+| Profile | Model | Effort | Use |
+|---|---|---|---|
+| Ultra-fast | `gpt-5.3-codex-spark` | `low` | Tiny deterministic edits, targeted lookups, short iterations with clear context and an immediate check. |
+| Bounded execution | `gpt-5.6-luna` | `xhigh` | Well-specified implementation, extraction or transformations with concrete acceptance checks. |
+| Substantial execution | `gpt-5.6-luna` | `max` | Larger implementation with bounded ownership, tests and observable acceptance criteria. |
+| Capable default | `gpt-6-astra` | `medium` | Interpretation, cross-cutting diagnosis, technical decisions and coordination where understanding the problem dominates. |
+| Difficult problems | `gpt-6-astra` | `xhigh` | Particularly difficult reasoning, complex terminal/system work or unresolved ambiguity needing deeper investigation. |
 
-   Start lower and increase only after fresh evidence shows the proof bar is not
-   being met. Prefer vanilla selection when no role, proof, cost, or lifecycle
-   requirement justifies pinning. Do not turn changing benchmark scores into
-   durable routing law; use current vendor evidence for benchmark-sensitive decisions.
-5. Inventory the exact channels used by the selected topology:
-   `current_task`, `spawn_agent`, and/or `create_thread`. Inventory current
-   native controls, relevant skills, and custom role files. Role templates under
-   `assets/agents/` intentionally omit model and effort so explicit route
-   selection can use any model/effort the runtime supports. A role file that
-   pins either field must agree with the route.
-6. Resolve with Python 3.11 or newer. On Windows use `scripts\route.cmd`.
+Choose directly for the task. There is no Spark-first or Luna-first ladder,
+mandatory failed attempt, coordinator stage, planning/review delegation, CLI
+resolver, receipt workflow or preset wrapper. Importance alone does not justify
+XHigh. A read-only task can still need Astra. Patch size alone does not prove
+that Luna is suitable for autonomous systems administration.
 
-Planner:
+This five-profile policy explicitly permits Luna Max for the substantial
+execution profile; no repeated conversational approval is required merely for
+that effort. It does not authorise new spending routes, external actions or
+additional access. Astra Max and Ultra are outside the habitual palette.
+Sol and Terra are not habitual defaults, not forbidden models or proven
+universally inferior alternatives. Honour explicit operator selections and
+fixed specialist bindings, including bindings outside this palette.
 
-```bash
-python3 scripts/route.py resolve \
-  --preset <preset.toml> \
-  --route direct_subagent \
-  --role planner \
-  --channel-model spawn_agent=gpt-5.6-sol \
-  --available-tool spawn_agent \
-  --available-tool followup_task \
-  --available-tool send_message \
-  --available-tool wait_agent \
-  --available-tool list_agents \
-  --available-tool interrupt_agent \
-  --agent-root <codex-home>/agents
-```
+## Runtime and delegation
 
-Sol-managed Luna Fleet:
+Before selecting compute, check the exact channel's current advertised models
+and efforts. Current-task, native-subagent and user-owned-task support differ.
+Spark may be available in the main/task picker but absent from `spawn_agent`:
+do not invent support, create a task to work around it, or silently substitute.
+Report the gap and continue locally when the existing selection can meet the
+proof bar; otherwise surface the specific decision needed.
+
+For permitted delegation, give bounded ownership, relevant context, expected
+output and verification requirements. A differently modelled native worker
+needs fresh or bounded context: full-history forks inherit the parent model.
+Reuse appropriate idle workers where supported. Respect actual available slots;
+eight concurrent children is a ceiling, not a target or permission to spawn.
+Do not make specialists coordinators or enable recursive delegation implicitly.
+The coordinator integrates and verifies the result.
+
+Creating a user-owned task, forking, moving or archiving tasks still requires
+the corresponding explicit user request. Routing grants no authority over
+hosts, accounts, private data, credentials, publication or destructive actions.
+Respect native approvals and refusals. Do not force feature flags.
+
+## Cost and evidence
+
+Use weighted input/cache/output consumption, not raw token counts or turn
+counts alone. Reasoning tokens may already be included in output. Do not count
+them twice or add a second penalty for steps already included in measured cost.
+Distinguish benchmark results from native task proof and projected savings
+from measured account usage. Keep changing benchmark scores out of durable
+routing rules. Report unavailable capabilities and unverified claims plainly.
+
+## Installation and updates
+
+The sole install source is `TheAngryPit/TheAngrySkills`, not Workbench.
 
 ```bash
-python3 scripts/route.py resolve \
-  --preset <preset.toml> \
-  --route direct_fleet \
-  --fanout 3 \
-  --runtime-capacity 6 \
-  --active-subagents <live-count> \
-  --channel-model current_task=gpt-5.6-sol \
-  --channel-model spawn_agent=gpt-5.6-luna \
-  --available-tool spawn_agent \
-  --available-tool followup_task \
-  --available-tool send_message \
-  --available-tool wait_agent \
-  --available-tool list_agents \
-  --available-tool interrupt_agent \
-  --agent-root <codex-home>/agents
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git -g -a codex -y -s model-capability-router
 ```
 
-Pass every required control actually exposed by the session. For a user-owned
-task also pass `create_thread=<model>` and the task controls. Pass
-`--existing-task-id <id>` only after live inspection proves project, purpose,
-ownership, logical relationship, parent when delegated, and lifecycle match.
-Then pass `--reuse-verified`. Every delegated user-owned route also requires
-`--logical-parent-id <id>`; an independent `parallel_task` must not receive one.
-Use `--model`, `--effort`, `--worker-model`, or `--worker-effort` only when the
-current channel inventory proves the override.
-
-For `field_fleet`, first create or reconcile the reusable Terra task with
-`field_coordinator`. Resolve `field_fleet` only as a second stage, passing its
-verified task ID, `--reuse-verified`, its logical parent ID, and a fresh
-`--coordinator-receipt <json>` produced from live task readback. The receipt
-binds the Terra identity, role, worker role, controls, models, capacity, active
-children, parent, lifecycle, verification method, and observation time. The
-master's inventory and free slots do not prove the coordinator's Fleet capability.
-The preset owns the maximum receipt age; callers may request a smaller window
-but cannot enlarge it. The receipt is a structured caller-supplied attestation,
-not a platform signature, so `proof_state` remains `not_started`.
-
-7. Follow the resolver result:
-   - `preflight_ready`: routing inputs are coherent, but `proof_state` remains
-     `not_started`; execute once and collect the required native/runtime proof;
-   - `needs_authorization`: stop at the named current-user gate;
-   - `blocked`: do not silently substitute a channel, relationship, role, model, or task.
-8. Attach owned scope, expected output, proof, and stop condition to every
-   delegation. Reconcile required results before reporting closure.
-
-Read [orchestration-contract.md](references/orchestration-contract.md) before
-creating, reusing, steering, waiting on, or ending a Fleet, field coordinator,
-delegated subtask, or parallel task.
-
-Before replacing a schema 2 installation, follow
-[schema-3-migration.md](references/schema-3-migration.md). Do not update the
-resolver, preset mirror, routing caller, or role assets as unrelated independent
-changes.
-
-When a gstack skill owns the workflow, also read
-[gstack-compatibility.md](references/gstack-compatibility.md). Preserve gstack's
-phase order, artifacts, dual-voice degradation labels, STOP points, and human
-gates; use this router only to choose compute and topology for a bounded phase.
-
-gstack is an optional overlay. Native routing is the default and never requires
-gstack. Select `--workflow-owner gstack --workflow-phase <phase>` only when a
-gstack skill owns the current workflow; then inventory `gstack` and pass the
-required plan, repository, revision, scope, test, or target artifacts with
-`--context-artifact KEY=VALUE`. The resolver enforces the phase/topology/role
-matrix. An independent parallel task may run its own gstack loop, but remains
-outside its creator's gstack hierarchy.
-
-## Fleet Rules
-
-- Use only independent workstreams with explicit ownership and proof.
-- Start with two or three workers. The operator preset ceiling is six spawned
-  subagent threads, excluding the primary task; capacity is not a target.
-- Before each expansion, reconcile the live runtime ceiling and active spawned
-  children. Effective fan-out is the smallest of requested fan-out, the
-  approved ceiling, and currently free slots. Zero free slots blocks the route.
-- Keep workers as direct children. They never spawn further agents.
-- Prefer `fork_turns="none"` or a small bounded positive value. Do not clone
-  the full conversation into every worker.
-- Reuse an idle native child with `followup_task` during the current lifecycle;
-  otherwise spawn only the missing workstream.
-- Wait for required workers, reconcile conflicts, and interrupt unnecessary work.
-- Escalate only the failed or ambiguous workstream to Terra or Sol; do not
-  upgrade the whole Fleet automatically.
-
-## Authority Gates
-
-`create_thread` creates a user-owned platform peer. Use it only when the user
-explicitly asks for a new task in the current request. Delegation by itself does
-not authorize task creation. Archival also requires current user authorization.
-
-`fork_thread` is excluded. It copies task history and is not routing,
-delegation, retry, reuse, or coordination. `handoff_thread` is outside the
-router and is only for an explicitly requested relocation of an existing task
-and its associated Git state.
-
-`max` and `ultra` require explicit operator authorization for the bounded work
-in the current task. Neither changes permissions, targets, credentials,
-mutation authority, or delegation depth.
-
-## Output Contract
-
-Return the topology, execution channel, technical and logical relationships,
-task lifecycle and reuse action, role, model, effort, Fleet fan-out and ceiling,
-capability chain, missing controls or skills, authorization gates, proof bar,
-stop condition, runtime rejection evidence, binding evidence, preset version,
-preflight state, proof requirement versus proof state, evidence classification,
-and excluded operations. Never present caller-supplied gstack context strings as
-verified artifacts or a proof-bearing route as completed work.
+Use one canonical installed skill per OS user, shared by Codex profiles through
+native discovery or links. A profile link is not a second independent version.
+Keep source metadata pointed at the normal repository. `npx skills` records
+update provenance; it does not provide an automatic update schedule. Inspect
+the installed CLI's update/check behavior before using it as a read-only check.

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Model Capability Router"
-  short_description: "Route Codex tasks, subagents, coordinators, and Fleets"
-  default_prompt: "Use $model-capability-router to choose the topology, model, effort, role, lifecycle, Fleet capacity, capability flow, gates, and proof bar; preserve native operation unless gstack explicitly owns the workflow."
+  display_name: "Native Model Routing"
+  short_description: "Five native profiles without mandatory routing stages"
+  default_prompt: "Use $model-capability-router for the requested native model-routing decision, respecting the selected main model and current channel availability."

@@ -7,8 +7,25 @@ description: "Use when explicitly asked to choose or configure native Codex mode
 
 Use native Codex model, effort and agent selection. Respect the operator's
 selected main model and effort; this skill does not switch an active task.
-Keep small or tightly coupled work local. Delegation is optional and must be
-permitted by the current task and runtime instructions.
+Choose the execution arrangement before the worker model.
+
+## Execution arrangement
+
+Keep small, tightly coupled work and immediate follow-ups with the agent that
+already holds the relevant context. A cheaper worker model alone does not
+justify a handoff. Batch related operations rather than delegating each one.
+
+Delegate a bounded package when its benefit justifies briefing, startup,
+coordination, verification and likely correction costs. Reuse a suitable worker
+for related follow-ups. Send only context needed for its acceptance checks.
+
+Parallelise independently executable packages with clear ownership when the
+benefit outweighs duplicated context and integration costs. Sequence dependent
+work. Faster completion and lower consumption are separate benefits.
+
+Continue the current thread when its context remains useful. A fresh task suits
+an independent objective; a full-history fork copies history rather than
+providing a clean context.
 
 ## Five profiles
 
@@ -46,7 +63,7 @@ proof bar; otherwise surface the specific decision needed.
 For permitted delegation, give bounded ownership, relevant context, expected
 output and verification requirements. A differently modelled native worker
 needs fresh or bounded context: full-history forks inherit the parent model.
-Reuse appropriate idle workers where supported. Respect actual available slots;
+Respect actual available slots;
 eight concurrent children is a ceiling, not a target or permission to spawn.
 Do not make specialists coordinators or enable recursive delegation implicitly.
 The coordinator integrates and verifies the result.
@@ -58,9 +75,12 @@ Respect native approvals and refusals. Do not force feature flags.
 
 ## Cost and evidence
 
-Use weighted input/cache/output consumption, not raw token counts or turn
-counts alone. Reasoning tokens may already be included in output. Do not count
-them twice or add a second penalty for steps already included in measured cost.
+Compare remaining whole-task consumption, including parent and worker calls,
+using each model's input, cache and output rates. Existing context is not free;
+cache reuse can reduce its cost but is not guaranteed across threads, models
+or changed prefixes. Include cache writes when the meter exposes them.
+Reasoning may already be included in output; count it once. Avoid double-counting
+child usage in parent aggregates or costs already included in measurements.
 Distinguish benchmark results from native task proof and projected savings
 from measured account usage. Keep changing benchmark scores out of durable
 routing rules. Report unavailable capabilities and unverified claims plainly.

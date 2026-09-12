@@ -148,10 +148,16 @@ def render_skill(entry: dict, staging: Path, commit: str,
     original_name = NAME_PATTERN.search(frontmatter).group(0)
     frontmatter = replace_exact(frontmatter, original_name, f"name: {name}", name)
     text = text[:match.start(1)] + frontmatter + text[match.end(1):]
+    skill_file.write_text(text)
     for op in overlay.get("replacements", []):
-        if safe_relative(op["file"]).as_posix() != "SKILL.md":
-            raise ValueError(f"only SKILL.md overlays permitted in this revision: {name}")
-        text = replace_exact(text, op["before"], op["after"], name)
+        relative = safe_relative(op["file"])
+        target_file = target / relative
+        if not target_file.is_file() or relative.as_posix() not in entry["files"]:
+            raise ValueError(f"overlay target is not a source skill file: {name}/{relative}")
+        contents = target_file.read_text()
+        contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
+        target_file.write_text(contents)
+    text = skill_file.read_text()
     if overlay.get("codex_note"):
         marker = SKILL_PATTERN.match(text)
         text = text[:marker.end()] + "\n" + overlay["codex_note"].rstrip() + "\n" + text[marker.end():]
@@ -207,7 +213,8 @@ def build(check: bool) -> None:
         actual = {p.relative_to(DEST).as_posix(): sha(p) for p in files(DEST)} if DEST.exists() else {}
         if actual != recorded:
             raise ValueError("published tree has local modifications; preserve and review them before rebuild")
-    with tempfile.TemporaryDirectory(prefix="cursor-mirror-build-") as tmp:
+    DEST.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".cursor-mirror-build-", dir=DEST.parent) as tmp:
         staged = Path(tmp) / "mirrors-cursor"
         staged.mkdir()
         for entry in active:
@@ -228,11 +235,23 @@ def build(check: bool) -> None:
                 raise ValueError(f"generated mirror differs: {len(changed)} files")
             print(f"mirror check passed: {len(entries)} physical, {len(active)} published, {len(generated)} output files")
             return
-        if DEST.exists():
-            shutil.rmtree(DEST)
-        shutil.copytree(staged, DEST)
+        backup = Path(tmp) / "prior-mirrors-cursor"
+        state_file = Path(tmp) / "state.json"
+        state_file.write_text(dump(state))
         STATE.parent.mkdir(parents=True, exist_ok=True)
-        STATE.write_text(dump(state))
+        moved_prior = False
+        try:
+            if DEST.exists():
+                DEST.rename(backup)
+                moved_prior = True
+            staged.rename(DEST)
+            state_file.replace(STATE)
+        except OSError:
+            if DEST.exists():
+                shutil.rmtree(DEST)
+            if moved_prior:
+                backup.rename(DEST)
+            raise
         print(f"built {len(active)} skills, {len(generated)} files; changed={len(changed)}")
 
 

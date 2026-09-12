@@ -12,7 +12,8 @@
         "./skills/core/model-capability-router",
         "./skills/core/model-routing-preset-builder",
         "./skills/core/proof-orchestrator",
-        "./skills/core/skill-catalog-curator"
+        "./skills/core/skill-catalog-curator",
+        "./skills/core/ask-pit"
       ]
     },
     {
@@ -22,7 +23,8 @@
         "./skills/engineering/docs-skill-builder",
         "./skills/engineering/openclaw-custom-build-validation",
         "./skills/engineering/theangry-ai-code-audit",
-        "./skills/engineering/writing-ticks"
+        "./skills/engineering/writing-ticks",
+        "./skills/engineering/writing-for-astra"
       ]
     },
     {

@@ -41,6 +41,7 @@ jobs:
         run: |
           node scripts/sync-curated-mirrors.mjs
           node scripts/sync-hyperframes-mirror.mjs
+          python scripts/sync-ask-pit.py
 
       - name: Validate generated mirror and catalog
         run: |
@@ -48,6 +49,7 @@ jobs:
           node --check scripts/sync-curated-mirrors.mjs
           node scripts/sync-curated-mirrors.mjs --check
           node scripts/sync-hyperframes-mirror.mjs --check
+          python scripts/sync-ask-pit.py --check
           python -m pytest -q tests
           scripts/theangry-skills.mjs check --root skills --profile shared
 
@@ -80,7 +82,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch" || true
           git switch -C "$branch"
-          git add .claude-plugin/marketplace.json skills/mirrors-*
+          git add .claude-plugin/marketplace.json skills/mirrors-* skills/core/ask-pit
           git commit -m "Refresh curated skill mirrors"
           git push --force-with-lease origin "HEAD:$branch"
 
@@ -92,7 +94,7 @@ jobs:
               --base main \
               --head "$branch" \
               --title "Refresh curated skill mirrors" \
-              --body "Automated one-to-one upstream refresh for every accepted mirror family. The workflow applies only deterministic prefixes and path rewrites, validates the generated mirrors, and merges automatically after required checks pass.")"
+              --body "Automated refresh of accepted mirror families and AskPit. Mirrors retain deterministic prefixes and path rewrites; AskPit retains its approved Writing for Astra route and packaging identity. Validation runs before automatic merge.")"
             pr_number="${pr_url##*/}"
           fi
 

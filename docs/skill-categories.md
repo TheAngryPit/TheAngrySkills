@@ -99,9 +99,14 @@ Approved mirror prefixes include:
 - `looper-`
 - `effective-`
 - `hyperframes-`
+- `emil-`
 
 An upstream name that is already product-namespaced may remain unchanged. The
 HyperFrames mirror preserves `hyperframes`, existing `hyperframes-*` names, and
 `remotion-to-hyperframes`; generic siblings receive the `hyperframes-` namespace.
+The Emil mirror preserves existing `emil-*` names such as `emil-design-eng`;
+generic siblings receive the `emil-` namespace. The family remains a separate,
+explicit project-selection mirror and is not part of the owned default install
+sets.
 
 Mirror folders are created only when that source is intentionally mirrored.

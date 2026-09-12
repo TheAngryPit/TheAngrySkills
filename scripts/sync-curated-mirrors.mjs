@@ -147,7 +147,7 @@ function escapePattern(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function rewriteReferences(text, mappings) {
+function rewriteReferences(text, mappings, options = {}) {
   let result = text;
   const ordered = [...mappings].sort((a, b) => b.sourceName.length - a.sourceName.length);
   for (const { sourceName, destinationName } of ordered) {
@@ -157,16 +157,25 @@ function rewriteReferences(text, mappings) {
       .replace(new RegExp(`(skills/)${escaped}(?=/|\\b)`, "g"), `$1${destinationName}`)
       .replace(new RegExp(`(\\.\\./)${escaped}(?=/|\\b)`, "g"), `$1${destinationName}`)
       .replace(new RegExp(`(\\*/)${escaped}(?=/|\\b)`, "g"), `$1${destinationName}`);
+    if (options.rewriteNamedReferences) {
+      result = result.replace(new RegExp("`" + escaped + "`", "g"), "`" + destinationName + "`");
+      if (sourceName.includes("-")) {
+        result = result.replace(
+          new RegExp(`(?<![A-Za-z0-9_-])${escaped}(?![A-Za-z0-9_-])`, "g"),
+          destinationName,
+        );
+      }
+    }
   }
   return result;
 }
 
-function rewriteTree(root, owner, mappings) {
+function rewriteTree(root, owner, mappings, options = {}) {
   for (const file of walkFiles(root)) {
     if (!TEXT_FILE.test(file)) continue;
     const original = readFileSync(file, "utf8");
     if (original.includes("\u0000")) continue;
-    let rewritten = rewriteReferences(original, mappings);
+    let rewritten = rewriteReferences(original, mappings, options);
     if (path.relative(root, file) === "SKILL.md") {
       rewritten = rewritten.replace(
         /^(---\r?\n[\s\S]*?^name:\s*)([^\r\n]+)(\r?\n)/m,
@@ -179,6 +188,9 @@ function rewriteTree(root, owner, mappings) {
 }
 
 function mirrorNote(source, item, sourceCommit) {
+  const adaptation = source.rewrite_named_references
+    ? "The mirrored frontmatter names and concrete references to renamed sibling paths and skill names are adapted to the published names;"
+    : "The mirrored frontmatter name and references to sibling skill paths are adapted to the published names;";
   return `# ${source.repository.replace(/^https:\/\/github\.com\//, "").replace(/\.git$/, "")} Skill Mirror\n\n` +
     `Mirrored skill: ${item.upstreamName}\n` +
     `Published skill: ${item.destinationName}\n` +
@@ -187,8 +199,7 @@ function mirrorNote(source, item, sourceCommit) {
     `Branch: ${source.branch}\n` +
     `Commit: ${sourceCommit}\n\n` +
     `This skill is vendored from upstream with a \`${source.prefix}\` prefix to avoid ` +
-    `global skill-name collisions. The mirrored frontmatter name and references to ` +
-    `sibling skill paths are adapted to the published names; upstream scripts, assets, ` +
+    `global skill-name collisions. ${adaptation} upstream scripts, assets, ` +
     `instructions, licensing, and workflow logic otherwise remain upstream material.\n`;
 }
 
@@ -214,7 +225,9 @@ function materialize(source, checkout, sourceCommit) {
     for (const item of entries) {
       const destination = path.join(stagingRoot, item.destinationName);
       cpSync(item.root, destination, { recursive: true, dereference: false });
-      rewriteTree(destination, item, mappings);
+      rewriteTree(destination, item, mappings, {
+        rewriteNamedReferences: source.rewrite_named_references === true,
+      });
       if (license && !rootLicense(destination)) cpSync(license, path.join(destination, path.basename(license)));
       writeFileSync(path.join(destination, "MIRROR.md"), mirrorNote(source, item, sourceCommit));
     }

@@ -225,6 +225,23 @@
         "./skills/mirrors-mattpocock/writing-fragments",
         "./skills/mirrors-mattpocock/writing-shape"
       ]
+    },
+    {
+      "name": "mirrors-emilkowalski",
+      "skills": [
+        "./skills/mirrors-emilkowalski/emil-animate",
+        "./skills/mirrors-emilkowalski/emil-animate-expo",
+        "./skills/mirrors-emilkowalski/emil-animation-vocabulary",
+        "./skills/mirrors-emilkowalski/emil-apple-design",
+        "./skills/mirrors-emilkowalski/emil-ask-sonner",
+        "./skills/mirrors-emilkowalski/emil-design-eng",
+        "./skills/mirrors-emilkowalski/emil-find-animation-opportunities",
+        "./skills/mirrors-emilkowalski/emil-improve-animations",
+        "./skills/mirrors-emilkowalski/emil-pick-ui-library",
+        "./skills/mirrors-emilkowalski/emil-prototype",
+        "./skills/mirrors-emilkowalski/emil-review-animations",
+        "./skills/mirrors-emilkowalski/emil-write-swift"
+      ]
     }
   ]
 }

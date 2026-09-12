@@ -55,7 +55,7 @@ wrote it.
 | Model routing | Build or apply portable model, effort, role, capability, and fallback policy | `model-routing-preset-builder`, `model-capability-router` |
 | Engineering workflow | Skills that shape code work, docs, continuity, or skill quality | `continuity-handoff`, `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
 | Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
-| Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
+| Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `emil-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
 their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes
@@ -195,7 +195,12 @@ The currently accepted mirror families for public curation are:
 - Looper skills, with `looper-` prefixes
 - Effective HTML skills, with `effective-` prefixes
 - HyperFrames by HeyGen skills, preserving natural names and using `hyperframes-` for generic names
+- Emil Kowalski skills, preserving existing `emil-` names and using `emil-` for generic names
 - Matt Pocock skills, curated under `mirrors-mattpocock/` with approved overlays and provenance
+
+The Emil family follows the same one-to-one curated mirror workflow as OpenClaw.
+It is available as the separate `mirrors-emilkowalski` family for explicit
+project selection; it is not added to the owned default install sets.
 
 When mirrors are published here, they should:
 

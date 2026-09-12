@@ -41,7 +41,6 @@ jobs:
         run: |
           node scripts/sync-curated-mirrors.mjs
           node scripts/sync-hyperframes-mirror.mjs
-          python scripts/sync-ask-pit.py
 
       - name: Validate generated mirror and catalog
         run: |
@@ -82,7 +81,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch" || true
           git switch -C "$branch"
-          git add .claude-plugin/marketplace.json skills/mirrors-* skills/core/ask-pit
+          git add .claude-plugin/marketplace.json skills/mirrors-*
           git commit -m "Refresh curated skill mirrors"
           git push --force-with-lease origin "HEAD:$branch"
 
@@ -94,7 +93,7 @@ jobs:
               --base main \
               --head "$branch" \
               --title "Refresh curated skill mirrors" \
-              --body "Automated refresh of accepted mirror families and AskPit. Mirrors retain deterministic prefixes and path rewrites; AskPit retains its approved Writing for Astra route and packaging identity. Validation runs before automatic merge.")"
+              --body "Automated refresh of accepted mirror families. Mirrors retain deterministic prefixes and path rewrites. Validation runs before automatic merge.")"
             pr_number="${pr_url##*/}"
           fi
 

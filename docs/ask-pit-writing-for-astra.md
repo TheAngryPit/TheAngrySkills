@@ -11,21 +11,25 @@ Its provenance and included upstream MIT license explain the adaptation.
 
 ## Updating
 
-The existing scheduled Sync Curated Mirrors workflow also runs
-`python scripts/sync-ask-pit.py`. It fetches current upstream Ask Matt, includes
-its supporting files, reapplies the approved identity and route, validates the
-result and includes it in the existing update PR. The workflow's existing
-required-check and auto-merge path applies. No full Matt Pocock mirror exists.
+The daily **Review adapted skill upstreams** workflow checks Ask Matt and
+Writing for Agents, including supporting files and the upstream license. It
+opens or updates one GitHub issue per affected skill with changed paths, a
+commit comparison and links to the adjacent PROVENANCE.md rationale.
 
-A changed/missing writer route or identity fails before replacing AskPit. Review
-the change instead of silently publishing an unpatched router. Writing for Astra
-is outside the generated AskPit directory and is never overwritten by refresh.
-New Matt Pocock skills are not imported: the full-family mirror was cancelled.
+It does not modify skills, accept a new baseline or auto-merge adaptations.
+Unchanged source files produce no alert even if unrelated upstream commits exist.
+GitHub notification delivery follows the repository's notification settings.
 
-For a deterministic local refresh use `--upstream /path/to/checkout`.
-For offline integrity validation use `--check`. UPSTREAM.json records the exact
-source commit and original/generated hashes; tests cover compatible updates,
-missing routes, support additions/removals and preservation of the writer skill.
+Each skill keeps its reviewed source revision and hashes in UPSTREAM.json.
+After reviewing a change, preserve the documented modifications, port or
+explicitly skip upstream differences, and advance the baseline in the reviewed PR.
+Closing the issue alone does not update that baseline.
+
+AskPit's generator remains available for an approved review:
+`python scripts/sync-ask-pit.py --upstream /path/to/checkout`.
+`--check` validates generated integrity offline. Writing for Astra is never
+rewritten by that generator. The generic mirror updater no longer refreshes
+AskPit automatically. New Matt Pocock skills are not imported.
 
 ## Installation
 

@@ -34,6 +34,15 @@
       "prefix": "openclaw-"
     },
     {
+      "id": "emilkowalski",
+      "repository": "https://github.com/emilkowalski/skills.git",
+      "branch": "main",
+      "source_root": "skills",
+      "destination_root": "skills/mirrors-emilkowalski",
+      "prefix": "emil-",
+      "rewrite_named_references": true
+    },
+    {
       "id": "taste",
       "repository": "https://github.com/Leonxlnx/taste-skill.git",
       "branch": "main",

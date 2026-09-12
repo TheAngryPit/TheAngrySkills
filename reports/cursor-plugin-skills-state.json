@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 40,
+  "candidate_not_published": 41,
   "generated_files": {
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "0e15e6a091f973b5e381c87fd11d5084691fd73ec33be75c21834b97cf5aa508",
@@ -40,9 +40,6 @@
     "cursor-loop-on-ci/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-loop-on-ci/MIRROR.md": "81d70cd8b8a28d2ec76199ba7555e3239bea284076892a7eecb46df039a0dee0",
     "cursor-loop-on-ci/SKILL.md": "e0e0ac3c33d401bdb121f5ddeeda18add76d536f82f0ba6ab872abcc1bd7560e",
-    "cursor-maintain-verification-skill/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
-    "cursor-maintain-verification-skill/MIRROR.md": "cf3362a12890c07a561c8b509a581ea4cdb7139db38744fd4b29bb74dde977e8",
-    "cursor-maintain-verification-skill/SKILL.md": "d023778b448effca448988db57fa577b87b2d5c3f72b56ce4bfd07b8666fc00e",
     "cursor-make-pr-easy-to-review/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-make-pr-easy-to-review/MIRROR.md": "d556d1612ef9d39371d279be9e65d3aaf64f87462efc171b1d8df19cbdf774aa",
     "cursor-make-pr-easy-to-review/SKILL.md": "5e19965073fbb5cd84697bedcc91c0b40f1c75f1f91fff930e7888a237978a1a",
@@ -149,7 +146,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 48,
+  "published_skills": 47,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

@@ -43,7 +43,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("91 physical, 48 published", result.stdout)
+        self.assertIn("91 physical, 47 published", result.stdout)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"

@@ -60,6 +60,13 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("snapshot file drift", result.stderr)
 
+    def test_untracked_snapshot_symlink_is_rejected(self):
+        skill_dir = self.root / "sources/cursor-plugins/snapshot/cli-for-agent/skills/cli-for-agents"
+        (skill_dir / "external").symlink_to(self.root, target_is_directory=True)
+        result = self.run_build("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("untracked symlinks", result.stderr)
+
     def test_published_relative_markdown_links_resolve(self):
         root = self.root / "skills/mirrors-cursor"
         links = 0

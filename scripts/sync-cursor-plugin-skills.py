@@ -82,6 +82,9 @@ def validate_manifest(manifest: dict) -> list[dict]:
 
 def verify_snapshot(manifest: dict) -> None:
     entries = validate_manifest(manifest)
+    symlinks = sorted(p.relative_to(SOURCE).as_posix() for p in SOURCE.rglob("*") if p.is_symlink())
+    if symlinks:
+        raise ValueError(f"snapshot contains untracked symlinks: {symlinks}")
     actual = physical_skills(SOURCE)
     expected = {e["path"] for e in entries}
     if actual != expected:

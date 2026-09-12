@@ -5,6 +5,6 @@ Published skill: hyperframes-music-to-video
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/music-to-video
 Branch: main
-Commit: ea7e1dbd0bd2afb77370b946461c4ea16afdb387
+Commit: 51a88b95660c5f67e66e9c5977226f6ae7b31255
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

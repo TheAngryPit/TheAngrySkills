@@ -45,15 +45,75 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Hold. Keep the bundled runtime external and require a separate code/security review before admission. Hold with the bundled runtime; do not install dependencies from this mirror. Hold until the command boundary, environment allowlist, timeout, and cleanup receive separate review. Retain the finding as contextual/defensive, but hold the bundled runtime until the policy test and implementation are reviewed together. Retain the scanner finding and hold the bundled Slack adapter pending external-egress and side-effect review.",
+      "findings": [
+        {
+          "rule_id": "bundled-script-review",
+          "severity": "warning",
+          "path": "scripts/**",
+          "line": null,
+          "count": 62,
+          "classification": "bundled_executable_surface",
+          "effect": "The skill ships TypeScript/Bun scripts, tests, adapters, and CLI code that can execute local and external workflow actions.",
+          "credentials": [
+            "CURSOR_API_KEY",
+            "SLACK_BOT_TOKEN"
+          ],
+          "decision": "Hold. Keep the bundled runtime external and require a separate code/security review before admission."
+        },
+        {
+          "rule_id": "dependency-manifest-surface",
+          "severity": "warning",
+          "path": "scripts/package.json",
+          "line": null,
+          "classification": "active_dependency_surface",
+          "effect": "The package manifest can install and run bundled dependencies.",
+          "credentials": [],
+          "decision": "Hold with the bundled runtime; do not install dependencies from this mirror."
+        },
+        {
+          "rule_id": "persistence-mutation",
+          "severity": "critical",
+          "path": "scripts/measurements.ts",
+          "line": 302,
+          "classification": "active_executable_code_with_security_boundary",
+          "effect": "runMeasurementCommand executes planner-authored bash in a worker branch and creates/removes a scratch HOME. The allowlist and cleanup are defensive controls, but the shell boundary is still active.",
+          "credentials": [
+            "allowlisted process environment"
+          ],
+          "decision": "Hold until the command boundary, environment allowlist, timeout, and cleanup receive separate review."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "scripts/__tests__/operator-boundary.test.ts",
+          "line": 38,
+          "classification": "defensive_test_reference",
+          "effect": "The test asserts that ORCHESTRATE_OPERATOR is ignored without the home flag. The scanner matches the word \"ignores\" although the test enforces the policy gate.",
+          "credentials": [],
+          "decision": "Retain the finding as contextual/defensive, but hold the bundled runtime until the policy test and implementation are reviewed together."
+        },
+        {
+          "rule_id": "persistence-mutation",
+          "severity": "critical",
+          "path": "scripts/adapters/slack/index.ts",
+          "line": 51,
+          "classification": "read_only_false_positive_context_with_external_adapter",
+          "effect": "The flagged line only reads a Slack profile field; it is not persistence. The surrounding adapter still provides Slack API access and can create external messages elsewhere.",
+          "credentials": [
+            "SLACK_BOT_TOKEN"
+          ],
+          "decision": "Retain the scanner finding and hold the bundled Slack adapter pending external-egress and side-effect review."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nRun bundled scripts, use Work Cloud, contact Slack, push, merge, or publish only with explicit operator authorization and a separately proven contract; until then produce plan-only output. Required native capabilities: native bounded delegation if exposed, local plan reader. External dependencies remain explicit: Cursor SDK/API, CURSOR_API_KEY, Slack, Git/PR publication. Missing delegation/credentials returns plan-only with no external action. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: bundled-script-review at scripts/**:n/a (bundled_executable_surface); dependency-manifest-surface at scripts/package.json:n/a (active_dependency_surface); persistence-mutation at scripts/measurements.ts:302 (active_executable_code_with_security_boundary); policy-bypass-instruction at scripts/__tests__/operator-boundary.test.ts:38 (defensive_test_reference); persistence-mutation at scripts/adapters/slack/index.ts:51 (read_only_false_positive_context_with_external_adapter). Hold. Keep the bundled runtime external and require a separate code/security review before admission. Hold with the bundled runtime; do not install dependencies from this mirror. Hold until the command boundary, environment allowlist, timeout, and cleanup receive separate review. Retain the finding as contextual/defensive, but hold the bundled runtime until the policy test and implementation are reviewed together. Retain the scanner finding and hold the bundled Slack adapter pending external-egress and side-effect review.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "orchestrate/skills/orchestrate/SKILL.md",
   "source_sha256": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22"

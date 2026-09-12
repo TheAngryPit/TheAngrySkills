@@ -43,15 +43,29 @@
     },
     "security_review": {
       "scanner_verdict": "needs_human_review",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Hold until native connector availability, authorization, and read-only behavior are proven.",
+      "findings": [
+        {
+          "rule_id": "mcp-plugin-hook-install",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "line": 62,
+          "classification": "active_connector_discovery_surface",
+          "effect": "The workflow discovers MCPs and then queries external evidence categories in parallel; connector permissions and authenticated data access are part of the behavior.",
+          "credentials": [
+            "connector/MCP authentication"
+          ],
+          "decision": "Hold until native connector availability, authorization, and read-only behavior are proven."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nLabel missing evidence categories; do not infer rationale from another source. Required native capabilities: git/gh source history, available connector per evidence category. External dependencies remain explicit: GitHub gh read-only, authorized issue/chat/docs/observability/data connectors. Missing MCP/connector or gh auth yields a partial rationale with unknowns. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: mcp-plugin-hook-install at SKILL.md:62 (active_connector_discovery_surface). Hold until native connector availability, authorization, and read-only behavior are proven.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "pstack/skills/why/SKILL.md",
   "source_sha256": "222b93789754ba6ee901835137184acdca667f7e47c523bcc85aca86675fb249"

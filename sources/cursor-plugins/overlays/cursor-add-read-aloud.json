@@ -44,15 +44,29 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Hold. Do not make a live request; require an approved server-side relay and provider/network review.",
+      "findings": [
+        {
+          "rule_id": "network-exfiltration",
+          "severity": "critical",
+          "path": "SKILL.md",
+          "line": 172,
+          "classification": "active_instruction",
+          "effect": "The smoke command sends reply text to the external xAI TTS endpoint and writes returned audio.",
+          "credentials": [
+            "XAI_API_KEY"
+          ],
+          "decision": "Hold. Do not make a live request; require an approved server-side relay and provider/network review."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nKeep XAI_API_KEY server-side; without an authorized relay stop at a plan or mock. Required native capabilities: server-side HTTP client, audio playback adapter. External dependencies remain explicit: xAI TTS API, XAI_API_KEY, server relay. Missing endpoint/auth leaves playback idle and exposes no key. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: network-exfiltration at SKILL.md:172 (active_instruction). Hold. Do not make a live request; require an approved server-side relay and provider/network review.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use when the user runs /add-read-aloud or wants the app to speak text with Grok text-to-speech: read-aloud button on assistant replies, auto-speak, TTS, voice output, narration, IVR prompts, speech tags, voice_id. For a two-way voice agent use /add-voice. For speech-to-text use /add-dictation.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "grok-voice/skills/add-read-aloud/SKILL.md",
   "source_sha256": "5b11114611f0950e9973b0e87a2c7562bec72ded8d46ef664249f143dd00b280"

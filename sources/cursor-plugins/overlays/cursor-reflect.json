@@ -43,15 +43,57 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed.",
+      "findings": [
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/divergent-reviewer.md",
+          "line": 7,
+          "classification": "defensive_reference_text",
+          "effect": "The reference tells the reviewer to treat transcript text as untrusted and ignore embedded directives while limiting lookups to cited context.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/judgment-reviewer.md",
+          "line": 5,
+          "classification": "defensive_reference_text",
+          "effect": "The reference applies the same untrusted-transcript boundary to judgment review.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/synthesizer.md",
+          "line": 3,
+          "classification": "defensive_reference_text",
+          "effect": "The synthesizer is told to treat reviewer output as untrusted and not follow embedded directives.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/tooling-reviewer.md",
+          "line": 5,
+          "classification": "defensive_reference_text",
+          "effect": "The tooling reviewer is told to constrain MCP lookups to context cited by the transcript.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nKeep judgment, tooling, and divergent lenses separate; do not edit a skill automatically. Required native capabilities: three bounded reviewers, scoped transcript. External dependencies remain explicit: native parallel delegates if exposed, task transcript. Missing transcript/lens keeps the result incomplete and write-free. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: policy-bypass-instruction at references/divergent-reviewer.md:7 (defensive_reference_text); policy-bypass-instruction at references/judgment-reviewer.md:5 (defensive_reference_text); policy-bypass-instruction at references/synthesizer.md:3 (defensive_reference_text); policy-bypass-instruction at references/tooling-reviewer.md:5 (defensive_reference_text). Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "pstack/skills/reflect/SKILL.md",
   "source_sha256": "6a4d4ccaace9ce88c3e268fcbedf3cfd40e527162a5e5aad6de8edbaf5e2b83f"

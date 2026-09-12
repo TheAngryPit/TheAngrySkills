@@ -42,15 +42,37 @@
     },
     "security_review": {
       "scanner_verdict": "needs_human_review",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Hold until the executable helper receives a focused script review; source remains intact and unindexed. Hold pending script and installation-scope review.",
+      "findings": [
+        {
+          "rule_id": "executable-file",
+          "severity": "warning",
+          "path": "scripts/log.sh",
+          "line": null,
+          "classification": "active_local_writer",
+          "effect": "The helper creates/appends a local TSV log and sanitizes cells, including formula-like prefixes.",
+          "credentials": [],
+          "decision": "Hold until the executable helper receives a focused script review; source remains intact and unindexed."
+        },
+        {
+          "rule_id": "bundled-script-review",
+          "severity": "warning",
+          "path": "scripts/log.sh",
+          "line": null,
+          "classification": "active_local_writer",
+          "effect": "The bundled shell helper writes operator-supplied evidence to a file; it has no demonstrated external egress, but it is executable.",
+          "credentials": [],
+          "decision": "Hold pending script and installation-scope review."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nKeep the trail local and bounded; strip secret-like values before logging. Required native capabilities: local TSV writer, redaction check. External dependencies remain explicit: local decision log. Malformed cells or failed redaction leaves the trail unchanged. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: executable-file at scripts/log.sh:n/a (active_local_writer); bundled-script-review at scripts/log.sh:n/a (active_local_writer). Hold until the executable helper receives a focused script review; source remains intact and unindexed. Hold pending script and installation-scope review.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "pstack/skills/show-me-your-work/SKILL.md",
   "source_sha256": "831e85ba3f84f38bf338cd03e6af050fea357752e25a825e334c99f59d7f2077"

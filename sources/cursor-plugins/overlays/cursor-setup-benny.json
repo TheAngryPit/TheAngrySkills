@@ -1,10 +1,72 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nResolve the named skill, tool, connector, and account against what is actually available in this Codex session before following the upstream steps. Do not infer connection, authentication, credits, or runtime parity from this mirror. Preserve the external product named upstream and report a concrete missing capability when required.\n",
+  "codex_note": "## Codex dormant security hold\n\nThis skill remains dormant and unindexed. Do not copy, install, or enable Benny automation without explicit approval. Finding review: mcp-plugin-hook-install at SKILL.md:63 (guardrail_reference_in_dormant_workflow). Keep dormant and unindexed. The warning is retained; no plugin installation or automation enablement is authorized.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Configure Benny and prepare its triage and repro automations. Use when installing Benny or changing its Slack, tracker, repository, routing, control, model, or budget settings.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "pstack/automations/benny/skills/setup-benny/SKILL.md",
-  "source_sha256": "5a3cbe63360c9f6373b6cb6c79a1eaf7e0eba181bfaa1577e2e6431af3407282"
+  "source_sha256": "5a3cbe63360c9f6373b6cb6c79a1eaf7e0eba181bfaa1577e2e6431af3407282",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "dormant-security-hold",
+    "name_mapping": {
+      "upstream_skill": "setup-benny",
+      "published_name": "cursor-setup-benny",
+      "source_path": "pstack/automations/benny/skills/setup-benny/SKILL.md"
+    },
+    "preserved_semantics": "Configure Benny and prepare its triage and repro automations. Use when installing Benny or changing its Slack, tracker, repository, routing, control, model, or budget settings.",
+    "native_mapping": {
+      "capabilities": [
+        "source reader"
+      ],
+      "required_tools": [
+        "source reader"
+      ],
+      "fallback": "Keep dormant and return a static review; do not install or activate the automation.",
+      "availability": "dormant_only"
+    },
+    "external_dependencies": [
+      "Benny automation pack",
+      "Cursor automations",
+      "Slack/tracker/routing configuration"
+    ],
+    "permission_gates": [
+      "Do not copy, install, enable, or update the dormant automation without explicit approval.",
+      "Retain scanner findings and source provenance."
+    ],
+    "behavioral_proof": {
+      "positive": "A static fixture identifies the dormant files and their intended configuration without writing them.",
+      "missing_tool_or_input": "Missing project-scoped plugin/dependency support leaves the pack dormant and produces no write.",
+      "error": "A configuration or dependency error stops before automation enablement."
+    },
+    "promotion_status": "dormant_security_hold_human_review",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "needs_human_review",
+      "status": "retained_contextual_hold",
+      "decision": "Keep dormant and unindexed. The warning is retained; no plugin installation or automation enablement is authorized.",
+      "scope": "dormant_snapshot_extra",
+      "findings": [
+        {
+          "rule_id": "mcp-plugin-hook-install",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "line": 63,
+          "classification": "guardrail_reference_in_dormant_workflow",
+          "effect": "The line tells setup to stop when project-scoped plugin installation or dependencies fail. The surrounding dormant workflow copies files, writes .cursor/settings.json, and can enable live automations.",
+          "credentials": [
+            "Benny external configuration",
+            "Cursor automation/connector credentials"
+          ],
+          "decision": "Keep dormant and unindexed. The warning is retained; no plugin installation or automation enablement is authorized."
+        }
+      ]
+    }
+  }
 }

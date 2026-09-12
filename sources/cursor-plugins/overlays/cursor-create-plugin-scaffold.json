@@ -45,15 +45,30 @@
     },
     "security_review": {
       "scanner_verdict": "needs_human_review",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained_contextual_hold",
+      "decision": "Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval.",
+      "findings": [
+        {
+          "rule_id": "mcp-plugin-hook-install",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "line": 16,
+          "classification": "active_workflow_mutation_surface",
+          "effect": "The required component input explicitly includes hooks and mcpServers; the workflow then creates plugin files and defaults to ~/.cursor/plugins/local.",
+          "credentials": [
+            "MCP server configuration",
+            "marketplace/plugin activation"
+          ],
+          "decision": "Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse an explicit destination; never write ~/.cursor or activate hooks/MCP/marketplace wiring by default. Required native capabilities: local file writer, manifest validator. External dependencies remain explicit: Cursor plugin layout, hooks, MCP servers, marketplace metadata. An unsafe destination or invalid component stops before writing. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: mcp-plugin-hook-install at SKILL.md:16 (active_workflow_mutation_surface). Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
   "replacements": [],
   "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
   "source_sha256": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46"

@@ -1,9 +1,56 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-native-fix-gated",
+    "name_mapping": {
+      "upstream_skill": "no-comments",
+      "published_name": "cursor-no-comments",
+      "source_path": "pstack/skills/no-comments/SKILL.md"
+    },
+    "preserved_semantics": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
+    "native_mapping": {
+      "capabilities": [
+        "bounded review delegate",
+        "local diff/test runner"
+      ],
+      "required_tools": [
+        "bounded review delegate",
+        "local diff/test runner"
+      ],
+      "fallback": "Reviewer error yields report-only status with no mutation.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "native bounded reviewer if exposed"
+    ],
+    "permission_gates": [
+      "Apply only accepted findings after approval; reviewer absence means report-only.",
+      "Reviewer error yields report-only status with no mutation.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-no-comments: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-no-comments: Reviewer error yields report-only status with no mutation.",
+      "error": "Error fixture for cursor-no-comments: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nApply only accepted findings after approval; reviewer absence means report-only. Required native capabilities: bounded review delegate, local diff/test runner. External dependencies remain explicit: native bounded reviewer if exposed. Reviewer error yields report-only status with no mutation. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "pstack/skills/no-comments/SKILL.md",
   "source_sha256": "5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05"

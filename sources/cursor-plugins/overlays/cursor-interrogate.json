@@ -1,9 +1,56 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-native",
+    "name_mapping": {
+      "upstream_skill": "interrogate",
+      "published_name": "cursor-interrogate",
+      "source_path": "pstack/skills/interrogate/SKILL.md"
+    },
+    "preserved_semantics": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
+    "native_mapping": {
+      "capabilities": [
+        "bounded independent reviewers",
+        "local diff reader"
+      ],
+      "required_tools": [
+        "bounded independent reviewers",
+        "local diff reader"
+      ],
+      "fallback": "A missing reviewer is recorded and cannot become a clean result.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "native parallel delegates if exposed"
+    ],
+    "permission_gates": [
+      "Keep intent, findings, rubric, and synthesis separate; do not mutate code.",
+      "A missing reviewer is recorded and cannot become a clean result.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-interrogate: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-interrogate: A missing reviewer is recorded and cannot become a clean result.",
+      "error": "Error fixture for cursor-interrogate: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nKeep intent, findings, rubric, and synthesis separate; do not mutate code. Required native capabilities: bounded independent reviewers, local diff reader. External dependencies remain explicit: native parallel delegates if exposed. A missing reviewer is recorded and cannot become a clean result. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "pstack/skills/interrogate/SKILL.md",
   "source_sha256": "2867910309e81411123ae4edca68ffca5795e66521d3f3bc0876f6213b542fb9"

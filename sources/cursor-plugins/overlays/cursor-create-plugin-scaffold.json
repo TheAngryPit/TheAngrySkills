@@ -1,9 +1,59 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-product-gated",
+    "name_mapping": {
+      "upstream_skill": "create-plugin-scaffold",
+      "published_name": "cursor-create-plugin-scaffold",
+      "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md"
+    },
+    "preserved_semantics": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
+    "native_mapping": {
+      "capabilities": [
+        "local file writer",
+        "manifest validator"
+      ],
+      "required_tools": [
+        "local file writer",
+        "manifest validator"
+      ],
+      "fallback": "An unsafe destination or invalid component stops before writing.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor plugin layout",
+      "hooks",
+      "MCP servers",
+      "marketplace metadata"
+    ],
+    "permission_gates": [
+      "Use an explicit destination; never write ~/.cursor or activate hooks/MCP/marketplace wiring by default.",
+      "An unsafe destination or invalid component stops before writing.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-create-plugin-scaffold: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-create-plugin-scaffold: An unsafe destination or invalid component stops before writing.",
+      "error": "Error fixture for cursor-create-plugin-scaffold: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "create-plugin/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/create-plugin/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "needs_human_review",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nUse an explicit destination; never write ~/.cursor or activate hooks/MCP/marketplace wiring by default. Required native capabilities: local file writer, manifest validator. External dependencies remain explicit: Cursor plugin layout, hooks, MCP servers, marketplace metadata. An unsafe destination or invalid component stops before writing. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
   "source_sha256": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46"

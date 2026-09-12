@@ -1,9 +1,56 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nResolve the named skill, tool, connector, and account against what is actually available in this Codex session before following the upstream steps. Do not infer connection, authentication, credits, or runtime parity from this mirror. Preserve the external product named upstream and report a concrete missing capability when required.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-product-security-hold",
+    "name_mapping": {
+      "upstream_skill": "Make Bot UI",
+      "published_name": "cursor-make-bot-ui",
+      "source_path": "pstack/skills/make-bot-ui/SKILL.md"
+    },
+    "preserved_semantics": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
+    "native_mapping": {
+      "capabilities": [
+        "local UI reader"
+      ],
+      "required_tools": [
+        "local UI reader"
+      ],
+      "fallback": "The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval.",
+      "availability": "security_hold"
+    },
+    "external_dependencies": [
+      "Grok Bot webhook",
+      "webhook sender key",
+      "Tailscale"
+    ],
+    "permission_gates": [
+      "Keep this as external product reference only. Never execute the source commands `curl -fsSL https://tailscale.com/install.sh | sudo sh` or `sudo tailscale up ...` from the mirror.",
+      "The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval.",
+      "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
+    ],
+    "behavioral_proof": {
+      "positive": "A fixture audits the UI/webhook shape without executing an installer, network call, or privileged command.",
+      "missing_tool_or_input": "Missing webhook credentials or Tailscale authorization returns a plan-only result and no write.",
+      "error": "A privileged-command or network-policy violation aborts before execution and records the exact command."
+    },
+    "promotion_status": "security_hold_quarantine",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "quarantine",
+      "status": "retained",
+      "decision": "The quarantine verdict is retained. Critical privilege-escalation findings at SKILL.md:89 and SKILL.md:95 are active commands, not inert examples; the overlay adds a gate rather than neutralizing them."
+    }
+  },
+  "codex_note": "## Codex security hold\n\nKeep this as external product reference only. Never execute the source commands `curl -fsSL https://tailscale.com/install.sh | sudo sh` or `sudo tailscale up ...` from the mirror. The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval. This candidate remains unindexed. The quarantine verdict is retained. Critical privilege-escalation findings at SKILL.md:89 and SKILL.md:95 are active commands, not inert examples; the overlay adds a gate rather than neutralizing them.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Security hold requires contextual review and behavior proof before promotion.",
+  "reason": "Security-hold contract records the external surface, explicit permission gate, positive/missing/error cases, pinned README provenance, and retained scanner verdict.",
   "replacements": [],
   "source_path": "pstack/skills/make-bot-ui/SKILL.md",
   "source_sha256": "3624c8ef16cf2e48deb2a4049e72c6962a9431c8d6c6af90e7bd7ea0375224ec"

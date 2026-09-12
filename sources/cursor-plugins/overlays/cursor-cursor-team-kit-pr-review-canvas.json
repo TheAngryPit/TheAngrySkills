@@ -1,9 +1,64 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-readonly-artifact",
+    "name_mapping": {
+      "upstream_skill": "pr-review-canvas",
+      "published_name": "cursor-cursor-team-kit-pr-review-canvas",
+      "source_path": "cursor-team-kit/skills/pr-review-canvas/SKILL.md"
+    },
+    "preserved_semantics": "Generate an interactive PR review walkthrough as an HTML page. Fetches PR data via gh API, categorizes files into core vs mechanical changes, adds reviewer annotations, and renders diffs with moved-code detection. Use when the user pastes a GitHub PR URL and asks for a review, walkthrough, or summary, or says \"review this PR\".",
+    "native_mapping": {
+      "capabilities": [
+        "gh read-only API or local diff",
+        "local HTML artifact",
+        "node syntax check"
+      ],
+      "required_tools": [
+        "gh read-only API or local diff",
+        "local HTML artifact",
+        "node syntax check"
+      ],
+      "fallback": "Missing gh falls back to a local diff and marks PR metadata unavailable.",
+      "availability": "renderer_proven_full_workflow_unproven",
+      "adapter": "scripts/cursor_functional_adapters.py:review_canvas_request",
+      "proof_scope": [
+        "bundled renderer.js with synthetic diff",
+        "gh/local source boundary and read-only permission gate",
+        "PR retrieval, categorization quality, browser presentation, reviewer annotations, and external publication remain unproven"
+      ]
+    },
+    "external_dependencies": [
+      "GitHub gh CLI, read-only and optional with a local fixture"
+    ],
+    "permission_gates": [
+      "Use the bundled renderer for a local artifact; never comment, approve, merge, or publish.",
+      "Missing gh falls back to a local diff and marks PR metadata unavailable.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Executed adapter review_canvas_request with a valid fixture; tests/test_cursor_functional_overlays.py::test_promoted_adapters_cover_positive_missing_and_permission_error records the expected bounded result.",
+      "missing_tool_or_input": "Executed the review_canvas_request fallback/absence case; tests/test_cursor_functional_overlays.py::test_promoted_adapters_cover_positive_missing_and_permission_error records the explicit fallback or NOT VERIFIED state.",
+      "error": "Executed the review_canvas_request error or permission case; tests/test_cursor_functional_overlays.py::test_promoted_adapters_cover_positive_missing_and_permission_error records rejection without unrelated side effects."
+    },
+    "promotion_status": "promoted_renderer_proven_full_workflow_unproven",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "cursor-team-kit/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-team-kit/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_to_install",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nUse the bundled renderer for a local artifact; never comment, approve, merge, or publish. Required native capabilities: gh read-only API or local diff, local HTML artifact, node syntax check. External dependencies remain explicit: GitHub gh CLI, read-only and optional with a local fixture. Missing gh falls back to a local diff and marks PR metadata unavailable. This candidate is promoted only for the bounded renderer/read-only path; PR retrieval, categorization, browser presentation, annotations, and publication remain unproven. Executable bounded adapter: `scripts/cursor_functional_adapters.py:review_canvas_request`; its positive, missing-capability/input, and error/permission paths are exercised by `tests/test_cursor_functional_overlays.py::test_promoted_adapters_cover_positive_missing_and_permission_error`.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Generate an interactive PR review walkthrough as an HTML page. Fetches PR data via gh API, categorizes files into core vs mechanical changes, adds reviewer annotations, and renders diffs with moved-code detection. Use when the user pastes a GitHub PR URL and asks for a review, walkthrough, or summary, or says \"review this PR\".",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "cursor-team-kit/skills/pr-review-canvas/SKILL.md",
   "source_sha256": "88a07a2459197acba3c5e06b7d695e35ad618a998442b72d05cdba4efc117ac6"

@@ -1,9 +1,56 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-write-gated",
+    "name_mapping": {
+      "upstream_skill": "continual-learning",
+      "published_name": "cursor-continual-learning",
+      "source_path": "continual-learning/skills/continual-learning/SKILL.md"
+    },
+    "preserved_semantics": "Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.",
+    "native_mapping": {
+      "capabilities": [
+        "bounded transcript reader",
+        "AGENTS.md diff"
+      ],
+      "required_tools": [
+        "bounded transcript reader",
+        "AGENTS.md diff"
+      ],
+      "fallback": "A missing transcript/updater returns a proposed-only result with no write.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "scoped transcript source"
+    ],
+    "permission_gates": [
+      "Mine only an explicit scope and ask before a durable AGENTS.md write.",
+      "A missing transcript/updater returns a proposed-only result with no write.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-continual-learning: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-continual-learning: A missing transcript/updater returns a proposed-only result with no write.",
+      "error": "Error fixture for cursor-continual-learning: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "continual-learning/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/continual-learning/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nMine only an explicit scope and ask before a durable AGENTS.md write. Required native capabilities: bounded transcript reader, AGENTS.md diff. External dependencies remain explicit: scoped transcript source. A missing transcript/updater returns a proposed-only result with no write. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "continual-learning/skills/continual-learning/SKILL.md",
   "source_sha256": "f627f733a33879b63523da7e92c8b33e6086df42a49a8139a87d1c21e7bd9b16"

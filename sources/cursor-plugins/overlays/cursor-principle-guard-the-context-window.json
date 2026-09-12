@@ -1,9 +1,49 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-instruction",
+    "name_mapping": {
+      "upstream_skill": "principle-guard-the-context-window",
+      "published_name": "cursor-principle-guard-the-context-window",
+      "source_path": "pstack/skills/principle-guard-the-context-window/SKILL.md"
+    },
+    "preserved_semantics": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
+    "native_mapping": {
+      "capabilities": [],
+      "required_tools": [],
+      "fallback": "No tool is required; an oversized payload gets a bounded sequential fallback.",
+      "availability": "guide_only",
+      "proof_harness": "scripts/cursor_functional_adapters.py:bound_context"
+    },
+    "external_dependencies": [],
+    "permission_gates": [
+      "Bound reads and payloads; route only when a real delegate exists.",
+      "No tool is required; an oversized payload gets a bounded sequential fallback.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Guide fixture is checked by the proof harness `scripts/cursor_functional_adapters.py:bound_context`; this validates the rule shape, not a native runtime implementation.",
+      "missing_tool_or_input": "The harness exercises the missing-capability/input fallback for `bound_context` and records the bounded outcome; the guide remains usable without that optional capability.",
+      "error": "The harness exercises the invalid/error or unsafe-permission case for `bound_context` and records rejection or preservation; no workflow parity is claimed."
+    },
+    "promotion_status": "promoted_guide_only",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nBound reads and payloads; route only when a real delegate exists. Required native capabilities: none; this is instruction-only. No external product dependency is required by the adapted path. No tool is required; an oversized payload gets a bounded sequential fallback. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation. Proof harness: `scripts/cursor_functional_adapters.py:bound_context`; its checks do not implement or claim the upstream runtime.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
   "source_sha256": "9f60e2c79b35f865cb103462f9128c6760b70f603475d1e535e5930f61840f66"

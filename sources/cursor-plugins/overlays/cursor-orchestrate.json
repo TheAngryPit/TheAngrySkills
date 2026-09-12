@@ -1,9 +1,59 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-product-gated",
+    "name_mapping": {
+      "upstream_skill": "orchestrate",
+      "published_name": "cursor-orchestrate",
+      "source_path": "orchestrate/skills/orchestrate/SKILL.md"
+    },
+    "preserved_semantics": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
+    "native_mapping": {
+      "capabilities": [
+        "native bounded delegation if exposed",
+        "local plan reader"
+      ],
+      "required_tools": [
+        "native bounded delegation if exposed",
+        "local plan reader"
+      ],
+      "fallback": "Missing delegation/credentials returns plan-only with no external action.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor SDK/API",
+      "CURSOR_API_KEY",
+      "Slack",
+      "Git/PR publication"
+    ],
+    "permission_gates": [
+      "Run bundled scripts, use Work Cloud, contact Slack, push, merge, or publish only with explicit operator authorization and a separately proven contract; until then produce plan-only output.",
+      "Missing delegation/credentials returns plan-only with no external action.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-orchestrate: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-orchestrate: Missing delegation/credentials returns plan-only with no external action.",
+      "error": "Error fixture for cursor-orchestrate: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "orchestrate/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/orchestrate/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "blocked_malicious",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nRun bundled scripts, use Work Cloud, contact Slack, push, merge, or publish only with explicit operator authorization and a separately proven contract; until then produce plan-only output. Required native capabilities: native bounded delegation if exposed, local plan reader. External dependencies remain explicit: Cursor SDK/API, CURSOR_API_KEY, Slack, Git/PR publication. Missing delegation/credentials returns plan-only with no external action. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "orchestrate/skills/orchestrate/SKILL.md",
   "source_sha256": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22"

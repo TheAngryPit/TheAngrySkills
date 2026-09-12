@@ -384,7 +384,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; prova separada de report-only/apply/publish"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "renderer proven; full PR workflow not proven",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_to_install",
       "decision_classification": "adaptação funcional",
@@ -401,8 +401,8 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "cursor-team-kit/skills/pr-review-canvas/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "renderer fixture and read-only permission proof; retrieval, categorization, browser presentation, annotations and publication remain unproven",
+      "publish": true,
       "published_name": "cursor-cursor-team-kit-pr-review-canvas",
       "upstream_purpose": "Generate an interactive PR review walkthrough as an HTML page. Fetches PR data via gh API, categorizes files into core vs mechanical changes, adds reviewer annotations, and renders diffs with moved-code detection. Use when the user pastes a GitHub PR URL and asks for a review, walkthrough, or summary, or says \"review this PR\".",
       "upstream_skill": "pr-review-canvas",
@@ -1251,7 +1251,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only content proven; native runtime not claimed",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1265,8 +1265,8 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/principle-build-the-lever/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "guide-only instruction content with executable rule-shape harness; no workflow runtime claimed",
+      "publish": true,
       "published_name": "cursor-principle-build-the-lever",
       "upstream_purpose": "Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun.",
       "upstream_skill": "principle-build-the-lever",
@@ -1383,7 +1383,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only content proven; native runtime not claimed",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1397,15 +1397,15 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "guide-only instruction content with executable rule-shape harness; no workflow runtime claimed",
+      "publish": true,
       "published_name": "cursor-principle-guard-the-context-window",
       "upstream_purpose": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
       "upstream_skill": "principle-guard-the-context-window",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only content proven; native runtime not claimed",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1419,8 +1419,8 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/principle-laziness-protocol/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "guide-only instruction content with executable rule-shape harness; no workflow runtime claimed",
+      "publish": true,
       "published_name": "cursor-principle-laziness-protocol",
       "upstream_purpose": "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem.",
       "upstream_skill": "principle-laziness-protocol",
@@ -1559,7 +1559,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only content proven; native runtime not claimed",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1573,8 +1573,8 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/principle-prove-it-works/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "guide-only instruction content with executable rule-shape harness; no workflow runtime claimed",
+      "publish": true,
       "published_name": "cursor-principle-prove-it-works",
       "upstream_purpose": "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'",
       "upstream_skill": "principle-prove-it-works",
@@ -1873,7 +1873,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only content proven; native runtime not claimed",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1887,8 +1887,8 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/technical-writing/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "guide-only instruction content with executable rule-shape harness; no workflow runtime claimed",
+      "publish": true,
       "published_name": "cursor-technical-writing",
       "upstream_purpose": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
       "upstream_skill": "technical-writing",

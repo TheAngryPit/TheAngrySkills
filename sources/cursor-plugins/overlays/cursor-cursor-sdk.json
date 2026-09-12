@@ -1,16 +1,58 @@
 {
-  "codex_note": "",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-sdk-security-hold",
+    "name_mapping": {
+      "upstream_skill": "cursor-sdk",
+      "published_name": "cursor-cursor-sdk",
+      "source_path": "cursor-sdk/skills/cursor-sdk/SKILL.md"
+    },
+    "preserved_semantics": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
+    "native_mapping": {
+      "capabilities": [
+        "reference reader"
+      ],
+      "required_tools": [
+        "reference reader"
+      ],
+      "fallback": "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
+      "availability": "security_hold"
+    },
+    "external_dependencies": [
+      "@cursor/sdk",
+      "CURSOR_API_KEY",
+      "Cursor REST/SDK",
+      "MCP configuration"
+    ],
+    "permission_gates": [
+      "Keep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror.",
+      "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
+      "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
+    ],
+    "behavioral_proof": {
+      "positive": "A documentation-only fixture identifies the external API symbols and returns a reference-only report.",
+      "missing_tool_or_input": "Missing SDK/MCP surface keeps the result reference-only and write-free.",
+      "error": "Credential or MCP configuration input is rejected and the source finding remains visible."
+    },
+    "promotion_status": "security_hold_blocked_malicious",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "cursor-sdk/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-sdk/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "blocked_malicious",
+      "status": "retained",
+      "decision": "The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased."
+    }
+  },
+  "codex_note": "## Codex security hold\n\nKeep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror. The Cursor SDK and native connector/tool permissions are not proven in Codex. This candidate remains unindexed. The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
-  "replacements": [
-    {
-      "after": "description: \"Guide work with the external Cursor TypeScript SDK (@cursor/sdk): Agent.create, prompt, resume, streaming, MCP, errors, local/cloud runtime, and CI or automation integration. Use when the user names the Cursor SDK or asks to run Cursor agents programmatically; consult the included references because the SDK changes.\"",
-      "before": "description: Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
-      "file": "SKILL.md"
-    }
-  ],
+  "proof": "Pinned source hash and deterministic build are static provenance only. Security hold requires contextual review and behavior proof before promotion.",
+  "reason": "Security-hold contract records the external surface, explicit permission gate, positive/missing/error cases, pinned README provenance, and retained scanner verdict.",
+  "replacements": [],
   "source_path": "cursor-sdk/skills/cursor-sdk/SKILL.md",
   "source_sha256": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979"
 }

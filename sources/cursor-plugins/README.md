@@ -15,16 +15,20 @@ evidence beside each published skill. The upstream skill text otherwise stays
 in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
-This first reviewable batch publishes 47 content or naming candidates under
-`skills/mirrors-cursor/`. It holds 37 functional adaptations until their Codex
-workflow and permission behavior are proven. It also holds `cursor-cursor-sdk`,
-`cursor-make-bot-ui` and `cursor-review-plugin-submission` for contextual
-security review. `cursor-maintain-verification-skill` is held after source
-review showed a Cursor-local path, parallel workers, live driving, and PR
-publication that need a Codex-specific proof. All 91 remain traceable in the
-manifest and snapshot. No held
-skill is indexed for installation by this batch. There is no new plugin or
-marketplace entry.
+This reviewable batch publishes 53 content or naming candidates under
+`skills/mirrors-cursor/`. One functional candidate, the cursor-team-kit PR
+review canvas, is promoted for a read-only local artifact path with executable
+renderer proof. Five instruction-only candidates are promoted as `guide_only`:
+the four principles and technical writing. The remaining 31 functional
+adaptations stay held with a per-skill Codex contract covering native mapping,
+permission gates, positive behavior, missing capability/input, and error cases.
+It also holds `cursor-cursor-sdk`, `cursor-make-bot-ui` and
+`cursor-review-plugin-submission` for contextual security review.
+`cursor-maintain-verification-skill` is held after source review showed a
+Cursor-local path, parallel workers, live driving, and PR publication that need
+a Codex-specific proof. All 91 remain traceable in the manifest and snapshot.
+No held skill is indexed for installation by this batch. There is no new plugin
+or marketplace entry.
 
 To verify the committed build:
 

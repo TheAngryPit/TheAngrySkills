@@ -5,12 +5,13 @@ Source: `cursor/plugins` at `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 Scope: skills and their support files only; no plugin, global install, push or merge.
 
 The manifest has 91 physical skills and 169 support files. Three Benny skills
-are source-dormant. The first build indexes 47 skills: 34 content-intact and
-13 nominal adaptations. It retains 41 declared skills as unindexed candidates:
-37 functional adaptations awaiting Codex behavior proof, plus `cursor-sdk`,
-`make-bot-ui` and `review-plugin-submission` pending contextual security review,
-and `maintain-verification-skill` pending a Codex-local verification workflow.
-No editorial classification is presented as a tested runtime capability.
+are source-dormant. The current build indexes 53 skills: the original 47, one
+renderer-proven read-only PR canvas path, and five `guide_only` instruction
+skills. It retains 35 declared skills as unindexed candidates: 31 functional
+adaptations awaiting Codex behavior proof, plus `cursor-sdk`, `make-bot-ui` and
+`review-plugin-submission` pending contextual security review, and
+`maintain-verification-skill` pending a Codex-local verification workflow. No
+guide or renderer proof is presented as full native runtime parity.
 
 The first-pass security scan of all 88 declared candidates reported 77
 `safe_to_install`, five `blocked_malicious`, five `needs_human_review` and one
@@ -29,9 +30,10 @@ source review found a concrete Codex workflow gap. The implementation manifest
 records the stricter promotion status until a native or external path is
 proven without changing the requested behavior.
 
-Static checks passed for the 47 indexed candidates: 47/47 frontmatter parsed
-with no errors (31 A, 16 B under the Codex profile); the security scanner
-returned `safe_to_install` for 47/47;
+Static checks passed for the 53 indexed candidates: 53/53 frontmatter parsed
+with no errors; the six new contract/adapter cases pass their positive,
+missing-capability/input, and error/permission checks; the security scanner
+returned `safe_to_install` for 53/53;
 relative Markdown links in generated
 output resolved; rebuild produced the committed bytes; and comparison with
 the pinned upstream checkout reported no new, removed or changed skills or
@@ -53,8 +55,8 @@ recovery, artifact or PR contract. A cloud proof must be a separate synthetic
 task after an authorized dispatch path and a concrete closure mechanism are
 established; no cloud task was created in this batch.
 
-Review order: validate this source/overlay format and 47-content batch;
-resolve the 11 security findings in context; port and behavior-test the 37
+Review order: validate this source/overlay format and 53-skill batch; resolve
+the 11 security findings in context; port and behavior-test the remaining 31
 functional skills in bounded lots; only then consider promoting held skills.
 The reverse path is removal of this mirror's generated skills, source snapshot,
 overlays, report and generator. There is no installed state to roll back.

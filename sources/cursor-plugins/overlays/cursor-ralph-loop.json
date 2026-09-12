@@ -1,9 +1,56 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nThis workflow originates in Cursor. Before executing a step that names a Cursor tool, model, hook, or service, check the capability actually exposed in this Codex session. Preserve the requested outcome and any external product identity. Use a native Codex equivalent only when its behavior can be verified; otherwise report the concrete gap. Respect the selected model, reasoning effort, permissions, and coordinator ownership. This skill being mirrored does not prove native runtime parity.\n",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-persistent-loop-gated",
+    "name_mapping": {
+      "upstream_skill": "ralph-loop",
+      "published_name": "cursor-ralph-loop",
+      "source_path": "ralph-loop/skills/ralph-loop/SKILL.md"
+    },
+    "preserved_semantics": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
+    "native_mapping": {
+      "capabilities": [
+        "project-local state writer",
+        "bounded iteration control"
+      ],
+      "required_tools": [
+        "project-local state writer",
+        "bounded iteration control"
+      ],
+      "fallback": "Missing scheduler or invalid state leaves the loop inactive.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor stop hook or equivalent scheduler"
+    ],
+    "permission_gates": [
+      "Require max iterations, completion promise, and explicit scope; do not start unattended loops without a scheduler.",
+      "Missing scheduler or invalid state leaves the loop inactive.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-ralph-loop: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-ralph-loop: Missing scheduler or invalid state leaves the loop inactive.",
+      "error": "Error fixture for cursor-ralph-loop: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "ralph-loop/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/ralph-loop/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nRequire max iterations, completion promise, and explicit scope; do not start unattended loops without a scheduler. Required native capabilities: project-local state writer, bounded iteration control. External dependencies remain explicit: Cursor stop hook or equivalent scheduler. Missing scheduler or invalid state leaves the loop inactive. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "ralph-loop/skills/ralph-loop/SKILL.md",
   "source_sha256": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09"

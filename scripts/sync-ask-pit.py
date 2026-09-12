@@ -117,6 +117,8 @@ for the authoring adaptations and their rationale.
 
 def validate(destination=DEST):
     destination = Path(destination)
+    if json.loads((destination / 'UPSTREAM.json').read_text()).get('adaptation_patch'):
+        return adapted_module().validate(destination)
     record = json.loads((destination / 'UPSTREAM.json').read_text())
     expected = set(record['generated_sha256']) | {'UPSTREAM.json', 'PROVENANCE.md'}
     actual = {str(p.relative_to(destination)) for p in destination.rglob('*') if p.is_file()}
@@ -136,20 +138,16 @@ def validate(destination=DEST):
             raise ValueError('Unapproved upstream difference: ' + name)
 
 
+def adapted_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('matt_adaptations', ROOT / 'scripts/sync-matt-adaptations.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--upstream', type=Path, help='Existing upstream checkout for local validation')
-    parser.add_argument('--check', action='store_true', help='Validate committed generated files without network')
-    args = parser.parse_args()
-    if args.check:
-        validate()
-        print('ask_pit_valid')
-    elif args.upstream:
-        refresh(args.upstream)
-    else:
-        with tempfile.TemporaryDirectory(prefix='ask-pit-upstream-') as temp:
-            subprocess.run(['git', 'clone', '--depth', '1', '--branch', 'main', REPOSITORY, temp], check=True)
-            refresh(Path(temp))
+    adapted_module().main(single='ask-pit')
 
 
 if __name__ == '__main__':

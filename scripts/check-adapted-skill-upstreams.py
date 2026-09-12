@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = ('skills/core/ask-pit', 'skills/engineering/writing-for-astra')
+PACKAGES = tuple(item['destination'] for item in json.loads((ROOT / 'scripts/matt-adaptations.json').read_text())) + ('skills/engineering/writing-for-astra',)
 UPSTREAM = 'https://github.com/mattpocock/skills.git'
 
 

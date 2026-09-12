@@ -1,4 +1,4 @@
-# ask-pit: approved adaptation
+# resolving-merge-conflicts: approved adaptation
 
 Source: [Matt Pocock skills](https://github.com/mattpocock/skills).
 Reviewed source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.
@@ -6,7 +6,7 @@ Operator approved batch 01 on 2026-09-12. MIT attribution is retained in LICENSE
 
 ## What changed and why
 
-Retain the AskPit identity and Writing for Astra route. Replace fixed context limits, mandatory context clearing and zero-cost claims with native context decisions. Preserve the workflow map and intentional orchestration.
+Scope staging to the merge/rebase work and preserve unrelated edits. Allow cancellation only when the operator authorizes it. Preserve resolution by intent, validation and completion.
 
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch).
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).

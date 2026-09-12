@@ -2,7 +2,9 @@
 
 AskPit is the public replacement for the retired ask-pit/ask-theangrypit router
 variants in the private Workbench. Its source is Matt Pocock's Ask Matt; the
-only workflow adaptation routes /writing-for-agents to /writing-for-astra.
+writer adaptation routes /writing-for-agents to /writing-for-astra. Approved
+batch 01 also adapts context management to the current harness; the workflow
+map and intentional orchestration remain. See its PROVENANCE.md and ADAPTATIONS.patch.
 The skill name and UI display name identify AskPit without colliding with Ask Matt.
 
 Writing for Astra is our separately maintained authoring reference, based on
@@ -11,8 +13,8 @@ Its provenance and included upstream MIT license explain the adaptation.
 
 ## Updating
 
-The daily **Review adapted skill upstreams** workflow checks Ask Matt and
-Writing for Agents, including supporting files and the upstream license. It
+The daily **Review adapted skill upstreams** workflow checks Ask Matt, Writing for Agents and
+the four approved batch-01 skills, including supporting files and the upstream license. It
 opens or updates one GitHub issue per affected skill with changed paths, a
 commit comparison and links to the adjacent PROVENANCE.md rationale.
 
@@ -29,7 +31,8 @@ AskPit's generator remains available for an approved review:
 `python scripts/sync-ask-pit.py --upstream /path/to/checkout`.
 `--check` validates generated integrity offline. Writing for Astra is never
 rewritten by that generator. The generic mirror updater no longer refreshes
-AskPit automatically. New Matt Pocock skills are not imported.
+AskPit automatically. The full Matt mirror is being reviewed in approval-sized batches; unapproved
+adaptations and new skills are not imported by this generator.
 
 ## Installation
 

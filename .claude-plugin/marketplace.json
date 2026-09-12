@@ -190,6 +190,15 @@
         "./skills/mirrors-hyperframes/hyperframes-talking-head-recut",
         "./skills/mirrors-hyperframes/remotion-to-hyperframes"
       ]
+    },
+    {
+      "name": "mirrors-mattpocock",
+      "skills": [
+        "./skills/mirrors-mattpocock/code-review",
+        "./skills/mirrors-mattpocock/diagnosing-bugs",
+        "./skills/mirrors-mattpocock/tdd",
+        "./skills/mirrors-mattpocock/resolving-merge-conflicts"
+      ]
     }
   ]
 }

@@ -1,0 +1,26 @@
+--- a/code-review/SKILL.md
++++ b/code-review/SKILL.md
+@@ -1,9 +1,9 @@
+ ---
+ name: code-review
+-description: "Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\"."
++description: "Use when reviewing a branch, PR, or work in progress against repository standards and its spec."
+ ---
+ 
+-Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
++Two-axis review of the requested changes, whether committed or still in progress:
+ 
+ - **Standards**: does the code conform to this repo's documented coding standards?
+ - **Spec**: does the code faithfully implement the originating issue / spec?
+@@ -18,9 +18,9 @@
+ 
+ Whatever the user said is the fixed point (a commit SHA, branch name, tag, `main`, `HEAD~5`, etc.). If they didn't specify one, ask for it.
+ 
+-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
++For committed work, capture `git diff <fixed-point>...HEAD` and `git log <fixed-point>..HEAD --oneline`. For work in progress, also capture the staged and unstaged changes (`git diff --cached`, `git diff`) and inspect relevant untracked files from `git status --short`. Freeze the requested file set and diff for both reviewers so they review the same version. Exclude unrelated working changes.
+ 
+-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here, not inside two parallel sub-agents.
++Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the requested review surface is non-empty. A bad ref or empty diff should fail here, not inside two parallel sub-agents.
+ 
+ ### 2. Identify the spec source
+ 

@@ -1,0 +1,20 @@
+{
+  "name": "grilling",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/productivity/grilling",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2",
+    "agents/openai.yaml": "1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "19ed27b7b2394239a96b58388c3ee8d037483d1bd14852f0357b3f109e0ee86b",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "83c1d6c36edb83fe77a65b04ec5fc59146f3f7696be65a048ef62fdbb9557cb9",
+    "SKILL.md": "db41360b5500be0105a35bfaf368c812c1e69f3cbff00f849e863ebd4d4daf68",
+    "agents/openai.yaml": "1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b"
+  }
+}

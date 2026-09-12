@@ -195,10 +195,11 @@ The currently accepted mirror families for public curation are:
 - Looper skills, with `looper-` prefixes
 - Effective HTML skills, with `effective-` prefixes
 - HyperFrames by HeyGen skills, preserving natural names and using `hyperframes-` for generic names
+- Matt Pocock skills, curated under `mirrors-mattpocock/` with approved overlays and provenance
 
 When mirrors are published here, they should:
 
-- keep source-specific prefixes such as `openclaw-`, `taste-`, `vercel-`, or `hyperframes-`
+- keep source-specific prefixes such as `openclaw-`, `taste-`, `vercel-`, or `hyperframes-`, or remain under an explicit source mirror family
 - preserve upstream README, license, copyright, and notices
 - avoid mixing owned TheAngrySkills workflow logic into upstream material
 - stay clearly marked as curated mirrors, not original work

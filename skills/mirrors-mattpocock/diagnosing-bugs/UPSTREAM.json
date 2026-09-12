@@ -4,6 +4,7 @@
   "source_path": "skills/engineering/diagnosing-bugs",
   "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
   "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
   "upstream_sha256": {
     "SKILL.md": "77f3cf31bc99b2f49af943222526531fcc9fc41d047626d3640e875e85af3e84",
     "agents/openai.yaml": "3e430dbe4334a87597488c060cb3dc3786bb00c9182877d6f5ec41f62490e90b",

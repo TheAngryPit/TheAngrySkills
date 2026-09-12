@@ -1,0 +1,20 @@
+{
+  "name": "scaffold-exercises",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/misc/scaffold-exercises",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "75f5c9d771606fb9762f16522efc954df11c324f87148d8ff069bce166257de9",
+    "agents/openai.yaml": "525b33913340bea7947ad2de17f2a7c5fb94be543345fe80ae753b9a44ba601d",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "f7aa9469d5128c90208a09d3d92afb7b648e9ed8c5eeef8792cb5076b4ee967e",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "cd2615a360adf3527a9bbce7a5eeaef06c8d0056b3059f83587485b1f33c1084",
+    "SKILL.md": "d67477a874dd679c5f8e029a0d7e8488a0d5706532d085c9626dcb04b4066662",
+    "agents/openai.yaml": "525b33913340bea7947ad2de17f2a7c5fb94be543345fe80ae753b9a44ba601d"
+  }
+}

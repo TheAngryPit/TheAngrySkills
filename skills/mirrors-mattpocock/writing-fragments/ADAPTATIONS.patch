@@ -1,0 +1,19 @@
+--- a/writing-fragments/SKILL.md
++++ b/writing-fragments/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: writing-fragments
+-description: "Writing, explore: mine raw fragments, no structure yet."
++description: "Collaborative writing: collect raw fragments without committing to structure."
+ disable-model-invocation: true
+ ---
+ 
+@@ -35,7 +35,7 @@
+ - A complaint, a confession, a punchline.
+ - A **leading word**: a compact metaphor or coinage the whole piece can hang on (one term that names the idea, the way _tracer bullets_ or _fog of war_ names a whole pattern).
+ 
+-Of these, the leading word is the most valuable fragment to land. It is load-bearing: name the right one in explore and it shapes the structure, the transitions, and the title later, paying dividends through the entire exploit phase. When the conversation circles a recurring idea, push to coin a word for it.
++Of these, the leading word is a valuable fragment when one emerges. It can be load-bearing: naming the right one in explore can shape the structure, transitions, and title later, paying dividends through the exploit phase. When the conversation circles a recurring idea, offer a leading word if one clarifies it; do not force a coinage.
+ 
+ The novelist's diary is the model: years of unstructured noticings that later get mined for raw material. Fragments are noticings.
+ 

@@ -11,9 +11,33 @@ spec=importlib.util.spec_from_file_location('matt',ROOT/'scripts/sync-matt-adapt
 matt=importlib.util.module_from_spec(spec);spec.loader.exec_module(matt)
 ITEMS=json.loads((ROOT/'scripts/matt-adaptations.json').read_text())
 
+def test_manifest_contains_the_approved_surface_only():
+    names={item['name'] for item in ITEMS}
+    assert len(ITEMS)==31
+    assert len(names-{ 'ask-pit' })==30
+    assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==19
+    assert sum(item['overlay']=='empty' for item in ITEMS)==11
+    assert not names & {'ask-matt','writing-for-agents','claude-handoff','git-guardrails-claude-code',
+                        'migrate-to-shoehorn','setup-pre-commit','setup-ts-deep-modules'}
+    assert all(item['destination'].startswith('skills/mirrors-mattpocock/')
+               for item in ITEMS if item['name']!='ask-pit')
+
+
 @pytest.mark.parametrize('item',ITEMS,ids=lambda i:i['name'])
 def test_all_approved_overlays_reverse_to_upstream(item):
     matt.validate(ROOT/item['destination'])
+
+
+def test_empty_overlay_is_explicit_and_reversible(tmp_path):
+    item=next(i for i in ITEMS if i['name']=='domain-modeling')
+    package=ROOT/item['destination']
+    assert item['overlay']=='empty'
+    assert (package/'ADAPTATIONS.patch').read_bytes()==b''
+    work=tmp_path/'reverse'; work.mkdir()
+    target=work/item['name']; shutil.copytree(package,target)
+    before=matt.file_map(target)
+    matt.patch(work,item['name'],reverse=True)
+    assert matt.file_map(target)==before
 
 
 def fixture_source(tmp_path):

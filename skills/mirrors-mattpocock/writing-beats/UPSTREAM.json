@@ -1,0 +1,20 @@
+{
+  "name": "writing-beats",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/in-progress/writing-beats",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "a96abafa2372eede8267d770138b322d6125da8adaa7ccf0a5e08e4ee13ee71e",
+    "agents/openai.yaml": "ddaef01da61d8e3c5f482c4403033c20cf5823f08a1dbf1d4c871670831d01e2",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "634afa3ba29a80d17c9edb209ce9353c095ca51132f8e4bfe2f104d57ced3324",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "e4951bbb2a4871677330f71063167474acd694a7fb5296e09ba431055240aa24",
+    "SKILL.md": "140575e9b9ea702ac0ac29822e883e95d3c6d98af15a6de16136ef34711d1291",
+    "agents/openai.yaml": "ddaef01da61d8e3c5f482c4403033c20cf5823f08a1dbf1d4c871670831d01e2"
+  }
+}

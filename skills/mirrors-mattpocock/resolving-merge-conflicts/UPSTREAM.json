@@ -1,0 +1,19 @@
+{
+  "name": "resolving-merge-conflicts",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/engineering/resolving-merge-conflicts",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "upstream_sha256": {
+    "SKILL.md": "9d8114f8ef0b31f535a265fc05c364bd8cf2e2895a830040e06c22acb11f54b0",
+    "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "320dfce3ff45bdcd27f760eac1c299fe9856b5d18ed57887c092242a2ab1fcc7",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "7d23654c25f863f38c2654bb47ca6d5f91f9edd74edbdcc93e973afaf26a802d",
+    "SKILL.md": "70de294800dc2a680280e5fa6fd4690bb2f61aba2fc2beb8a1058f3799ab8a64",
+    "agents/openai.yaml": "a1f4f96838f2ed6282eb28abbbf99029cb8fadce552baf53da90a025b8bffddf"
+  }
+}

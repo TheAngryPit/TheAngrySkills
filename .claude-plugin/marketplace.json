@@ -12,7 +12,8 @@
         "./skills/core/model-capability-router",
         "./skills/core/model-routing-preset-builder",
         "./skills/core/proof-orchestrator",
-        "./skills/core/skill-catalog-curator"
+        "./skills/core/skill-catalog-curator",
+        "./skills/core/ask-pit"
       ]
     },
     {
@@ -22,7 +23,8 @@
         "./skills/engineering/docs-skill-builder",
         "./skills/engineering/openclaw-custom-build-validation",
         "./skills/engineering/theangry-ai-code-audit",
-        "./skills/engineering/writing-ticks"
+        "./skills/engineering/writing-ticks",
+        "./skills/engineering/writing-for-astra"
       ]
     },
     {
@@ -187,6 +189,15 @@
         "./skills/mirrors-hyperframes/hyperframes-slideshow",
         "./skills/mirrors-hyperframes/hyperframes-talking-head-recut",
         "./skills/mirrors-hyperframes/remotion-to-hyperframes"
+      ]
+    },
+    {
+      "name": "mirrors-mattpocock",
+      "skills": [
+        "./skills/mirrors-mattpocock/code-review",
+        "./skills/mirrors-mattpocock/diagnosing-bugs",
+        "./skills/mirrors-mattpocock/tdd",
+        "./skills/mirrors-mattpocock/resolving-merge-conflicts"
       ]
     }
   ]

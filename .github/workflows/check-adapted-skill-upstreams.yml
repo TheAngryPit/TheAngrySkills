@@ -1,0 +1,24 @@
+name: Review adapted skill upstreams
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: adapted-skill-upstream-review
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Alert on changed upstream skill files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/check-adapted-skill-upstreams.py --notify

@@ -45,6 +45,7 @@ jobs:
         run: |
           node scripts/sync-curated-mirrors.mjs --check
           node scripts/sync-hyperframes-mirror.mjs --check
+          python scripts/sync-matt-adaptations.py --check
 
       - name: Run tests
         run: python -m pytest -q tests

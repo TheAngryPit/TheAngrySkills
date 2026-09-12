@@ -1,0 +1,27 @@
+[
+  {
+    "name": "code-review",
+    "destination": "skills/mirrors-mattpocock/code-review",
+    "source_path": "skills/engineering/code-review"
+  },
+  {
+    "name": "diagnosing-bugs",
+    "destination": "skills/mirrors-mattpocock/diagnosing-bugs",
+    "source_path": "skills/engineering/diagnosing-bugs"
+  },
+  {
+    "name": "tdd",
+    "destination": "skills/mirrors-mattpocock/tdd",
+    "source_path": "skills/engineering/tdd"
+  },
+  {
+    "name": "resolving-merge-conflicts",
+    "destination": "skills/mirrors-mattpocock/resolving-merge-conflicts",
+    "source_path": "skills/engineering/resolving-merge-conflicts"
+  },
+  {
+    "name": "ask-pit",
+    "destination": "skills/core/ask-pit",
+    "source_path": "skills/engineering/ask-matt"
+  }
+]

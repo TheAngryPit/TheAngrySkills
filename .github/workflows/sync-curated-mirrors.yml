@@ -48,6 +48,7 @@ jobs:
           node --check scripts/sync-curated-mirrors.mjs
           node scripts/sync-curated-mirrors.mjs --check
           node scripts/sync-hyperframes-mirror.mjs --check
+          python scripts/sync-ask-pit.py --check
           python -m pytest -q tests
           scripts/theangry-skills.mjs check --root skills --profile shared
 
@@ -92,7 +93,7 @@ jobs:
               --base main \
               --head "$branch" \
               --title "Refresh curated skill mirrors" \
-              --body "Automated one-to-one upstream refresh for every accepted mirror family. The workflow applies only deterministic prefixes and path rewrites, validates the generated mirrors, and merges automatically after required checks pass.")"
+              --body "Automated refresh of accepted mirror families. Mirrors retain deterministic prefixes and path rewrites. Validation runs before automatic merge.")"
             pr_number="${pr_url##*/}"
           fi
 

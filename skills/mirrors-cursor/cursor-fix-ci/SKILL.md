@@ -3,6 +3,10 @@ name: cursor-fix-ci
 description: Find failing PR checks, inspect logs or external check links, and apply focused fixes
 ---
 
+## Codex publication boundary
+
+Treat repository review, local edits, pushing a branch, opening or updating a PR, and merging as distinct effects. Verify the target repository and current user authorization for each external write. If push or PR publication is not yet authorized, complete the local branch, diff, checks, and draft PR text so approval is the final step. Do not merge unless separately requested. Preserve the upstream review and CI workflow within those boundaries.
+
 # Fix CI
 
 ## Trigger

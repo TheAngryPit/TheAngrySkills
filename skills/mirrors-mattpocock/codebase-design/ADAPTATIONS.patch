@@ -1,0 +1,46 @@
+--- a/codebase-design/SKILL.md
++++ b/codebase-design/SKILL.md
+@@ -9,7 +9,7 @@
+ 
+ ## Glossary
+ 
+-Use these terms exactly: don't substitute "component," "service," "API," or "boundary." Consistent language is the whole point.
++Prefer these terms for architecture concepts. Preserve an established project term when it names a real domain or integration concept; do not replace it with a glossary synonym just for consistency.
+ 
+ **Module**: anything with an interface and an implementation. Deliberately scale-agnostic: a function, class, package, or tier-spanning slice. _Avoid_: unit, component, service.
+ 
+@@ -62,7 +62,7 @@
+ - **Depth is a property of the interface, not the implementation.** A deep module can be internally composed of small, mockable, swappable parts; they just aren't part of the interface. A module can have **internal seams** (private to its implementation, used by its own tests) as well as the **external seam** at its interface.
+ - **The deletion test.** Imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.
+ - **The interface is the test surface.** Callers and tests cross the same seam. If you want to test *past* the interface, the module is probably the wrong shape.
+-- **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a seam unless something actually varies across it.
++- **One adapter is evidence, not proof, of a seam. Two adapters are stronger evidence.** Introduce a seam when a real variation, test need, ownership boundary, or external dependency justifies it; do not add one solely as hypothetical indirection.
+ 
+ ## Designing for testability
+ 
+@@ -106,7 +106,7 @@
+ 
+ - **Depth as ratio of implementation-lines to interface-lines** (Ousterhout): rewards padding the implementation. We use depth-as-leverage instead.
+ - **"Interface" as the TypeScript `interface` keyword or a class's public methods**: too narrow: interface here includes every fact a caller must know.
+-- **"Boundary"**: overloaded with DDD's bounded context. Say **seam** or **interface**.
++- **"Boundary"**: use **seam** or **interface** for the architecture concept, but retain **boundary** when it is an established domain term such as a bounded context.
+ 
+ ## Going deeper
+ 
+--- a/codebase-design/DEEPENING.md
++++ b/codebase-design/DEEPENING.md
+@@ -26,12 +26,12 @@
+ 
+ ## Seam discipline
+ 
+-- **One adapter means a hypothetical seam. Two adapters means a real one.** Don't introduce a port unless at least two adapters are justified (typically production + test). A single-adapter seam is just indirection.
++- **One adapter is evidence, not proof, of a seam. Two adapters are stronger evidence.** Introduce a port when a real variation, test need, ownership boundary, or external dependency justifies it; do not add one solely as hypothetical indirection.
+ - **Internal seams vs external seams.** A deep module can have internal seams (private to its implementation, used by its own tests) as well as the external seam at its interface. Don't expose internal seams through the interface just because tests use them.
+ 
+ ## Testing strategy: replace, don't layer
+ 
+-- Old unit tests on shallow modules become waste once tests at the deepened module's interface exist; delete them.
++- Old tests on shallow modules may become redundant once tests at the deepened module's interface exist; delete them only after the replacement tests demonstrably cover their observable behavior.
+ - Write new tests at the deepened module's interface. The **interface is the test surface**.
+ - Tests assert on observable outcomes through the interface, not internal state.
+ - Tests should survive internal refactors, since they describe behaviour, not implementation. If a test has to change when the implementation changes, it's testing past the interface.

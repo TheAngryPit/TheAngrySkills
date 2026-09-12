@@ -1,0 +1,20 @@
+{
+  "name": "implement",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/engineering/implement",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "empty",
+  "upstream_sha256": {
+    "SKILL.md": "6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3",
+    "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "6305dcb374978155d8eace489d106958281e73f68f11b9e59b15ef83aff205cf",
+    "SKILL.md": "6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3",
+    "agents/openai.yaml": "8970a8596ade0c28ab427f41a4ea242d6bdf6186c59ebf55e1238dbecaab79dc"
+  }
+}

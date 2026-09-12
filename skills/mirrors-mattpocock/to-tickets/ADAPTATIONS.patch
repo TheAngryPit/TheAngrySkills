@@ -1,0 +1,17 @@
+--- a/to-tickets/SKILL.md
++++ b/to-tickets/SKILL.md
+@@ -20,7 +20,7 @@
+ 
+ If you have not already explored the codebase, do so to understand the current state of the code. Ticket titles and descriptions should use the project's domain glossary vocabulary, and respect ADRs in the area you're touching.
+ 
+-Look for opportunities to prefactor the code to make the implementation easier. "Make the change easy, then make the easy change."
++Look for prefactoring only when it removes a demonstrated blocker or reduces the blast radius of the requested change. "Make the change easy, then make the easy change."
+ 
+ ### 3. Draft vertical slices
+ 
+@@ -102,4 +102,4 @@
+ 
+ </issue-template>
+ 
+-In either form, avoid specific file paths or code snippets: they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.
++In either form, avoid implementation file paths or code snippets: they go stale fast. Keep tracker paths required by the configured local workflow. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype. Trim to the decision-rich parts, not a working demo, just the important bits.

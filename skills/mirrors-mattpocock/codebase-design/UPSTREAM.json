@@ -1,0 +1,24 @@
+{
+  "name": "codebase-design",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/engineering/codebase-design",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "DEEPENING.md": "f3dd099ce99289bd213914d8ee3e2429b78309c3957ca4583f7659551b1d53c1",
+    "DESIGN-IT-TWICE.md": "8e740bf98446dbd4dfdc132ac4346d9a7eedaf93de6a495889171cf7f99f16bd",
+    "SKILL.md": "2c20617f87ec8af6a434859f381b2f061a69b530444e74eb39e78bb016a6d1e2",
+    "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "062797c1c80dea8e1bb0710abe4adebf714188a3b68ad261879ce9e7ee79bbe5",
+    "DEEPENING.md": "3d7181242a46a0709fb8447a0f8470d85b07c0f6828a1641046c17a67f91f041",
+    "DESIGN-IT-TWICE.md": "8e740bf98446dbd4dfdc132ac4346d9a7eedaf93de6a495889171cf7f99f16bd",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "0ec4c9f25a8fe25f0d55cb9e6059ddf95f00ef31d59618c19e3c59cbd1168452",
+    "SKILL.md": "831db24a5aec5deec15061ba25cae887f5f1947a124d440cbf699130efd4d3c8",
+    "agents/openai.yaml": "edebc9e4fcfe102114012575eaa9600b9b5fd08c311664f389c36e7bc717740f"
+  }
+}

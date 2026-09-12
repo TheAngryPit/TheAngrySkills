@@ -1,0 +1,30 @@
+{
+  "name": "setup-matt-pocock-skills",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/engineering/setup-matt-pocock-skills",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "2bcd89e97777cdb705914424e39c97d5db524c8eb4eafac8120778a07774f0ec",
+    "agents/openai.yaml": "9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939",
+    "domain.md": "edc6d6131fdffc4b7135704f5262124fc43355c95f61b7399dc5a4db643e28ca",
+    "issue-tracker-github.md": "afd6852a80185217bd28aa5cbe456bef1e85be25be7bd1fba382d5b8ee428325",
+    "issue-tracker-gitlab.md": "ea175f73d193b3f55819c0ed9bbccf6ee0e70ad8f928e3d7607596c53380acd6",
+    "issue-tracker-local.md": "7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e",
+    "triage-labels.md": "4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "6a2bdd3c86e0d1f2363dc8e5c1e83f7f31e897a1e3f913e54c04fdaf846b73fe",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "154762ea90b90c89011675404eb9704cf1b35a0f1e72ae6c3736fa394f5f0aa9",
+    "SKILL.md": "f37f4707edfa9d10cdf5ab59e963cbc486aae5e7b06a602ca9cdad29bb5836b7",
+    "agents/openai.yaml": "9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939",
+    "domain.md": "edc6d6131fdffc4b7135704f5262124fc43355c95f61b7399dc5a4db643e28ca",
+    "issue-tracker-github.md": "afd6852a80185217bd28aa5cbe456bef1e85be25be7bd1fba382d5b8ee428325",
+    "issue-tracker-gitlab.md": "ea175f73d193b3f55819c0ed9bbccf6ee0e70ad8f928e3d7607596c53380acd6",
+    "issue-tracker-local.md": "7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e",
+    "triage-labels.md": "4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d"
+  }
+}

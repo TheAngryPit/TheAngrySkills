@@ -1,0 +1,20 @@
+{
+  "name": "writing-fragments",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/in-progress/writing-fragments",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "298b0edd23df229183630de592ed8aa4289233560f2040691f6eb77caeaad4ea",
+    "agents/openai.yaml": "81167f25ee8ea1bb4b4958f12b6702ea972ad31b05e03ec91e39fa4bae0c2641",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "ec78a3bcd3893168d1e2dc749e8580b1dbe238d6e8520d76ce1a84c0d64c8f7b",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "419b83a1d4260588fa085e743e9b589e738e40cc2b916f3c27ed31ad8260cb3b",
+    "SKILL.md": "58fcf464a4254e6d1f7bb264de8cb42a222f81fcf439ff3455ce98da81ee510c",
+    "agents/openai.yaml": "81167f25ee8ea1bb4b4958f12b6702ea972ad31b05e03ec91e39fa4bae0c2641"
+  }
+}

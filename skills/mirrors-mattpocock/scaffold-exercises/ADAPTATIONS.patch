@@ -1,0 +1,55 @@
+--- a/scaffold-exercises/SKILL.md
++++ b/scaffold-exercises/SKILL.md
+@@ -5,7 +5,7 @@
+ 
+ # Scaffold Exercises
+ 
+-Create exercise directory structures that pass `pnpm ai-hero-cli internal lint`, then commit with `git commit`.
++Create exercise directory structures that pass `pnpm ai-hero-cli internal lint`, then commit only the changes made for this task with `git commit`.
+ 
+ ## Directory naming
+ 
+@@ -16,7 +16,7 @@
+ 
+ ## Exercise variants
+ 
+-Each exercise needs at least one of these subfolders:
++An exercise can contain one or more of these variant subfolders:
+ 
+ - `problem/` - student workspace with TODOs
+ - `solution/` - reference implementation
+@@ -46,14 +46,14 @@
+ 1. **Parse the plan** - extract section names, exercise names, and variant types
+ 2. **Create directories** - `mkdir -p` for each path
+ 3. **Create stub readmes** - one `readme.md` per variant folder with a title
+-4. **Run lint** - `pnpm ai-hero-cli internal lint` to validate
++4. **Run lint** - run `pnpm ai-hero-cli internal lint` to validate
+ 5. **Fix any errors** - iterate until lint passes
+ 
+ ## Lint rules summary
+ 
+-The linter (`pnpm ai-hero-cli internal lint`) checks:
++The exercise linter is authoritative. Its relevant checks are:
+ 
+-- Each exercise has subfolders (`problem/`, `solution/`, `explainer/`)
++- Each exercise uses variant folders from the list above; it does not require all three
+ - At least one of `problem/`, `explainer/`, or `explainer.1/` exists
+ - `readme.md` exists and is non-empty in the primary subfolder
+ - No `.gitkeep` files
+@@ -62,13 +62,15 @@
+ - No `pnpm run exercise` commands in readmes
+ - `main.ts` required per subfolder unless it's readme-only
+ 
++A solution-only exercise requires proof from the linter or a focused fixture before creation; otherwise follow the documented minimum variants.
++
+ ## Moving/renaming exercises
+ 
+ When renumbering or moving exercises:
+ 
+ 1. Use `git mv` (not `mv`) to rename directories - preserves git history
+ 2. Update the numeric prefix to maintain order
+-3. Re-run lint after moves
++3. Re-run the repository's exercise lint command after moves
+ 
+ Example:
+ 

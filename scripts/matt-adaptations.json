@@ -2,26 +2,187 @@
   {
     "name": "code-review",
     "destination": "skills/mirrors-mattpocock/code-review",
-    "source_path": "skills/engineering/code-review"
+    "source_path": "skills/engineering/code-review",
+    "overlay": "patch"
   },
   {
     "name": "diagnosing-bugs",
     "destination": "skills/mirrors-mattpocock/diagnosing-bugs",
-    "source_path": "skills/engineering/diagnosing-bugs"
+    "source_path": "skills/engineering/diagnosing-bugs",
+    "overlay": "patch"
   },
   {
     "name": "tdd",
     "destination": "skills/mirrors-mattpocock/tdd",
-    "source_path": "skills/engineering/tdd"
+    "source_path": "skills/engineering/tdd",
+    "overlay": "patch"
   },
   {
     "name": "resolving-merge-conflicts",
     "destination": "skills/mirrors-mattpocock/resolving-merge-conflicts",
-    "source_path": "skills/engineering/resolving-merge-conflicts"
+    "source_path": "skills/engineering/resolving-merge-conflicts",
+    "overlay": "patch"
   },
   {
     "name": "ask-pit",
     "destination": "skills/core/ask-pit",
-    "source_path": "skills/engineering/ask-matt"
+    "source_path": "skills/engineering/ask-matt",
+    "overlay": "patch"
+  },
+  {
+    "name": "retro",
+    "destination": "skills/mirrors-mattpocock/retro",
+    "source_path": "skills/in-progress/retro",
+    "overlay": "patch"
+  },
+  {
+    "name": "setup-matt-pocock-skills",
+    "destination": "skills/mirrors-mattpocock/setup-matt-pocock-skills",
+    "source_path": "skills/engineering/setup-matt-pocock-skills",
+    "overlay": "patch"
+  },
+  {
+    "name": "scaffold-exercises",
+    "destination": "skills/mirrors-mattpocock/scaffold-exercises",
+    "source_path": "skills/misc/scaffold-exercises",
+    "overlay": "patch"
+  },
+  {
+    "name": "codebase-design",
+    "destination": "skills/mirrors-mattpocock/codebase-design",
+    "source_path": "skills/engineering/codebase-design",
+    "overlay": "patch"
+  },
+  {
+    "name": "domain-modeling",
+    "destination": "skills/mirrors-mattpocock/domain-modeling",
+    "source_path": "skills/engineering/domain-modeling",
+    "overlay": "empty"
+  },
+  {
+    "name": "grill-with-docs",
+    "destination": "skills/mirrors-mattpocock/grill-with-docs",
+    "source_path": "skills/engineering/grill-with-docs",
+    "overlay": "empty"
+  },
+  {
+    "name": "implement",
+    "destination": "skills/mirrors-mattpocock/implement",
+    "source_path": "skills/engineering/implement",
+    "overlay": "empty"
+  },
+  {
+    "name": "improve-codebase-architecture",
+    "destination": "skills/mirrors-mattpocock/improve-codebase-architecture",
+    "source_path": "skills/engineering/improve-codebase-architecture",
+    "overlay": "empty"
+  },
+  {
+    "name": "prototype",
+    "destination": "skills/mirrors-mattpocock/prototype",
+    "source_path": "skills/engineering/prototype",
+    "overlay": "patch"
+  },
+  {
+    "name": "research",
+    "destination": "skills/mirrors-mattpocock/research",
+    "source_path": "skills/engineering/research",
+    "overlay": "empty"
+  },
+  {
+    "name": "to-spec",
+    "destination": "skills/mirrors-mattpocock/to-spec",
+    "source_path": "skills/engineering/to-spec",
+    "overlay": "patch"
+  },
+  {
+    "name": "to-tickets",
+    "destination": "skills/mirrors-mattpocock/to-tickets",
+    "source_path": "skills/engineering/to-tickets",
+    "overlay": "patch"
+  },
+  {
+    "name": "triage",
+    "destination": "skills/mirrors-mattpocock/triage",
+    "source_path": "skills/engineering/triage",
+    "overlay": "empty"
+  },
+  {
+    "name": "wayfinder",
+    "destination": "skills/mirrors-mattpocock/wayfinder",
+    "source_path": "skills/engineering/wayfinder",
+    "overlay": "patch"
+  },
+  {
+    "name": "wizard",
+    "destination": "skills/mirrors-mattpocock/wizard",
+    "source_path": "skills/engineering/wizard",
+    "overlay": "empty"
+  },
+  {
+    "name": "implement-spec",
+    "destination": "skills/mirrors-mattpocock/implement-spec",
+    "source_path": "skills/in-progress/implement-spec",
+    "overlay": "patch"
+  },
+  {
+    "name": "loop-me",
+    "destination": "skills/mirrors-mattpocock/loop-me",
+    "source_path": "skills/in-progress/loop-me",
+    "overlay": "patch"
+  },
+  {
+    "name": "writing-beats",
+    "destination": "skills/mirrors-mattpocock/writing-beats",
+    "source_path": "skills/in-progress/writing-beats",
+    "overlay": "patch"
+  },
+  {
+    "name": "writing-fragments",
+    "destination": "skills/mirrors-mattpocock/writing-fragments",
+    "source_path": "skills/in-progress/writing-fragments",
+    "overlay": "patch"
+  },
+  {
+    "name": "writing-shape",
+    "destination": "skills/mirrors-mattpocock/writing-shape",
+    "source_path": "skills/in-progress/writing-shape",
+    "overlay": "patch"
+  },
+  {
+    "name": "grill-me",
+    "destination": "skills/mirrors-mattpocock/grill-me",
+    "source_path": "skills/productivity/grill-me",
+    "overlay": "empty"
+  },
+  {
+    "name": "grilling",
+    "destination": "skills/mirrors-mattpocock/grilling",
+    "source_path": "skills/productivity/grilling",
+    "overlay": "patch"
+  },
+  {
+    "name": "handoff",
+    "destination": "skills/mirrors-mattpocock/handoff",
+    "source_path": "skills/productivity/handoff",
+    "overlay": "empty"
+  },
+  {
+    "name": "teach",
+    "destination": "skills/mirrors-mattpocock/teach",
+    "source_path": "skills/productivity/teach",
+    "overlay": "patch"
+  },
+  {
+    "name": "to-questionnaire",
+    "destination": "skills/mirrors-mattpocock/to-questionnaire",
+    "source_path": "skills/productivity/to-questionnaire",
+    "overlay": "empty"
+  },
+  {
+    "name": "wait-what",
+    "destination": "skills/mirrors-mattpocock/wait-what",
+    "source_path": "skills/productivity/wait-what",
+    "overlay": "empty"
   }
 ]

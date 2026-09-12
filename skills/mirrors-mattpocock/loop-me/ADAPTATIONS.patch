@@ -1,0 +1,11 @@
+--- a/loop-me/SKILL.md
++++ b/loop-me/SKILL.md
+@@ -24,7 +24,7 @@
+ 
+ ## Definition of done
+ 
+-A workflow spec is done when an implementer agent could build it without asking a single question. Grill until then; nothing is done while a question remains.
++A workflow spec is done when an implementer agent has the decisions and contracts needed to build it without guessing. Grill until every implementation-blocking question is resolved or explicitly assigned to a human checkpoint; do not treat a deliberately deferred, non-blocking choice as a reason to continue the interview.
+ 
+ ## The workspace
+ 

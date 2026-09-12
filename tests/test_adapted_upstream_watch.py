@@ -36,3 +36,33 @@ def test_watch_preserves_skills_and_baselines_and_ignores_other_paths(tmp_path):
     reports = watch.check(upstream, repo)
     assert len(reports) == 1 and reports[0]['changed'] == ['SKILL.md']
     assert before == {str(p):p.read_bytes() for p in repo.rglob('*') if p.is_file()}
+
+
+def test_watch_reports_drift_for_empty_overlay_without_mutating_baseline(tmp_path):
+    upstream = tmp_path / 'upstream'; upstream.mkdir()
+    source = upstream / 'skills/domain-modeling'; source.mkdir(parents=True)
+    (upstream / 'LICENSE').write_text('MIT fixture')
+    (source / 'SKILL.md').write_text('original')
+    repo = tmp_path / 'ours'; dest = repo / 'skills/mirrors-mattpocock/domain-modeling'
+    dest.mkdir(parents=True)
+    (dest / 'SKILL.md').write_text('original')
+    (dest / 'ADAPTATIONS.patch').write_bytes(b'')
+    (dest / 'UPSTREAM.json').write_text(json.dumps(dict(
+        name='domain-modeling', commit='reviewed', source_path='skills/domain-modeling',
+        overlay='empty', upstream_sha256=watch.snapshot(upstream, 'skills/domain-modeling'))))
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
+                    'commit', '-qm', 'fixture'], check=True)
+    before = {str(p):p.read_bytes() for p in repo.rglob('*') if p.is_file()}
+    (source / 'SKILL.md').write_text('changed upstream')
+    original_packages = watch.PACKAGES
+    watch.PACKAGES = (str(dest.relative_to(repo)),)
+    try:
+        reports = watch.check(upstream, repo)
+    finally:
+        watch.PACKAGES = original_packages
+    assert len(reports) == 1
+    assert reports[0]['skill'] == 'domain-modeling'
+    assert reports[0]['changed'] == ['SKILL.md']
+    assert before == {str(p):p.read_bytes() for p in repo.rglob('*') if p.is_file()}

@@ -1,0 +1,20 @@
+{
+  "name": "retro",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/in-progress/retro",
+  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "patch",
+  "upstream_sha256": {
+    "SKILL.md": "264f3330f1e2382af89610ed048ba0ed6d08883eb69f596a8f1df3f1e1a4c6a1",
+    "agents/openai.yaml": "cb6fb9d7e6b4be5975f41f6def1dd00a1255bad5d9b02696b124c924a8b8745c",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "664a9f49aa47c4c04234481b3a2bd02df3cfb390b1d8c6900e5b79aad58188bf",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "384fb18c2f9823c2408017b36a33262adbf25bf0219fce5ed9dbf5fdfb0f60c8",
+    "SKILL.md": "ffbb31b2c2e04997aa4a3fd04ee089e5d86961258c0ded8a46cde06263b4424f",
+    "agents/openai.yaml": "cb6fb9d7e6b4be5975f41f6def1dd00a1255bad5d9b02696b124c924a8b8745c"
+  }
+}

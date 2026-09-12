@@ -1,0 +1,19 @@
+--- a/writing-shape/SKILL.md
++++ b/writing-shape/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: writing-shape
+-description: "Writing, exploit: shape raw material into an article, paragraph by paragraph."
++description: "Collaborative writing: shape raw material into an article, paragraph by paragraph."
+ disable-model-invocation: true
+ ---
+ 
+@@ -58,7 +58,7 @@
+ 
+ ## Format arguments to actually have
+ 
+-When choosing how to render a block, weigh these tradeoffs out loud with the user, not silently:
++When a format choice materially affects meaning or review, weigh these tradeoffs out loud with the user:
+ 
+ - **Prose vs. list.** Prose carries argument; lists carry parallel items. If items aren't truly parallel, prose is better. If they are, a list is faster to scan.
+ - **Inline vs. callout.** Tips, warnings, and asides go in callouts (`> [!TIP]`, `> [!NOTE]`), but only if they'd genuinely derail the main argument inline. Otherwise leave them inline.

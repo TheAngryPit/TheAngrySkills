@@ -1,0 +1,10 @@
+--- a/writing-beats/SKILL.md
++++ b/writing-beats/SKILL.md
+@@ -1,6 +1,6 @@
+ ---
+ name: writing-beats
+-description: Writing, exploit; assemble raw material into a journey of beats, grounding each term before a beat leans on it.
++description: "Collaborative writing: assemble raw material into a journey of beats, grounding each term before using it."
+ disable-model-invocation: true
+ ---
+ 

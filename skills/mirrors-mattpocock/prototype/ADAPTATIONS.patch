@@ -1,0 +1,11 @@
+--- a/prototype/LOGIC.md
++++ b/prototype/LOGIC.md
+@@ -59,7 +59,7 @@
+ 
+ ## Anti-patterns
+ 
+-- **Don't add tests.** A prototype that needs tests is no longer a prototype.
++- **Don't add a production test suite.** A focused assertion is allowed when it is the cheapest proof of the question; keep it separate from the real module and do not turn the prototype into production code.
+ - **Don't wire it to the real database.** Use in-memory state unless the question is specifically about persistence.
+ - **Don't generalise.** No "what if we wanted to support X later." The prototype answers one question.
+ - **Don't blur the logic and the page together.** If the pure module references the DOM, `document`, or button handlers, it's no longer liftable. Keep the page as a thin shell over a pure module.

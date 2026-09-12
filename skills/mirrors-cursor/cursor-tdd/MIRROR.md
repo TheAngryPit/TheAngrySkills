@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: pstack/skills/tdd/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md
 Source SHA-256: 011cab0ecc04a3632121efb493ae4d60aa282a9b72c66de74dd8ad7e4313e05a
 Published name: cursor-tdd
 Decision class: adaptação nominal

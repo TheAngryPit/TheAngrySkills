@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: pstack/skills/principle-attack-the-premise/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md
 Source SHA-256: c87bd7536f772f8a403ad8155535ee17a1bbec9a353156693eb3bb1520c87ae3
 Published name: cursor-principle-attack-the-premise
 Decision class: intacta

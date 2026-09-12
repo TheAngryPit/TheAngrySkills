@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: teaching/skills/create-learning-path/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/teaching/README.md
 Source SHA-256: 3d247cc4d5baf6fb397a398f6957ab7427c7852d613a42bb057fa93ca20fcc63
 Published name: cursor-create-learning-path
 Decision class: adaptação nominal

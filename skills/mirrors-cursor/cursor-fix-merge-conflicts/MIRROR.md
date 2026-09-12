@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: cursor-team-kit/skills/fix-merge-conflicts/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-team-kit/README.md
 Source SHA-256: 738b251281b30fd33e3892d0679cf94249e9c9e29e1bed40bcdde4a6aca98a76
 Published name: cursor-fix-merge-conflicts
 Decision class: adaptação nominal

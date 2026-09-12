@@ -39,7 +39,7 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nBuild the smallest rerunnable tool or check before repeating work. Required native capabilities: none; this is instruction-only. No external product dependency is required by the adapted path. No tool is required; a nondeterministic lever is unproven. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation. Proof harness: `scripts/cursor_functional_adapters.py:prove_rerunnable`; its checks do not implement or claim the upstream runtime.\n",
+  "codex_note": "## Codex adaptation\n\nBuild the smallest rerunnable tool or check before repeating work. Required native capabilities: none; this is instruction-only. No external product dependency is required by the adapted path. No tool is required; a nondeterministic lever is unproven. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",

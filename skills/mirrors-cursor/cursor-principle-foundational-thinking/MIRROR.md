@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: pstack/skills/principle-foundational-thinking/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md
 Source SHA-256: 864b827e8199d946ce58beca0f89c4ed4099ed6e426fb698a3aaa45de2a9eea2
 Published name: cursor-principle-foundational-thinking
 Decision class: intacta

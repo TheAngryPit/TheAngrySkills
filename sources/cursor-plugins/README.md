@@ -15,13 +15,15 @@ evidence beside each published skill. The upstream skill text otherwise stays
 in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
-This reviewable batch publishes 53 content or naming candidates under
-`skills/mirrors-cursor/`. One functional candidate, the cursor-team-kit PR
+This reviewable branch indexes 53 content or naming candidates under
+`skills/mirrors-cursor/`; public availability still requires PR review and merge.
+One functional candidate, the cursor-team-kit PR
 review canvas, is promoted for a read-only local artifact path with executable
 renderer proof. Five instruction-only candidates are promoted as `guide_only`:
 the four principles and technical writing. The remaining 31 functional
-adaptations stay held with a per-skill Codex contract covering native mapping,
-permission gates, positive behavior, missing capability/input, and error cases.
+adaptations stay held with a per-skill Codex contract recording native mapping,
+permission gates, and positive, missing-capability/input, and error scenarios
+still to prove.
 It also holds `cursor-cursor-sdk`, `cursor-make-bot-ui` and
 `cursor-review-plugin-submission` for contextual security review.
 `cursor-maintain-verification-skill` is held after source review showed a

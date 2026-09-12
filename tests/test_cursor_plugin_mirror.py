@@ -43,7 +43,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("91 physical, 47 published", result.stdout)
+        self.assertIn("91 physical, 53 published", result.stdout)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"
@@ -78,6 +78,11 @@ class CursorMirrorTests(unittest.TestCase):
                 links += 1
                 self.assertTrue((file.parent / target).exists(), (file, target))
         self.assertGreater(links, 0)
+
+    def test_published_skills_do_not_reference_repo_only_proof_harness(self):
+        root = self.root / "skills/mirrors-cursor"
+        for skill in root.glob("*/SKILL.md"):
+            self.assertNotIn("scripts/cursor_functional_adapters.py", skill.read_text(), skill)
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

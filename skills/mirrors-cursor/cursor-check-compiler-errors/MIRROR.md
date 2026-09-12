@@ -3,6 +3,7 @@
 Source: https://github.com/cursor/plugins.git
 Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
 Physical source path: cursor-team-kit/skills/check-compiler-errors/SKILL.md
+Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-team-kit/README.md
 Source SHA-256: 1ad76beccd581fc285199334709e0a37cdc2f76e5d0d33c90e1dc21905518004
 Published name: cursor-check-compiler-errors
 Decision class: adaptação nominal

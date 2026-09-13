@@ -350,6 +350,46 @@
       "file": "playbooks/eval.md",
       "before": "Do not glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.",
       "after": "Do not glob across unrelated task or workspace transcript roots. That crosses workspace boundaries and reads private chats from unrelated projects."
+    },
+    {
+      "file": "playbooks/opening-a-pr.md",
+      "before": "Run `/no-comments` before review. Write every PR title, PR description, and commit body with `/technical-writing`, then apply `/unslop`.",
+      "after": "Run `cursor-no-comments` before review when installed and applicable. Write every PR title, PR description, and commit body with `cursor-technical-writing`, then apply `cursor-unslop`; record the exact gap if a held or unavailable skill cannot be invoked."
+    },
+    {
+      "file": "playbooks/opening-a-pr.md",
+      "before": "A subagent that opens a PR runs `interrogate`, `/deslop`, and `/no-comments`.",
+      "after": "A bounded delegate that opens a PR uses `cursor-interrogate`, `cursor-deslop`, and `cursor-no-comments` only when each concrete skill is installed and applicable; otherwise it records the gap."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Write under `/technical-writing` in full, then `/unslop`.",
+      "after": "Write under `cursor-technical-writing` in full, then `cursor-unslop`, when installed and applicable."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Run `/deslop` before each commit and `/no-comments` before review.",
+      "after": "Run `cursor-deslop` before each commit and `cursor-no-comments` before review when installed and applicable; otherwise record the exact gap."
+    },
+    {
+      "file": "playbooks/autopilot-stack.md",
+      "before": "`/no-comments` (the **no-comments** skill)",
+      "after": "`cursor-no-comments` when installed and applicable"
+    },
+    {
+      "file": "playbooks/autopilot-full.md",
+      "before": "`/no-comments` (the **no-comments** skill)",
+      "after": "`cursor-no-comments` when installed and applicable"
+    },
+    {
+      "file": "playbooks/investigation.md",
+      "before": "Apply the **unslop** skill to the reply.",
+      "after": "Apply `cursor-unslop` to the reply when installed and applicable."
+    },
+    {
+      "file": "playbooks/feature.md",
+      "before": "`interrogate` before shipping.",
+      "after": "`cursor-interrogate` before shipping when installed and applicable; otherwise record the exact gap."
     }
   ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",

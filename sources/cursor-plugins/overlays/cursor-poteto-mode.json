@@ -55,9 +55,9 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Isolated fixture applies one exact playbook file by reading its bounded sections and records the read-only result; it does not prove live runtime behavior.",
+      "positive": "Isolated fixture reads one exact playbook file and returns its structural headings and ordered entries; it does not apply contextual steps or prove live runtime behavior.",
       "missing_tool_or_input": "Isolated fixture returns the labeled sequential fallback when the selected playbook file is absent or a required capability is unavailable.",
-      "error": "Isolated fixture returns an explicit error for an empty playbook file or unknown playbook; no bundled script or live native session is executed."
+      "error": "Isolated fixture returns an explicit error for an empty playbook file or unknown playbook; no contextual step, bundled script, or live native session is executed."
     },
     "promotion_status": "held_until_native_behavior_and_script_security_review",
     "upstream_readme": {

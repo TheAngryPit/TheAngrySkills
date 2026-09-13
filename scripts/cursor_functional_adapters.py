@@ -58,18 +58,18 @@ PSTACK_PLAYBOOK_FILES = (
 )
 
 
-def apply_pstack_playbook(
+def read_pstack_playbook_fixture(
     playbook_root: str | Path,
     playbook: str,
     *,
     available_capabilities: Iterable[str] = ("local skill reader",),
     required_capabilities: Iterable[str] = (),
 ) -> dict[str, object]:
-    """Apply one exact playbook file to a read-only fixture.
+    """Read one exact playbook file structurally in a read-only fixture.
 
-    The fixture reads the selected file and records its markdown sections as
-    bounded steps. It does not run bundled commands, start a cloud task, or
-    claim live playbook behavior.
+    The fixture records headings and ordered entries from the selected file.
+    It does not apply contextual steps, run bundled commands, start a cloud
+    task, or claim live playbook behavior.
     """
 
     if playbook not in PSTACK_PLAYBOOK_FILES:
@@ -106,13 +106,13 @@ def apply_pstack_playbook(
             "reason": capability_result.fallback,
             "external_writes": False,
         }
-    steps = tuple(
+    entries = tuple(
         line.strip()
         for line in text.splitlines()
         if line.strip().startswith("#")
         or (len(line.strip()) > 2 and line.strip()[0].isdigit() and line.strip()[1:3] == ". ")
     )
-    if not steps:
+    if not entries:
         return {
             "status": "ERROR",
             "playbook": playbook,
@@ -120,13 +120,34 @@ def apply_pstack_playbook(
             "external_writes": False,
         }
     return {
-        "status": "APPLIED",
+        "status": "READ",
         "playbook": playbook,
         "path": str(path),
-        "steps": steps,
+        "entries": entries,
         "environment": "isolated-read-only-fixture",
         "external_writes": False,
     }
+
+
+def _validate_fixture_component(value: str, label: str) -> None:
+    if (
+        not isinstance(value, str)
+        or not value.strip()
+        or value in {".", ".."}
+        or "/" in value
+        or "\\" in value
+    ):
+        raise AdapterError(f"{label} must be a single non-empty path component")
+
+
+def _reject_symlink_components(root: Path, relative: Path) -> None:
+    if root.is_symlink():
+        raise AdapterError("verification fixture project root must not be a symlink")
+    current = root
+    for component in relative.parts:
+        current /= component
+        if current.is_symlink():
+            raise AdapterError("verification fixture path must not contain symlinks")
 
 
 def run_verification_fixture(
@@ -145,29 +166,38 @@ def run_verification_fixture(
     started and no product or external state is changed.
     """
 
-    if not app_name.strip() or "/" in app_name or "\\" in app_name:
-        raise AdapterError("app_name must be a single non-empty path component")
+    _validate_fixture_component(app_name, "app_name")
     if not features:
         raise AdapterError("verification fixture needs at least one feature")
     for name, body in features.items():
-        if not name.strip() or "/" in name or "\\" in name:
-            raise AdapterError("feature names must be single non-empty path components")
+        _validate_fixture_component(name, "feature name")
         if not isinstance(body, str) or not body.strip():
             raise AdapterError("feature fixture content must be non-empty text")
 
-    root = Path(project_root)
+    root_path = Path(project_root)
+    if root_path.is_symlink():
+        raise AdapterError("verification fixture project root must not be a symlink")
+    root = root_path.resolve()
     target = root / ".agents" / "skills" / f"verify-{app_name}"
+    _reject_symlink_components(root, target.relative_to(root))
     if target.exists() and not target.is_dir():
         raise AdapterError("verification target is not a directory")
     target.mkdir(parents=True, exist_ok=True)
     features_dir = target / "features"
+    _reject_symlink_components(root, features_dir.relative_to(root))
     features_dir.mkdir(exist_ok=True)
-    (target / "SKILL.md").write_text(
+    skill_path = target / "SKILL.md"
+    if skill_path.is_symlink():
+        raise AdapterError("verification fixture file must not be a symlink")
+    skill_path.write_text(
         f"---\nname: verify-{app_name}\n---\n\n"
         "This is an isolated verification fixture.\n"
     )
     for name, body in features.items():
-        (features_dir / f"{name}.md").write_text(body)
+        feature_path = features_dir / f"{name}.md"
+        if feature_path.is_symlink():
+            raise AdapterError("verification fixture file must not be a symlink")
+        feature_path.write_text(body)
 
     expected = tuple(sorted(features))
     actual = tuple(sorted(path.stem for path in features_dir.glob("*.md")))
@@ -193,7 +223,7 @@ def run_verification_fixture(
             {
                 "status": "BLOCKED",
                 "reason": "verification app is unavailable",
-                "conducted_features": (),
+                "fixture_observations": (),
             }
         )
         return result
@@ -202,7 +232,7 @@ def run_verification_fixture(
             {
                 "status": "BLOCKED",
                 "reason": "verification observations are missing",
-                "conducted_features": (),
+                "fixture_observations": (),
             }
         )
         return result
@@ -212,14 +242,14 @@ def run_verification_fixture(
             {
                 "status": "ERROR",
                 "reason": "observed feature results do not match the reconciled map",
-                "conducted_features": observed,
+                "fixture_observations": observed,
             }
         )
         return result
     result.update(
         {
-            "status": "VERIFIED",
-            "conducted_features": observed,
+            "status": "FIXTURE_ONLY",
+            "fixture_observations": observed,
         }
     )
     return result

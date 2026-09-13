@@ -13,7 +13,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 from cursor_functional_adapters import (  # noqa: E402
     AdapterError,
     PSTACK_PLAYBOOK_FILES,
-    apply_pstack_playbook,
+    read_pstack_playbook_fixture,
     run_verification_fixture,
     select_verification_target,
 )
@@ -127,17 +127,17 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertIn("name: cursor-poteto-mode", frontmatter)
             self.assertNotIn("mode: true", frontmatter)
 
-            applied = apply_pstack_playbook(target / "playbooks", "bug-fix")
-            self.assertEqual(applied["status"], "APPLIED")
-            self.assertEqual(applied["playbook"], "bug-fix")
-            self.assertTrue(applied["steps"])
-            self.assertEqual(applied["environment"], "isolated-read-only-fixture")
-            self.assertFalse(applied["external_writes"])
+            read = read_pstack_playbook_fixture(target / "playbooks", "bug-fix")
+            self.assertEqual(read["status"], "READ")
+            self.assertEqual(read["playbook"], "bug-fix")
+            self.assertTrue(read["entries"])
+            self.assertEqual(read["environment"], "isolated-read-only-fixture")
+            self.assertFalse(read["external_writes"])
 
             missing_root = Path(temporary) / "missing-playbooks"
-            missing = apply_pstack_playbook(missing_root, "bug-fix")
+            missing = read_pstack_playbook_fixture(missing_root, "bug-fix")
             self.assertEqual(missing["status"], "FALLBACK")
-            missing_capability = apply_pstack_playbook(
+            missing_capability = read_pstack_playbook_fixture(
                 target / "playbooks",
                 "bug-fix",
                 required_capabilities=("native bounded delegation",),
@@ -147,10 +147,10 @@ class CursorPstackCoreTests(unittest.TestCase):
             empty_root = Path(temporary) / "empty-playbooks"
             empty_root.mkdir()
             (empty_root / "bug-fix.md").write_text("")
-            malformed = apply_pstack_playbook(empty_root, "bug-fix")
+            malformed = read_pstack_playbook_fixture(empty_root, "bug-fix")
             self.assertEqual(malformed["status"], "ERROR")
             with self.assertRaises(AdapterError):
-                apply_pstack_playbook(target / "playbooks", "not-a-playbook")
+                read_pstack_playbook_fixture(target / "playbooks", "not-a-playbook")
 
     def test_verification_mirrors_use_agents_root_and_native_harness_language(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -192,25 +192,25 @@ class CursorPstackCoreTests(unittest.TestCase):
             "BLOCKED",
         )
 
-    def test_verification_fixture_creates_reconciles_and_conducts_isolated_project(self):
+    def test_verification_fixture_creates_reconciles_and_compares_fixture_observations(self):
         features = {
             "create-note": "Create a note and record the evidence.",
             "search": "Search notes and record the evidence.",
         }
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            verified = run_verification_fixture(
+            fixture_result = run_verification_fixture(
                 root,
                 "notes",
                 features,
                 app_available=True,
                 observed_features=features,
             )
-            self.assertEqual(verified["status"], "VERIFIED")
-            self.assertTrue(verified["created_skill"])
-            self.assertEqual(verified["reconciled_features"], tuple(sorted(features)))
-            self.assertEqual(verified["conducted_features"], tuple(sorted(features)))
-            self.assertFalse(verified["product_edits"])
+            self.assertEqual(fixture_result["status"], "FIXTURE_ONLY")
+            self.assertTrue(fixture_result["created_skill"])
+            self.assertEqual(fixture_result["reconciled_features"], tuple(sorted(features)))
+            self.assertEqual(fixture_result["fixture_observations"], tuple(sorted(features)))
+            self.assertFalse(fixture_result["product_edits"])
             self.assertTrue((root / ".agents/skills/verify-notes/SKILL.md").is_file())
             self.assertTrue((root / ".agents/skills/verify-notes/features/search.md").is_file())
 
@@ -222,7 +222,7 @@ class CursorPstackCoreTests(unittest.TestCase):
                 app_available=False,
             )
             self.assertEqual(blocked["status"], "BLOCKED")
-            self.assertEqual(blocked["conducted_features"], ())
+            self.assertEqual(blocked["fixture_observations"], ())
             self.assertFalse(blocked["product_edits"])
 
         with tempfile.TemporaryDirectory() as temporary:
@@ -238,6 +238,39 @@ class CursorPstackCoreTests(unittest.TestCase):
                 mismatch["reason"],
                 "observed feature results do not match the reconciled map",
             )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaises(AdapterError):
+                run_verification_fixture(temporary, ".", features, app_available=False)
+            with self.assertRaises(AdapterError):
+                run_verification_fixture(temporary, "notes", {"..": "invalid"}, app_available=False)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            outside = root / "outside"
+            outside.mkdir()
+            (root / ".agents").symlink_to(outside, target_is_directory=True)
+            with self.assertRaises(AdapterError):
+                run_verification_fixture(root, "notes", features, app_available=False)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            project = root / "project"
+            project.mkdir()
+            project_alias = root / "project-alias"
+            project_alias.symlink_to(project, target_is_directory=True)
+            with self.assertRaises(AdapterError):
+                run_verification_fixture(project_alias, "notes", features, app_available=False)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            feature_dir = root / ".agents/skills/verify-notes/features"
+            feature_dir.mkdir(parents=True)
+            outside_file = root / "outside.md"
+            outside_file.write_text("outside")
+            (feature_dir / "search.md").symlink_to(outside_file)
+            with self.assertRaises(AdapterError):
+                run_verification_fixture(root, "notes", features, app_available=False)
 
 
 if __name__ == "__main__":

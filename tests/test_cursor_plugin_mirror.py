@@ -103,6 +103,22 @@ class CursorMirrorTests(unittest.TestCase):
                 self.assertTrue((file.parent / target).exists(), (file, target))
         self.assertGreater(links, 0)
 
+    def test_published_frontmatter_parses_without_pyyaml(self):
+        auditor = REPO / "skills/core/skill-catalog-curator/scripts/audit_skill_frontmatter.py"
+        result = subprocess.run(
+            [sys.executable, "-S", str(auditor),
+             str(self.root / "skills/mirrors-cursor"), "--profile", "shared", "--json"],
+            cwd=self.root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        results = json.loads(result.stdout)["results"]
+        self.assertEqual(len(results), 53)
+        for item in results:
+            self.assertEqual(item["counts"]["error"], 0, item)
+
     def test_published_skills_do_not_reference_repo_only_proof_harness(self):
         root = self.root / "skills/mirrors-cursor"
         for skill in root.glob("*/SKILL.md"):

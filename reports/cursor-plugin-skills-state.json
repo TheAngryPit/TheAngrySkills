@@ -12,7 +12,7 @@
     "cursor-check-compiler-errors/SKILL.md": "0f5084ff8a3fef740143e4cf8102277ffbede8fa14f7d3d93ce84fc3871a0b5e",
     "cursor-cli-for-agents/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-cli-for-agents/MIRROR.md": "4aecd195b245c6d469230ff19efa5cc825a62cc5e855477986d90e3702290424",
-    "cursor-cli-for-agents/SKILL.md": "6327b1c83bccbc039d8360bbcaad2648f99067d39a177c399323396e5583058f",
+    "cursor-cli-for-agents/SKILL.md": "25369e60d34532cf86ca52554fb6494baa989547532d54af18188e22d23c9915",
     "cursor-control-cli/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-control-cli/MIRROR.md": "3adf01c77b450769eecace9a412c49ff585ab28019725c8a3677e5d326a30750",
     "cursor-control-cli/SKILL.md": "fc0208c2f2d52ca5247676b234da6c4e24f5d44187195245d7f6914f673c7918",
@@ -163,7 +163,7 @@
     "cursor-what-did-i-get-done/SKILL.md": "9b3ccd5de17e3ff4b6c5bd473390bb10c12036a16f4900dd796fa68fe2937b4b",
     "cursor-x-mcp-guide/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-x-mcp-guide/MIRROR.md": "d6c7a8b0bfa300f2ff3b5464082a8af5c6f3c2214afcaab332485bedd27c4b77",
-    "cursor-x-mcp-guide/SKILL.md": "b2efc200fc7168000a475954ead39b87b6444b8157bcca2e6548dea05ef10038",
+    "cursor-x-mcp-guide/SKILL.md": "8c26f88fc6dacab8f09b0836ba4701bce0d98f52c3bf729e443697511d2d2078",
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,

@@ -1,15 +1,6 @@
 ---
 name: cursor-x-mcp-guide
-description: >-
-  ALWAYS read this when a user connects the X plugin or any X MCP, before using
-  any X connection, and again on any X error. Do not call an X tool until this
-  file has been read in the current turn. On first connect, confirm X tools are
-  available, fetch get_usage_credits BEFORE any user-facing text, then send the
-  congrats + capabilities message. Never tell the user to buy credits until that
-  check returns ~$0 or a job would exceed the balance. If X is connected but
-  tools are missing (tools=0, user-X-* not found), that is a setup failure — not
-  a paywall. Estimate the cost of every X call before making it and confirm with
-  the user before anything expensive.
+description: "ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure — not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive."
 ---
 
 ## Codex mirror boundary

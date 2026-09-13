@@ -49,12 +49,28 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse the exact workspace/topic/time scope and preserve missing exports. Required native capabilities: scoped task history, live repository state, shared record. External dependencies remain explicit: Cursor transcript history or supplied Codex record, GitHub read-only metadata if requested. Mismatched workspace/export is partial and does not alter state. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse native task history and verified rollout paths, not `~/.cursor/projects`. Preserve the scope window, distinct own-history/shared-record sweep, citations, live-state readback and capsule format. Apply the standing model router to optional read-only delegation.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Transcripts live at `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, where `<slug>` is the workspace path with the leading slash dropped and each \"/\" turned into \"-\" (so `/Users/you/proj` becomes `Users-you-proj`). Every line is one chat message.",
+      "after": "In Codex, discover accessible prior tasks with the native thread list/read tools. Local rollout JSONL may provide full tool history when a verified rollout path is available; its filesystem layout varies by host. Do not infer a Cursor transcript path or read a different project without the user’s scope."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Spawn parallel subagents on a fast, cheap model, each taking a slice of the corpus.",
+      "after": "For a large in-scope corpus, delegate independent slices to read-only Codex subagents under the standing `model-capability-router` policy."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Tell every subagent to order candidates by real modification time (`ls -t`) and never by UUID name, grep the topic first and then read only the matching chats and only their relevant regions, and skip the current chat plus obvious noise (subagent, eval, and test chats).",
+      "after": "Tell each investigator to order accessible tasks by verified update time, search the topic before opening a transcript, read only relevant regions, and skip the current task plus obvious eval/test noise. Do not assume a filename UUID encodes recency."
+    }
+  ],
   "source_path": "pstack/skills/recall/SKILL.md",
   "source_sha256": "d265b0e5b6dc5b89c0407f3387d24462c988e1990a37d5359735137908128c5a"
 }

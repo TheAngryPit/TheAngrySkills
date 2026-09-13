@@ -119,6 +119,41 @@ class CursorMirrorTests(unittest.TestCase):
         for item in results:
             self.assertEqual(item["counts"]["error"], 0, item)
 
+    def test_all_active_candidates_preview_without_publishing(self):
+        marketplace = self.root / ".claude-plugin/marketplace.json"
+        before = marketplace.read_bytes()
+        preview = self.root / "candidate-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 88)
+        self.assertFalse((preview / "cursor-setup-benny").exists())
+        self.assertEqual(marketplace.read_bytes(), before)
+        self.assertEqual(self.run_build("--check").returncode, 0)
+        auditor = REPO / "skills/core/skill-catalog-curator/scripts/audit_skill_frontmatter.py"
+        audit = subprocess.run(
+            [sys.executable, "-S", str(auditor), str(preview),
+             "--profile", "shared", "--json"],
+            text=True, capture_output=True, check=False,
+        )
+        self.assertEqual(audit.returncode, 0, audit.stderr)
+        results = json.loads(audit.stdout)["results"]
+        self.assertEqual(len(results), 88)
+        self.assertTrue(all(item["counts"]["error"] == 0 for item in results))
+        missing = []
+        for file in preview.rglob("*.md"):
+            for match in re.finditer(r"\]\(([^)]+)\)", file.read_text()):
+                target = match.group(1).split("#", 1)[0]
+                if not target or ":" in target or target.startswith("/"):
+                    continue
+                if target == "url" and file.name == "synthesizer-prompt.md":
+                    continue  # Upstream prompt placeholder, not a file link.
+                if not (file.parent / target).exists():
+                    missing.append((str(file.relative_to(preview)), target))
+        self.assertEqual(missing, [])
+        repeated = self.run_build("--preview-candidates", str(preview))
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertIn("already exists", repeated.stderr)
+
     def test_published_skills_do_not_reference_repo_only_proof_harness(self):
         root = self.root / "skills/mirrors-cursor"
         for skill in root.glob("*/SKILL.md"):

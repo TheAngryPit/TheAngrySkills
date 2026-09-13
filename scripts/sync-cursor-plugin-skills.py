@@ -111,6 +111,31 @@ def replace_exact(text: str, before: str, after: str, owner: str) -> str:
     return text.replace(before, after, 1)
 
 
+def normalize_description(frontmatter: str) -> str:
+    """Keep upstream trigger wording while making common YAML forms parser-safe."""
+
+    lines = frontmatter.splitlines()
+    result = []
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if line.startswith("description: >") or line.startswith("description: |"):
+            parts = []
+            index += 1
+            while index < len(lines) and (lines[index].startswith("  ") or not lines[index]):
+                parts.append(lines[index].strip())
+                index += 1
+            result.append("description: " + json.dumps(" ".join(part for part in parts if part), ensure_ascii=False))
+            continue
+        if line.startswith("description: ") and ": " in line[len("description: "):]:
+            value = line[len("description: "):]
+            if not value.startswith(("'", '"')):
+                line = "description: " + json.dumps(value, ensure_ascii=False)
+        result.append(line)
+        index += 1
+    return "\n".join(result)
+
+
 def rewrite_sibling_links(source_file: Path, output_file: Path, text: str,
                           source_to_entry: dict[Path, dict], staging: Path, commit: str) -> str:
     def replace(match: re.Match[str]) -> str:
@@ -163,6 +188,9 @@ def render_skill(entry: dict, staging: Path, commit: str,
         contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
         target_file.write_text(contents)
     text = skill_file.read_text()
+    marker = SKILL_PATTERN.match(text)
+    normalized = normalize_description(marker.group(1))
+    text = text[:marker.start(1)] + normalized + text[marker.end(1):]
     if overlay.get("codex_note"):
         marker = SKILL_PATTERN.match(text)
         text = text[:marker.end()] + "\n" + overlay["codex_note"].rstrip() + "\n" + text[marker.end():]
@@ -298,6 +326,29 @@ def build(check: bool) -> None:
         print(f"built {len(active)} skills, {len(generated)} files; changed={len(changed)}")
 
 
+def preview_candidates(destination: Path) -> None:
+    """Render every active skill, including held candidates, without indexing."""
+
+    manifest = load(LEDGER)
+    verify_snapshot(manifest)
+    entries = validate_manifest(manifest)
+    candidates = [e for e in entries if e["declared_for_distribution"]]
+    if destination.exists():
+        raise ValueError(f"candidate preview destination already exists: {destination}")
+    source_to_entry = {
+        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"]}
+        for e in entries
+    }
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".cursor-candidate-preview-", dir=destination.parent) as tmp:
+        staged = Path(tmp) / "candidates"
+        staged.mkdir()
+        for entry in candidates:
+            render_skill(entry, staged, manifest["upstream_commit"], source_to_entry)
+        staged.rename(destination)
+    print(f"rendered {len(candidates)} active skills, including held candidates, at {destination}")
+
+
 def refresh(upstream: Path) -> None:
     manifest = load(LEDGER)
     entries = validate_manifest(manifest)
@@ -331,9 +382,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="verify committed build without writing")
     parser.add_argument("--compare-upstream", type=Path, help="report upstream changes; never import automatically")
+    parser.add_argument("--preview-candidates", type=Path,
+                        help="render held active skills for review without indexing them")
     args = parser.parse_args()
     if args.compare_upstream:
         refresh(args.compare_upstream.resolve())
+    elif args.preview_candidates:
+        preview_candidates(args.preview_candidates.resolve())
     else:
         build(args.check)
 

@@ -46,12 +46,28 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nDo not use hidden cloud workers; one fallback candidate is not a competition. Required native capabilities: bounded candidate delegates, local candidate artifacts. External dependencies remain explicit: native parallel delegates if exposed. An unavailable candidate is recorded as missing, not a fabricated winner. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse native Codex subagents and isolated worktrees/paths for parallel candidates, not Cursor `Task` or `~/.cursor/rules`. Keep the same rubric, cross-judge, base selection, graft and verification phases. Follow the standing model router and task authority.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Use `arena runners` from `~/.cursor/rules/pstack-models.mdc` when present. Otherwise default to one each on `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`.",
+      "after": "Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Spawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce both the artifact and a short rationale.",
+      "after": "Launch N independent Codex subagents in parallel when authorized, each with the same task contract, the shared grounding path, its own isolated output path, and a short rationale. Keep one writer per path and wait for each artifact before judging."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "choose one model from the `arena cross-judge pool` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model.",
+      "after": "choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish, or have the coordinator perform an explicit independent judgment if no authorized judge is available."
+    }
+  ],
   "source_path": "pstack/skills/arena/SKILL.md",
   "source_sha256": "8d431f7b1aa19daf6300366fc876c4d1aadac06417ec5502407345ffaf4e90d9"
 }

@@ -61,12 +61,43 @@
       ]
     }
   },
-  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: mcp-plugin-hook-install at SKILL.md:62 (active_connector_discovery_surface). Hold until native connector availability, authorization, and read-only behavior are proven.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse the connectors and read-only scopes actually available in this Codex task. Preserve the seven-category coverage map, source investigators, null results, epistemic framework, citation checks and synthesis. Native model/effort follows the standing `model-capability-router`; delegation does not grant source or write authority.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
   "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
-  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
-  "replacements": [],
+  "reason": "Preserve multi-source why investigation while mapping Cursor MCP discovery and subagents to verified Codex tools and model policy.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Before spawning investigators, list the available MCPs from the Cursor environment. Use the available-tools map when present. Otherwise inspect the `mcps/` directory Cursor exposes for enabled MCP servers.",
+      "after": "Before spawning investigators, inventory the MCP tools and resources actually exposed in this Codex task. Use native tool discovery and resource listings; do not infer installed connectors from names or inspect a Cursor `mcps/` directory. Record unavailable categories."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Source control is always available through git and `gh`.",
+      "after": "Local source history is available when the target is a Git checkout; `gh` requires a configured remote and access. Verify both before claiming source-control or PR coverage."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "- `subagent_type`: `generalPurpose`\n- `model`: your configured why-investigators model (default `grok-4.6-fast-xhigh`)\n- `readonly`: `false` (agent mode). **Do not use readonly/Ask mode.** It strips MCP access, which disables MCP-backed investigators entirely. Investigators still shouldn't write anything.",
+      "after": "- Use available native Codex subagents when delegation is authorized. Select model and effort under the standing `model-capability-router` policy. Give each investigator only the tools and source scope it needs; prohibit writes and external messages. If a connector is unavailable to subagents, investigate that category in the coordinator and record the actual access path."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Source control investigator**. Git history, `gh` for PRs, code comments, tests. Always spawn.",
+      "after": "**Source control investigator**. Local Git history; `gh` for PRs only when a remote and access exist. Investigate directly if native delegation is unavailable."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "- `subagent_type`: `generalPurpose`\n- `model`: your configured why-synthesizer model (default `claude-fable-5-1-thinking-max`)\n- `readonly`: `false` (agent mode). The synthesizer's quality check spot-verifies citations, which can require MCP access. Readonly/Ask mode strips MCPs and defeats that.",
+      "after": "- Use an available native Codex synthesizer subagent when authorized, with model and effort chosen under the standing `model-capability-router` policy. Provide read-only source access required for spot checks; otherwise synthesize and verify citations in the coordinator."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Take the synthesizer's output and present it to the user. You may lightly edit for clarity or add context from the conversation, but **do not rewrite the confidence language**.",
+      "after": "Spot-check the synthesizer’s citations and present the supported result. Correct factual errors while preserving the distinction between observed facts, inferences and unknowns; the coordinator owns the final answer."
+    }
+  ],
   "source_path": "pstack/skills/why/SKILL.md",
   "source_sha256": "222b93789754ba6ee901835137184acdca667f7e47c523bcc85aca86675fb249"
 }

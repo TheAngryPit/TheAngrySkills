@@ -49,12 +49,33 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nDesign the auditable playbook before code and keep hypotheses falsifiable. Required native capabilities: local repository reader, check runner, decision log. External dependencies remain explicit: bounded delegate if exposed, local decision log. Ungrounded scope or failed check is INCONCLUSIVE and blocks done. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nResolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "reason": "Resolve pstack sibling names and native Codex model/delegation while retaining the architecture and experiment loop.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "read the Principles section of the **poteto-mode** skill",
+      "after": "read the Principles section of **cursor-poteto-mode**"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "run the **architect** skill (it runs **arena**)",
+      "after": "run **cursor-architect** (which uses **cursor-arena**)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Log the run via the **show-me-your-work** skill",
+      "after": "Log the run via **cursor-show-me-your-work**"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Present the framing and tradeoffs before committing to a long run. Reversible work proceeds (the **never-block-on-the-human** principle skill), but a multi-hour run earns one checkpoint.",
+      "after": "Present framing and tradeoffs when they materially affect the approved outcome. Continue already authorized reversible work through the run; ask for a checkpoint only when an unresolved product decision or authority gate changes the result."
+    }
+  ],
   "source_path": "pstack/skills/figure-it-out/SKILL.md",
   "source_sha256": "e041c64a39f1084a20e60ee99762c4dbd3ec8be56ed33fd68ea867b8bd8bd3e4"
 }

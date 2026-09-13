@@ -68,12 +68,28 @@
       ]
     }
   },
-  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: executable-file at scripts/log.sh:n/a (active_local_writer); bundled-script-review at scripts/log.sh:n/a (active_local_writer). Hold until the executable helper receives a focused script review; source remains intact and unindexed. Hold pending script and installation-scope review.\n",
+  "codex_note": "## Codex runtime mapping\n\nKeep the canonical TSV and bundled `scripts/log.sh`. Write only inside the authorized workspace or task scratch path, verify evidence links, and use the native task history/rollout for transcript audit. Independent review follows the standing model router and is reported only when performed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
   "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
-  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
-  "replacements": [],
+  "reason": "Preserve auditable decision trail while replacing Cursor transcript location and reviewer model defaults with native Codex paths and policy.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Read this run's transcript under the active workspace's `agent-transcripts/` directory (the system prompt names the path). Don't glob across `~/.cursor/projects/*/`. That reads unrelated private chats.",
+      "after": "Read the current Codex task history through the native thread reader or its verified local rollout path when available. Do not glob other projects or rely on a Cursor transcript path; if full tool history is inaccessible, name that audit limit."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Before handing back, spawn a subagent on a different model family from the one that did the work. Self-review is not a substitute.",
+      "after": "Before handing back, use an authorized independent Codex reviewer when a different model perspective is available under the standing `model-capability-router` policy. If no reviewer or full transcript access is available, report the evidence limit without inventing cross-model sign-off."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Lead with the reviewer's model on its own line (`reviewed by <model>`), then list each flag pointing to specific rows or moments. \"No flags\" is a valid value. The model name is not.",
+      "after": "Name the actual reviewer model when one ran, then list flags tied to rows or moments. If review could not run, label it not assessed; never infer a reviewer from the selected route."
+    }
+  ],
   "source_path": "pstack/skills/show-me-your-work/SKILL.md",
   "source_sha256": "831e85ba3f84f38bf338cd03e6af050fea357752e25a825e334c99f59d7f2077"
 }

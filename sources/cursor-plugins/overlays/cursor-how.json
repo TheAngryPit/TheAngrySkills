@@ -46,12 +46,33 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nAnchor explanations in real files/symbols; use a sequential read when delegates are absent. Required native capabilities: local repository reader, bounded explorer/explainer if exposed. External dependencies remain explicit: native delegated reviewer if exposed. Missing source/delegate yields explicit unknowns, not a guess. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse native read-only subagents only when authorized; the standing `model-capability-router` owns model and effort. Preserve simple versus complex paths, distinct exploration angles, cited synthesis and coordinator verification.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Spawn all explorers in a single message:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explorer model (default `grok-4.6-fast-xhigh`)\n- `readonly`: `true`",
+      "after": "Delegate the 2 to 4 distinct angles to read-only Codex subagents in parallel when the task permits delegation. Select available model and effort under the standing `model-capability-router` policy. If delegation is unavailable, investigate the same angles sequentially and keep the evidence separate."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Spawn one Task subagent that explores and explains in one pass:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)\n- `readonly`: `true`",
+      "after": "Use one read-only Codex subagent when delegation is authorized and useful; choose model and effort under the standing `model-capability-router` policy. Otherwise explore and explain directly in one pass."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Once all explorers have returned, spawn one Task subagent to synthesize their findings into one explanation:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)\n- `readonly`: `true`",
+      "after": "After all explorers return, synthesize their cited findings in the coordinator or one read-only Codex subagent chosen under the standing `model-capability-router` policy. The coordinator checks the source paths and owns the final explanation."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Present the explainer's output to the user. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.",
+      "after": "Check the cited source paths and explain the result to the user in the requested scope. Correct factual errors before presenting it; the coordinator owns the final answer."
+    }
+  ],
   "source_path": "pstack/skills/how/SKILL.md",
   "source_sha256": "06b714dbd830bc829bfb89e33a1c39daf6d72ea412e488ea9d65f5f33b885a0c"
 }

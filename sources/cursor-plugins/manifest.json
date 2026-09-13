@@ -978,7 +978,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex adapter fixture-proven; live target application path not demonstrated",
+      "availability": "Codex adapter renderer fixture checked; live target application path not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1075,7 +1075,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "Codex adapter fixture-proven; live target application path not demonstrated",
+      "availability": "Codex adapter renderer and path-state fixtures checked; live target application path not demonstrated",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "intacta",
@@ -1141,12 +1141,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Codex adapter renderer fixture checked; playbook application, native session, cloud task lane, and bundled script behavior not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
+      "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); concrete mirror dependencies `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` are conditional and require availability checks; cloud-capable task execution is conditional; bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
       "family": "pstack",
       "files": {
         "SKILL.md": "b3c505602b82fb3641a3983e9c46fb974881faa12ece1af804fae27afb7be532",

@@ -11,30 +11,43 @@
     "native_mapping": {
       "capabilities": [
         "local skill reader",
-        "native bounded delegation if exposed"
+        "native bounded delegation",
+        "native project tools",
+        "native proof runner"
       ],
       "required_tools": [
-        "local skill reader",
-        "native bounded delegation if exposed"
+        "local skill reader"
       ],
-      "fallback": "Missing companion playbook leaves the mode inactive.",
-      "availability": "not_proven_in_current_codex_session"
+      "optional_tools": [
+        "native bounded delegation",
+        "native project tools",
+        "native proof runner"
+      ],
+      "playbook_root": "skills/mirrors-cursor/cursor-poteto-mode/playbooks/",
+      "playbook_count": 23,
+      "fallback": "Missing companion playbook or native capability produces a labeled sequential fallback; the mode never silently widens scope.",
+      "availability": "fixture_proven bounded adapter; native session and bundled script behavior not proven",
+      "routing_authority": "model-capability-router remains the standing model authority; proof-orchestrator selects the proof path",
+      "session_behavior": "per-turn guidance only; no sticky mode, background agent, or future invocation is claimed"
     },
     "external_dependencies": [
-      "Cursor playbooks",
-      "native delegated reviewers if exposed"
+      "project-local mirror playbooks",
+      "native bounded delegation when available",
+      "native project tools and verification surface when the selected playbook needs them"
     ],
     "permission_gates": [
-      "Preserve the 23 principle IDs and autonomy gates; style never enables unattended execution.",
-      "Missing companion playbook leaves the mode inactive.",
+      "Preserve the 23 playbook and principle semantics; style never enables unattended execution.",
+      "Read only the selected companion playbook, and report missing or unavailable capabilities explicitly.",
+      "Native delegation keeps the bounded brief, selected model/effort, ownership, and proof contract with the coordinator.",
+      "A heartbeat or automation is used only when the user explicitly requests monitoring; it is not a replacement for a sticky mode.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-poteto-mode: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-poteto-mode: Missing companion playbook leaves the mode inactive.",
-      "error": "Error fixture for cursor-poteto-mode: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Fixture selects a matching playbook from the 23-file registry and returns a native bounded path.",
+      "missing_tool_or_input": "Fixture with a missing playbook returns a labeled sequential fallback without claiming native delegation.",
+      "error": "Empty requests and unknown explicit playbooks are rejected without widening scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_until_native_behavior_and_script_security_review",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -85,12 +98,248 @@
       ]
     }
   },
-  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: bundled-script-review at scripts/**:n/a (bundled_executable_surface); executable-file at scripts/check-plan.mjs,scripts/worktree-audit.sh,scripts/orch/orch.ts,scripts/watch-pr/watch-pr:n/a (active_executable_surface); dependency-manifest-surface at scripts/package.json:n/a (active_dependency_surface). Hold. Do not admit or run the bundled scripts until their code, dependency, and egress behavior is reviewed. Hold. Treat the files as executable code, not passive style guidance, until separately reviewed. Hold. No dependency installation or script activation is authorized by this mirror.\n",
+  "codex_note": "## Codex adaptation and security boundary\n\nThis is a per-turn native Codex guidance adapter. It preserves the 23 playbooks and their principles, but it does not create a sticky mode or claim implicit future invocation. Read the selected playbook from the project-local mirror. Map the upstream question action to the host's optional user-input surface only for a genuine product or preference choice. Map the upstream task and delegation fields to native bounded delegation when exposed, keeping scope, selected model/effort, ownership, and proof with the coordinator. If delegation is unavailable, use the labeled sequential fallback. Keep model selection with model-capability-router and proof-path selection with proof-orchestrator. A heartbeat or automation is used only when explicitly requested.\n\nThis candidate remains unindexed. Finding review: bundled-script-review at scripts/**:n/a (bundled_executable_surface); executable-file at scripts/check-plan.mjs,scripts/worktree-audit.sh,scripts/orch/orch.ts,scripts/watch-pr/watch-pr:n/a (active_executable_surface); dependency-manifest-surface at scripts/package.json:n/a (active_dependency_surface). Do not install dependencies or activate the bundled scripts until code, dependency, and egress behavior is reviewed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
-  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests exercise the 23-playbook registry, positive selection, missing-playbook fallback, malformed input, and the rendered frontmatter and security boundary.",
+  "reason": "The adapter preserves the full source tree while making the runtime mapping, no-sticky boundary, native authority, and executable-script hold explicit.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "mode: true\nicon: crown\ncolor: yellow\nreminder: New task? Playbook match or rigor needed -> apply /poteto-mode. Casual turn or user opts out -> don't.\n",
+      "after": ""
+    },
+    {
+      "file": "SKILL.md",
+      "before": "About to `AskQuestion` on a \"which approach\", \"how should I\", or \"what should this do\" fork",
+      "after": "About to ask the host for a product or preference choice"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Agent-facing prose also follows the **create-skill** skill (Cursor's built-in for authoring SKILL.md files).",
+      "after": "Agent-facing prose follows the host-supported skill-authoring guidance."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "the `deslop` skill from the `cursor-team-kit` plugin (`/deslop`)",
+      "after": "the available local cleanup check"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`cursor-team-kit` publishes `control-cli` (CLIs and TUIs) and `control-ui` (browser / Electron / web UIs)",
+      "after": "the target project's native CLI or UI verification surface"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Use `subagent_type: \"poteto-agent\"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/poteto-mode` and `poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `poteto-agent`.",
+      "after": "Delegated work uses native bounded delegation when exposed. The coordinator keeps the bounded brief, selected model/effort, scope, and proof contract; otherwise it follows the documented sequential fallback."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "a Cursor restart",
+      "after": "a Codex restart"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Defaults for every `Task` call.** `run_in_background: true`, agent mode (readonly strips MCP), file pointers not inlined context, explicit model per role (configurable via `/setup-pstack`.",
+      "after": "Native bounded delegation respects the operator's selected model and reasoning effort."
+    },
+    {
+      "file": "SKILL.md",
+      "before": " Defaults `grok-4.6-fast-xhigh` for code, `claude-fable-5-1-thinking-max` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-fable-5-1-thinking-max`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).",
+      "after": " Keep the bounded brief with the coordinator and do not invent a model ladder or sticky routing."
+    },
+    {
+      "file": "playbooks/autonomous-run.md",
+      "before": "using Cursor's `/loop` command (a built-in, not a pstack skill)",
+      "after": "using an explicitly requested Codex heartbeat or automation"
+    },
+    {
+      "file": "playbooks/autonomous-run.md",
+      "before": "or use `AskQuestion`",
+      "after": "or defer reversible work to the user"
+    },
+    {
+      "file": "playbooks/bug-fix.md",
+      "before": "Cursor's `/loop` command",
+      "after": "an explicitly requested Codex heartbeat"
+    },
+    {
+      "file": "playbooks/bug-fix.md",
+      "before": "Delegate implementation to a subagent using your configured bug-fix model (default `grok-4.6-fast-xhigh`)",
+      "after": "Delegate implementation through native bounded delegation while respecting the selected model and effort"
+    },
+    {
+      "file": "playbooks/feature.md",
+      "before": "Delegate code-writing to a subagent using your configured feature model (default `grok-4.6-fast-xhigh`)",
+      "after": "Delegate code-writing through native bounded delegation while respecting the selected model and effort"
+    },
+    {
+      "file": "playbooks/hillclimb.md",
+      "before": "Hand the change to a subagent using your configured hillclimb model (default `grok-4.6-fast-xhigh`)",
+      "after": "Hand the change to native bounded delegation while respecting the selected model and effort"
+    },
+    {
+      "file": "playbooks/perf-issue.md",
+      "before": "Delegate implementation to a subagent using your configured perf-issue model (default `grok-4.6-fast-xhigh`)",
+      "after": "Delegate implementation through native bounded delegation while respecting the selected model and effort"
+    },
+    {
+      "file": "playbooks/refactoring.md",
+      "before": "Delegate the mechanical edits to a subagent using your configured refactoring model (default `grok-4.6-fast-xhigh`)",
+      "after": "Delegate the mechanical edits through native bounded delegation while respecting the selected model and effort"
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Ten lanes on `grok-4.6-fast-xhigh` at the PR head drive the real surface through its control skill, per the **swarm** skill.",
+      "after": "The proof-orchestrator selects bounded lanes at the PR head and drives the real surface through the target project's native verification skill."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Browser, Electron, and web UIs use `control-ui` from `cursor-team-kit`. CLIs and TUIs use `control-cli` from `cursor-team-kit`.",
+      "after": "Browser, Electron, and web UIs use the target project's native UI verification surface. CLIs and TUIs use its native CLI verification surface."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "In a local session, a real terminal `/loop`.",
+      "after": "In a local session, an explicitly requested Codex heartbeat or automation."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Each live lane runs on its own cloud VM at the PR head. Drive through `control-ui` or `control-cli` from `cursor-team-kit`.",
+      "after": "Each live lane uses an explicitly isolated native verification session at the PR head. Drive through the target project's native UI or CLI verification surface."
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Ten lanes on `grok-4.6-fast-xhigh` at the PR head, per the boot recipe.",
+      "after": "Bounded lanes selected by the proof-orchestrator at the PR head, per the boot recipe."
+    },
+    {
+      "file": "playbooks/autopilot-stack.md",
+      "before": "One Cursor cloud agent per PR owns",
+      "after": "One native bounded delegate per PR owns"
+    },
+    {
+      "file": "playbooks/autopilot-stack.md",
+      "before": "A local root arms each tick as a real terminal `/loop`.",
+      "after": "A local root uses an explicitly requested Codex heartbeat or automation for each tick."
+    },
+    {
+      "file": "playbooks/autopilot-full.md",
+      "before": "One Cursor cloud agent per PR owns",
+      "after": "One native bounded delegate per PR owns"
+    },
+    {
+      "file": "playbooks/autopilot-full.md",
+      "before": "A local root arms each tick as a real terminal `/loop`.",
+      "after": "A local root uses an explicitly requested Codex heartbeat or automation for each tick."
+    },
+    {
+      "file": "playbooks/autopilot-full.md",
+      "before": "`control-cli` or `control-ui` from `cursor-team-kit` as the change demands",
+      "after": "the target project's native CLI or UI verification surface as the change demands"
+    },
+    {
+      "file": "playbooks/babysit.md",
+      "before": "This playbook replaces Cursor's built-in babysit skill",
+      "after": "This playbook provides the native Codex babysit workflow"
+    },
+    {
+      "file": "playbooks/babysit.md",
+      "before": "Run `drive` and `background` under `/loop` in dynamic mode.",
+      "after": "Run `drive` and `background` under an explicitly requested Codex heartbeat in dynamic mode."
+    },
+    {
+      "file": "playbooks/orchestrate.md",
+      "before": "Always `environment: \"cloud\"` unless the task needs this machine: `control-ui` or `control-cli` runtime verification (from `cursor-team-kit`).",
+      "after": "Use the native task environment unless the target surface requires this machine, and use the target project's native UI or CLI verification surface."
+    },
+    {
+      "file": "playbooks/orchestrate.md",
+      "before": "the cloud agent's status in the Cursor dashboard",
+      "after": "the native task's status in the Codex task surface"
+    },
+    {
+      "file": "playbooks/orchestrate.md",
+      "before": "After a Cursor restart",
+      "after": "After a Codex restart"
+    },
+    {
+      "file": "playbooks/session-pickup.md",
+      "before": "Do not glob across `~/.cursor/projects/*/`, that crosses workspace boundaries and reads private chats from unrelated projects",
+      "after": "Do not glob across unrelated task or workspace transcript roots, because that crosses workspace boundaries and reads private chats from unrelated projects"
+    },
+    {
+      "file": "playbooks/opening-a-pr.md",
+      "before": "Run `/deslop` from `cursor-team-kit` over the diff before commit.",
+      "after": "Run the available local cleanup check over the diff before commit."
+    },
+    {
+      "file": "playbooks/authoring-a-skill.md",
+      "before": "the **create-skill** skill (Cursor's built-in for authoring SKILL.md files)",
+      "after": "the host-supported skill-authoring guidance"
+    },
+    {
+      "file": "playbooks/worktree-cleanup.md",
+      "before": "`.cursor/worktrees/myrepo/x`",
+      "after": "a Codex-managed worktree path"
+    },
+    {
+      "file": "playbooks/worktree-cleanup.md",
+      "before": "`~/Library/Application Support/Cursor`",
+      "after": "the host's application support directory"
+    },
+    {
+      "file": "playbooks/visual-parity.md",
+      "before": "`/loop` per component until the diff is zero",
+      "after": "an explicitly requested Codex heartbeat per component until the diff is zero"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "not Cursor's built-in babysit skill",
+      "after": "not a separate upstream babysit route"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "(\"going to bed\", \"trust it when i'm back\", \"/loop until X\")",
+      "after": "(\"going to bed\", \"trust it when i'm back\", \"until X\")"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "(\"run until done\", \"/loop until X\")",
+      "after": "(\"run until done\", \"until X\")"
+    },
+    {
+      "file": "playbooks/multi-phase-plan.md",
+      "before": "Explore in subagents with `subagent_type: \"poteto-agent\"` and an explicit model per the Subagents section (the **guard-the-context-window** principle skill). Each returns file pointers, conventions, test commands, and entry points. No inlined dumps.",
+      "after": "Explore through native bounded delegation with a bounded brief and the operator-selected model and effort. Each delegate returns file pointers, conventions, test commands, and entry points. No inlined dumps."
+    },
+    {
+      "file": "playbooks/autopilot-stack.md",
+      "before": "the `deslop` skill from the `cursor-team-kit` plugin (`/deslop`)",
+      "after": "the available local cleanup check"
+    },
+    {
+      "file": "playbooks/autopilot-full.md",
+      "before": "the `deslop` skill from the `cursor-team-kit` plugin (`/deslop`)",
+      "after": "the available local cleanup check"
+    },
+    {
+      "file": "playbooks/shipping.md",
+      "before": "One subagent per PR, not batched, each a Cursor cloud agent, each exercising the real surface (`control-ui` or `control-cli` from `cursor-team-kit` as the change demands)",
+      "after": "One native bounded delegate per PR, not batched, each exercising the real surface through the target project's native UI or CLI verification surface as the change demands"
+    },
+    {
+      "file": "playbooks/shipping.md",
+      "before": "Hold the watch under `/loop` in dynamic mode.",
+      "after": "Hold the watch under an explicitly requested Codex heartbeat in dynamic mode."
+    },
+    {
+      "file": "playbooks/eval.md",
+      "before": "Do not glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.",
+      "after": "Do not glob across unrelated task or workspace transcript roots. That crosses workspace boundaries and reads private chats from unrelated projects."
+    }
+  ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",
   "source_sha256": "b3c505602b82fb3641a3983e9c46fb974881faa12ece1af804fae27afb7be532"
 }

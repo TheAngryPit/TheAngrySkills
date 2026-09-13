@@ -7,35 +7,39 @@
       "published_name": "cursor-create-verification-skill",
       "source_path": "pstack/skills/create-verification-skill/SKILL.md"
     },
-    "preserved_semantics": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
+    "preserved_semantics": "Generate a project-local verification skill that drives the real user surface, records observable evidence, and hands maintenance to a verification loop.",
     "native_mapping": {
       "capabilities": [
         "repository reader",
-        "local verification runner",
+        "native verification runner",
         "evidence collector"
       ],
       "required_tools": [
         "repository reader",
-        "local verification runner",
+        "native verification runner",
         "evidence collector"
       ],
-      "fallback": "Missing harness or broken startup preserves the source and fails verification.",
-      "availability": "not_proven_in_current_codex_session"
+      "project_local_skill_root": ".agents/skills/verify-<app>/",
+      "fallback": "Missing harness, broken startup, or unavailable native surface preserves the source and returns a blocked verification result.",
+      "availability": "fixture_proven_adapter; live target application not supplied",
+      "routing_authority": "proof-orchestrator selects the proof path; model-capability-router remains the standing model authority"
     },
     "external_dependencies": [
-      "application runtime or supplied harness"
+      "target application runtime or supplied harness",
+      "project-local .agents/skills destination"
     ],
     "permission_gates": [
-      "Write only to an explicit project-local destination; do not kill processes or drive outside scope.",
+      "Write only to an explicit project-local .agents/skills/verify-<app>/ destination; never write a global skill from this flow.",
+      "Run the generated instructions only against an instance started by the verification run, and never kill by process name.",
       "Missing harness or broken startup preserves the source and fails verification.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Do not publish, open a PR, or mutate product code as part of generation without separate explicit authorization."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-create-verification-skill: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-create-verification-skill: Missing harness or broken startup preserves the source and fails verification.",
-      "error": "Error fixture for cursor-create-verification-skill: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Fixture renders a Codex-native project-local destination and preserves the generated evidence path.",
+      "missing_tool_or_input": "Fixture with no native verification harness returns blocked and performs no write outside the requested project-local destination.",
+      "error": "Malformed destination or failed startup is reported explicitly and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_until_live_behavior_and_permission_proof",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -48,12 +52,153 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nWrite only to an explicit project-local destination; do not kill processes or drive outside scope. Required native capabilities: repository reader, local verification runner, evidence collector. External dependencies remain explicit: application runtime or supplied harness. Missing harness or broken startup preserves the source and fails verification. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation boundary\n\nThis mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The example harness commands in the feature-map references are upstream examples and must be replaced by concrete commands observed in the target repository before a generated skill is used.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate into a temporary project-local fixture and exercise positive, unavailable-harness, and malformed-input outcomes.",
+  "reason": "The adapter changes the generated destination and tool boundary while leaving the pinned upstream source unchanged.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "a project-local skill (`.cursor/skills/verify-<app>/`)",
+      "after": "a project-local skill (`.agents/skills/verify-<app>/`)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Write `.cursor/skills/verify-<app>/SKILL.md`",
+      "after": "Write `.agents/skills/verify-<app>/SKILL.md`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Create `.cursor/skills/verify-<app>/features/README.md`",
+      "after": "Create `.agents/skills/verify-<app>/features/README.md`"
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Put `control-notes` and the `notes` CLI on `PATH`.",
+      "after": "- Provide the target project's native browser/CLI harness and the `notes` CLI on `PATH`."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run `control-notes doctor` and require the expected URL, data directory, and build revision.",
+      "after": "- Run the target project's native read-only doctor check and require the expected URL, data directory, and build revision."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run browser actions through `control-notes browser`.",
+      "after": "- Run browser actions through the target project's native browser harness."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run terminal actions through `control-notes cli -- <command>`.",
+      "after": "- Run terminal actions through the target project's native CLI harness."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "## Driving it with control-notes",
+      "after": "## Driving it with the target project's native harness"
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "- `control-notes doctor` reports the expected URL and disposable data directory.",
+      "after": "- The native harness doctor reports the expected URL and disposable data directory."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"New note\"`.",
+      "after": "Run the native browser harness with `click --role button --name \"New note\"`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser fill --role textbox --name \"Title\" --value \"Release checklist\"` and `control-notes browser fill --role textbox --name \"Body\" --value \"Tag and publish\"`.",
+      "after": "Run the native browser harness with `fill --role textbox --name \"Title\" --value \"Release checklist\"` and `fill --role textbox --name \"Body\" --value \"Tag and publish\"`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"Save note\"`.",
+      "after": "Run the native browser harness with `click --role button --name \"Save note\"`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role link --name \"All notes\"` and `control-notes browser click --role link --name \"Release checklist\"`.",
+      "after": "Run the native browser harness with `click --role link --name \"All notes\"` and `click --role link --name \"Release checklist\"`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"New note\"`, `control-notes browser fill --role textbox --name \"Title\" --value \"Discard me\"`, and `control-notes browser click --role button --name \"Cancel\"`.",
+      "after": "Run the native browser harness with `click --role button --name \"New note\"`, `fill --role textbox --name \"Title\" --value \"Discard me\"`, and `click --role button --name \"Cancel\"`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes cli -- notes create --title \"CLI note\" --body \"Created from terminal\" --format json`.",
+      "after": "Run the native CLI harness with `notes create --title \"CLI note\" --body \"Created from terminal\" --format json`."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser snapshot --aria --path artifacts/create-note/list.aria.txt` and `control-notes browser screenshot --path artifacts/create-note/list.png`.",
+      "after": "Run the native browser harness with `snapshot --aria --path artifacts/create-note/list.aria.txt` and `screenshot --path artifacts/create-note/list.png`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "## Driving it with control-notes",
+      "after": "## Driving it with the target project's native harness"
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "- `control-notes doctor` reports the expected URL and data directory.",
+      "after": "- The native harness doctor reports the expected URL and data directory."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role button --name \"Search\"`.",
+      "after": "Run the native browser harness with `click --role button --name \"Search\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser press --key \"/\"`.",
+      "after": "Run the native browser harness with `press --key \"/\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"quarterly\"`.",
+      "after": "Run the native browser harness with `fill --role searchbox --name \"Search notes\" --value \"quarterly\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"budget\"`.",
+      "after": "Run the native browser harness with `fill --role searchbox --name \"Search notes\" --value \"budget\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role link --name \"Quarterly plan\"`.",
+      "after": "Run the native browser harness with `click --role link --name \"Quarterly plan\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"volcano\"`.",
+      "after": "Run the native browser harness with `fill --role searchbox --name \"Search notes\" --value \"volcano\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role button --name \"Clear search\"`.",
+      "after": "Run the native browser harness with `click --role button --name \"Clear search\"`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes cli -- notes search \"quarterly\" --format json`.",
+      "after": "Run the native CLI harness with `notes search \"quarterly\" --format json`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes cli -- notes search \"volcano\" --format json`.",
+      "after": "Run the native CLI harness with `notes search \"volcano\" --format json`."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser snapshot --aria --path artifacts/search/results.aria.txt` and `control-notes browser screenshot --path artifacts/search/results.png`.",
+      "after": "Run the native browser harness with `snapshot --aria --path artifacts/search/results.aria.txt` and `screenshot --path artifacts/search/results.png`."
+    }
+  ],
   "source_path": "pstack/skills/create-verification-skill/SKILL.md",
   "source_sha256": "644f2551403c1bca01a2855b34611b6e7be0ce0dc5b204514c376c0f6a6e6ac4"
 }

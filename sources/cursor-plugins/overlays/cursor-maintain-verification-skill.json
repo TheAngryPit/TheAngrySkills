@@ -1,10 +1,75 @@
 {
-  "codex_note": "",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-project-local-maintenance",
+    "name_mapping": {
+      "upstream_skill": "maintain-verification-skill",
+      "published_name": "cursor-maintain-verification-skill",
+      "source_path": "pstack/skills/maintain-verification-skill/SKILL.md"
+    },
+    "preserved_semantics": "Maintain every project-local verification skill feature map through source reconciliation, a coordinator-owned live pass, explicit outcomes, and surviving evidence.",
+    "native_mapping": {
+      "capabilities": [
+        "repository reader",
+        "native bounded delegation",
+        "native verification runner",
+        "evidence collector"
+      ],
+      "required_tools": [
+        "repository reader",
+        "native verification runner",
+        "evidence collector"
+      ],
+      "optional_tools": [
+        "native bounded delegation"
+      ],
+      "project_local_skill_glob": ".agents/skills/verify-*/",
+      "fallback": "Without native bounded delegation, read source entries sequentially and preserve the same return shape. Without a live verification surface, return blocked with the attempted route and prerequisite.",
+      "availability": "fixture_proven adapter; live target application not supplied",
+      "routing_authority": "proof-orchestrator selects the proof path; model-capability-router remains the standing model authority"
+    },
+    "external_dependencies": [
+      "project-local .agents/skills/verify-* target",
+      "target application runtime or supplied harness",
+      "native bounded delegation when available"
+    ],
+    "permission_gates": [
+      "Edit only the selected verification skill's own project-local directory under .agents/skills/verify-*.",
+      "Never edit product code, global skills, the mirror source, or the marketplace from this maintenance flow.",
+      "The coordinator owns all live driving and health checks; delegates are read-only source readers.",
+      "Do not open, publish, or merge a PR without separate explicit authorization; run notes remain scratch evidence.",
+      "Missing target, live surface, or prerequisite returns blocked and preserves the target."
+    ],
+    "behavioral_proof": {
+      "positive": "Fixture selects one project-local verification target, reconciles its feature files, and leaves evidence outside cleanup scope.",
+      "missing_tool_or_input": "Fixture without bounded delegation uses the sequential fallback, and a missing live target returns blocked with no product edit.",
+      "error": "Ambiguous target or failed doctor is reported explicitly and does not broaden the edit scope."
+    },
+    "promotion_status": "held_until_live_behavior_and_permission_proof",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation boundary\n\nThis mirror maintains only the explicitly selected project-local verification skill under `.agents/skills/verify-*/`. The coordinator owns the live pass and proof-orchestrator selects its proof level. Source readers may use native bounded delegation when exposed, but the sequential fallback is valid and must preserve the same return shape. A missing or unhealthy target is `blocked` with the attempted route and prerequisite. The maintenance flow never edits product code or global skills, and it never opens, publishes, or merges a PR without separate authorization.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate into a temporary project-local fixture and exercise target selection, sequential fallback, and scope/error outcomes.",
+  "reason": "The adapter changes the project-local target path and delegation boundary while leaving the pinned upstream source unchanged.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "usually `.cursor/skills/verify-*/`",
+      "after": "usually `.agents/skills/verify-*/`"
+    }
+  ],
   "source_path": "pstack/skills/maintain-verification-skill/SKILL.md",
   "source_sha256": "515c0eaa054b3f6be1b1fb06f2c2f173c80fddb58bbcac57576f89c479bc68e8"
 }

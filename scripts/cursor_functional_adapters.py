@@ -480,8 +480,8 @@ def run_bug_fix_playbook_fixture(
             },
             "after": {"status": "NOT_RUN"},
             "playbook_step_scope": {
-                "exercised": BUG_FIX_EXERCISED_STEPS,
-                "unexercised": BUG_FIX_UNEXERCISED_STEPS,
+                "exercised": (1,),
+                "unexercised": (2, 3, 4, 5, 6),
             },
             "evidence_scope": ("exit_code", "stdout", "stderr"),
             "environment": "local-notes-bug-fix-fixture",

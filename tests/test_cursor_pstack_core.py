@@ -452,7 +452,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertEqual(result["after"]["status"], "NOT_RUN")
             self.assertEqual(
                 result["playbook_step_scope"],
-                {"exercised": (1, 4), "unexercised": (2, 3, 5, 6)},
+                {"exercised": (1,), "unexercised": (2, 3, 4, 5, 6)},
             )
             self.assertEqual(app.read_text(), wrong_failure_app)
 

@@ -109,6 +109,21 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(invalid.returncode, 0)
         self.assertIn("unreviewed plugin-level support dependency", invalid.stderr)
 
+    def test_thermos_bundles_two_distinct_review_lenses(self):
+        preview = self.root / "thermos-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        root = preview / "cursor-thermos"
+        skill = (root / "SKILL.md").read_text()
+        bug = (root / "references/bug-security-reviewer.md").read_text()
+        quality = (root / "references/code-quality-reviewer.md").read_text()
+        self.assertIn("bug/security role", skill)
+        self.assertIn("code-quality role", skill)
+        self.assertIn("cursor-thermo-nuclear-review", bug)
+        self.assertIn("cursor-thermos-thermo-nuclear-code-quality-review", quality)
+        self.assertIn("only added/modified code", bug)
+        self.assertIn("code-judo / 1k-line / spaghetti rules", quality)
+
     def test_untracked_snapshot_symlink_is_rejected(self):
         skill_dir = self.root / "sources/cursor-plugins/snapshot/cli-for-agent/skills/cli-for-agents"
         (skill_dir / "external").symlink_to(self.root, target_is_directory=True)

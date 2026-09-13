@@ -10,28 +10,32 @@
     "preserved_semantics": "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits.",
     "native_mapping": {
       "capabilities": [
-        "two distinct bounded reviewers",
-        "local diff reader"
+        "two independent native read-only reviewers",
+        "local diff/file reader",
+        "coordinator synthesis"
       ],
       "required_tools": [
-        "two distinct bounded reviewers",
-        "local diff reader"
+        "two native bounded reviewers",
+        "local diff/file reader"
       ],
-      "fallback": "Reviewer error yields incomplete synthesis and no mutation.",
+      "fallback": "If only one reviewer completes, report a partial single-lens review; do not claim a Thermos double review.",
       "availability": "not_proven_in_current_codex_session"
     },
     "external_dependencies": [
-      "native parallel delegates if exposed"
+      "native parallel reviewers",
+      "pinned bug/security and code-quality role references",
+      "cursor-thermo-nuclear-review and cursor-thermos-thermo-nuclear-code-quality-review rubric skills"
     ],
     "permission_gates": [
-      "Keep bug/security and code-quality lenses distinct; sequential fallback is labeled.",
-      "Reviewer error yields incomplete synthesis and no mutation.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Keep bug/security and code-quality lenses independent and read-only.",
+      "The coordinator validates findings against changed code and owns synthesis; no reviewer applies edits.",
+      "If a reviewer drops out, report the missing lens and preserve the partial result.",
+      "Respect the operator-selected model/effort and standing model-capability-router."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-thermos: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-thermos: Reviewer error yields incomplete synthesis and no mutation.",
-      "error": "Error fixture for cursor-thermos: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Two independent native reviewers receive the same scoped diff and their pinned distinct rubrics; coordinator deduplicates a combined verdict.",
+      "missing_tool_or_input": "One unavailable reviewer yields a labeled partial result, not a double-review claim.",
+      "error": "Malformed diff or failed reviewer is reported with the missing lens and no workspace mutation."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -46,12 +50,77 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nKeep bug/security and code-quality lenses distinct; sequential fallback is labeled. Required native capabilities: two distinct bounded reviewers, local diff reader. External dependencies remain explicit: native parallel delegates if exposed. Reviewer error yields incomplete synthesis and no mutation. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nPass the same scoped diff to two independent read-only native reviewers in parallel. Give the bug/security reviewer [its pinned role](references/bug-security-reviewer.md) and the code-quality reviewer [its pinned role](references/code-quality-reviewer.md); their full rubrics are `cursor-thermo-nuclear-review` and `cursor-thermos-thermo-nuclear-code-quality-review`. Follow the selected model/effort under `model-capability-router`. The coordinator verifies and synthesizes; if one lens fails, label the result partial.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source and role hashes plus deterministic preview prove packaging; live two-reviewer behavior and synthesis remain to be demonstrated.",
+  "reason": "Bundle both named upstream agent roles and map the parallel double review to native read-only reviewers without collapsing the two lenses.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Run the two thermo review passes as async background subagents in parallel, then synthesize their results.",
+      "after": "Run the two thermo review passes as independent native read-only reviewers in parallel when available, then synthesize their results."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Launch both subagents in the same message with `run_in_background: true`:\n   - `subagent_type: \"thermo-nuclear-review-subagent\"` for bugs, breakages, security, devex regressions, feature-flag leaks, and other branch-audit risks.\n   - `subagent_type: \"thermo-nuclear-code-quality-review-subagent\"` for maintainability, structure, file-size growth, spaghetti, abstractions, and codebase-health risks.",
+      "after": "Launch both native reviewers in parallel when available:\n   - Give one the [bug/security role](references/bug-security-reviewer.md) and `cursor-thermo-nuclear-review` rubric for bugs, breakages, security, devex regressions, feature-flag leaks, and other branch-audit risks.\n   - Give the other the [code-quality role](references/code-quality-reviewer.md) and `cursor-thermos-thermo-nuclear-code-quality-review` rubric for maintainability, structure, file-size growth, spaghetti, abstractions, and codebase-health risks."
+    }
+  ],
   "source_path": "thermos/skills/thermos/SKILL.md",
-  "source_sha256": "c272effc404b126d34464e8a1dacec30f6757638db39088ca5afc58dd2c1f472"
+  "source_sha256": "c272effc404b126d34464e8a1dacec30f6757638db39088ca5afc58dd2c1f472",
+  "bundled_support_files": [
+    {
+      "source_path": "thermos/agents/thermo-nuclear-review-subagent.md",
+      "target_path": "references/bug-security-reviewer.md",
+      "replacements": [
+        {
+          "before": "Invoked via Task after a parent gathers diff and file contents. Loads rubric from the thermo-nuclear-review skill in the Thermos plugin.",
+          "after": "Used as a bounded native reviewer role after the coordinator gathers diff and file contents. Loads the mirrored cursor-thermo-nuclear-review rubric."
+        },
+        {
+          "before": "You are a **Task subagent**.",
+          "after": "You are a **native Codex read-only reviewer**."
+        },
+        {
+          "before": "the `thermo-nuclear-review` skill (shipped in the Thermos plugin)",
+          "after": "the `cursor-thermo-nuclear-review` skill"
+        },
+        {
+          "before": "in **one** message, run two `Task` calls in parallel — `subagent_type: \"shell\"` and `subagent_type: \"explore\"`",
+          "after": "in parallel when available, use native read-only shell and exploration capabilities"
+        },
+        {
+          "before": "with `subagent_type: \"thermo-nuclear-review-subagent\"`",
+          "after": "with this pinned bug/security role"
+        }
+      ]
+    },
+    {
+      "source_path": "thermos/agents/thermo-nuclear-code-quality-review-subagent.md",
+      "target_path": "references/code-quality-reviewer.md",
+      "replacements": [
+        {
+          "before": "Invoked via Task after a parent gathers diff and file contents. Loads rubric from the thermo-nuclear-code-quality-review skill in the Thermos plugin.",
+          "after": "Used as a bounded native reviewer role after the coordinator gathers diff and file contents. Loads the mirrored cursor-thermos-thermo-nuclear-code-quality-review rubric."
+        },
+        {
+          "before": "You are a **Task subagent**.",
+          "after": "You are a **native Codex read-only reviewer**."
+        },
+        {
+          "before": "the `thermo-nuclear-code-quality-review` skill (shipped in the Thermos plugin)",
+          "after": "the `cursor-thermos-thermo-nuclear-code-quality-review` skill"
+        },
+        {
+          "before": "in **one** message, run two `Task` calls in parallel — `subagent_type: \"shell\"` and `subagent_type: \"explore\"`",
+          "after": "in parallel when available, use native read-only shell and exploration capabilities"
+        },
+        {
+          "before": "with `subagent_type: \"thermo-nuclear-code-quality-review-subagent\"`",
+          "after": "with this pinned code-quality role"
+        }
+      ]
+    }
+  ]
 }

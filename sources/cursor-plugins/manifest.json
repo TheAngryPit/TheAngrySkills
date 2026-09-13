@@ -2414,6 +2414,12 @@
         "cursor-continual-learning",
         "cursor-ralph-loop"
       ]
+    },
+    "scripts/cursor_plugin_submission_audit.py": {
+      "sha256": "664fb03dcc98385c7b8e91635cd4682597e196532c7e32664d45fae66d8794df",
+      "related_skills": [
+        "cursor-review-plugin-submission"
+      ]
     }
   }
 }

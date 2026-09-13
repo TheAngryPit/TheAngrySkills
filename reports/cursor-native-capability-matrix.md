@@ -1,6 +1,6 @@
 # Cursor → Codex capability proof matrix
 
-State at PR #64 head `c46ffb23` on 2026-09-13. A source hash or rendered
+State of PR #64 on 2026-09-13. A source hash or rendered
 instruction is provenance, not execution proof. `held` means the skill is in
 the 88-skill active inventory but outside the published skill catalog.
 
@@ -15,8 +15,10 @@ the 88-skill active inventory but outside the published skill catalog.
 | Advisor | Held preview bundles pinned role and native adapter. Synthetic payload tests cover known `apply_patch` marker, expected agent/verdict, one-time nudge, and explicit task-bound enable/status/expect/disable without default model. | No live read-only advisor consult or proved ordering for expected ID versus `SubagentStop`; shell/MCP/out-of-band edits are not sensed. |
 | Continual learning | Held preview bundles pinned updater role and native adapter. Synthetic Stop tests cover threshold, transcript root/mtime, duplicate turn; a bounded synthetic updater pass changed only fixture AGENTS/index and its second unchanged-mtime pass was a no-op. | No real transcript, trusted hook, automatic update, or global memory write proof. |
 | Agent compatibility | Held preview repairs pinned invalid YAML description and bundles four named reviewer roles; strict frontmatter audit has zero errors. | Published `agent-compatibility` scanner is not installed locally. Package/version/installation/egress review and real scanner, startup, validation, docs checks are absent; no combined score is claimed. |
+| Cursor plugin submission audit | Held preview bundles a hash-checked read-only structural auditor. Synthetic fixtures check manifest JSON, bounded component paths, frontmatter field presence, README, and passive hook/MCP detection. | Full YAML validity, marketplace source/name uniqueness, documentation quality, runtime behavior, and submission policy remain unproven. Source `needs_human_review` finding and `security_hold_*` promotion status remain intact; no recommendation to publish. |
 | External service, cloud, hooks/MCP, and unsafe install surfaces | Manifest and per-skill overlays retain contextual scanner findings for xAI voice requests, Cursor SDK credential/MCP references, orchestrate scripts/Slack, create-plugin hooks/MCP, make-bot-ui install, and pstack scripts. | Held until each named service, secret, permission, side effect, and native host capability is reviewed and exercised. No global install, cloud task, secret submission, hook trust, or merge was performed. |
 
-Validation for the state above: `pytest -q tests` passed 144 tests and 2
+Validation for the state above: `pytest -q tests` passed 150 tests and 2
 subtests; `sync-cursor-plugin-skills.py --check` and `git diff --check origin/main`
-passed. GitHub `Validate skill stack` passed on `c46ffb23`.
+passed. GitHub `Validate skill stack` passed on `d502296d`; the new audit fixture
+has not yet reached CI.

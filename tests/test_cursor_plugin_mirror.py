@@ -67,6 +67,48 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("snapshot file drift", result.stderr)
 
+    def test_plugin_level_agent_is_pinned_and_transitively_mapped(self):
+        manifest = json.loads((self.root / "sources/cursor-plugins/manifest.json").read_text())
+        support = manifest["support_files"]
+        self.assertEqual(len(support), 27)
+        self.assertIn(
+            "cursor-no-comments",
+            support["pstack/agents/comment-sicko.md"]["related_skills"],
+        )
+        self.assertIn(
+            "cursor-poteto-mode",
+            support["pstack/agents/poteto-agent.md"]["related_skills"],
+        )
+        self.assertIn(
+            "cursor-continual-learning",
+            support["continual-learning/hooks/continual-learning-stop.ts"]["related_skills"],
+        )
+
+    def test_plugin_level_support_drift_is_rejected(self):
+        agent = self.root / "sources/cursor-plugins/snapshot/pstack/agents/comment-sicko.md"
+        agent.write_text(agent.read_text() + "\nChanged outside a skill directory.\n")
+        result = self.run_build("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("plugin-level support inventory or hash drift", result.stderr)
+
+    def test_named_agent_is_bundled_for_its_skill_only(self):
+        preview = self.root / "candidate-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        skill = (preview / "cursor-no-comments/SKILL.md").read_text()
+        agent = (preview / "cursor-no-comments/references/comment-sicko-agent.md").read_text()
+        self.assertIn("references/comment-sicko-agent.md", skill)
+        self.assertIn("cursor-how", agent)
+        self.assertNotIn("`Task`", skill)
+
+        overlay = self.root / "sources/cursor-plugins/overlays/cursor-no-comments.json"
+        data = json.loads(overlay.read_text())
+        data["bundled_support_files"][0]["source_path"] = "pstack/agents/poteto-agent.md"
+        overlay.write_text(json.dumps(data, indent=2) + "\n")
+        invalid = self.run_build("--preview-candidates", str(self.root / "invalid-preview"))
+        self.assertNotEqual(invalid.returncode, 0)
+        self.assertIn("unreviewed plugin-level support dependency", invalid.stderr)
+
     def test_untracked_snapshot_symlink_is_rejected(self):
         skill_dir = self.root / "sources/cursor-plugins/snapshot/cli-for-agent/skills/cli-for-agents"
         (skill_dir / "external").symlink_to(self.root, target_is_directory=True)

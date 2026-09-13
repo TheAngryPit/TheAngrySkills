@@ -2173,7 +2173,236 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     }
   ],
-  "snapshot_scope": "91 physical SKILL.md files and the 169 supporting files inside their skill directories; nearest ancestor license evidence only",
+  "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3",
-  "upstream_repository": "https://github.com/cursor/plugins.git"
+  "upstream_repository": "https://github.com/cursor/plugins.git",
+  "support_files": {
+    "advisor/agents/advisor-subagent.md": {
+      "sha256": "50debf8b5848c7e9f43c84985631445e554e246b52ecf83d6691bfa79643878e",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/capture-response.sh": {
+      "sha256": "51c249434fbd19fd198fba05a99b6b2637f34877a5bd43adc62b3ecd8f71440a",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/hooks.json": {
+      "sha256": "353d83923e0056f62648c76256d85935fc080ceb2b34d153f13b6cb9356eea49",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/lib.sh": {
+      "sha256": "1ca60db14f4693d75768372ca64f74456591227ba7a39474e5a20960427b8cbe",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/mark-pending.sh": {
+      "sha256": "61096abd683fb13b645a8c038fd05f11bf6f0bab77a9c15cd5ede9cbe7bb18fd",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/record-consult.sh": {
+      "sha256": "ca937ec0a3ab9d97998c18432da11a09c3a6cb720072dacb00b66851e3ccee3e",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/stop-hook.sh": {
+      "sha256": "563efd736a5b5a2dc1cadbbd64caefc9f30133d49d02b5312c9e4ea0fc2636bf",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "agent-compatibility/agents/compatibility-scan-review.md": {
+      "sha256": "4ce59d99d3d882b8768abec5ff839dfe7ec055218507b49e8b89b76c94b40693",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/docs-reliability-review.md": {
+      "sha256": "a0bb33ebc679b0ee0030580924c9d9915632af5e6fb41f6066346f2b688d48e8",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/startup-review.md": {
+      "sha256": "4e713f4dac1997febf48c1a5bdab96e2a4454f7062fed3a0e1142b8d4cfefd36",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/validation-review.md": {
+      "sha256": "38612d157dfd443955f2541248bf4b19fae1f50ee7e9fca0ab53c2f7060ce5cd",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "continual-learning/agents/agents-memory-updater.md": {
+      "sha256": "93dfb244f173e2240d8d6bffe4870a647d1da27d402b8de83197e3e2b471527d",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "continual-learning/hooks/continual-learning-stop.ts": {
+      "sha256": "ad2610f3e3fe10981e9aa80a6be56e1d7ee20a203ec94585b003bd49904dc1e2",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "continual-learning/hooks/hooks.json": {
+      "sha256": "bc26f31a03e0cd4be8f62c58e263117191067df726e7363af5a88084304c7c8c",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "create-plugin/agents/plugin-architect.md": {
+      "sha256": "100e47bdc94ba67f25c99358a211e8cf7de02564f0cf60a7069b0db07f97ed41",
+      "related_skills": [
+        "cursor-create-plugin-scaffold"
+      ],
+      "relationship": "plugin manifest agent/rule dependency; per-skill activation to verify"
+    },
+    "create-plugin/rules/plugin-quality-gates.mdc": {
+      "sha256": "79efb4b9a58f4565609b52df2f61eb83ea677ab5de96932df0b160341676d1e8",
+      "related_skills": [
+        "cursor-create-plugin-scaffold",
+        "cursor-review-plugin-submission"
+      ],
+      "relationship": "plugin manifest agent/rule dependency; per-skill activation to verify"
+    },
+    "cursor-team-kit/agents/ci-watcher.md": {
+      "sha256": "8bc93b9ced5588f0ece54ce52690e9682ac49a7fd64be7124379b0e2e128556e",
+      "related_skills": [
+        "cursor-loop-on-ci"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "cursor-team-kit/agents/thermo-nuclear-code-quality-review.md": {
+      "sha256": "4d15c05be503f9fdb795a292807334558e7619ffc2fd75ddbc9e97e0d6312234",
+      "related_skills": [
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "cursor-team-kit/rules/no-inline-imports.mdc": {
+      "sha256": "91bb4412f2775b386ddf6af0d235fbe8160907f6104c76928470fdf51be69edd",
+      "related_skills": [
+        "cursor-check-compiler-errors",
+        "cursor-control-cli",
+        "cursor-control-ui",
+        "cursor-deslop",
+        "cursor-fix-ci",
+        "cursor-fix-merge-conflicts",
+        "cursor-get-pr-comments",
+        "cursor-loop-on-ci",
+        "cursor-make-pr-easy-to-review",
+        "cursor-new-branch-and-pr",
+        "cursor-cursor-team-kit-pr-review-canvas",
+        "cursor-review-and-ship",
+        "cursor-run-smoke-tests",
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
+        "cursor-verify-this",
+        "cursor-weekly-review",
+        "cursor-what-did-i-get-done",
+        "cursor-workflow-from-chats"
+      ],
+      "relationship": "plugin-wide rule; specific skill activation unproven"
+    },
+    "cursor-team-kit/rules/typescript-exhaustive-switch.mdc": {
+      "sha256": "58214625757c38b73fc3e66a715ea4b2ae609f6b3e285edc4393c5144430a8f4",
+      "related_skills": [
+        "cursor-check-compiler-errors",
+        "cursor-control-cli",
+        "cursor-control-ui",
+        "cursor-deslop",
+        "cursor-fix-ci",
+        "cursor-fix-merge-conflicts",
+        "cursor-get-pr-comments",
+        "cursor-loop-on-ci",
+        "cursor-make-pr-easy-to-review",
+        "cursor-new-branch-and-pr",
+        "cursor-cursor-team-kit-pr-review-canvas",
+        "cursor-review-and-ship",
+        "cursor-run-smoke-tests",
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
+        "cursor-verify-this",
+        "cursor-weekly-review",
+        "cursor-what-did-i-get-done",
+        "cursor-workflow-from-chats"
+      ],
+      "relationship": "plugin-wide rule; specific skill activation unproven"
+    },
+    "pstack/agents/comment-sicko.md": {
+      "sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+      "related_skills": [
+        "cursor-no-comments"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "pstack/agents/poteto-agent.md": {
+      "sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+      "related_skills": [
+        "cursor-poteto-mode"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "ralph-loop/hooks/capture-response.sh": {
+      "sha256": "1ed2e9be8dfad78d1391ef635610b9202e3a9715074c1c23058b0d11dcdb9b1f",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "ralph-loop/hooks/hooks.json": {
+      "sha256": "4170ab91da22869fc1356c0e861f14807c0a935553ced808c96635f0c84d6880",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "ralph-loop/hooks/stop-hook.sh": {
+      "sha256": "4ae2529aa75db7258e6b5ba9e01a8ca888489018199603ae9d6e1434867fdcc0",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "thermos/agents/thermo-nuclear-code-quality-review-subagent.md": {
+      "sha256": "636800f1e5acf501f339779a8867b95d633396930b3356a2b0c9a0018343f02d",
+      "related_skills": [
+        "cursor-thermos"
+      ],
+      "relationship": "named agent dependency; individual review skills related"
+    },
+    "thermos/agents/thermo-nuclear-review-subagent.md": {
+      "sha256": "9dfa8ed88d1ea5d775edb5557b8a8ecfa9f2977b904c55c902b0ceb648b563d0",
+      "related_skills": [
+        "cursor-thermos"
+      ],
+      "relationship": "named agent dependency; individual review skills related"
+    }
+  }
 }

@@ -102,6 +102,27 @@ def verify_snapshot(manifest: dict) -> None:
         license_path = entry.get("license_path")
         if license_path and sha(SOURCE / safe_relative(license_path)) != entry["license_sha256"]:
             raise ValueError(f"license drift: {license_path}")
+    support = manifest.get("support_files")
+    if not isinstance(support, dict):
+        raise ValueError("missing plugin-level support ledger")
+    skill_families = {entry["published_name"]: entry["family"] for entry in entries}
+    expected_support = {}
+    for path, record in support.items():
+        rel = safe_relative(path)
+        if len(rel.parts) < 3 or rel.parts[1] not in {"agents", "hooks", "rules"}:
+            raise ValueError(f"invalid plugin-level support path: {path}")
+        related = record.get("related_skills")
+        if (not isinstance(related, list) or not related
+                or any(skill_families.get(name) != rel.parts[0] for name in related)):
+            raise ValueError(f"invalid plugin-level support relationship: {path}")
+        expected_support[path] = record["sha256"]
+    actual_support = {}
+    for path in files(SOURCE):
+        rel = path.relative_to(SOURCE)
+        if len(rel.parts) >= 3 and rel.parts[1] in {"agents", "hooks", "rules"}:
+            actual_support[rel.as_posix()] = sha(path)
+    if actual_support != expected_support:
+        raise ValueError("plugin-level support inventory or hash drift")
 
 
 def replace_exact(text: str, before: str, after: str, owner: str) -> str:
@@ -187,6 +208,23 @@ def render_skill(entry: dict, staging: Path, commit: str,
         contents = target_file.read_text()
         contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
         target_file.write_text(contents)
+    support_ledger = load(LEDGER).get("support_files", {})
+    for bundle in overlay.get("bundled_support_files", []):
+        source_rel = safe_relative(bundle["source_path"])
+        output_rel = safe_relative(bundle["target_path"])
+        record = support_ledger.get(source_rel.as_posix())
+        if not record or name not in record["related_skills"]:
+            raise ValueError(f"unreviewed plugin-level support dependency: {name}/{source_rel}")
+        output = target / output_rel
+        if output.exists():
+            raise ValueError(f"plugin-level support output collision: {name}/{output_rel}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(SOURCE / source_rel, output)
+        for op in bundle.get("replacements", []):
+            output.write_text(replace_exact(
+                output.read_text(), op["before"], op["after"],
+                f"{name}/{output_rel}",
+            ))
     text = skill_file.read_text()
     marker = SKILL_PATTERN.match(text)
     normalized = normalize_description(marker.group(1))
@@ -199,6 +237,8 @@ def render_skill(entry: dict, staging: Path, commit: str,
         if output_file.suffix.lower() not in {".md", ".mdx"}:
             continue
         source_file = source_dir / output_file.relative_to(target)
+        if not source_file.is_file():
+            continue
         original = output_file.read_text()
         rewritten = rewrite_sibling_links(source_file, output_file, original, source_to_entry, staging, commit)
         if rewritten != original:

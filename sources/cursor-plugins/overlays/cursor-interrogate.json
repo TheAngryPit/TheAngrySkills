@@ -10,28 +10,29 @@
     "preserved_semantics": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
     "native_mapping": {
       "capabilities": [
-        "bounded independent reviewers",
-        "local diff reader"
+        "bounded read-only reviewers",
+        "diff and file read",
+        "independent synthesis"
       ],
       "required_tools": [
-        "bounded independent reviewers",
-        "local diff reader"
+        "native Codex subagents when delegated review is authorized",
+        "local Git and file read"
       ],
-      "fallback": "A missing reviewer is recorded and cannot become a clean result.",
+      "fallback": "If fewer reviewers are available, report actual coverage and do not claim multi-model consensus.",
       "availability": "not_proven_in_current_codex_session"
     },
     "external_dependencies": [
-      "native parallel delegates if exposed"
+      "native subagent availability and operator-selected models"
     ],
     "permission_gates": [
-      "Keep intent, findings, rubric, and synthesis separate; do not mutate code.",
-      "A missing reviewer is recorded and cannot become a clean result.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Respect explicit model selection and the standing model-capability-router.",
+      "Keep reviewer assignments read-only and prevent automatic edits.",
+      "Do not create a repair PR solely because a model name is unavailable."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-interrogate: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-interrogate: A missing reviewer is recorded and cannot become a clean result.",
-      "error": "Error fixture for cursor-interrogate: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Fixture with two independent read-only reviewers on the same diff and a deduplicated verdict.",
+      "missing_tool_or_input": "Unavailable models or reviewers are recorded as missing; no fabricated consensus.",
+      "error": "A failed reviewer or inaccessible diff produces an explicit gap and no auto-applied patch."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -43,15 +44,46 @@
     "security_review": {
       "scanner_verdict": "safe_docs_only",
       "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "decision": "Pinned source reviewed; native adapter does not waive the source findings."
     }
   },
-  "codex_note": "## Codex adaptation\n\nKeep intent, findings, rubric, and synthesis separate; do not mutate code. Required native capabilities: bounded independent reviewers, local diff reader. External dependencies remain explicit: native parallel delegates if exposed. A missing reviewer is recorded and cannot become a clean result. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
-  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "codex_note": "## Codex runtime mapping\n\nUse the native Codex subagent capability for independent read-only reviewers only when delegation is authorized. Follow the standing `model-capability-router` and the operator-selected model/effort; do not force the Cursor default model table. Record actual reviewer models and unavailable slots. Keep the source rubric, lead judgment, and no-auto-apply contract.\n",
+  "codex_rule": "Preserve independent review and source rubric while respecting native model, scope and permissions.",
   "preserved_requirement": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic build are static provenance only; native multi-review behavior remains to be demonstrated.",
+  "reason": "Replace Cursor Task and model config with native bounded reviewers while retaining the adversarial judgment workflow.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Launch all reviewers in a single message using the Task tool. Use the `interrogate reviewers` list from `~/.cursor/rules/pstack-models.mdc` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count. Otherwise use the table defaults.",
+      "after": "Launch independent read-only reviewers through native Codex subagents when authorized. Use the actual available reviewers under the standing `model-capability-router` and the operator-selected model/effort; extend or shrink Reviewer A/B/C/D labels to match. Record unavailable reviewer slots."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "| Subagent | Default model |\n|----------|---------------|\n| Reviewer A | `claude-fable-5-1-thinking-max` |\n| Reviewer B | `gpt-5.6-sol-max` |\n| Reviewer C | `grok-4.6-fast-xhigh` |\n| Reviewer D | `claude-opus-5-thinking-xhigh` |",
+      "after": "| Reviewer | Native Codex model |\n|----------|--------------------|\n| A/B/C/D as available | The actual selected or available model and effort, recorded in the result |"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "- `subagent_type`: `generalPurpose`\n- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line\n- `readonly`: `true`",
+      "after": "- Assign a bounded review responsibility to each native subagent.\n- Use a genuinely read-only role or instructions and verify no reviewer modified the workspace.\n- Use native model selection only as allowed by the standing router and operator."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "If a model slug is rejected as unresolvable when you try to spawn the subagent, check the valid slugs in the Task tool's error message, pick the closest equivalent (prefer the highest-reasoning tier of the same family), spawn with the valid slug, and open a separate PR to update the configured value or default table. Do not block the review on the slug issue. If the configured value is `inherit-parent` or `auto`, omit `model` instead. Never treat those aliases as broken slugs or enter this fallback for them.",
+      "after": "If a requested model is unavailable, record that reviewer as unavailable. Continue with authorized available reviewers only when the proof bar can still be met. Do not silently substitute a model or create a repair PR."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Identify consensus**. Findings raised by 2+ models independently are highest signal.",
+      "after": "**Identify consensus**. Findings raised independently by 2+ actual reviewers are high signal; describe model diversity only when it was actually present."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Identify lone-model findings**. Still worth reading, but weight accordingly.",
+      "after": "**Identify single-reviewer findings**. Still worth reading, but weight accordingly."
+    }
+  ],
   "source_path": "pstack/skills/interrogate/SKILL.md",
   "source_sha256": "2867910309e81411123ae4edca68ffca5795e66521d3f3bc0876f6213b542fb9"
 }

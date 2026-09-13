@@ -12,7 +12,10 @@ trace, prewritten correction, local Git history, and PR simulation.
 `check-plan.mjs` ran on temporary plans; `worktree-audit.sh` ran with mocked
 external commands. Bun exercised dependency-free `orch/store.ts` operations
 and `watch-pr/github.ts` command wiring in scratch with mocked `git`/`gh`;
-neither CLI entrypoint or bootstrap ran. Advisor/Ralph/continual-learning
+the exact lock dependencies then installed in scratch, and a fresh bootstrap
+installed/restarted from the populated cache. Both CLI entrypoints ran against
+scratch state and mocks; 52 bundled tests and strict typecheck passed. Real
+GitHub access and live product behavior remain unproven. Advisor/Ralph/continual-learning
 have inactive synthetic native hook adapters. Four agent-compatibility reviewer
 roles are bundled in a held preview, whose previously invalid frontmatter now
 parses. Held submission-audit and scaffold previews have bounded static fixtures
@@ -20,7 +23,7 @@ for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
 disposable-destination generation; their security holds are retained.
 `pytest -q tests` passed 161 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI last passed on
-`ad8b99f8`; the new integration head awaits publication and CI.
+`4782016a`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

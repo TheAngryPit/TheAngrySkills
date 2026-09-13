@@ -83,7 +83,7 @@ class CursorPstackCoreTests(unittest.TestCase):
                 )
                 self.assertEqual(
                     contract["native_mapping"]["upstream_agent_dependency"]["status"],
-                    "present_in_pinned_upstream_clone_not_vendored_in_skills_snapshot",
+                    "bundled_as_native_role_reference",
                 )
 
     def test_poteto_renders_all_playbooks_with_native_markdown_boundary(self):
@@ -99,6 +99,10 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertTrue((target / "scripts/package.json").is_file())
             self.assertTrue((target / "scripts/orch/orch.ts").is_file())
             self.assertTrue((target / "scripts/watch-pr/watch-pr").is_file())
+            delegate_role = target / "references/poteto-agent.md"
+            self.assertTrue(delegate_role.is_file())
+            self.assertIn("cursor-poteto-mode", delegate_role.read_text())
+            self.assertIn("cursor-principle-*", delegate_role.read_text())
 
             skill_markdown = (target / "SKILL.md").read_text()
             self.assertIn("per-turn native Codex guidance adapter", skill_markdown)

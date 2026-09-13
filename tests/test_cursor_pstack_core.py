@@ -11,7 +11,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 from cursor_functional_adapters import (  # noqa: E402
+    AdapterError,
     PSTACK_PLAYBOOK_FILES,
+    apply_pstack_playbook,
+    run_verification_fixture,
     select_verification_target,
 )
 _SYNC_SPEC = importlib.util.spec_from_file_location(
@@ -124,6 +127,31 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertIn("name: cursor-poteto-mode", frontmatter)
             self.assertNotIn("mode: true", frontmatter)
 
+            applied = apply_pstack_playbook(target / "playbooks", "bug-fix")
+            self.assertEqual(applied["status"], "APPLIED")
+            self.assertEqual(applied["playbook"], "bug-fix")
+            self.assertTrue(applied["steps"])
+            self.assertEqual(applied["environment"], "isolated-read-only-fixture")
+            self.assertFalse(applied["external_writes"])
+
+            missing_root = Path(temporary) / "missing-playbooks"
+            missing = apply_pstack_playbook(missing_root, "bug-fix")
+            self.assertEqual(missing["status"], "FALLBACK")
+            missing_capability = apply_pstack_playbook(
+                target / "playbooks",
+                "bug-fix",
+                required_capabilities=("native bounded delegation",),
+            )
+            self.assertEqual(missing_capability["status"], "FALLBACK")
+            self.assertEqual(missing_capability["missing"], ("native bounded delegation",))
+            empty_root = Path(temporary) / "empty-playbooks"
+            empty_root.mkdir()
+            (empty_root / "bug-fix.md").write_text("")
+            malformed = apply_pstack_playbook(empty_root, "bug-fix")
+            self.assertEqual(malformed["status"], "ERROR")
+            with self.assertRaises(AdapterError):
+                apply_pstack_playbook(target / "playbooks", "not-a-playbook")
+
     def test_verification_mirrors_use_agents_root_and_native_harness_language(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary) / "staging"
@@ -163,6 +191,53 @@ class CursorPstackCoreTests(unittest.TestCase):
             )["status"],
             "BLOCKED",
         )
+
+    def test_verification_fixture_creates_reconciles_and_conducts_isolated_project(self):
+        features = {
+            "create-note": "Create a note and record the evidence.",
+            "search": "Search notes and record the evidence.",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            verified = run_verification_fixture(
+                root,
+                "notes",
+                features,
+                app_available=True,
+                observed_features=features,
+            )
+            self.assertEqual(verified["status"], "VERIFIED")
+            self.assertTrue(verified["created_skill"])
+            self.assertEqual(verified["reconciled_features"], tuple(sorted(features)))
+            self.assertEqual(verified["conducted_features"], tuple(sorted(features)))
+            self.assertFalse(verified["product_edits"])
+            self.assertTrue((root / ".agents/skills/verify-notes/SKILL.md").is_file())
+            self.assertTrue((root / ".agents/skills/verify-notes/features/search.md").is_file())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            blocked = run_verification_fixture(
+                temporary,
+                "notes",
+                features,
+                app_available=False,
+            )
+            self.assertEqual(blocked["status"], "BLOCKED")
+            self.assertEqual(blocked["conducted_features"], ())
+            self.assertFalse(blocked["product_edits"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            mismatch = run_verification_fixture(
+                temporary,
+                "notes",
+                features,
+                app_available=True,
+                observed_features={"create-note": "different", "search": features["search"]},
+            )
+            self.assertEqual(mismatch["status"], "ERROR")
+            self.assertEqual(
+                mismatch["reason"],
+                "observed feature results do not match the reconciled map",
+            )
 
 
 if __name__ == "__main__":

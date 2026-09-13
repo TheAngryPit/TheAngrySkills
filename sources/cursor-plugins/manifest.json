@@ -978,7 +978,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex adapter renderer fixture checked; live target application path not demonstrated",
+      "availability": "Codex adapter renderer and isolated verification fixture checked; live target application path not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1000,7 +1000,7 @@
       "published_name": "cursor-create-verification-skill",
       "upstream_purpose": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
       "upstream_skill": "create-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de criação/reconciliação/observação; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -1075,7 +1075,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "Codex adapter renderer and path-state fixtures checked; live target application path not demonstrated",
+      "availability": "Codex adapter renderer, path-state, and isolated verification fixtures checked; live target application path not demonstrated",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "intacta",
@@ -1094,7 +1094,7 @@
       "published_name": "cursor-maintain-verification-skill",
       "upstream_purpose": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
       "upstream_skill": "maintain-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state e criação/reconciliação/observação; teste de comportamento no host Codex"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1141,7 +1141,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex adapter renderer fixture checked; playbook application, native session, cloud task lane, and bundled script behavior not demonstrated",
+      "availability": "Codex adapter renderer and isolated playbook fixture checked; live playbook application, native session, cloud task lane, and bundled script behavior not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1204,7 +1204,7 @@
       "published_name": "cursor-poteto-mode",
       "upstream_purpose": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
       "upstream_skill": "Poteto Mode",
-      "validation_requirement": "frontmatter e referências relativas; all 23 playbooks and references rendered in staging; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; all 23 playbooks and references rendered in staging; fixture de aplicação de playbook com ausência/erro; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
     },
     {
       "availability": "content available; live selection not demonstrated",

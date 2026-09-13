@@ -75,6 +75,20 @@ def _normalized_promise(message: object) -> str | None:
     return " ".join(match.group(1).split()) if match else None
 
 
+def _positive_env(primary: str, legacy: str, fallback: int) -> int:
+    raw = os.environ.get(primary, os.environ.get(legacy, ""))
+    try:
+        value = int(raw)
+        return value if value > 0 else fallback
+    except ValueError:
+        return fallback
+
+
+def _true_env(primary: str, legacy: str) -> bool:
+    raw = os.environ.get(primary, os.environ.get(legacy, ""))
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def ralph_start(project: Path, session_id: str, prompt: str,
                 maximum: int, promise: str | None) -> dict:
     """Arm a task-bound local loop; native project hook trust is still required."""
@@ -278,13 +292,28 @@ def continual_learning_stop(event: dict, project: Path) -> dict:
     if not isinstance(trial, dict):
         raise HookInputError("invalid continual-learning trial settings")
     trial_started = state.get("trial_started_at_ms")
-    if trial.get("enabled") and trial_started is None:
+    trial_enabled = trial.get("enabled") is True or _true_env(
+        "CONTINUAL_LEARNING_TRIAL_MODE", "CONTINUOUS_LEARNING_TRIAL_MODE"
+    )
+    if trial_enabled and trial_started is None:
         trial_started = now
         state["trial_started_at_ms"] = now
-    in_trial = (trial.get("enabled") is True and type(trial_started) is int
-                and now - trial_started < 60_000 * 1440)
-    minimum_turns = 3 if in_trial else 10
-    minimum_minutes = 15 if in_trial else 120
+    trial_duration = _positive_env(
+        "CONTINUAL_LEARNING_TRIAL_DURATION_MINUTES",
+        "CONTINUOUS_LEARNING_TRIAL_DURATION_MINUTES", 1440
+    )
+    in_trial = (trial_enabled and type(trial_started) is int
+                and now - trial_started < 60_000 * trial_duration)
+    minimum_turns = _positive_env(
+        "CONTINUAL_LEARNING_TRIAL_MIN_TURNS" if in_trial else "CONTINUAL_LEARNING_MIN_TURNS",
+        "CONTINUOUS_LEARNING_TRIAL_MIN_TURNS" if in_trial else "CONTINUOUS_LEARNING_MIN_TURNS",
+        3 if in_trial else 10,
+    )
+    minimum_minutes = _positive_env(
+        "CONTINUAL_LEARNING_TRIAL_MIN_MINUTES" if in_trial else "CONTINUAL_LEARNING_MIN_MINUTES",
+        "CONTINUOUS_LEARNING_TRIAL_MIN_MINUTES" if in_trial else "CONTINUOUS_LEARNING_MIN_MINUTES",
+        15 if in_trial else 120,
+    )
     state["last_processed_turn_id"] = turn_id
     state["turns_since_last_run"] = turns + 1
     advanced = transcript_mtime is not None and (

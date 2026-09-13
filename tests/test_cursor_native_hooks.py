@@ -30,10 +30,11 @@ class CursorNativeHookTests(unittest.TestCase):
         path.write_text(json.dumps(data))
         return path
 
-    def call(self, handler, event, project=None):
+    def call(self, handler, event, project=None, env=None):
         result = subprocess.run(
             [sys.executable, str(SCRIPT), handler, "--project", str(project or self.project)],
             input=json.dumps(event), text=True, capture_output=True, check=True,
+            env=os.environ | (env or {}),
         )
         return json.loads(result.stdout)
 
@@ -256,6 +257,28 @@ class CursorNativeHookTests(unittest.TestCase):
         event["turn_id"] = "turn-2"
         self.assertEqual(self.call("continual-learning-stop", event), {})
         self.assertEqual(json.loads(path.read_text())["turns_since_last_run"], 3)
+
+    def test_continual_learning_environment_overrides_and_expired_trial(self):
+        transcripts = self.root / "transcripts"
+        transcripts.mkdir()
+        transcript = transcripts / "task-1.jsonl"
+        transcript.write_text("fixture only\n")
+        path = self.state("continual-learning", {
+            "session_id": "task-1", "enabled": True,
+            "transcript_root": str(transcripts), "turns_since_last_run": 1,
+            "last_run_at_ms": 0, "last_transcript_mtime_ms": None,
+            "trial_started_at_ms": 1,
+        })
+        event = self.stop_event() | {"transcript_path": str(transcript)}
+        env = {
+            "CONTINUAL_LEARNING_TRIAL_MODE": "true",
+            "CONTINUAL_LEARNING_TRIAL_DURATION_MINUTES": "1",
+            "CONTINUAL_LEARNING_MIN_TURNS": "2",
+            "CONTINUAL_LEARNING_MIN_MINUTES": "1",
+        }
+        response = self.call("continual-learning-stop", event, env=env)
+        self.assertEqual(response["decision"], "block")
+        self.assertEqual(json.loads(path.read_text())["turns_since_last_run"], 0)
 
     def test_state_directory_symlink_cannot_redirect_hook_writes(self):
         outside = self.root / "outside-state"

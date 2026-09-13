@@ -96,8 +96,9 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperfr
 
 ### 4. Use or customize my model-routing preset
 
-Install `model-capability-router` for five native profiles: Spark Low, Luna
-XHigh, Luna Max, Astra Medium and Astra XHigh. Choose directly for the task;
+Install `model-capability-router` for this operator's native palette: Sol Medium
+as a separately configured home default, Astra Low/Medium/XHigh, Luna
+High/XHigh/Max, and optional Spark Low. Choose directly for the task;
 there is no mandatory escalation ladder, resolver or coordinator stage.
 Respect the selected main model and live channel availability. The optional
 `model-routing-preset-builder` customises this same policy, not a second runtime.

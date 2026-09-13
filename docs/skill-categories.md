@@ -18,7 +18,7 @@ The category system exists for five practical reasons:
 
 `skills/core/` contains the public-safe TheAngryPit workflow layer. These skills structure long execution, manage proof, keep communication disciplined, preserve install hygiene, and route models or capabilities through explicit presets.
 
-`model-capability-router` provides five native compute profiles without a
+`model-capability-router` describes the operator's native compute palette without a
 mandatory resolver or topology wrapper. `model-routing-preset-builder`
 customises that single policy. Both use the normal repository as their sole
 install source; Workbench must not publish duplicate routing skills.

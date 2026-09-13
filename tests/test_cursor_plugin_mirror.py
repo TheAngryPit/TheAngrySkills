@@ -25,6 +25,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         for relative in (
             "scripts/sync-cursor-plugin-skills.py",
+            "scripts/cursor_native_hook_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "reports/cursor-plugin-skills-state.json",
@@ -90,6 +91,36 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--check")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("plugin-level support inventory or hash drift", result.stderr)
+
+    def test_native_adapter_is_pinned_and_bundled_only_for_related_skills(self):
+        preview = self.root / "native-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for name in ("cursor-ralph-loop", "cursor-cancel-ralph", "cursor-advisor",
+                     "cursor-continual-learning"):
+            bundled = preview / name / "scripts/cursor_native_hook_adapters.py"
+            self.assertEqual(
+                bundled.read_bytes(),
+                (self.root / "scripts/cursor_native_hook_adapters.py").read_bytes(),
+            )
+        ralph = (preview / "cursor-ralph-loop/SKILL.md").read_text()
+        cancel = (preview / "cursor-cancel-ralph/SKILL.md").read_text()
+        self.assertIn("ARMED_HOOK_TRUST_UNVERIFIED", ralph)
+        self.assertIn("live Stop event", ralph)
+        self.assertNotIn(".cursor/ralph/", ralph)
+        self.assertNotIn("rm -rf", cancel)
+        self.assertIn("`iteration` returned", cancel)
+        advisor_role = (preview / "cursor-advisor/references/advisor-subagent.md").read_text()
+        self.assertIn("authorized current-task transcript", advisor_role)
+        self.assertNotIn("model: grok", advisor_role)
+        self.assertNotIn("readonly: true", advisor_role)
+        self.assertFalse((preview / "cursor-no-comments/scripts/cursor_native_hook_adapters.py").exists())
+
+        adapter = self.root / "scripts/cursor_native_hook_adapters.py"
+        adapter.write_text(adapter.read_text() + "\nUnexpected local edit.\n")
+        drift = self.run_build("--check")
+        self.assertNotEqual(drift.returncode, 0)
+        self.assertIn("native support file drift", drift.stderr)
 
     def test_named_agent_is_bundled_for_its_skill_only(self):
         preview = self.root / "candidate-preview"

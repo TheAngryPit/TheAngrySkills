@@ -16,7 +16,7 @@
         "project-local loop state reader"
       ],
       "fallback": "No state or ambiguous path is a no-op that preserves the workspace.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bundled_adapter_and_synthetic_cancel_fixture; live_hook_state_unproven"
     },
     "external_dependencies": [
       "project-local .cursor/ralph state"
@@ -27,11 +27,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-cancel-ralph: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-cancel-ralph: No state or ambiguous path is a no-op that preserves the workspace.",
-      "error": "Error fixture for cursor-cancel-ralph: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Synthetic CLI fixture cancels only a matching task-bound Ralph state file.",
+      "missing_tool_or_input": "No active state returns INACTIVE; another session returns OTHER_SESSION and preserves state.",
+      "error": "Symlinked state directories are rejected and no recursive deletion is used."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_until_live_task_bound_cancel_proof",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
@@ -44,12 +44,24 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nConfirm exact project-local state; never use broad recursive delete or process-name kill. Required native capabilities: project-local loop state reader. External dependencies remain explicit: project-local .cursor/ralph state. No state or ambiguous path is a no-op that preserves the workspace. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Native Codex boundary\n\nThe bundled [adapter](scripts/cursor_native_hook_adapters.py) cancels only matching project/session state; its synthetic fixture proves the file boundary but not a live hook state. A wrong or unknown session is a no-op. Never use the upstream recursive delete command. This candidate remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Cancel an active Ralph Loop. Use when the user wants to stop, cancel, or abort a running ralph loop.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, and wrong-session behavior. No project hook was installed or trusted; no live automatic continuation was observed.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "1. Check if `.cursor/ralph/scratchpad.md` exists.\n\n2. **If it does not exist**: Tell the user \"No active Ralph loop found.\"\n\n3. **If it exists**:\n   - Read `.cursor/ralph/scratchpad.md` to get the current iteration from the `iteration:` field.\n   - Remove the state file and any done flag:\n     ```bash\n     rm -rf .cursor/ralph\n     ```\n   - Report: \"Cancelled Ralph loop (was at iteration N).\"\n",
+      "after": "1. Use the bundled [native adapter](scripts/cursor_native_hook_adapters.py) with the exact project root and current session ID: `python3 scripts/cursor_native_hook_adapters.py ralph-cancel --project <project> --session-id <current-session-id>`.\n\n2. If it reports `INACTIVE`, tell the user no active Ralph loop was found. If it reports `OTHER_SESSION`, do not remove another task's state. If it reports `CANCELLED`, report the `iteration` returned by the task-bound adapter response.\n\n3. Do not use recursive deletion or process-name termination. The adapter removes only the state file for the matching session; a missing or ambiguous session leaves the project unchanged.\n"
+    }
+  ],
   "source_path": "ralph-loop/skills/cancel-ralph/SKILL.md",
-  "source_sha256": "5824c5344af837c1cc56659d362124f75bdc1460ae66bf616e592fb2d8e8ea43"
+  "source_sha256": "5824c5344af837c1cc56659d362124f75bdc1460ae66bf616e592fb2d8e8ea43",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_native_hook_adapters.py",
+      "target_path": "scripts/cursor_native_hook_adapters.py"
+    }
+  ]
 }

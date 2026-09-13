@@ -2404,5 +2404,16 @@
       ],
       "relationship": "named agent dependency; individual review skills related"
     }
+  },
+  "native_support_files": {
+    "scripts/cursor_native_hook_adapters.py": {
+      "sha256": "abf2e03e18a8ae3af216c0b5d5e477bfb9a5ec3e326993ad2e01b86ad7c926c7",
+      "related_skills": [
+        "cursor-advisor",
+        "cursor-cancel-ralph",
+        "cursor-continual-learning",
+        "cursor-ralph-loop"
+      ]
+    }
   }
 }

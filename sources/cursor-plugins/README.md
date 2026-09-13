@@ -3,7 +3,7 @@
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
-and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
+and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. A separate hash-checked native adapter is bundled only into the held Advisor, Ralph and continual-learning previews; it is not registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three non-distributed Benny skills as dormant.
 
 Each `overlays/<published-name>.json` declares the exact source hash, optional

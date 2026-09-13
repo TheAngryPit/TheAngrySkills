@@ -123,6 +123,20 @@ def verify_snapshot(manifest: dict) -> None:
             actual_support[rel.as_posix()] = sha(path)
     if actual_support != expected_support:
         raise ValueError("plugin-level support inventory or hash drift")
+    native_support = manifest.get("native_support_files", {})
+    if not isinstance(native_support, dict):
+        raise ValueError("invalid native support ledger")
+    for path, record in native_support.items():
+        rel = safe_relative(path)
+        if rel.parts[0] != "scripts" or len(rel.parts) != 2:
+            raise ValueError(f"invalid native support path: {path}")
+        source = ROOT / rel
+        if not source.is_file() or source.is_symlink() or sha(source) != record.get("sha256"):
+            raise ValueError(f"native support file drift: {path}")
+        related = record.get("related_skills")
+        if (not isinstance(related, list) or not related
+                or any(name not in skill_families for name in related)):
+            raise ValueError(f"invalid native support relationship: {path}")
 
 
 def replace_exact(text: str, before: str, after: str, owner: str) -> str:
@@ -225,6 +239,18 @@ def render_skill(entry: dict, staging: Path, commit: str,
                 output.read_text(), op["before"], op["after"],
                 f"{name}/{output_rel}",
             ))
+    native_ledger = load(LEDGER).get("native_support_files", {})
+    for bundle in overlay.get("bundled_native_files", []):
+        source_rel = safe_relative(bundle["source_path"])
+        output_rel = safe_relative(bundle["target_path"])
+        record = native_ledger.get(source_rel.as_posix())
+        if not record or name not in record["related_skills"]:
+            raise ValueError(f"unreviewed native support dependency: {name}/{source_rel}")
+        output = target / output_rel
+        if output.exists():
+            raise ValueError(f"native support output collision: {name}/{output_rel}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / source_rel, output)
     text = skill_file.read_text()
     marker = SKILL_PATTERN.match(text)
     normalized = normalize_description(marker.group(1))

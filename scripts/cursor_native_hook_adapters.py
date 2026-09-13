@@ -105,7 +105,7 @@ def ralph_start(project: Path, session_id: str, prompt: str,
         "max_iterations": maximum,
         "completion_promise": promise,
     })
-    return {"status": "ARMED_NOT_ACTIVE_UNTIL_HOOK_TRUSTED", "iteration": 1}
+    return {"status": "ARMED_HOOK_TRUST_UNVERIFIED", "iteration": 1}
 
 
 def ralph_cancel(project: Path, session_id: str) -> dict:
@@ -116,8 +116,9 @@ def ralph_cancel(project: Path, session_id: str) -> dict:
         return {"status": "INACTIVE"}
     if not session_id or state.get("session_id") != session_id:
         return {"status": "OTHER_SESSION"}
+    iteration = state.get("iteration")
     path.unlink()
-    return {"status": "CANCELLED"}
+    return {"status": "CANCELLED", "iteration": iteration if type(iteration) is int else None}
 
 
 def ralph_config(project: Path) -> dict:

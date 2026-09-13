@@ -108,7 +108,7 @@ class CursorNativeHookTests(unittest.TestCase):
              "--max-iterations", "2", "--completion-promise", "done"],
             text=True, capture_output=True, check=True,
         )
-        self.assertEqual(json.loads(armed.stdout)["status"], "ARMED_NOT_ACTIVE_UNTIL_HOOK_TRUSTED")
+        self.assertEqual(json.loads(armed.stdout)["status"], "ARMED_HOOK_TRUST_UNVERIFIED")
         path = self.project / ".codex/cursor-mirror-state/ralph/state.json"
         self.assertEqual(json.loads(path.read_text())["iteration"], 1)
         duplicate = subprocess.run(
@@ -127,7 +127,7 @@ class CursorNativeHookTests(unittest.TestCase):
             [*base, "ralph-cancel", "--project", str(self.project), "--session-id", "task-1"],
             text=True, capture_output=True, check=True,
         )
-        self.assertEqual(json.loads(cancelled.stdout)["status"], "CANCELLED")
+        self.assertEqual(json.loads(cancelled.stdout), {"status": "CANCELLED", "iteration": 1})
         self.assertFalse(path.exists())
 
     def test_advisor_subagent_identity_and_verdict_guard_pending_state(self):

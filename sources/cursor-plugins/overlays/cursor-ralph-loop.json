@@ -18,10 +18,10 @@
         "bounded iteration control"
       ],
       "fallback": "Missing scheduler or invalid state leaves the loop inactive.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bundled_adapter_and_synthetic_stop_fixture; live_hook_trust_and_continuation_unproven"
     },
     "external_dependencies": [
-      "Cursor stop hook or equivalent scheduler"
+      "verified project-local Codex Stop hook and exact-hash trust"
     ],
     "permission_gates": [
       "Require max iterations, completion promise, and explicit scope; do not start unattended loops without a scheduler.",
@@ -29,11 +29,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-ralph-loop: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-ralph-loop: Missing scheduler or invalid state leaves the loop inactive.",
-      "error": "Error fixture for cursor-ralph-loop: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Synthetic CLI fixture arms task-bound state and returns a Codex continuation after a Stop payload.",
+      "missing_tool_or_input": "Missing hook trust or session ID leaves the loop not active; no live registration is performed by the fixture.",
+      "error": "Synthetic fixture covers corrupt state, wrong session, max iterations, exact promise, and cancellation."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_until_live_trusted_hook_continuation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
@@ -46,12 +46,34 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nRequire max iterations, completion promise, and explicit scope; do not start unattended loops without a scheduler. Required native capabilities: project-local state writer, bounded iteration control. External dependencies remain explicit: Cursor stop hook or equivalent scheduler. Missing scheduler or invalid state leaves the loop inactive. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Native Codex boundary\n\nThe bundled [adapter](scripts/cursor_native_hook_adapters.py) supports task-bound start, cancel, config render, and Stop handling in synthetic fixtures. It never installs or trusts a hook. The source loop depends on a project-local Codex Stop hook that has passed exact-hash trust review; until a live host continuation is observed, report the loop as not active. Preserve the user-selected model, effort, scope, and explicit iteration limit.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, and wrong-session behavior. No project hook was installed or trusted; no live automatic continuation was observed.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "1. Gather the user's task prompt and optional parameters:\n   - `max_iterations` (number, default 0 for unlimited)\n   - `completion_promise` (text, or \"null\" if not set)\n\n2. Create the directory `.cursor/ralph/` if it doesn't exist, then write the state file at `.cursor/ralph/scratchpad.md` with this exact format:\n\n   ```markdown\n   ---\n   iteration: 1\n   max_iterations: <N or 0>\n   completion_promise: \"<TEXT>\" or null\n   ---\n\n   <the user's task prompt goes here>\n   ```\n\n   Example:\n   ```markdown\n   ---\n   iteration: 1\n   max_iterations: 20\n   completion_promise: \"COMPLETE\"\n   ---\n\n   Build a REST API for todos with CRUD operations, input validation, and tests.\n   ```\n\n3. Confirm to the user that the Ralph loop is active, then begin working on the task.\n\n4. The stop hook automatically intercepts each turn end and feeds the same prompt back as a followup message. You will see it prefixed with `[Ralph loop iteration N.]`.\n",
+      "after": "1. Gather the exact task prompt, a completion promise if requested, and an explicit `max_iterations` value. `0` retains the upstream unlimited semantics, but use it only when the user explicitly asks for an unbounded loop.\n\n2. Check that the current project and session ID are known and that the project-local Codex `Stop` hook has been installed and trusted at its exact hash. The bundled [native adapter](scripts/cursor_native_hook_adapters.py) can render an inactive config fragment with `render-ralph-config --project <project>`. Rendering does not install or trust it. If the hook or session ID is unavailable, report that the loop is not active.\n\n3. Save the prompt to a project-local file and arm state with `python3 scripts/cursor_native_hook_adapters.py ralph-start --project <project> --session-id <current-session-id> --prompt-file <prompt-file> --max-iterations <N> [--completion-promise <text>]`. The adapter stores task-bound state under `.codex/cursor-mirror-state/ralph/`. Confirm `ARMED_HOOK_TRUST_UNVERIFIED` accurately; only a verified, trusted hook can drive continuation.\n\n4. Begin the requested work. On each verified native `Stop` event, the adapter checks the exact promise and iteration limit, then returns Codex `decision: block` with the original prompt for another iteration. Do not claim an automatic continuation from the synthetic fixture alone.\n"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "- Quote the `completion_promise` value in the YAML frontmatter if it contains special characters.",
+      "after": "- Pass the completion promise as a quoted CLI argument; the native adapter writes JSON state, not Cursor YAML frontmatter."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Confirm the loop is active (prompt, iteration limit, promise if set), then start working on the task immediately.",
+      "after": "Confirm the state is armed, report whether native hook trust was independently verified, and start the task only within the authorized scope. Do not claim automatic continuation until a live Stop event proves it."
+    }
+  ],
   "source_path": "ralph-loop/skills/ralph-loop/SKILL.md",
-  "source_sha256": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09"
+  "source_sha256": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_native_hook_adapters.py",
+      "target_path": "scripts/cursor_native_hook_adapters.py"
+    }
+  ]
 }

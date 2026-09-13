@@ -10,14 +10,17 @@ changing the published catalog. The pstack core has 23 mapped playbooks,
 fixture-only verification and a local notes-app `bug-fix` path with reproduction,
 trace, prewritten correction, local Git history, and PR simulation.
 `check-plan.mjs` ran on temporary plans; `worktree-audit.sh` ran with mocked
-external commands. Advisor/Ralph/continual-learning
+external commands. Bun exercised dependency-free `orch/store.ts` operations
+and `watch-pr/github.ts` command wiring in scratch with mocked `git`/`gh`;
+neither CLI entrypoint or bootstrap ran. Advisor/Ralph/continual-learning
 have inactive synthetic native hook adapters. Four agent-compatibility reviewer
 roles are bundled in a held preview, whose previously invalid frontmatter now
 parses. Held submission-audit and scaffold previews have bounded static fixtures
 for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
 disposable-destination generation; their security holds are retained.
-`pytest -q tests` passed 158 tests and 2 subtests; mirror `--check`
-passed at 91 physical, 54 emitted and 167 output files. CI passed on `ad8b99f8`.
+`pytest -q tests` passed 161 tests and 2 subtests; mirror `--check`
+passed at 91 physical, 54 emitted and 167 output files. CI last passed on
+`ad8b99f8`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

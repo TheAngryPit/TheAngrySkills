@@ -29,8 +29,10 @@ It also holds `cursor-cursor-sdk`, `cursor-make-bot-ui` and
 `cursor-maintain-verification-skill` is held after source review showed a
 Cursor-local path, parallel workers, live driving, and PR publication that need
 a Codex-specific proof. All 91 remain traceable in the manifest and snapshot.
-No held skill is indexed for installation by this batch. There is no new plugin
-or marketplace entry.
+No held skill is indexed for installation by this batch. The generator keeps
+the repository's `.claude-plugin/marketplace.json` catalog entry
+`mirrors-cursor` aligned with the emitted paths. This is catalog registration;
+it does not import or activate an independent Cursor plugin.
 
 To verify the committed build:
 
@@ -44,13 +46,15 @@ To compare a fresh checkout without accepting changes:
 python3 scripts/sync-cursor-plugin-skills.py --compare-upstream /path/to/cursor-plugins
 ```
 
-The comparison reports new, removed and modified physical skills and exits
+The check also verifies that the marketplace catalog lists exactly the
+reviewed, emitted Cursor skills. The comparison reports new, removed and
+modified physical skills and exits
 nonzero if any need review. Build refuses to overwrite local changes in the
 generated tree. To adopt a new upstream commit, review its inventory, license,
 behavior and security delta per skill, update the snapshot and manifest, rebase
 exact overlays, then rebuild and review the resulting diff. New skills are never
-activated automatically. Reverting this mirror means reverting only its
-snapshot, overlays, generator, report and `skills/mirrors-cursor/` tree; global
+activated automatically. Reverting this mirror means reverting its snapshot,
+overlays, generator, report, catalog entry and `skills/mirrors-cursor/` tree; global
 installation is a separate operator decision.
 
 `orchestrate`, `cursor-sdk`, Grok voice and X MCP continue to describe their

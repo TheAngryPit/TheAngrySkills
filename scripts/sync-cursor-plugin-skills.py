@@ -25,6 +25,8 @@ LEDGER = ROOT / "sources" / "cursor-plugins" / "manifest.json"
 OVERLAYS = ROOT / "sources" / "cursor-plugins" / "overlays"
 DEST = ROOT / "skills" / "mirrors-cursor"
 STATE = ROOT / "reports" / "cursor-plugin-skills-state.json"
+MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
+MARKETPLACE_FAMILY = "mirrors-cursor"
 SKILL_PATTERN = re.compile(r"^---\r?\n([\s\S]*?)\r?\n---\r?\n")
 NAME_PATTERN = re.compile(r"^name:\s*[^\r\n]+$", re.MULTILINE)
 MARKDOWN_LINK = re.compile(r"\]\(([^)]+)\)")
@@ -205,11 +207,33 @@ def compare_trees(expected: Path, actual: Path) -> list[str]:
     return [k for k in sorted(a.keys() | b.keys()) if a.get(k) != b.get(k)]
 
 
+def render_marketplace(active: list[dict]) -> str:
+    marketplace = load(MARKETPLACE)
+    plugins = marketplace.get("plugins")
+    if not isinstance(plugins, list):
+        raise ValueError("invalid marketplace plugins list")
+    matches = [index for index, plugin in enumerate(plugins)
+               if plugin.get("name") == MARKETPLACE_FAMILY]
+    if len(matches) > 1:
+        raise ValueError("duplicate Cursor marketplace family")
+    cursor_family = {
+        "name": MARKETPLACE_FAMILY,
+        "skills": [f"./skills/{MARKETPLACE_FAMILY}/{entry['published_name']}"
+                   for entry in sorted(active, key=lambda item: item["published_name"])],
+    }
+    if matches:
+        plugins[matches[0]] = cursor_family
+    else:
+        plugins.append(cursor_family)
+    return json.dumps(marketplace, indent=2, ensure_ascii=False) + "\n"
+
+
 def build(check: bool) -> None:
     manifest = load(LEDGER)
     verify_snapshot(manifest)
     entries = validate_manifest(manifest)
     active = [e for e in entries if e["publish"]]
+    marketplace_text = render_marketplace(active)
     source_to_entry = {(SOURCE / e["path"]).resolve(): e for e in entries}
     previous = load(STATE) if STATE.exists() else None
     if not check and previous:
@@ -235,13 +259,22 @@ def build(check: bool) -> None:
             "generated_files": generated,
         }
         if check:
-            if changed or not STATE.exists() or load(STATE) != state:
-                raise ValueError(f"generated mirror differs: {len(changed)} files")
+            state_drift = not STATE.exists() or load(STATE) != state
+            marketplace_drift = MARKETPLACE.read_text() != marketplace_text
+            if changed or state_drift or marketplace_drift:
+                raise ValueError(
+                    f"generated mirror differs: {len(changed)} files, "
+                    f"state={state_drift}, marketplace={marketplace_drift}"
+                )
             print(f"mirror check passed: {len(entries)} physical, {len(active)} published, {len(generated)} output files")
             return
         backup = Path(tmp) / "prior-mirrors-cursor"
         state_file = Path(tmp) / "state.json"
         state_file.write_text(dump(state))
+        marketplace_file = Path(tmp) / "marketplace.json"
+        marketplace_file.write_text(marketplace_text)
+        previous_state = STATE.read_bytes() if STATE.exists() else None
+        previous_marketplace = MARKETPLACE.read_bytes()
         STATE.parent.mkdir(parents=True, exist_ok=True)
         moved_prior = False
         try:
@@ -250,11 +283,17 @@ def build(check: bool) -> None:
                 moved_prior = True
             staged.rename(DEST)
             state_file.replace(STATE)
+            marketplace_file.replace(MARKETPLACE)
         except OSError:
             if DEST.exists():
                 shutil.rmtree(DEST)
             if moved_prior:
                 backup.rename(DEST)
+            if previous_state is None:
+                STATE.unlink(missing_ok=True)
+            else:
+                STATE.write_bytes(previous_state)
+            MARKETPLACE.write_bytes(previous_marketplace)
             raise
         print(f"built {len(active)} skills, {len(generated)} files; changed={len(changed)}")
 

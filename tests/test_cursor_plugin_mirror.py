@@ -1,7 +1,8 @@
 """Behavioral guards for the pinned Cursor skill mirror build."""
 
-import shutil
+import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -22,6 +23,7 @@ class CursorMirrorTests(unittest.TestCase):
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "reports/cursor-plugin-skills-state.json",
+            ".claude-plugin/marketplace.json",
         ):
             source = REPO / relative
             target = self.root / relative
@@ -66,6 +68,28 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--check")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("untracked symlinks", result.stderr)
+
+    def test_missing_cursor_marketplace_entry_is_rejected(self):
+        marketplace = self.root / ".claude-plugin/marketplace.json"
+        data = json.loads(marketplace.read_text())
+        data["plugins"] = [plugin for plugin in data["plugins"] if plugin["name"] != "mirrors-cursor"]
+        marketplace.write_text(json.dumps(data, indent=2) + "\n")
+        result = self.run_build("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("generated mirror differs", result.stderr)
+
+    def test_marketplace_follows_reviewed_promotion_set(self):
+        manifest = self.root / "sources/cursor-plugins/manifest.json"
+        data = json.loads(manifest.read_text())
+        entry = next(item for item in data["skills"] if item["published_name"] == "cursor-cli-for-agents")
+        entry["publish"] = False
+        manifest.write_text(json.dumps(data, indent=2) + "\n")
+        result = self.run_build()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        marketplace = json.loads((self.root / ".claude-plugin/marketplace.json").read_text())
+        cursor_family = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == "mirrors-cursor")
+        self.assertEqual(len(cursor_family["skills"]), 52)
+        self.assertNotIn("./skills/mirrors-cursor/cursor-cli-for-agents", cursor_family["skills"])
 
     def test_published_relative_markdown_links_resolve(self):
         root = self.root / "skills/mirrors-cursor"

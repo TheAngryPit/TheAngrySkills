@@ -759,6 +759,203 @@ esac
             self.assertIn(str(child), audited.stdout)
             self.assertIn("no-remote", audited.stdout)
 
+    def test_orch_store_runs_in_scratch_without_bootstrap(self):
+        bun = shutil.which("bun")
+        if bun is None:
+            self.skipTest("bun unavailable")
+        source = (
+            REPO
+            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/orch"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            scripts = root / "scripts"
+            shutil.copytree(source, scripts / "orch")
+            environment = {
+                "PATH": f"{Path(bun).parent}:/usr/bin:/bin",
+                "HOME": str(root / "home"),
+                "LANG": "C",
+            }
+            checked = subprocess.run(
+                [
+                    bun,
+                    "test",
+                    "scripts/orch/orch.test.ts",
+                    "--test-name-pattern",
+                    "initializes an idempotent plain-file store|composes unit add|records, replaces, checks|pushes, peeks|parks gates",
+                ],
+                cwd=str(root),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(
+                checked.returncode,
+                0,
+                f"stdout={checked.stdout!r} stderr={checked.stderr!r}",
+            )
+            combined = checked.stdout + checked.stderr
+            self.assertIn(
+                "5 pass",
+                combined,
+            )
+            self.assertIn("0 fail", combined)
+            self.assertFalse((scripts / "node_modules").exists())
+
+    def test_watch_pr_reader_uses_real_bun_with_mocked_gh_and_git(self):
+        bun = shutil.which("bun")
+        if bun is None:
+            self.skipTest("bun unavailable")
+        source = (
+            REPO
+            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/watch-pr"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            scripts = root / "scripts"
+            shutil.copytree(source, scripts / "watch-pr")
+            driver = root / "reader-driver.ts"
+            driver.write_text(
+                '''import { GhGitHubReader } from "./scripts/watch-pr/github.ts";
+import { parsePrNumber } from "./scripts/watch-pr/types.ts";
+
+const reader = new GhGitHubReader();
+const context = { owner: "owner", repo: "repo", number: parsePrNumber(42) };
+console.log(JSON.stringify({
+  origin: await reader.originRepo(),
+  current: await reader.currentPr(null),
+  pullRequest: await reader.pullRequest(context),
+  openPullRequests: await reader.openPullRequests({ owner: "owner", repo: "repo" }),
+  checks: await reader.checksFastPath(context),
+  rollup: await reader.checkRollupPage(context, null),
+  threads: await reader.reviewThreads(context),
+  commits: await reader.commitRollups(context),
+}));
+'''
+            )
+            mock_bin = root / "mock-bin"
+            mock_bin.mkdir()
+            git = mock_bin / "git"
+            git.write_text(
+                '''#!/bin/bash
+if [ "$1" = "remote" ] && [ "$2" = "get-url" ] && [ "$3" = "origin" ]; then
+  printf 'git@github.com:owner/repo.git\\n'
+  exit 0
+fi
+exit 2
+'''
+            )
+            gh = mock_bin / "gh"
+            gh.write_text(
+                '''#!/bin/bash
+case "$*" in
+  "pr view --json number,url")
+    printf '{"number":42,"url":"https://github.com/owner/repo/pull/42"}\\n'
+    ;;
+  *"pr view 42 --repo owner/repo --json mergeable,mergeStateStatus,reviewDecision,headRefOid,headRefName,baseRefName,state,mergedAt,isDraft"*)
+    printf '{"mergeable":"MERGEABLE","mergeStateStatus":"CLEAN","reviewDecision":"APPROVED","headRefOid":"abc123","headRefName":"fix/mock","baseRefName":"main","state":"OPEN","mergedAt":null,"isDraft":false}\\n'
+    ;;
+  *"pr list --repo owner/repo --state open --limit 300 --json number,headRefName,baseRefName"*)
+    printf '[{"number":42,"headRefName":"fix/mock","baseRefName":"main"}]\\n'
+    ;;
+  *"pr checks 42 --repo owner/repo --json name,state,description,link,workflow,bucket"*)
+    printf '[{"name":"ci","state":"SUCCESS","description":"ok","link":"","workflow":"ci","bucket":"pass"}]\\n'
+    ;;
+  *ReviewThreads*)
+    printf '{"data":{"repository":{"pullRequest":{"reviewThreads":{"nodes":[]}}}}}\\n'
+    ;;
+  *PrCommitStatuses*)
+    printf '{"data":{"repository":{"pullRequest":{"commits":{"nodes":[{"commit":{"oid":"abc123","statusCheckRollup":{"state":"SUCCESS"}}}]}}}}}\\n'
+    ;;
+  *PrCheckRollup*)
+    printf '{"data":{"repository":{"pullRequest":{"commits":{"nodes":[{"commit":{"statusCheckRollup":{"contexts":{"pageInfo":{"hasNextPage":false,"endCursor":null},"nodes":[]}}}}]}}}}}\\n'
+    ;;
+  *) exit 2 ;;
+esac
+'''
+            )
+            git.chmod(0o755)
+            gh.chmod(0o755)
+            environment = {
+                "PATH": f"{mock_bin}:{Path(bun).parent}:/usr/bin:/bin",
+                "HOME": str(root / "home"),
+                "LANG": "C",
+            }
+            checked = subprocess.run(
+                [bun, str(driver)],
+                cwd=str(root),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            payload = json.loads(checked.stdout)
+            self.assertEqual(payload["origin"], {"owner": "owner", "repo": "repo"})
+            self.assertEqual(payload["current"]["number"], 42)
+            self.assertEqual(payload["pullRequest"]["headRefName"], "fix/mock")
+            self.assertEqual(payload["openPullRequests"][0]["headRefName"], "fix/mock")
+            self.assertEqual(payload["checks"]["checks"][0]["kind"], "passed")
+            self.assertEqual(payload["rollup"]["checks"], [])
+            self.assertEqual(payload["commits"], [{"oid": "abc123", "state": "SUCCESS"}])
+
+    def test_watch_pr_mocked_command_is_bounded_by_outer_timeout(self):
+        bun = shutil.which("bun")
+        timeout = shutil.which("gtimeout") or shutil.which("timeout")
+        if bun is None or timeout is None:
+            self.skipTest("bun or timeout unavailable")
+        source = (
+            REPO
+            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/watch-pr"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            scripts = root / "scripts"
+            shutil.copytree(source, scripts / "watch-pr")
+            driver = root / "slow-reader-driver.ts"
+            driver.write_text(
+                '''import { GhGitHubReader } from "./scripts/watch-pr/github.ts";
+import { parsePrNumber } from "./scripts/watch-pr/types.ts";
+await new GhGitHubReader().checksFastPath({
+  owner: "owner",
+  repo: "repo",
+  number: parsePrNumber(42),
+});
+'''
+            )
+            mock_bin = root / "mock-bin"
+            mock_bin.mkdir()
+            slow_gh = mock_bin / "gh"
+            slow_gh.write_text("#!/bin/bash\nsleep 2\n")
+            slow_gh.chmod(0o755)
+            environment = {
+                "PATH": f"{mock_bin}:{Path(bun).parent}:/usr/bin:/bin",
+                "HOME": str(root / "home"),
+                "LANG": "C",
+            }
+            bounded = subprocess.run(
+                [timeout, "--signal=KILL", "1s", bun, str(driver)],
+                cwd=str(root),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(bounded.returncode, -9)
+
     def test_local_app_fixture_rejects_outside_or_symlinked_apps(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

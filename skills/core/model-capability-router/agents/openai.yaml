@@ -1,4 +1,6 @@
 interface:
   display_name: "Native Model Routing"
-  short_description: "Five native profiles without mandatory routing stages"
+  short_description: "Native model choices without mandatory routing stages"
   default_prompt: "Use $model-capability-router for the requested native model-routing decision, respecting the selected main model and current channel availability."
+policy:
+  allow_implicit_invocation: false

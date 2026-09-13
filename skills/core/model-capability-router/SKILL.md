@@ -1,13 +1,15 @@
 ---
 name: model-capability-router
-description: "Use when explicitly asked to choose or configure native Codex models and reasoning effort, or when authorised delegation needs a compute choice. Provides Spark, Luna XHigh/Max and Astra Medium/XHigh profiles without mandatory routing stages or wrappers."
+description: "Use when the operator explicitly asks for native Codex model or reasoning-effort routing, including an active standing request."
 ---
 
 # Native Model Routing
 
 Use native Codex model, effort and agent selection. Respect the operator's
 selected main model and effort; this skill does not switch an active task.
-Choose the execution arrangement before the worker model.
+For this operator's home, Sol Medium is the separately configured Codex default.
+Choose the execution arrangement before a delegated worker's model.
+Authorization to delegate alone does not require consulting this router.
 
 ## Execution arrangement
 
@@ -15,9 +17,11 @@ Keep small, tightly coupled work and immediate follow-ups with the agent that
 already holds the relevant context. A cheaper worker model alone does not
 justify a handoff. Batch related operations rather than delegating each one.
 
-Delegate a bounded package when its benefit justifies briefing, startup,
+When the operator requests delegation, preserve that workflow for suitable
+bounded work. Otherwise delegate when the benefit justifies briefing, startup,
 coordination, verification and likely correction costs. Reuse a suitable worker
-for related follow-ups. Send only context needed for its acceptance checks.
+and its relevant context for related follow-ups, without assuming cache reuse.
+Give it the context needed for its acceptance checks.
 
 Parallelise independently executable packages with clear ownership when the
 benefit outweighs duplicated context and integration costs. Sequence dependent
@@ -27,29 +31,32 @@ Continue the current thread when its context remains useful. A fresh task suits
 an independent objective; a full-history fork copies history rather than
 providing a clean context.
 
-## Five profiles
+## Operator profiles
 
 | Profile | Model | Effort | Use |
 |---|---|---|---|
-| Ultra-fast | `gpt-5.3-codex-spark` | `low` | Tiny deterministic edits, targeted lookups, short iterations with clear context and an immediate check. |
-| Bounded execution | `gpt-5.6-luna` | `xhigh` | Well-specified implementation, extraction or transformations with concrete acceptance checks. |
-| Substantial execution | `gpt-5.6-luna` | `max` | Larger implementation with bounded ownership, tests and observable acceptance criteria. |
-| Capable default | `gpt-6-astra` | `medium` | Interpretation, cross-cutting diagnosis, technical decisions and coordination where understanding the problem dominates. |
-| Difficult problems | `gpt-6-astra` | `xhigh` | Particularly difficult reasoning, complex terminal/system work or unresolved ambiguity needing deeper investigation. |
+| Home default and coordination | `gpt-5.6-sol` | `medium` | This home's selected default; sustained coordination, integration and open-ended execution. |
+| Planning and review | `gpt-6-astra` | `low` | Habitual Astra setting for conversation, planning and review when its judgment helps. |
+| Demanding decisions | `gpt-6-astra` | `medium` | Substantial ambiguity, cross-cutting decisions or tradeoffs requiring more analysis. |
+| Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
+| Bounded subtask | `gpt-5.6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
+| Defined execution | `gpt-5.6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
+| Substantial execution | `gpt-5.6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
+| Tiny iteration, when available | `gpt-5.3-codex-spark` | `low` | Small deterministic edits or lookups with an immediate check. |
 
 Choose directly for the task. There is no Spark-first or Luna-first ladder,
-mandatory failed attempt, coordinator stage, planning/review delegation, CLI
-resolver, receipt workflow or preset wrapper. Importance alone does not justify
-XHigh. A read-only task can still need Astra. Patch size alone does not prove
-that Luna is suitable for autonomous systems administration.
+mandatory failed attempt, coordinator stage, automatic planning/review
+delegation, CLI resolver, receipt workflow or preset wrapper. Requested
+planning or review delegation remains available when suitable. Importance
+alone does not justify XHigh. A read-only task can still need Astra. Patch
+size alone does not prove that Luna suits autonomous systems administration.
 
-This five-profile policy explicitly permits Luna Max for the substantial
-execution profile; no repeated conversational approval is required merely for
-that effort. It does not authorise new spending routes, external actions or
-additional access. Astra Max and Ultra are outside the habitual palette.
-Sol and Terra are not habitual defaults, not forbidden models or proven
-universally inferior alternatives. Honour explicit operator selections and
-fixed specialist bindings, including bindings outside this palette.
+Luna Max is available when justified by the work; it requires no repeated
+approval merely for that effort. These profiles do not authorise new spending
+routes, external actions or additional access. Astra Max and Ultra are outside
+the habitual palette. Terra and other supported models remain available when
+selected by the operator or bound to a specialist. Honour explicit selections
+and fixed bindings, including those outside this palette.
 
 ## Runtime and delegation
 
@@ -63,8 +70,8 @@ proof bar; otherwise surface the specific decision needed.
 For permitted delegation, give bounded ownership, relevant context, expected
 output and verification requirements. A differently modelled native worker
 needs fresh or bounded context: full-history forks inherit the parent model.
-Respect actual available slots;
-eight concurrent children is a ceiling, not a target or permission to spawn.
+Respect actual available slots; a concurrency ceiling is neither a target nor
+permission to spawn.
 Do not make specialists coordinators or enable recursive delegation implicitly.
 The coordinator integrates and verifies the result.
 
@@ -75,15 +82,15 @@ Respect native approvals and refusals. Do not force feature flags.
 
 ## Cost and evidence
 
-Compare remaining whole-task consumption, including parent and worker calls,
-using each model's input, cache and output rates. Existing context is not free;
-cache reuse can reduce its cost but is not guaranteed across threads, models
-or changed prefixes. Include cache writes when the meter exposes them.
-Reasoning may already be included in output; count it once. Avoid double-counting
-child usage in parent aggregates or costs already included in measurements.
-Distinguish benchmark results from native task proof and projected savings
-from measured account usage. Keep changing benchmark scores out of durable
-routing rules. Report unavailable capabilities and unverified claims plainly.
+Compare the remaining whole task, including parent and worker input, output,
+briefing, startup, coordination, verification and rework. Reusing a worker can
+save context transfer; cached input is possible, not guaranteed across tasks,
+models or changed prefixes. Count reasoning and child usage once if a meter
+already includes them. API token prices and benchmarks inform comparisons but
+do not measure this account's Codex allowance or prove a routing saving. Use
+observed account usage or a like-for-like native task comparison for such claims;
+state when that evidence is unavailable. Keep changing prices and benchmark
+scores out of durable profile rules.
 
 ## Installation and updates
 

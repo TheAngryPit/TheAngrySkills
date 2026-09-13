@@ -10,29 +10,32 @@
     "preserved_semantics": "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
     "native_mapping": {
       "capabilities": [
-        "scoped task-history reader",
-        "user confirmation"
+        "bounded current-workspace task history",
+        "native skill-creator",
+        "cursor-unslop",
+        "optional native preference input"
       ],
       "required_tools": [
-        "scoped task-history reader",
-        "user confirmation"
+        "project-local file search/read",
+        "native skill-creator"
       ],
-      "fallback": "Insufficient history or declined confirmation produces no write.",
+      "fallback": "If bounded transcript access is unavailable, use only the current task and user-supplied evidence; label the history gap and ask for missing preferences.",
       "availability": "not_proven_in_current_codex_session"
     },
     "external_dependencies": [
-      "task history",
-      "durable skill/config destination"
+      "skill-creator and cursor-unslop skills",
+      "bounded current-workspace transcript access when available"
     ],
     "permission_gates": [
-      "Mine only the requested scope and ask before durable skill/global configuration writes.",
-      "Insufficient history or declined confirmation produces no write.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Only inspect the current workspace/task history that the user authorized; do not scan unrelated task roots.",
+      "The user’s answers determine the mode content; a one-off observation is not a durable rule.",
+      "Default to a project-local .agents/skills destination. A personal global path needs an explicit user choice and writable permission.",
+      "Follow the existing task authorization for commit/PR; do not infer publication or installation."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-automate-me: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-automate-me: Insufficient history or declined confirmation produces no write.",
-      "error": "Error fixture for cursor-automate-me: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Fixture updates an existing project-local mode skill from two corroborated bounded evidence slices and the user’s preferences while preserving uncontradicted sections.",
+      "missing_tool_or_input": "Without transcript access, current-task/user-provided evidence is labeled partial and no history pattern is invented.",
+      "error": "An ambiguous existing destination or failed skill-creator run preserves the original skill and reports the exact gap."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -47,12 +50,103 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nMine only the requested scope and ask before durable skill/global configuration writes. Required native capabilities: scoped task-history reader, user confirmation. External dependencies remain explicit: task history, durable skill/config destination. Insufficient history or declined confirmation produces no write. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse `skill-creator` for authoring, `cursor-unslop` for prose, and `cursor-poteto-mode` only as a shape example. Search `.agents/skills/` in the project and the personal Codex skills root only when it is relevant and readable. Mine bounded history from the current workspace/task, never unrelated task roots. Native user-input surfaces may allow fewer choices and no multiselect; retain the broad-to-specific preference inquiry in concise rounds with free text. Project-local writes follow the current task scope; personal installation is a separate explicit choice.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source and deterministic preview prove static mapping only; live authoring/update and user preference loop remain untested.",
+  "reason": "Preserve the full mode-skill authoring and evidence flow while mapping Cursor skill names, storage, transcript scope, and preference input to native Codex.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "via create-skill + unslop",
+      "after": "via skill-creator + cursor-unslop"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Cursor's built-in `create-skill` (authoring), and the **unslop** skill",
+      "after": "the native `skill-creator` (authoring), and the `cursor-unslop` skill"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`.cursor/skills/**/*-mode/SKILL.md` and `~/.cursor/skills/*-mode/SKILL.md`",
+      "after": "`.agents/skills/**/*-mode/SKILL.md` and the personal Codex skills root (`~/.codex/skills/*-mode/SKILL.md`, when relevant and readable)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "(`.cursor/skills/<handle>/`)",
+      "after": "(`.agents/skills/<handle>/`)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "confirm intent with `AskQuestion`",
+      "after": "confirm intent through the native optional user-input surface"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "The system prompt names the workspace's `agent-transcripts/` directory. Use only that path. Don't glob across `~/.cursor/projects/*/`.",
+      "after": "Use only the current workspace's supplied transcript path or native task-history access. Do not glob across unrelated task roots."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Use the `AskQuestion` tool (structured multi-choice) rather than asking the user to type from scratch.",
+      "after": "Use the native optional user-input surface for concise choices and its free-text path for anything missing."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "one or two questions with 4-6 options each, `allow_multiple: true` for category questions.",
+      "after": "one or two concise questions with the choices the host supports; if multiselect is unavailable, gather priorities in a follow-up round or free text."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "The **poteto-mode** skill shows the shape.",
+      "after": "The `cursor-poteto-mode` skill shows the shape."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "poteto-mode's.",
+      "after": "`cursor-poteto-mode`'s."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Use Cursor's built-in `create-skill` skill to author the skill.",
+      "after": "Use the native `skill-creator` skill to author the skill."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`.cursor/skills/<handle>/<handle>-mode/SKILL.md`",
+      "after": "`.agents/skills/<handle>/<handle>-mode/SKILL.md`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`.cursor/skills/<handle>-mode/SKILL.md`",
+      "after": "`.agents/skills/<handle>-mode/SKILL.md`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`~/.cursor/skills/<handle>-mode/`",
+      "after": "`~/.codex/skills/<handle>-mode/`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "follow `create-skill`'s YAML rules",
+      "after": "follow `skill-creator`'s YAML rules"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Apply the **unslop** skill and `create-skill`'s writing guidelines",
+      "after": "Apply `cursor-unslop` and `skill-creator`'s writing guidelines"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "A `create-skill`-style test/iterate benchmark loop",
+      "after": "A `skill-creator`-style test/iterate benchmark loop"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "`create-skill` alone, no mining required.",
+      "after": "`skill-creator` alone, no mining required."
+    }
+  ],
   "source_path": "pstack/skills/automate-me/SKILL.md",
   "source_sha256": "1510979b0b71b54284427a19c09918f8b1fdfc168f9b7f9e30098793a5ec88ef"
 }

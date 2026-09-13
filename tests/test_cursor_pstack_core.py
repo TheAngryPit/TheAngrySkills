@@ -2,17 +2,25 @@
 
 import json
 import importlib.util
+import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
+import cursor_functional_adapters as adapters  # noqa: E402
 from cursor_functional_adapters import (  # noqa: E402
     AdapterError,
+    MissingCapability,
     PSTACK_PLAYBOOK_FILES,
+    PSTACK_FIXTURE_MARKER,
+    PSTACK_FIXTURE_MARKER_CONTENT,
     read_pstack_playbook_fixture,
     run_bug_fix_playbook_fixture,
     run_local_app_fixture,
@@ -57,6 +65,15 @@ elif command == "search":
         print("not-found")
         raise SystemExit(1)
     print("found:" + ",".join(matches))
+elif command == "trace-search":
+    query = sys.argv[2]
+    notes = json.loads(store.read_text()) if store.exists() else []
+    title = notes[0]["title"] if notes else ""
+    matched = query in title
+    print(
+        f"trace:query={query};title={title};"
+        f"comparison=case-sensitive;matched={str(matched).lower()}"
+    )
 else:
     raise SystemExit("unknown command")
 """
@@ -64,6 +81,87 @@ FIXED_NOTES_APP = BUGGY_NOTES_APP.replace(
     'query in note["title"]',
     'query.casefold() in note["title"].casefold()',
 )
+VALID_PLAN = """# Synthetic bug-fix plan
+
+Short fixture plan.
+
+## How to read this
+
+One box is one unit of work
+names the evidence
+Check a box only when its evidence exists
+playbooks/
+Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+
+## Program checklist
+
+### Arm the program
+
+/goal
+
+### Spawn owners
+
+status message
+
+### PR mechanics
+
+git show origin/main:
+
+### Verdict and merge
+
+30-minute review
+
+### Boot recipe
+
+fixture boot
+
+## Fix synthetic notes app
+
+**Depends on.** local fixture
+
+**Files.**
+- [ ] app.py
+
+**Build.**
+- [ ] Run the fixture app.
+
+**You see.**
+- [ ] Capture the observed output.
+
+**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+- [ ] Unit evidence exists.
+
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `grok-4.6-fast-xhigh` at the PR head
+- [ ] Lane 1. exercise fixture. Save `lane-1.txt`. Pass when output matches.
+- [ ] Lane 2. exercise fixture. Save `lane-2.txt`. Pass when output matches.
+- [ ] Lane 3. exercise fixture. Save `lane-3.txt`. Pass when output matches.
+- [ ] Lane 4. exercise fixture. Save `lane-4.txt`. Pass when output matches.
+- [ ] Lane 5. exercise fixture. Save `lane-5.txt`. Pass when output matches.
+- [ ] Lane 6. exercise fixture. Save `lane-6.txt`. Pass when output matches.
+- [ ] Lane 7. exercise fixture. Save `lane-7.txt`. Pass when output matches.
+- [ ] Lane 8. exercise fixture. Save `lane-8.txt`. Pass when output matches.
+- [ ] Lane 9. exercise fixture. Save `lane-9.txt`. Pass when output matches.
+- [ ] Lane 10. exercise fixture. Save `lane-10.txt`. Pass when output matches.
+
+**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
+- [ ] Metric.
+- [ ] Probe.
+- [ ] Baseline.
+- [ ] Rule.
+
+**Review gate.** None.
+
+**Merge.**
+- [ ] Merge only after the fixture evidence is reviewed.
+
+## Close the program
+
+Close after the fixture report is written.
+
+## Appendix Prototype evidence
+
+The synthetic fixture is not a live product proof.
+"""
 
 
 def read_manifest():
@@ -377,6 +475,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             staging = self.render_core("cursor-poteto-mode", root / "staging")
             app = root / "app.py"
             app.write_text(BUGGY_NOTES_APP)
+            (root / PSTACK_FIXTURE_MARKER).write_text(PSTACK_FIXTURE_MARKER_CONTENT)
             result = run_bug_fix_playbook_fixture(
                 staging / "playbooks",
                 root,
@@ -391,10 +490,34 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertNotEqual(result["playbook_read"]["status"], "APPLIED")
             self.assertEqual(
                 result["playbook_step_scope"],
-                {"exercised": (1, 4), "unexercised": (2, 3, 5, 6)},
+                {"completed": (1, 4, 5), "partial": (2, 3, 6), "unexercised": ()},
             )
             self.assertEqual(result["before"]["status"], "PASS")
             self.assertEqual(result["failure"]["status"], "FAIL")
+            self.assertEqual(result["diagnosis"]["status"], "HYPOTHESIS_SUPPORTED")
+            self.assertEqual(
+                result["diagnosis"]["surviving_hypothesis"],
+                "case-sensitive search predicate",
+            )
+            self.assertEqual(result["plan"]["status"], "PLAN_RECORDED")
+            self.assertEqual(
+                result["plan"]["review"]["status"], "DIFF_RECORDED"
+            )
+            self.assertEqual(result["plan"]["review"]["mode"], "structural_only")
+            self.assertIn("casefold", result["plan"]["diff"])
+            self.assertEqual(result["local_history"]["status"], "LOCAL_ONLY")
+            self.assertEqual(
+                result["local_history"]["subjects_newest_first"],
+                (
+                    "fix(pstack): normalize notes search",
+                    "test(pstack): reproduce notes search failure",
+                ),
+            )
+            self.assertEqual(
+                result["local_history"]["pr_simulation"]["status"],
+                "SIMULATED_ONLY",
+            )
+            self.assertFalse(result["local_history"]["pr_simulation"]["real_pr"])
             self.assertEqual(result["correction"]["status"], "CORRECTED")
             self.assertTrue(result["correction"]["changed"])
             self.assertEqual(result["after"]["status"], "PASS")
@@ -420,7 +543,11 @@ class CursorPstackCoreTests(unittest.TestCase):
                     "create note",
                     "baseline exact-case search",
                     "reproduce lower-case search failure",
-                    "write corrected fixture source",
+                    "trace observable search mechanism",
+                    "record hypothesis cut and review prewritten correction diff",
+                    "commit reproduction before correction",
+                    "write prewritten corrected fixture source and commit correction",
+                    "push to temporary local bare remote as PR simulation",
                     "repeat lower-case search",
                 ),
             )
@@ -438,6 +565,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             staging = self.render_core("cursor-poteto-mode", root / "staging")
             app = root / "app.py"
             app.write_text(wrong_failure_app)
+            (root / PSTACK_FIXTURE_MARKER).write_text(PSTACK_FIXTURE_MARKER_CONTENT)
             result = run_bug_fix_playbook_fixture(
                 staging / "playbooks",
                 root,
@@ -452,9 +580,184 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertEqual(result["after"]["status"], "NOT_RUN")
             self.assertEqual(
                 result["playbook_step_scope"],
-                {"exercised": (1,), "unexercised": (2, 3, 4, 5, 6)},
+                {"completed": (1,), "partial": (), "unexercised": (2, 3, 4, 5, 6)},
             )
             self.assertEqual(app.read_text(), wrong_failure_app)
+
+    def test_bug_fix_history_requires_disposable_marker_and_known_root_entries(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            staging = self.render_core("cursor-poteto-mode", root / "staging")
+            app = root / "app.py"
+            app.write_text(BUGGY_NOTES_APP)
+            unmarked = run_bug_fix_playbook_fixture(
+                staging / "playbooks",
+                root,
+                app,
+                buggy_source=BUGGY_NOTES_APP,
+                corrected_source=FIXED_NOTES_APP,
+            )
+            self.assertEqual(unmarked["status"], "ERROR")
+            self.assertEqual(unmarked["local_history"]["status"], "BLOCKED")
+            self.assertIn("marker", unmarked["local_history"]["reason"])
+            self.assertEqual(app.read_text(), BUGGY_NOTES_APP)
+
+            (root / "notes.json").unlink()
+            (root / PSTACK_FIXTURE_MARKER).write_text(PSTACK_FIXTURE_MARKER_CONTENT)
+            (root / "unexpected.txt").write_text("must not be touched\n")
+            unexpected = run_bug_fix_playbook_fixture(
+                staging / "playbooks",
+                root,
+                app,
+                buggy_source=BUGGY_NOTES_APP,
+                corrected_source=FIXED_NOTES_APP,
+            )
+            self.assertEqual(unexpected["status"], "ERROR")
+            self.assertEqual(unexpected["local_history"]["status"], "BLOCKED")
+            self.assertIn("unexpected entries", unexpected["local_history"]["reason"])
+            self.assertEqual(app.read_text(), BUGGY_NOTES_APP)
+
+    def test_local_git_timeout_is_explicitly_blocked(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            timeout = subprocess.TimeoutExpired(("git",), 5.0)
+            with mock.patch.object(adapters.shutil, "which", return_value="/usr/bin/git"):
+                with mock.patch.object(
+                    adapters.subprocess, "run", side_effect=timeout
+                ):
+                    with self.assertRaisesRegex(
+                        MissingCapability, "local git fixture command timed out"
+                    ):
+                        adapters._run_local_git(root, ("init", "--quiet"))
+
+    def test_check_plan_safe_fixture_valid_and_invalid(self):
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("node unavailable")
+        script = (
+            REPO
+            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/check-plan.mjs"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            home = root / "home"
+            home.mkdir()
+            valid = root / "valid.md"
+            invalid = root / "invalid.md"
+            valid.write_text(VALID_PLAN)
+            invalid.write_text("# invalid\n")
+            environment = {
+                "PATH": str(Path(node).parent),
+                "HOME": str(home),
+                "LANG": "C",
+            }
+            checked = subprocess.run(
+                [node, str(script), str(valid)],
+                cwd=str(REPO),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            self.assertIn("1 PR sections, 0 problems", checked.stdout)
+
+            rejected = subprocess.run(
+                [node, str(script), str(invalid)],
+                cwd=str(REPO),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(rejected.returncode, 1)
+            self.assertRegex(
+                rejected.stderr,
+                r'no "## How to read this" section|no "## Program checklist"',
+            )
+
+    def test_worktree_audit_safe_fixture_uses_only_mocks(self):
+        script = (
+            REPO
+            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/worktree-audit.sh"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repo = root / "repo"
+            child = repo / "child"
+            repo.mkdir()
+            child.mkdir()
+            mock_bin = root / "mock-bin"
+            mock_bin.mkdir()
+            repo_text = str(repo)
+            child_text = str(child)
+            git = mock_bin / "git"
+            git.write_text(
+                f'''#!/bin/bash
+if [ "$1" = "-C" ]; then
+  target="$2"
+  shift 2
+fi
+case "$1" in
+  worktree)
+    if [ "$2" = "list" ]; then
+      printf 'worktree {repo_text}\\nHEAD 1111111111111111111111111111111111111111\\nbranch refs/heads/main\\nworktree {child_text}\\nHEAD 2222222222222222222222222222222222222222\\nbranch refs/heads/fix/mock\\n'
+    fi
+    ;;
+  fetch) exit 0 ;;
+  rev-parse) printf '2222222222222222222222222222222222222222\\n' ;;
+  log) printf '1700000000\\n' ;;
+  merge-base) exit 1 ;;
+  status) exit 0 ;;
+  symbolic-ref) printf 'refs/heads/fix/mock\\n' ;;
+  show-ref) exit 1 ;;
+  rev-list) printf '1\\n' ;;
+  *) exit 0 ;;
+esac
+'''
+            )
+            gh = mock_bin / "gh"
+            gh.write_text("#!/bin/bash\nprintf '[]\\n'\n")
+            jq = mock_bin / "jq"
+            jq.write_text("#!/bin/bash\nexit 0\n")
+            rg = mock_bin / "rg"
+            rg.write_text("#!/bin/bash\nexit 1\n")
+            for executable in (git, gh, jq, rg):
+                executable.chmod(0o755)
+
+            home = root / "home"
+            slug = str(repo).lstrip("/").replace("/", "-")
+            transcripts = home / ".cursor/projects" / slug / "agent-transcripts"
+            transcripts.mkdir(parents=True)
+            environment = {
+                "HOME": str(home),
+                "PATH": f"{mock_bin}:/usr/bin:/bin",
+                "LANG": "C",
+            }
+            audited = subprocess.run(
+                ["/bin/bash", str(script), str(repo)],
+                cwd=str(repo),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(audited.returncode, 0, audited.stderr)
+            self.assertIn("SIZE\tAGE\tMERGED\tDIRTY\tREMOTE\tPR\tLAST_CHAT\tBUCKET\tWORKTREE", audited.stdout)
+            self.assertIn(str(child), audited.stdout)
+            self.assertIn("no-remote", audited.stdout)
 
     def test_local_app_fixture_rejects_outside_or_symlinked_apps(self):
         with tempfile.TemporaryDirectory() as temporary:

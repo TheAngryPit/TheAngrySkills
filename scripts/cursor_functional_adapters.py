@@ -7,9 +7,13 @@ keeping missing capabilities and failed proof states explicit.
 
 from __future__ import annotations
 
+import difflib
 import hashlib
+import os
+import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping
@@ -59,8 +63,10 @@ PSTACK_PLAYBOOK_FILES = (
     "visual-parity",
     "worktree-cleanup",
 )
-BUG_FIX_EXERCISED_STEPS = (1, 4)
-BUG_FIX_UNEXERCISED_STEPS = (2, 3, 5, 6)
+BUG_FIX_COMPLETED_STEPS = (1, 4, 5)
+BUG_FIX_PARTIAL_STEPS = (2, 3, 6)
+PSTACK_FIXTURE_MARKER = ".pstack-disposable-fixture"
+PSTACK_FIXTURE_MARKER_CONTENT = "pstack-local-bug-fix-fixture-v1\n"
 
 
 def read_pstack_playbook_fixture(
@@ -394,6 +400,150 @@ def run_local_app_fixture(
     }
 
 
+def _run_local_git(root: Path, arguments: Iterable[str]) -> str:
+    executable = shutil.which("git")
+    if executable is None:
+        raise MissingCapability("git is unavailable for local history proof")
+    argv = tuple(arguments)
+    if any(not isinstance(item, str) or "\x00" in item for item in argv):
+        raise AdapterError("local git fixture arguments must be NUL-free strings")
+    environment = {
+        "HOME": str(root / ".git-home"),
+        "PATH": str(Path(executable).parent),
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_TERMINAL_PROMPT": "0",
+        "LC_ALL": "C",
+    }
+    (root / ".git-home").mkdir(exist_ok=True)
+    try:
+        completed = subprocess.run(
+            (executable, "-C", str(root), *argv),
+            cwd=str(root),
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=5.0,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise MissingCapability("local git fixture command timed out") from exc
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise AdapterError(
+            f"local git fixture command failed ({completed.returncode}): {detail}"
+        )
+    return completed.stdout
+
+
+def _record_local_bug_fix_history(
+    root: Path, app: Path, buggy_source: str, corrected_source: str
+) -> dict[str, object]:
+    marker = root / PSTACK_FIXTURE_MARKER
+    if marker.is_symlink() or not marker.is_file():
+        raise AdapterError(
+            "local bug-fix history requires an explicit disposable fixture marker"
+        )
+    if marker.read_text() != PSTACK_FIXTURE_MARKER_CONTENT:
+        raise AdapterError("local bug-fix fixture marker has unexpected content")
+    if (root / ".git").exists():
+        raise AdapterError("local bug-fix history fixture must start without .git")
+    try:
+        relative_app = app.relative_to(root)
+    except ValueError as exc:
+        raise AdapterError("fixture app must be inside the disposable fixture root") from exc
+    allowed_root_entries = {
+        PSTACK_FIXTURE_MARKER,
+        relative_app.parts[0],
+        "notes.json",
+        "staging",
+    }
+    unexpected_entries = sorted(
+        entry.name for entry in root.iterdir() if entry.name not in allowed_root_entries
+    )
+    if unexpected_entries:
+        raise AdapterError(
+            "local bug-fix fixture root has unexpected entries: "
+            + ", ".join(unexpected_entries)
+        )
+    if app.read_text() != buggy_source:
+        raise AdapterError("fixture app changed before local reproduction commit")
+    relative_app = str(relative_app)
+    _run_local_git(root, ("init", "--quiet"))
+    _run_local_git(root, ("add", "--", relative_app))
+    _run_local_git(
+        root,
+        (
+            "-c",
+            "user.name=pstack fixture",
+            "-c",
+            "user.email=pstack-fixture@example.invalid",
+            "commit",
+            "--quiet",
+            "-m",
+            "test(pstack): reproduce notes search failure",
+        ),
+    )
+    reproduction_commit = _run_local_git(root, ("log", "-1", "--format=%H")).strip()
+    before_hash = hashlib.sha256(app.read_bytes()).hexdigest()
+
+    app.write_text(corrected_source)
+    after_hash = hashlib.sha256(app.read_bytes()).hexdigest()
+    _run_local_git(root, ("add", "--", relative_app))
+    _run_local_git(
+        root,
+        (
+            "-c",
+            "user.name=pstack fixture",
+            "-c",
+            "user.email=pstack-fixture@example.invalid",
+            "commit",
+            "--quiet",
+            "-m",
+            "fix(pstack): normalize notes search",
+        ),
+    )
+    correction_commit = _run_local_git(root, ("log", "-1", "--format=%H")).strip()
+    subjects = tuple(
+        line.strip()
+        for line in _run_local_git(root, ("log", "-2", "--format=%s")).splitlines()
+        if line.strip()
+    )
+
+    with tempfile.TemporaryDirectory(prefix="pstack-pr-remote-") as remote_dir:
+        remote = Path(remote_dir)
+        _run_local_git(root, ("init", "--bare", "--quiet", str(remote)))
+        _run_local_git(root, ("remote", "add", "fixture-remote", str(remote)))
+        _run_local_git(
+            root,
+            ("push", "--quiet", "fixture-remote", "HEAD:refs/heads/fix/notes-search"),
+        )
+        remote_head = _run_local_git(
+            root,
+            ("ls-remote", "fixture-remote", "refs/heads/fix/notes-search"),
+        ).split()[0]
+
+    return {
+        "status": "LOCAL_ONLY",
+        "reproduction_commit": reproduction_commit,
+        "correction_commit": correction_commit,
+        "subjects_newest_first": subjects,
+        "source_before_sha256": before_hash,
+        "source_after_sha256": after_hash,
+        "pr_simulation": {
+            "status": "SIMULATED_ONLY",
+            "remote_kind": "temporary local bare git remote",
+            "branch": "fix/notes-search",
+            "remote_head": remote_head,
+            "external_publish": False,
+            "real_pr": False,
+        },
+    }
+
+
 def run_bug_fix_playbook_fixture(
     playbook_root: str | Path,
     project_root: str | Path,
@@ -405,12 +555,15 @@ def run_bug_fix_playbook_fixture(
     """Execute contextual bug-fix steps against the synthetic notes app.
 
     The exact ``bug-fix`` playbook is read first, then the fixture performs a
-    create/baseline search, reproduces a case-sensitive search failure, writes
-    the supplied prewritten correction to the fixture app, and repeats the
-    search. The correction is not generated by this playbook adapter. Each app
-    step is checked from independently captured process evidence. The result
-    is always fixture-only; this does not drive a live application or execute
-    any bundled pstack helper.
+    create/baseline search, reproduces a case-sensitive search failure, and
+    runs a trace command that supplies the observable mechanism. It records a
+    bounded hypothesis cut, a plan and diff review, commits the reproduction
+    before writing the supplied prewritten correction, pushes only to a
+    temporary local bare remote, and repeats the search. The correction is not
+    generated by this playbook adapter. Each app step is checked from
+    independently captured process evidence. The result is always fixture-only;
+    this does not drive a live application or execute any bundled pstack
+    helper.
     """
 
     playbook_read = read_pstack_playbook_fixture(playbook_root, "bug-fix")
@@ -420,7 +573,8 @@ def run_bug_fix_playbook_fixture(
             "playbook": "bug-fix",
             "playbook_read": playbook_read,
             "playbook_step_scope": {
-                "exercised": (),
+                "completed": (),
+                "partial": (),
                 "unexercised": (1, 2, 3, 4, 5, 6),
             },
             "evidence_scope": (),
@@ -474,13 +628,17 @@ def run_bug_fix_playbook_fixture(
             "playbook_read": playbook_read,
             "before": before,
             "failure": failure,
+            "diagnosis": {"status": "NOT_RUN"},
+            "plan": {"status": "NOT_RUN"},
             "correction": {
                 "status": "NOT_RUN",
                 "reason": "bug-specific failure evidence did not match",
             },
             "after": {"status": "NOT_RUN"},
+            "local_history": {"status": "NOT_RUN"},
             "playbook_step_scope": {
-                "exercised": (1,),
+                "completed": (1,),
+                "partial": (),
                 "unexercised": (2, 3, 4, 5, 6),
             },
             "evidence_scope": ("exit_code", "stdout", "stderr"),
@@ -488,15 +646,116 @@ def run_bug_fix_playbook_fixture(
             "filesystem_isolation": "not_observed",
             "network_isolation": "not_observed",
         }
-    before_hash = hashlib.sha256(app.read_bytes()).hexdigest()
-    app.write_text(corrected_source)
-    after_hash = hashlib.sha256(app.read_bytes()).hexdigest()
+
+    diagnostic = run_local_app_fixture(
+        root,
+        app,
+        ("trace-search", "release"),
+        expected_stdout=(
+            "trace:query=release;title=Release checklist;"
+            "comparison=case-sensitive;matched=false\n"
+        ),
+    )
+    if before["status"] != "PASS" or diagnostic["status"] != "PASS":
+        return {
+            "status": "ERROR",
+            "playbook": "bug-fix",
+            "playbook_read": playbook_read,
+            "before": before,
+            "failure": failure,
+            "diagnosis": {
+                "status": "NOT_CONFIRMED",
+                "evidence": diagnostic["evidence"],
+                "reason": "observable diagnosis did not match the case-sensitive mechanism",
+            },
+            "plan": {"status": "NOT_RUN"},
+            "correction": {"status": "NOT_RUN"},
+            "after": {"status": "NOT_RUN"},
+            "local_history": {"status": "NOT_RUN"},
+            "playbook_step_scope": {
+                "completed": (1,),
+                "partial": (2,),
+                "unexercised": (3, 4, 5, 6),
+            },
+            "evidence_scope": ("exit_code", "stdout", "stderr"),
+            "environment": "local-notes-bug-fix-fixture",
+            "filesystem_isolation": "not_observed",
+            "network_isolation": "not_observed",
+        }
+
+    diagnosis = {
+        "status": "HYPOTHESIS_SUPPORTED",
+        "candidate_hypotheses": ("missing note data", "case-sensitive search predicate"),
+        "surviving_hypothesis": "case-sensitive search predicate",
+        "mechanism": "lower-case query is compared without normalizing the stored title",
+        "observed": {
+            "baseline": before_search["evidence"],
+            "failure": failure["evidence"],
+            "trace": diagnostic["evidence"],
+        },
+    }
+    diff_text = "".join(
+        difflib.unified_diff(
+            buggy_source.splitlines(keepends=True),
+            corrected_source.splitlines(keepends=True),
+            fromfile="app.py (reproduction)",
+            tofile="app.py (prewritten correction)",
+        )
+    )
+    plan = {
+        "status": "PLAN_RECORDED",
+        "hypothesis": diagnosis["surviving_hypothesis"],
+        "change": "normalize query and stored title with casefold before membership",
+        "diff": diff_text,
+        "review": {
+            "status": "DIFF_RECORDED",
+            "scope": "single search predicate",
+            "source": "prewritten correction supplied by fixture caller",
+            "mode": "structural_only",
+            "delegation": "NOT_RUN",
+        },
+    }
+    try:
+        local_history = _record_local_bug_fix_history(
+            root,
+            app,
+            buggy_source,
+            corrected_source,
+        )
+    except (AdapterError, MissingCapability) as exc:
+        return {
+            "status": "ERROR",
+            "playbook": "bug-fix",
+            "playbook_read": playbook_read,
+            "before": before,
+            "failure": failure,
+            "diagnosis": diagnosis,
+            "plan": plan,
+            "correction": {
+                "status": "NOT_RUN",
+                "reason": f"local history proof unavailable: {exc}",
+            },
+            "after": {"status": "NOT_RUN"},
+            "local_history": {"status": "BLOCKED", "reason": str(exc)},
+            "playbook_step_scope": {
+                "completed": (1,),
+                "partial": (2, 3),
+                "unexercised": (4, 5, 6),
+            },
+            "evidence_scope": ("exit_code", "stdout", "stderr"),
+            "environment": "local-notes-bug-fix-fixture",
+            "filesystem_isolation": "not_observed",
+            "network_isolation": "not_observed",
+        }
     correction = {
-        "status": "CORRECTED" if before_hash != after_hash else "ERROR",
+        "status": "CORRECTED"
+        if local_history["source_before_sha256"] != local_history["source_after_sha256"]
+        else "ERROR",
         "source": "prewritten correction supplied by fixture caller",
-        "source_before_sha256": before_hash,
-        "source_after_sha256": after_hash,
-        "changed": before_hash != after_hash,
+        "source_before_sha256": local_history["source_before_sha256"],
+        "source_after_sha256": local_history["source_after_sha256"],
+        "changed": local_history["source_before_sha256"]
+        != local_history["source_after_sha256"],
     }
     after = run_local_app_fixture(
         root,
@@ -507,6 +766,10 @@ def run_bug_fix_playbook_fixture(
     successful = (
         before["status"] == "PASS"
         and failure["status"] == "FAIL"
+        and diagnosis["status"] == "HYPOTHESIS_SUPPORTED"
+        and plan["status"] == "PLAN_RECORDED"
+        and plan["review"]["status"] == "DIFF_RECORDED"
+        and local_history["status"] == "LOCAL_ONLY"
         and correction["status"] == "CORRECTED"
         and after["status"] == "PASS"
     )
@@ -516,17 +779,25 @@ def run_bug_fix_playbook_fixture(
         "playbook_read": playbook_read,
         "before": before,
         "failure": failure,
+        "diagnosis": diagnosis,
+        "plan": plan,
         "correction": correction,
         "after": after,
+        "local_history": local_history,
         "playbook_step_scope": {
-            "exercised": BUG_FIX_EXERCISED_STEPS,
-            "unexercised": BUG_FIX_UNEXERCISED_STEPS,
+            "completed": BUG_FIX_COMPLETED_STEPS,
+            "partial": BUG_FIX_PARTIAL_STEPS,
+            "unexercised": (),
         },
         "contextual_steps": (
             "create note",
             "baseline exact-case search",
             "reproduce lower-case search failure",
-            "write corrected fixture source",
+            "trace observable search mechanism",
+            "record hypothesis cut and review prewritten correction diff",
+            "commit reproduction before correction",
+            "write prewritten corrected fixture source and commit correction",
+            "push to temporary local bare remote as PR simulation",
             "repeat lower-case search",
         ),
         "evidence_scope": ("exit_code", "stdout", "stderr"),

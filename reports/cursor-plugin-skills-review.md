@@ -17,7 +17,7 @@ parses. Held submission-audit and scaffold previews have bounded static fixtures
 for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
 disposable-destination generation; their security holds are retained.
 `pytest -q tests` passed 158 tests and 2 subtests; mirror `--check`
-passed at 91 physical, 54 emitted and 167 output files. CI passed on `ed1088ca`.
+passed at 91 physical, 54 emitted and 167 output files. CI passed on `ad8b99f8`.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

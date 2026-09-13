@@ -10,10 +10,11 @@ changing the published catalog. The pstack core has 23 mapped playbooks and
 fixture-only verification and local app evidence; Advisor/Ralph/continual-learning
 have inactive synthetic native hook adapters. Four agent-compatibility reviewer
 roles are bundled in a held preview, whose previously invalid frontmatter now
-parses. A held submission-audit preview has a read-only structural fixture for
-manifest/path/frontmatter presence and passive hook/MCP detection; its security
-hold is retained. `pytest -q tests` passed 150 tests and 2 subtests; mirror `--check`
-passed at 91 physical, 54 emitted and 167 output files. CI passed on `d502296d`.
+parses. Held submission-audit and scaffold previews have bounded static fixtures
+for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
+disposable-destination generation; their security holds are retained.
+`pytest -q tests` passed 154 tests and 2 subtests; mirror `--check`
+passed at 91 physical, 54 emitted and 167 output files. CI passed on `bff5ec6c`.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

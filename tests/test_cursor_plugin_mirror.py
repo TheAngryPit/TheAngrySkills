@@ -27,6 +27,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/sync-cursor-plugin-skills.py",
             "scripts/cursor_native_hook_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
+            "scripts/cursor_plugin_scaffold_fixture.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "reports/cursor-plugin-skills-state.json",
@@ -118,6 +119,23 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertFalse(
             (self.root / "skills/mirrors-cursor/cursor-review-plugin-submission").exists()
         )
+
+    def test_scaffold_fixture_and_role_references_remain_held(self):
+        preview = self.root / "native-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        candidate = preview / "cursor-create-plugin-scaffold"
+        source = self.root / "scripts/cursor_plugin_scaffold_fixture.py"
+        bundled = candidate / "scripts/cursor_plugin_scaffold_fixture.py"
+        self.assertEqual(bundled.read_bytes(), source.read_bytes())
+        role = (candidate / "references/plugin-architect.md").read_text()
+        rule = (candidate / "references/plugin-quality-gates.md").read_text()
+        self.assertNotIn("model: inherit", role)
+        self.assertNotIn("readonly: true", role)
+        self.assertNotIn("alwaysApply: true", rule)
+        self.assertIn("explicit disposable project-local destination", role)
+        self.assertIn("explicit disposable project-local destination", rule)
+        self.assertFalse((self.root / "skills/mirrors-cursor/cursor-create-plugin-scaffold").exists())
 
     def test_native_adapter_is_pinned_and_bundled_only_for_related_skills(self):
         preview = self.root / "native-preview"

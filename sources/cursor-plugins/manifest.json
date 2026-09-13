@@ -2420,6 +2420,12 @@
       "related_skills": [
         "cursor-review-plugin-submission"
       ]
+    },
+    "scripts/cursor_plugin_scaffold_fixture.py": {
+      "sha256": "43fa6e7858157997b4563c32bd012afc386622af432116a8168fecf6120acffe",
+      "related_skills": [
+        "cursor-create-plugin-scaffold"
+      ]
     }
   }
 }

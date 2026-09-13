@@ -14,6 +14,7 @@ from cursor_functional_adapters import (  # noqa: E402
     AdapterError,
     PSTACK_PLAYBOOK_FILES,
     read_pstack_playbook_fixture,
+    run_bug_fix_playbook_fixture,
     run_local_app_fixture,
     run_verification_fixture,
     select_verification_target,
@@ -34,6 +35,34 @@ CORE = (
     "cursor-poteto-mode",
     "cursor-create-verification-skill",
     "cursor-maintain-verification-skill",
+)
+BUGGY_NOTES_APP = """
+from pathlib import Path
+import json
+import sys
+
+store = Path("notes.json")
+command = sys.argv[1]
+if command == "create":
+    note = {"title": sys.argv[2], "body": sys.argv[3]}
+    notes = json.loads(store.read_text()) if store.exists() else []
+    notes.append(note)
+    store.write_text(json.dumps(notes))
+    print(f"created:{note['title']}")
+elif command == "search":
+    query = sys.argv[2]
+    notes = json.loads(store.read_text()) if store.exists() else []
+    matches = [note["title"] for note in notes if query in note["title"]]
+    if not matches:
+        print("not-found")
+        raise SystemExit(1)
+    print("found:" + ",".join(matches))
+else:
+    raise SystemExit("unknown command")
+"""
+FIXED_NOTES_APP = BUGGY_NOTES_APP.replace(
+    'query in note["title"]',
+    'query.casefold() in note["title"].casefold()',
 )
 
 
@@ -278,34 +307,8 @@ class CursorPstackCoreTests(unittest.TestCase):
             "create-note": "Create a note and record the evidence.",
             "search": "Search notes and record the evidence.",
         }
-        buggy_app = """
-from pathlib import Path
-import json
-import sys
-
-store = Path("notes.json")
-command = sys.argv[1]
-if command == "create":
-    note = {"title": sys.argv[2], "body": sys.argv[3]}
-    notes = json.loads(store.read_text()) if store.exists() else []
-    notes.append(note)
-    store.write_text(json.dumps(notes))
-    print(f"created:{note['title']}")
-elif command == "search":
-    query = sys.argv[2]
-    notes = json.loads(store.read_text()) if store.exists() else []
-    matches = [note["title"] for note in notes if query in note["title"]]
-    if not matches:
-        print("not-found")
-        raise SystemExit(1)
-    print("found:" + ",".join(matches))
-else:
-    raise SystemExit("unknown command")
-"""
-        fixed_app = buggy_app.replace(
-            'query in note["title"]',
-            'query.casefold() in note["title"].casefold()',
-        )
+        buggy_app = BUGGY_NOTES_APP
+        fixed_app = FIXED_NOTES_APP
 
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -367,6 +370,91 @@ else:
                     "stderr": "",
                 },
             )
+
+    def test_bug_fix_playbook_executes_contextual_notes_steps(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            staging = self.render_core("cursor-poteto-mode", root / "staging")
+            app = root / "app.py"
+            app.write_text(BUGGY_NOTES_APP)
+            result = run_bug_fix_playbook_fixture(
+                staging / "playbooks",
+                root,
+                app,
+                buggy_source=BUGGY_NOTES_APP,
+                corrected_source=FIXED_NOTES_APP,
+            )
+
+            self.assertEqual(result["status"], "FIXTURE_ONLY")
+            self.assertEqual(result["playbook"], "bug-fix")
+            self.assertEqual(result["playbook_read"]["status"], "READ")
+            self.assertNotEqual(result["playbook_read"]["status"], "APPLIED")
+            self.assertEqual(
+                result["playbook_step_scope"],
+                {"exercised": (1, 4), "unexercised": (2, 3, 5, 6)},
+            )
+            self.assertEqual(result["before"]["status"], "PASS")
+            self.assertEqual(result["failure"]["status"], "FAIL")
+            self.assertEqual(result["correction"]["status"], "CORRECTED")
+            self.assertTrue(result["correction"]["changed"])
+            self.assertEqual(result["after"]["status"], "PASS")
+            self.assertEqual(
+                result["failure"]["evidence"],
+                {
+                    "exit_code": 1,
+                    "stdout": "not-found\n",
+                    "stderr": "",
+                },
+            )
+            self.assertEqual(
+                result["after"]["evidence"],
+                {
+                    "exit_code": 0,
+                    "stdout": "found:Release checklist\n",
+                    "stderr": "",
+                },
+            )
+            self.assertEqual(
+                result["contextual_steps"],
+                (
+                    "create note",
+                    "baseline exact-case search",
+                    "reproduce lower-case search failure",
+                    "write corrected fixture source",
+                    "repeat lower-case search",
+                ),
+            )
+            self.assertEqual(result["evidence_scope"], ("exit_code", "stdout", "stderr"))
+            self.assertEqual(result["filesystem_isolation"], "not_observed")
+            self.assertEqual(result["network_isolation"], "not_observed")
+
+    def test_bug_fix_playbook_requires_bug_specific_failure_before_correction(self):
+        wrong_failure_app = BUGGY_NOTES_APP.replace(
+            "raise SystemExit(1)",
+            "raise SystemExit(2)",
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            staging = self.render_core("cursor-poteto-mode", root / "staging")
+            app = root / "app.py"
+            app.write_text(wrong_failure_app)
+            result = run_bug_fix_playbook_fixture(
+                staging / "playbooks",
+                root,
+                app,
+                buggy_source=wrong_failure_app,
+                corrected_source=FIXED_NOTES_APP,
+            )
+
+            self.assertEqual(result["status"], "ERROR")
+            self.assertEqual(result["failure"]["evidence"]["exit_code"], 2)
+            self.assertEqual(result["correction"]["status"], "NOT_RUN")
+            self.assertEqual(result["after"]["status"], "NOT_RUN")
+            self.assertEqual(
+                result["playbook_step_scope"],
+                {"exercised": (1, 4), "unexercised": (2, 3, 5, 6)},
+            )
+            self.assertEqual(app.read_text(), wrong_failure_app)
 
     def test_local_app_fixture_rejects_outside_or_symlinked_apps(self):
         with tempfile.TemporaryDirectory() as temporary:

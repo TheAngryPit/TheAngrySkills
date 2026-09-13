@@ -14,6 +14,7 @@ import re
 import shlex
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 
@@ -22,6 +23,10 @@ class HookInputError(ValueError):
 
 
 def _state_path(project: Path, family: str) -> Path:
+    for parent in (project / ".codex", project / ".codex" / "cursor-mirror-state",
+                   project / ".codex" / "cursor-mirror-state" / family):
+        if parent.is_symlink():
+            raise HookInputError("hook state directory must not be a symlink")
     return project / ".codex" / "cursor-mirror-state" / family / "state.json"
 
 
@@ -162,6 +167,8 @@ def advisor_subagent_stop(event: dict, project: Path) -> dict:
     agent_id = event.get("agent_id")
     if not isinstance(agent_id, str) or agent_id != state.get("expected_agent_id"):
         return {}
+    if event.get("agent_type") != "advisor-subagent":
+        return {}
     if agent_id == state.get("last_recorded_agent_id"):
         return {}
     message = event.get("last_assistant_message")
@@ -172,6 +179,36 @@ def advisor_subagent_stop(event: dict, project: Path) -> dict:
     state["last_recorded_agent_id"] = agent_id
     state["expected_agent_id"] = None
     state["last_verdict"] = message[:6000]
+    _save(path, state)
+    return {}
+
+
+def advisor_post_tool_use(event: dict, project: Path) -> dict:
+    """Mark a successful, known patch as pending for this task only.
+
+    Bash and arbitrary MCP commands cannot be inferred to have edited a file
+    from their names or output. They require a separate, proved change sensor.
+    """
+    if not _bound_event(event, project, "PostToolUse"):
+        return {}
+    if event.get("tool_name") != "apply_patch":
+        return {}
+    path = _state_path(project, "advisor")
+    state = _load(path)
+    if state is None or not _same_session(event, state) or not state.get("enabled"):
+        return {}
+    tool_use_id = event.get("tool_use_id")
+    if not isinstance(tool_use_id, str) or not tool_use_id:
+        raise HookInputError("missing Codex tool_use_id")
+    if state.get("last_edit_tool_use_id") == tool_use_id:
+        return {}
+    response = event.get("tool_response")
+    if isinstance(response, dict) and (
+        response.get("isError") is True or response.get("exit_code") not in (None, 0)
+    ):
+        return {}
+    state["pending"] = True
+    state["last_edit_tool_use_id"] = tool_use_id
     _save(path, state)
     return {}
 
@@ -206,10 +243,78 @@ def advisor_stop(event: dict, project: Path) -> dict:
     }
 
 
+def continual_learning_stop(event: dict, project: Path) -> dict:
+    """Evaluate pinned turn/time/mtime thresholds without reading transcripts."""
+    if not _bound_event(event, project, "Stop"):
+        return {}
+    path = _state_path(project, "continual-learning")
+    state = _load(path)
+    if state is None or not _same_session(event, state) or not state.get("enabled"):
+        return {}
+    turn_id = event.get("turn_id")
+    if not isinstance(turn_id, str) or not turn_id:
+        raise HookInputError("missing Codex turn_id")
+    if state.get("last_processed_turn_id") == turn_id or event.get("stop_hook_active") is True:
+        return {}
+    root_value = state.get("transcript_root")
+    transcript_value = event.get("transcript_path")
+    if not isinstance(root_value, str) or not Path(root_value).is_absolute():
+        raise HookInputError("continual-learning needs an absolute transcript root")
+    root = Path(root_value).resolve()
+    transcript_mtime = None
+    if isinstance(transcript_value, str) and transcript_value:
+        transcript = Path(transcript_value)
+        if (transcript.is_absolute() and not transcript.is_symlink()
+                and transcript.resolve().is_relative_to(root) and transcript.is_file()):
+            transcript_mtime = transcript.stat().st_mtime_ns // 1_000_000
+    now = time.time_ns() // 1_000_000
+    turns = state.get("turns_since_last_run", 0)
+    last_run = state.get("last_run_at_ms", 0)
+    last_mtime = state.get("last_transcript_mtime_ms")
+    if (type(turns) is not int or turns < 0 or type(last_run) is not int or last_run < 0
+            or last_mtime is not None and (type(last_mtime) is not int or last_mtime < 0)):
+        raise HookInputError("invalid continual-learning counters")
+    trial = state.get("trial", {})
+    if not isinstance(trial, dict):
+        raise HookInputError("invalid continual-learning trial settings")
+    trial_started = state.get("trial_started_at_ms")
+    if trial.get("enabled") and trial_started is None:
+        trial_started = now
+        state["trial_started_at_ms"] = now
+    in_trial = (trial.get("enabled") is True and type(trial_started) is int
+                and now - trial_started < 60_000 * 1440)
+    minimum_turns = 3 if in_trial else 10
+    minimum_minutes = 15 if in_trial else 120
+    state["last_processed_turn_id"] = turn_id
+    state["turns_since_last_run"] = turns + 1
+    advanced = transcript_mtime is not None and (
+        last_mtime is None or transcript_mtime > last_mtime
+    )
+    elapsed = last_run == 0 or now - last_run >= minimum_minutes * 60_000
+    if state["turns_since_last_run"] >= minimum_turns and elapsed and advanced:
+        state["last_run_at_ms"] = now
+        state["turns_since_last_run"] = 0
+        state["last_transcript_mtime_ms"] = transcript_mtime
+        _save(path, state)
+        return {
+            "decision": "block",
+            "reason": ("Run `cursor-continual-learning` with a bounded native memory-updater "
+                       "only if that held skill and role are available in this project. "
+                       "Consider only transcripts not indexed or with newer mtime, "
+                       "exclude secrets and transient details, and edit AGENTS.md only "
+                       "within the operator's authorized scope. Otherwise report the "
+                       "exact capability gap and stop."),
+        }
+    _save(path, state)
+    return {}
+
+
 HOOK_HANDLERS = {
     "ralph-stop": ralph_stop,
+    "advisor-post-tool-use": advisor_post_tool_use,
     "advisor-subagent-stop": advisor_subagent_stop,
     "advisor-stop": advisor_stop,
+    "continual-learning-stop": continual_learning_stop,
 }
 
 

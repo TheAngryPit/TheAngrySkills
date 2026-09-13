@@ -327,8 +327,12 @@ else:
                 expected_stdout="created:Release checklist\n",
             )
             self.assertEqual(created["status"], "PASS")
-            self.assertEqual(created["environment"], "isolated-local-app-fixture")
-            self.assertFalse(created["external_writes"])
+            self.assertEqual(created["environment"], "local-app-fixture-process")
+            self.assertEqual(
+                created["evidence_scope"], ("exit_code", "stdout", "stderr")
+            )
+            self.assertEqual(created["filesystem_isolation"], "not_observed")
+            self.assertEqual(created["network_isolation"], "not_observed")
 
             failed = run_local_app_fixture(
                 root,

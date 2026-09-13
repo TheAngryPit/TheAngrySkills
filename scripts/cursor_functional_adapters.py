@@ -280,7 +280,10 @@ def run_local_app_fixture(
     accepts only a regular Python file under a non-symlink project root,
     invokes it through the current interpreter with ``shell=False``, closes
     stdin, strips inherited environment variables, and never starts a live
-    product, cloud task, or bundled pstack helper.
+    product, cloud task, or bundled pstack helper. It is not a security
+    sandbox: filesystem writes and network access by the fixture are not
+    observed or prevented. The proof claim is limited to captured output and
+    exit status.
     """
 
     root_path = Path(project_root)
@@ -350,9 +353,10 @@ def run_local_app_fixture(
                 "exit_code": expected_exit_code,
                 "stdout": expected_stdout,
             },
-            "environment": "isolated-local-app-fixture",
-            "external_writes": False,
-            "fixture_writes": True,
+            "environment": "local-app-fixture-process",
+            "evidence_scope": ("exit_code", "stdout", "stderr"),
+            "filesystem_isolation": "not_observed",
+            "network_isolation": "not_observed",
         }
 
     evidence = {
@@ -373,9 +377,10 @@ def run_local_app_fixture(
         "arguments": argv,
         "evidence": evidence,
         "expected": expected,
-        "environment": "isolated-local-app-fixture",
-        "external_writes": False,
-        "fixture_writes": True,
+        "environment": "local-app-fixture-process",
+        "evidence_scope": ("exit_code", "stdout", "stderr"),
+        "filesystem_isolation": "not_observed",
+        "network_isolation": "not_observed",
     }
 
 

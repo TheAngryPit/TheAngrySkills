@@ -80,6 +80,7 @@ PROMOTED = {
     "cursor-principle-laziness-protocol",
     "cursor-principle-prove-it-works",
     "cursor-technical-writing",
+    "cursor-ralph-loop-help",
 }
 
 GUIDE_ONLY = PROMOTED - {"cursor-cursor-team-kit-pr-review-canvas"}

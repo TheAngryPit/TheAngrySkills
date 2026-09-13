@@ -1,5 +1,17 @@
 # Cursor plugin skills mirror — implementation review
 
+2026-09-13 local branch addendum (`codex/cursor-full-sol-20260913`): one held
+instruction-only skill, `cursor-ralph-loop-help`, is now emitted as a guide to
+the external Cursor plugin. It never starts or cancels a Codex loop; the native
+`cursor-ralph-loop` and `cursor-cancel-ralph` remain held for runtime proof.
+The local branch has 54 emitted / 34 active held / 3 upstream dormant, while
+the public `origin/main` baseline described below remains 53 / 35 / 3.
+`scripts/sync-cursor-plugin-skills.py --check`, 16 Cursor unit tests, and
+`pytest -q tests` (116 passed, 2 subtests passed) completed in this branch.
+The new `--preview-candidates` path renders all 88 active skills for review
+without changing the published catalog; all 88 frontmatters parse in that
+preview. This does not prove native skill selection or loop execution.
+
 Base: TheAngrySkills `main` at `0706a19a4aac46a8db0a01e48dfe9ddc76768ca8`.
 Source: `cursor/plugins` at `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 Scope: skills, support files and required local catalog registration; no

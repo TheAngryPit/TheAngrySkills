@@ -2018,7 +2018,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only; native Ralph loop execution remains unproven",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2032,8 +2032,8 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "ralph-loop/skills/ralph-loop-help/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "This skill only explains the external Cursor Ralph Loop and has no write, hook, or network action; live Codex selection is still unproven.",
+      "publish": true,
       "published_name": "cursor-ralph-loop-help",
       "upstream_purpose": "Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.",
       "upstream_skill": "ralph-loop-help",

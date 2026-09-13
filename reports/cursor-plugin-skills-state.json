@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 35,
+  "candidate_not_published": 34,
   "generated_files": {
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "c9b8e41ac8d9045001b560df1459594376a04f88dbca8da0bf7601846e9444ca",
@@ -121,6 +121,9 @@
     "cursor-principle-type-system-discipline/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-principle-type-system-discipline/MIRROR.md": "a107b55e46f9b5f18ada9d6e0af6eb2cb22d40bdfea92f6f1eeabeae1623ce2f",
     "cursor-principle-type-system-discipline/SKILL.md": "8cf511ec50bfcc02490b697134f5913c601b37269c45a8fe9351df01014e9855",
+    "cursor-ralph-loop-help/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+    "cursor-ralph-loop-help/MIRROR.md": "e39d34a1d9c10b42f6cc39e7acfa7053aeca1ebc12c692bfb7b14f6754f9877d",
+    "cursor-ralph-loop-help/SKILL.md": "3b56a37df77005e2b0325cb2c92f3b0bd5a44405d04add94d09c6a6c291a8494",
     "cursor-review-and-ship/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-review-and-ship/MIRROR.md": "3481c8152565705d6c853dcdd96df966d499bf8fd0d84d4579a4878460bc411c",
     "cursor-review-and-ship/SKILL.md": "15bbf6bb4a4b60d1bf49d5d45dfc4d4d8d3b88b11fbb5169190d2db6041207a2",
@@ -167,7 +170,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 53,
+  "published_skills": 54,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

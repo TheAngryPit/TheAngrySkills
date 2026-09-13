@@ -13,6 +13,11 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 
 
+def published_count(root: Path = REPO) -> int:
+    manifest = json.loads((root / "sources/cursor-plugins/manifest.json").read_text())
+    return sum(entry["publish"] for entry in manifest["skills"])
+
+
 class CursorMirrorTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="cursor-mirror-test-")
@@ -45,7 +50,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("91 physical, 53 published", result.stdout)
+        self.assertIn(f"91 physical, {published_count()} published", result.stdout)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"
@@ -88,7 +93,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         marketplace = json.loads((self.root / ".claude-plugin/marketplace.json").read_text())
         cursor_family = next(plugin for plugin in marketplace["plugins"] if plugin["name"] == "mirrors-cursor")
-        self.assertEqual(len(cursor_family["skills"]), 52)
+        self.assertEqual(len(cursor_family["skills"]), published_count() - 1)
         self.assertNotIn("./skills/mirrors-cursor/cursor-cli-for-agents", cursor_family["skills"])
 
     def test_published_relative_markdown_links_resolve(self):
@@ -115,7 +120,7 @@ class CursorMirrorTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
         results = json.loads(result.stdout)["results"]
-        self.assertEqual(len(results), 53)
+        self.assertEqual(len(results), published_count())
         for item in results:
             self.assertEqual(item["counts"]["error"], 0, item)
 

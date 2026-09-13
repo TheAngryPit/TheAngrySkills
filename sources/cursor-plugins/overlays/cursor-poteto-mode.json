@@ -26,7 +26,7 @@
       "playbook_root": "skills/mirrors-cursor/cursor-poteto-mode/playbooks/",
       "playbook_count": 23,
       "fallback": "Missing companion playbook or native capability produces a labeled sequential fallback; the mode never silently widens scope.",
-      "availability": "renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; bug-fix steps 1/4/5 complete locally and 2/3/6 partial; live playbook application, native session, cloud task lane, real PR, and bundled orch/watch-pr behavior not proven",
+      "availability": "renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; fixture-local portions of bug-fix steps 1/4/5 exercised and 2/3/6 partial; live playbook application, native session, cloud task lane, real PR, and bundled orch/watch-pr behavior not proven",
       "routing_authority": "model-capability-router remains the standing model authority; proof-orchestrator selects the proof path",
       "session_behavior": "per-turn guidance only; no sticky mode, background agent, or future invocation is claimed",
       "concrete_skill_dependencies": {
@@ -55,7 +55,7 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "The rendered `bug-fix` playbook is read structurally, then a synthetic notes app executes a bounded local path with contextual create, baseline-search, induced-failure, observable trace, prewritten-correction, local reproduction/fix commits, temporary local bare remote simulation, and after-search with independent stdout/exit evidence. The result is `FIXTURE_ONLY`, never `APPLIED`; source steps 1, 4, and 5 are complete locally, while 2, 3, and 6 are partial, with no live parity or real PR claim.",
+      "positive": "The rendered `bug-fix` playbook is read structurally, then a synthetic notes app executes a bounded local path with contextual create, baseline-search, induced-failure, observable trace, prewritten-correction, local reproduction/fix commits, temporary local bare remote simulation, and after-search with independent stdout/exit evidence. The result is `FIXTURE_ONLY`, never `APPLIED`; fixture-local portions of source steps 1, 4, and 5 are exercised, while 2, 3, and 6 are partial, with no live parity or real PR claim.",
       "missing_tool_or_input": "Isolated fixture returns the labeled sequential fallback when the selected playbook file is absent or a required capability is unavailable.",
       "error": "Isolated fixture returns an explicit error for an empty playbook file or unknown playbook, and the notes fixture returns `ERROR` without writing the correction unless the exact bug-specific failure evidence matches. Local history also requires an explicit disposable-fixture marker and rejects unexpected root entries or a Git timeout. No bundled orch/watch-pr script or live native session is executed; the proof remains partial on source steps 2, 3, and 6."
     },

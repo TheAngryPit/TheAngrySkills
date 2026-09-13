@@ -490,7 +490,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertNotEqual(result["playbook_read"]["status"], "APPLIED")
             self.assertEqual(
                 result["playbook_step_scope"],
-                {"completed": (1, 4, 5), "partial": (2, 3, 6), "unexercised": ()},
+                {"fixture_completed": (1, 4, 5), "partial": (2, 3, 6), "unexercised": ()},
             )
             self.assertEqual(result["before"]["status"], "PASS")
             self.assertEqual(result["failure"]["status"], "FAIL")
@@ -580,7 +580,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertEqual(result["after"]["status"], "NOT_RUN")
             self.assertEqual(
                 result["playbook_step_scope"],
-                {"completed": (1,), "partial": (), "unexercised": (2, 3, 4, 5, 6)},
+                {"fixture_completed": (1,), "partial": (), "unexercised": (2, 3, 4, 5, 6)},
             )
             self.assertEqual(app.read_text(), wrong_failure_app)
 

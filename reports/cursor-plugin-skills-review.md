@@ -6,15 +6,18 @@ guide to the external Cursor plugin; it never starts or cancels a Codex loop.
 The branch has 54 emitted / 34 active held / 3 upstream dormant, while the
 public `origin/main` baseline described below was 53 / 35 / 3. The
 `--preview-candidates` path renders all 88 active skills for review without
-changing the published catalog. The pstack core has 23 mapped playbooks and
-fixture-only verification and local app evidence; Advisor/Ralph/continual-learning
+changing the published catalog. The pstack core has 23 mapped playbooks,
+fixture-only verification and a local notes-app `bug-fix` path with reproduction,
+trace, prewritten correction, local Git history, and PR simulation.
+`check-plan.mjs` ran on temporary plans; `worktree-audit.sh` ran with mocked
+external commands. Advisor/Ralph/continual-learning
 have inactive synthetic native hook adapters. Four agent-compatibility reviewer
 roles are bundled in a held preview, whose previously invalid frontmatter now
 parses. Held submission-audit and scaffold previews have bounded static fixtures
 for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
 disposable-destination generation; their security holds are retained.
-`pytest -q tests` passed 154 tests and 2 subtests; mirror `--check`
-passed at 91 physical, 54 emitted and 167 output files. CI passed on `bff5ec6c`.
+`pytest -q tests` passed 158 tests and 2 subtests; mirror `--check`
+passed at 91 physical, 54 emitted and 167 output files. CI passed on `ed1088ca`.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

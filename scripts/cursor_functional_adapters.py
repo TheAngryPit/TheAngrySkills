@@ -63,7 +63,7 @@ PSTACK_PLAYBOOK_FILES = (
     "visual-parity",
     "worktree-cleanup",
 )
-BUG_FIX_COMPLETED_STEPS = (1, 4, 5)
+BUG_FIX_FIXTURE_COMPLETED_STEPS = (1, 4, 5)
 BUG_FIX_PARTIAL_STEPS = (2, 3, 6)
 PSTACK_FIXTURE_MARKER = ".pstack-disposable-fixture"
 PSTACK_FIXTURE_MARKER_CONTENT = "pstack-local-bug-fix-fixture-v1\n"
@@ -573,7 +573,7 @@ def run_bug_fix_playbook_fixture(
             "playbook": "bug-fix",
             "playbook_read": playbook_read,
             "playbook_step_scope": {
-                "completed": (),
+                "fixture_completed": (),
                 "partial": (),
                 "unexercised": (1, 2, 3, 4, 5, 6),
             },
@@ -637,7 +637,7 @@ def run_bug_fix_playbook_fixture(
             "after": {"status": "NOT_RUN"},
             "local_history": {"status": "NOT_RUN"},
             "playbook_step_scope": {
-                "completed": (1,),
+                "fixture_completed": (1,),
                 "partial": (),
                 "unexercised": (2, 3, 4, 5, 6),
             },
@@ -673,7 +673,7 @@ def run_bug_fix_playbook_fixture(
             "after": {"status": "NOT_RUN"},
             "local_history": {"status": "NOT_RUN"},
             "playbook_step_scope": {
-                "completed": (1,),
+                "fixture_completed": (1,),
                 "partial": (2,),
                 "unexercised": (3, 4, 5, 6),
             },
@@ -738,7 +738,7 @@ def run_bug_fix_playbook_fixture(
             "after": {"status": "NOT_RUN"},
             "local_history": {"status": "BLOCKED", "reason": str(exc)},
             "playbook_step_scope": {
-                "completed": (1,),
+                "fixture_completed": (1,),
                 "partial": (2, 3),
                 "unexercised": (4, 5, 6),
             },
@@ -785,7 +785,7 @@ def run_bug_fix_playbook_fixture(
         "after": after,
         "local_history": local_history,
         "playbook_step_scope": {
-            "completed": BUG_FIX_COMPLETED_STEPS,
+            "fixture_completed": BUG_FIX_FIXTURE_COMPLETED_STEPS,
             "partial": BUG_FIX_PARTIAL_STEPS,
             "unexercised": (),
         },

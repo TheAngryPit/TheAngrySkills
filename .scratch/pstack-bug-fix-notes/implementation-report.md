@@ -51,14 +51,14 @@ entries, an existing `.git`, and a timeout. Filesystem and network isolation
 are `not_observed`.
 
 This is explicitly partial playbook proof. On the source `bug-fix` steps,
-completed locally are `(1, 4, 5)`: reproduction, repeat verification, and
+fixture-local portions exercised are `(1, 4, 5)`: reproduction, repeat verification, and
 local commit ordering. Partial are `(2, 3, 6)`: the fixture has a bounded
 hypothesis cut from baseline/failure/trace, a structural-only plan/diff record
 with no independent architect/delegation/review, and a local bare-remote PR
 simulation only. The source's two binary-search/how/why mechanism loop,
 architect/delegation/review, and real Opening a PR flow are not fully proven;
-there are no unexercised source steps claimed by this fixture because each is
-accounted for as complete or partial. No real PR was opened by this lot.
+the remaining source obligations are not claimed complete: each step is
+accounted for only within the synthetic fixture scope. No real PR was opened by this lot.
 
 The positive fixture does not claim full contextual app parity: it is one
 synthetic Python process surface with a JSON file, and filesystem/network

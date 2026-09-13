@@ -92,6 +92,21 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("plugin-level support inventory or hash drift", result.stderr)
 
+    def test_compatibility_preview_repairs_frontmatter_and_bundles_four_roles(self):
+        preview = self.root / "native-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        candidate = preview / "cursor-check-agent-compatibility"
+        skill = (candidate / "SKILL.md").read_text()
+        self.assertIn('description: "Run the full repository compatibility pass:', skill)
+        self.assertIn("package version, installation effects, and egress", skill)
+        for name in ("compatibility-scan-review", "startup-review",
+                     "validation-review", "docs-reliability-review"):
+            role = (candidate / "references" / f"{name}.md").read_text()
+            self.assertIn(f"name: {name}", role)
+            self.assertNotIn("model: fast", role)
+            self.assertNotIn("readonly: true", role)
+
     def test_native_adapter_is_pinned_and_bundled_only_for_related_skills(self):
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))

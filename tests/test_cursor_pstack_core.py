@@ -280,6 +280,88 @@ class CursorPstackCoreTests(unittest.TestCase):
             with self.assertRaises(AdapterError):
                 read_pstack_playbook_fixture(target / "playbooks", "not-a-playbook")
 
+    def test_poteto_preview_blocks_review_required_without_overclaiming_no_decision(self):
+        bun = shutil.which("bun")
+        if bun is None:
+            self.skipTest("bun unavailable")
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            target = self.render_core("cursor-poteto-mode", root / "staging")
+            driver = root / "review-required-driver.ts"
+            render = (target / "scripts/watch-pr/render.ts").as_posix()
+            policy = (target / "scripts/watch-pr/policy.ts").as_posix()
+            types = (target / "scripts/watch-pr/types.ts").as_posix()
+            driver.write_text(
+                f'''import {{ renderStatusTable }} from "{render}";
+import {{ classifyPr }} from "{policy}";
+import {{ parsePrNumber }} from "{types}";
+
+const context = {{ owner: "owner", repo: "repo", number: parsePrNumber(64) }};
+const check = {{ kind: "passed", name: "ci", reportedState: "SUCCESS", description: "", link: "", workflow: "" }};
+const base = {{
+  context,
+  mergeable: "MERGEABLE",
+  mergeStateStatus: "CLEAN",
+  headRefOid: "head",
+  headRefName: "feature",
+  baseRefName: "main",
+  state: "OPEN",
+  mergedAt: null,
+  isDraft: false,
+}};
+const snapshot = (reviewDecision: "REVIEW_REQUIRED" | null) => ({{
+  kind: "open",
+  context,
+  facts: {{ ...base, reviewDecision }},
+  threads: [],
+  ci: {{
+    source: "gh-pr-checks",
+    all: [check],
+    hadPreviousPassingCi: false,
+    kind: "ci-clean",
+    failed: [],
+    pending: [],
+    github: {{ kind: "allowed", basis: "merge-state", mergeStateStatus: "CLEAN", headRollupState: "SUCCESS" }},
+  }},
+  reviewAutomationRunning: false,
+}});
+const required = snapshot("REVIEW_REQUIRED");
+const noDecision = snapshot(null);
+console.log(JSON.stringify({{
+  required: {{ table: renderStatusTable([required]), decision: classifyPr(required) }},
+  noDecision: {{ table: renderStatusTable([noDecision]), decision: classifyPr(noDecision) }},
+}}));
+'''
+            )
+            environment = {
+                "PATH": f"{Path(bun).parent}:/usr/bin:/bin",
+                "HOME": str(root / "home"),
+                "LANG": "C",
+            }
+            checked = subprocess.run(
+                [bun, str(driver)],
+                cwd=str(root),
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=5.0,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stderr)
+            result = json.loads(checked.stdout)
+            required = result["required"]
+            self.assertEqual(required["table"].count("⏳ review required"), 2)
+            self.assertIn("| ⏳ review required | ⏳ review required |", required["table"])
+            self.assertEqual(required["decision"]["kind"], "blocker")
+            self.assertEqual(required["decision"]["blocker"]["kind"], "merge-gate")
+            self.assertEqual(required["decision"]["blocker"]["reason"], "review-required")
+            no_decision = result["noDecision"]
+            self.assertIn("— no decision", no_decision["table"])
+            self.assertEqual(no_decision["decision"]["kind"], "ready")
+
     def test_verification_mirrors_use_agents_root_and_native_harness_language(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary) / "staging"

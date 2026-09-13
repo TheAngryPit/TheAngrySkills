@@ -4,8 +4,10 @@ Date: 2026-09-13
 
 Status: fixture-only proof. A single approved dependency installation completed
 in an isolated scratch copy with the exact lock pins and `--ignore-scripts`.
-No live target application, cloud task, real GitHub query, real worktree
-operation, or external write was used. Bun `1.4.2` executed selected modules
+No live target application, cloud task, real worktree operation, or external
+write was used. One authorized real GitHub read-only status query was run
+against PR `TheAngryPit/TheAngrySkills#64`; no polling, stack operation, or
+merge action was performed. Bun `1.4.2` executed selected modules
 and CLI entrypoints from scratch copies. An earlier scratch run with an
 incorrectly generated bootstrap key entered the install path and failed with
 `DNSResolveFailed` for the requested tarballs before any package was
@@ -82,7 +84,7 @@ local checks were then run:
 | `watch-pr/github.ts` | Bun `1.4.2` ran the real `GhGitHubReader` from a scratch copy with mocked `git` and `gh`; origin, PR facts, open PRs, checks, rollup, threads, and commit status were parsed. A slow mocked `gh` was bounded by an external 1-second timeout and returned `-9` on this host. | This proves parser/command wiring with mocks and an outer timeout, not GitHub access, credentials, real CLI/bootstrap, or an intrinsic child-process timeout. |
 | `bootstrap.ts` + exact dependency set | One approved scratch install used explicit `https://registry.npmjs.org`, `--frozen-lockfile`, `--ignore-scripts`, minimal HOME/cache, and concurrency 1; it completed with status 0 and installed `commander 14.0.0`, `bun-types 1.3.14`, `typescript 7.0.2`, `@types/node 26.1.2`, and `undici-types 8.3.0`. The bootstrap fast path then returned `bootstrap-fast-path`. In a separate fresh scratch with no `node_modules`, `orch --help` exercised the real missing-key bootstrap install/restart against that populated cache, created the key, and left the same exact versions. | Exact dependency, bootstrap fast-path, and cache-populated missing-key bootstrap proof in scratch. The key checks package/lock bytes but not package version; the cache-populated run was not network-instrumented, so it is not an absolute zero-egress claim. |
 | `orch.ts` CLI | With the cache-populated bootstrap path and exact dependencies, real Bun CLI commands `init`, `unit add`, `unit list`, and `status` passed against a disposable store. The package test suite also passed all `52` tests. | Real Bun/entrypoint/commander and local file store; no external repo, network request, or GitHub operation. |
-| `watch-pr/watch-pr` CLI | With the cache-populated bootstrap path, exact dependencies, and mocked `gh`/`git`, `--status-only --pretty` returned the expected `#42` table with all three green verdicts. A slow mocked `gh` under the real entrypoint was killed by the external timeout with `-9` on this host. | Real Bun/entrypoint/exact commander plus mocks and an external timeout; no GitHub, credentials, or real-network behavior proof. |
+| `watch-pr/watch-pr` CLI | With the cache-populated bootstrap path, exact dependencies, and mocked `gh`/`git`, `--status-only --pretty` returned the expected `#42` table with all three green verdicts. A separate authorized real read-only `--status-only --pretty` query for PR `TheAngryPit/TheAngrySkills#64` exited 0 with empty stderr and rendered `CI ✅`, `Review ✅`, `Merge ⏸ draft`; raw facts were `reviewDecision=REVIEW_REQUIRED`, `isDraft=true`, `mergeStateStatus=BLOCKED`, and CI `SUCCESS` on head `f5a77fa0`. A slow mocked `gh` under the real entrypoint was killed by the external timeout with `-9` on this host. | Real Bun/entrypoint/exact commander plus mocks, one bounded real GitHub read, and an external timeout. The `Review ✅` cell means no unresolved review threads/automation in `render.ts`; it is not an approval decision. No polling, stack, merge, or broader live-parity proof. |
 
 The normal source snapshot has no `scripts/node_modules`. Its entrypoints call
 `bootstrap.ts`, which can install dependencies and restart with inherited
@@ -96,8 +98,46 @@ package has only `test`/`typecheck` scripts, and Bun help documents
 not network-instrumented, so it is not an absolute zero-egress claim. The
 environment review found no registry or Bun config files beside the fixture,
 and only variable names were inspected; values were not printed. Exact lock
-runtime, bootstrap, and CLI smoke are now proven in scratch, but real GitHub
-and live product behavior remain unproven.
+runtime, bootstrap, CLI smoke, and one bounded real GitHub status read are now
+proven in scratch. Broader GitHub behavior, polling/stack behavior, review
+approval semantics, and live product behavior remain unproven.
+
+## Bounded real GitHub read-only check
+
+An authorized scratch run used the exact-lock bootstrap and the real
+`watch-pr` entrypoint with a minimal environment and an external `gtimeout
+20s` bound. It queried only `TheAngryPit/TheAngrySkills#64` with
+`--status-only --pretty`; exit code was 0 and stderr was empty. The raw facts
+were `reviewDecision=REVIEW_REQUIRED`, `isDraft=true`,
+`mergeStateStatus=BLOCKED`, and CI `SUCCESS` on head `f5a77fa0`. The rendered
+row was `#64 | CI ✅ | Review ✅ | Merge ⏸ draft`.
+
+The output is not evidence that review was approved. Static inspection of
+`scripts/watch-pr/render.ts` shows that `reviewCell` reports unresolved review
+threads or review automation, and returns `✅` when neither is present; it
+does not read `facts.reviewDecision`. The draft merge cell is consistent with
+`isDraft=true`, and the policy still treats the draft as a merge gate unless
+`--allow-draft` is supplied. This proves one bounded live read path only; it
+does not prove polling, stack handling, review approval, merge readiness,
+mutation, or general GitHub/live-product parity.
+
+## `REVIEW_REQUIRED` overlay correction
+
+The upstream snapshot hashes remain unchanged. The held overlay now applies
+exact replacements to `scripts/watch-pr/types.ts`, `policy.ts`, and
+`render.ts`: `REVIEW_REQUIRED` is a distinct `review-required` merge-gate
+reason; the preview labels both Review and Merge as `⏳ review required`; and
+the blocker explains that the required review must be obtained. `APPROVED`,
+`CHANGES_REQUESTED`, and `null` remain distinct, with `null` rendered as
+`— no decision` rather than being treated as a blocker.
+
+A dependency-free Bun fixture rendered the adapted preview for a synthetic
+non-draft PR with `REVIEW_REQUIRED`, clean CI, and no open threads. It returned
+a `merge-gate` blocker with reason `review-required` and no ready result. The
+same fixture kept a non-draft PR with `reviewDecision=null` classified as
+`ready`, proving that the correction does not invent a repository review
+requirement when GitHub reports no decision. This is an adapted-preview
+regression proof; it does not change or claim to repair the upstream snapshot.
 
 ## Critical pstack script review
 
@@ -113,17 +153,21 @@ review, not an execution or sandbox proof.
 | `scripts/check-plan.mjs` | Read-only `readFileSync` of the plan argument. | No subprocess, install, `gh`, or network surface found. | Node ran against a temporary valid and invalid plan only; no write or external access was used. |
 | `scripts/orch/orch.ts` | Calls bootstrap first; commands delegate to the store. | `store.ts` uses atomic writes, `.orch.lock`, `mkdir`, `rename`, `unlink`, and optional `--force` lock takeover; frontier paths use `gt` and `git rev-parse` with inherited environment. | Bun, installed `commander`, explicit store directory, lock ownership, and separate `gt`/`git` policy. `init`, `unit add`, `unit list`, and `status` were run in a disposable scratch store; frontier subprocess paths were not exercised. |
 | `scripts/orch/store.ts` | Writes store TSV/Markdown state, lock files, inbox files, temporary files, and can remove stale/drained entries. | `execFileSync("gt", ...)` for frontier metadata and `execFileSync("git", ["rev-parse", ...])`; subprocess environments include `process.env`. | Explicit store scope, lock/force policy, `gt`/`git` availability, and inherited-secret review. Selected store tests and the CLI's local-store commands ran in scratch; frontier subprocess paths were not exercised. |
-| `scripts/watch-pr/watch-pr` | Calls bootstrap before loading the CLI; no direct domain write in the entrypoint. | Bun bootstrap/restart is the indirect process and install surface. | Same Bun/install prerequisites as bootstrap plus an explicit external-query decision. `--status-only --pretty` was run with mocked `gh`/`git`; no GitHub query was made. |
-| `scripts/watch-pr/cli.ts` | Polling/control flow only in this entrypoint; it invokes the real GitHub reader. | Uses `GhGitHubReader`, polling timers, and the `gh`/`git` subprocesses implemented in `github.ts`; normal polling can continue until timeout or error budget. | Bun, `commander`, `gh` authentication, repository/PR context, and a bounded polling policy. `--status-only --pretty` ran through the real entrypoint with mocked subprocesses; no authenticated or live query was made. |
-| `scripts/watch-pr/github.ts` | No direct file write found. | Spawns `git remote get-url origin`, `gh pr view`, `gh pr list`, `gh pr checks`, and `gh api graphql`; stdout/stderr are piped, but the generic spawn wrapper has no explicit per-process timeout. GitHub network and auth are prerequisites. | Explicit repo/PR scope, authenticated `gh`, network approval, and an outer timeout/cancellation policy. Parser and command wiring ran in module and CLI scratch checks with mocks; real GitHub remained unused. |
+| `scripts/watch-pr/watch-pr` | Calls bootstrap before loading the CLI; no direct domain write in the entrypoint. | Bun bootstrap/restart is the indirect process and install surface. | Same Bun/install prerequisites as bootstrap plus an explicit external-query decision. `--status-only --pretty` ran with mocked `gh`/`git` and once against the authorized real PR #64; no polling, stack, or merge action was made. The held overlay correction prevents `REVIEW_REQUIRED` from reaching a ready result in the adapted preview. |
+| `scripts/watch-pr/cli.ts` | Polling/control flow only in this entrypoint; it invokes the real GitHub reader. | Uses `GhGitHubReader`, polling timers, and the `gh`/`git` subprocesses implemented in `github.ts`; normal polling can continue until timeout or error budget. | Bun, `commander`, `gh` authentication, repository/PR context, and a bounded polling policy. `--status-only --pretty` ran through the real entrypoint with mocked subprocesses and once against authorized PR #64; no polling or mutation was made. |
+| `scripts/watch-pr/github.ts` | No direct file write found. | Spawns `git remote get-url origin`, `gh pr view`, `gh pr list`, `gh pr checks`, and `gh api graphql`; stdout/stderr are piped, but the generic spawn wrapper has no explicit per-process timeout. GitHub network and auth are prerequisites. | Explicit repo/PR scope, authenticated `gh`, network approval, and an outer timeout/cancellation policy. Parser and command wiring ran in module/CLI scratch checks with mocks; one bounded real status read was also made against PR #64. Review approval and broader GitHub behavior remain unproven. |
 | `scripts/watch-pr/render.ts` | Rendering only; no write found. | Emits GitHub PR URLs such as `https://github.com/<owner>/<repo>/pull/<number>`; does not fetch them itself. | Treat rendered URLs as external links; no execution was performed. |
 
 Finding disposition: the safe subset confirms the read-only behavior of
 `check-plan.mjs`, exercises only the control flow of `worktree-audit.sh` behind
 mocks, and proves exact-lock CLI/module paths with mocked git/GitHub commands
-and an outer timeout. The cache-populated bootstrap run reduces the install
-unknown but does not reduce the current distribution hold: the run was not
-network-instrumented, and no real GitHub or live product behavior was used.
+and an outer timeout. The cache-populated bootstrap run, one bounded real PR
+status read, and the held overlay regression reduce the install/read-path
+unknowns but do not reduce the current distribution hold: the cache run was
+not network-instrumented, the real read did not exercise polling or mutation,
+and the upstream `Review ✅` output was not a review-approval claim. The
+adapted preview now blocks `REVIEW_REQUIRED`; runtime/host activation and
+broader GitHub behavior remain outside the proof.
 Keep the bundled CLI scripts disabled in normal candidate use and require
 separate authorization for any future install, inherited-environment/credential
 review, network/egress policy, or worktree/store permission beyond this scratch

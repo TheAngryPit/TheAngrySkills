@@ -373,7 +373,7 @@ else:
             root = Path(temporary)
             app = root / "app.py"
             app.write_text("print('ok')\n")
-            outside = root.parent / "outside-app.py"
+            outside = root.parent / f"{root.name}-outside-app.py"
             outside.write_text("print('outside')\n")
             try:
                 with self.assertRaises(AdapterError):

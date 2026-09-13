@@ -87,7 +87,7 @@ def ralph_stop(event: dict, project: Path) -> dict:
     maximum = state.get("max_iterations")
     promise = state.get("completion_promise")
     if (not isinstance(prompt, str) or not prompt.strip()
-            or type(iteration) is not int or iteration < 0
+            or type(iteration) is not int or iteration < 1
             or type(maximum) is not int or maximum < 0
             or promise is not None and not isinstance(promise, str)):
         path.unlink()

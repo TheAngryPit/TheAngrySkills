@@ -45,20 +45,20 @@ class CursorNativeHookTests(unittest.TestCase):
 
     def test_ralph_continues_once_per_turn_and_stops_on_exact_promise(self):
         path = self.state("ralph", {
-            "session_id": "task-1", "prompt": "Fix the flaky test", "iteration": 0,
+            "session_id": "task-1", "prompt": "Fix the flaky test", "iteration": 1,
             "max_iterations": 3, "completion_promise": "tests pass",
         })
         first = self.call("ralph-stop", self.stop_event(message="Still working"))
         self.assertEqual(first["decision"], "block")
         self.assertIn("Fix the flaky test", first["reason"])
-        self.assertIn("iteration 1", first["reason"])
-        self.assertEqual(json.loads(path.read_text())["iteration"], 1)
+        self.assertIn("iteration 2", first["reason"])
+        self.assertEqual(json.loads(path.read_text())["iteration"], 2)
         self.assertEqual(self.call("ralph-stop", self.stop_event(message="Still working")), {})
-        self.assertEqual(json.loads(path.read_text())["iteration"], 1)
+        self.assertEqual(json.loads(path.read_text())["iteration"], 2)
 
         second = self.call("ralph-stop", self.stop_event(turn="turn-2", message="tests pass"))
         self.assertEqual(second["decision"], "block")
-        self.assertEqual(json.loads(path.read_text())["iteration"], 2)
+        self.assertEqual(json.loads(path.read_text())["iteration"], 3)
         done = self.call("ralph-stop", self.stop_event(
             turn="turn-3", message="Evidence checked. <promise>tests   pass</promise>"
         ))

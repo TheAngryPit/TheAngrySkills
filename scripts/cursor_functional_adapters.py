@@ -7,6 +7,8 @@ keeping missing capabilities and failed proof states explicit.
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping
@@ -253,6 +255,128 @@ def run_verification_fixture(
         }
     )
     return result
+
+
+def _process_output(value: str | bytes | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value
+
+
+def run_local_app_fixture(
+    project_root: str | Path,
+    app_path: str | Path,
+    arguments: Iterable[str],
+    *,
+    expected_stdout: str,
+    expected_exit_code: int = 0,
+    timeout_seconds: float = 2.0,
+) -> dict[str, object]:
+    """Run one local Python app fixture and compare independently captured evidence.
+
+    The runner is intentionally narrower than a generic command adapter: it
+    accepts only a regular Python file under a non-symlink project root,
+    invokes it through the current interpreter with ``shell=False``, closes
+    stdin, strips inherited environment variables, and never starts a live
+    product, cloud task, or bundled pstack helper.
+    """
+
+    root_path = Path(project_root)
+    if root_path.is_symlink():
+        raise AdapterError("local app fixture project root must not be a symlink")
+    root = root_path.resolve()
+    if not root.is_dir():
+        raise AdapterError("local app fixture project root must be a directory")
+
+    candidate = Path(app_path)
+    if not candidate.is_absolute():
+        candidate = root / candidate
+    if candidate.is_symlink():
+        raise AdapterError("local app fixture must not be a symlink")
+    try:
+        relative = candidate.resolve().relative_to(root)
+    except ValueError as exc:
+        raise AdapterError("local app fixture must stay inside the project root") from exc
+    _reject_symlink_components(root, relative)
+    app = candidate.resolve()
+    if app.suffix != ".py" or not app.is_file():
+        raise AdapterError("local app fixture must be a regular Python file")
+
+    if isinstance(arguments, (str, bytes)):
+        raise AdapterError("local app fixture arguments must be an iterable of strings")
+    argv = tuple(arguments)
+    if any(not isinstance(item, str) or "\x00" in item for item in argv):
+        raise AdapterError("local app fixture arguments must be NUL-free strings")
+    if not isinstance(expected_stdout, str) or "\x00" in expected_stdout:
+        raise AdapterError("expected_stdout must be NUL-free text")
+    if not isinstance(expected_exit_code, int) or isinstance(expected_exit_code, bool):
+        raise AdapterError("expected_exit_code must be an integer")
+    if not isinstance(timeout_seconds, (int, float)) or isinstance(timeout_seconds, bool):
+        raise AdapterError("timeout_seconds must be a positive number")
+    if timeout_seconds <= 0:
+        raise AdapterError("timeout_seconds must be a positive number")
+
+    command = (sys.executable, str(app), *argv)
+    isolated_environment = {
+        "PATH": str(Path(sys.executable).parent),
+        "PYTHONIOENCODING": "utf-8",
+    }
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=str(root),
+            env=isolated_environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=float(timeout_seconds),
+        )
+    except subprocess.TimeoutExpired as exc:
+        return {
+            "status": "TIMEOUT",
+            "app": str(app),
+            "arguments": argv,
+            "evidence": {
+                "exit_code": None,
+                "stdout": _process_output(exc.stdout),
+                "stderr": _process_output(exc.stderr),
+            },
+            "expected": {
+                "exit_code": expected_exit_code,
+                "stdout": expected_stdout,
+            },
+            "environment": "isolated-local-app-fixture",
+            "external_writes": False,
+            "fixture_writes": True,
+        }
+
+    evidence = {
+        "exit_code": completed.returncode,
+        "stdout": completed.stdout,
+        "stderr": completed.stderr,
+    }
+    expected = {
+        "exit_code": expected_exit_code,
+        "stdout": expected_stdout,
+    }
+    return {
+        "status": "PASS"
+        if completed.returncode == expected_exit_code
+        and completed.stdout == expected_stdout
+        else "FAIL",
+        "app": str(app),
+        "arguments": argv,
+        "evidence": evidence,
+        "expected": expected,
+        "environment": "isolated-local-app-fixture",
+        "external_writes": False,
+        "fixture_writes": True,
+    }
 
 
 def select_verification_target(

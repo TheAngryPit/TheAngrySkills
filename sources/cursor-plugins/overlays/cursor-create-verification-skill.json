@@ -21,7 +21,7 @@
       ],
       "project_local_skill_root": ".agents/skills/verify-<app>/",
       "fallback": "Missing harness, broken startup, or unavailable native surface preserves the source and returns a blocked verification result.",
-      "availability": "renderer and isolated verification fixture checked; live target application and harness not supplied",
+      "availability": "renderer, isolated verification fixture, and independent local-app fixture evidence checked; live target application and harness not supplied",
       "routing_authority": "proof-orchestrator selects the proof path; model-capability-router remains the standing model authority"
     },
     "external_dependencies": [
@@ -35,9 +35,9 @@
       "Do not publish, open a PR, or mutate product code as part of generation without separate explicit authorization."
     ],
     "behavioral_proof": {
-      "positive": "Isolated fixture creates a project-local verification skill, writes its feature files, and preserves the evidence boundary; matching supplied observations remain `FIXTURE_ONLY` because no live target application is driven.",
+      "positive": "Isolated fixture creates a project-local verification skill, writes its feature files, and preserves the evidence boundary; a separate isolated local-app fixture runner captures independent stdout/exit-code evidence across a pass, induced failure, and correction. Matching map observations remain `FIXTURE_ONLY` because no live target application is driven.",
       "missing_tool_or_input": "Isolated fixture returns blocked when the verification app is unavailable and performs no product edit.",
-      "error": "Isolated fixture returns an explicit error when supplied feature observations do not match the reconciled map; live startup failure remains unproven."
+      "error": "Isolated fixture returns an explicit error when supplied feature observations do not match the reconciled map; the local-app failure/correction path is fixture-only and live startup failure remains unproven."
     },
     "promotion_status": "held_until_live_behavior_and_permission_proof",
     "upstream_readme": {
@@ -52,10 +52,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation boundary\n\nThis mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The feature-map references intentionally retain the reproducible upstream `control-notes` commands; adapt them to concrete commands observed in the target repository before use. Map browser/Electron/web actions to `cursor-control-ui`, and CLI/TUI actions to `cursor-control-cli`, only when those skills are installed and applicable; otherwise record the exact surface gap.\n",
+  "codex_note": "## Codex adaptation boundary\n\nThis mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The feature-map references intentionally retain the reproducible upstream `control-notes` commands; adapt them to concrete commands observed in the target repository before use. Map browser/Electron/web actions to `cursor-control-ui`, and CLI/TUI actions to `cursor-control-cli`, only when those skills are installed and applicable; otherwise record the exact surface gap. A separate local Python app fixture runner may collect independent stdout/exit-code evidence, but its PASS/FAIL result is not live target verification.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
-  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate and use an isolated project fixture to create a project-local skill, reconcile feature files, and compare supplied observations with a `FIXTURE_ONLY` result. They do not exercise a live harness, target application, startup failure, or malformed-input path.",
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate, use an isolated project fixture to create a project-local skill, reconcile feature files, and compare supplied observations with a `FIXTURE_ONLY` result. They also run a bounded local Python app fixture and compare independently captured stdout/exit-code evidence across an induced failure and correction. They do not exercise a live harness, target application, or startup failure.",
   "reason": "The adapter changes the generated destination and tool boundary while leaving the pinned upstream source unchanged.",
   "replacements": [
     {

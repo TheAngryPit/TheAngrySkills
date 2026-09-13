@@ -25,7 +25,7 @@
       ],
       "project_local_skill_glob": ".agents/skills/verify-*/",
       "fallback": "Without native bounded delegation, read source entries sequentially and preserve the same return shape. Without a live verification surface, return blocked with the attempted route and prerequisite.",
-      "availability": "renderer, path-state, and isolated verification fixtures checked; live target application not supplied",
+      "availability": "renderer, path-state, isolated verification fixtures, and independent local-app fixture evidence checked; live target application not supplied",
       "routing_authority": "proof-orchestrator selects the proof path; model-capability-router remains the standing model authority"
     },
     "external_dependencies": [
@@ -41,9 +41,9 @@
       "Missing target, live surface, or prerequisite returns blocked and preserves the target."
     ],
     "behavioral_proof": {
-      "positive": "Focused adapter tests report target path states, and the isolated fixture reconciles feature files and compares supplied observations with a `FIXTURE_ONLY` result without driving a live application.",
+      "positive": "Focused adapter tests report target path states, and the isolated fixture reconciles feature files and compares supplied observations with a `FIXTURE_ONLY` result; a separate isolated local-app fixture runner captures independent stdout/exit-code evidence across a pass, induced failure, and correction without driving a live application.",
       "missing_tool_or_input": "Focused adapter tests report BLOCKED when the requested target is absent, and the isolated fixture returns BLOCKED when the app is unavailable; delegation fallback remains unexercised.",
-      "error": "Focused adapter tests keep ambiguous targets at NEEDS_INPUT, while the isolated fixture returns an explicit supplied-observation mismatch error; failed-doctor handling remains unproven."
+      "error": "Focused adapter tests keep ambiguous targets at NEEDS_INPUT, while the isolated fixture returns an explicit supplied-observation mismatch error; the local-app failure/correction path is fixture-only and failed-doctor handling remains unproven."
     },
     "promotion_status": "held_until_live_behavior_and_permission_proof",
     "upstream_readme": {
@@ -58,10 +58,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation boundary\n\nThis mirror maintains only the explicitly selected project-local verification skill under `.agents/skills/verify-*/`. The coordinator owns the live pass and proof-orchestrator selects its proof level. Source readers may use native bounded delegation when exposed, but the sequential fallback is only a declared path here, not a live proof. A missing or unhealthy target is `blocked` with the attempted route and prerequisite. The maintenance flow never edits product code or global skills, and it never opens, publishes, or merges a PR without separate authorization. The isolated fixture reconciles feature files and compares supplied observations; it does not drive an app, so live behavior remains unproven.\n",
+  "codex_note": "## Codex adaptation boundary\n\nThis mirror maintains only the explicitly selected project-local verification skill under `.agents/skills/verify-*/`. The coordinator owns the live pass and proof-orchestrator selects its proof level. Source readers may use native bounded delegation when exposed, but the sequential fallback is only a declared path here, not a live proof. A missing or unhealthy target is `blocked` with the attempted route and prerequisite. The maintenance flow never edits product code or global skills, and it never opens, publishes, or merges a PR without separate authorization. Focused tests reconcile feature files and use a separate local Python app fixture runner for independent stdout/exit-code evidence; neither fixture is live target proof.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
-  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate, exercise path-state selection, and use an isolated fixture to create a project-local skill, reconcile feature files, and compare supplied observations with a `FIXTURE_ONLY` result. Sequential fallback execution, live driving, and doctor failure remain unproven.",
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate, exercise path-state selection, and use an isolated fixture to create a project-local skill, reconcile feature files, and compare supplied observations with a `FIXTURE_ONLY` result. They also compare independent stdout/exit-code evidence from a bounded local Python app fixture across an induced failure and correction. Sequential fallback execution, live driving, and doctor failure remain unproven.",
   "reason": "The adapter changes the project-local target path and delegation boundary while leaving the pinned upstream source unchanged.",
   "replacements": [
     {

@@ -14,6 +14,7 @@ from cursor_functional_adapters import (  # noqa: E402
     AdapterError,
     PSTACK_PLAYBOOK_FILES,
     read_pstack_playbook_fixture,
+    run_local_app_fixture,
     run_verification_fixture,
     select_verification_target,
 )
@@ -272,6 +273,118 @@ class CursorPstackCoreTests(unittest.TestCase):
             with self.assertRaises(AdapterError):
                 run_verification_fixture(root, "notes", features, app_available=False)
 
+    def test_local_app_fixture_collects_independent_failure_and_fix(self):
+        features = {
+            "create-note": "Create a note and record the evidence.",
+            "search": "Search notes and record the evidence.",
+        }
+        buggy_app = """
+from pathlib import Path
+import json
+import sys
+
+store = Path("notes.json")
+command = sys.argv[1]
+if command == "create":
+    note = {"title": sys.argv[2], "body": sys.argv[3]}
+    notes = json.loads(store.read_text()) if store.exists() else []
+    notes.append(note)
+    store.write_text(json.dumps(notes))
+    print(f"created:{note['title']}")
+elif command == "search":
+    query = sys.argv[2]
+    notes = json.loads(store.read_text()) if store.exists() else []
+    matches = [note["title"] for note in notes if query in note["title"]]
+    if not matches:
+        print("not-found")
+        raise SystemExit(1)
+    print("found:" + ",".join(matches))
+else:
+    raise SystemExit("unknown command")
+"""
+        fixed_app = buggy_app.replace(
+            'query in note["title"]',
+            'query.casefold() in note["title"].casefold()',
+        )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "app.py"
+            app.write_text(buggy_app)
+            generated = run_verification_fixture(
+                root,
+                "notes",
+                features,
+                app_available=False,
+            )
+            self.assertEqual(generated["status"], "BLOCKED")
+            self.assertEqual(generated["environment"], "isolated-project-fixture")
+
+            created = run_local_app_fixture(
+                root,
+                app,
+                ("create", "Release checklist", "Tag and publish"),
+                expected_stdout="created:Release checklist\n",
+            )
+            self.assertEqual(created["status"], "PASS")
+            self.assertEqual(created["environment"], "isolated-local-app-fixture")
+            self.assertFalse(created["external_writes"])
+
+            failed = run_local_app_fixture(
+                root,
+                app,
+                ("search", "release"),
+                expected_stdout="found:Release checklist\n",
+            )
+            self.assertEqual(failed["status"], "FAIL")
+            self.assertEqual(
+                failed["evidence"],
+                {
+                    "exit_code": 1,
+                    "stdout": "not-found\n",
+                    "stderr": "",
+                },
+            )
+            self.assertNotEqual(failed["evidence"], failed["expected"])
+
+            app.write_text(fixed_app)
+            repaired = run_local_app_fixture(
+                root,
+                app,
+                ("search", "release"),
+                expected_stdout="found:Release checklist\n",
+            )
+            self.assertEqual(repaired["status"], "PASS")
+            self.assertEqual(
+                repaired["evidence"],
+                {
+                    "exit_code": 0,
+                    "stdout": "found:Release checklist\n",
+                    "stderr": "",
+                },
+            )
+
+    def test_local_app_fixture_rejects_outside_or_symlinked_apps(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "app.py"
+            app.write_text("print('ok')\n")
+            outside = root.parent / "outside-app.py"
+            outside.write_text("print('outside')\n")
+            try:
+                with self.assertRaises(AdapterError):
+                    run_local_app_fixture(
+                        root,
+                        outside,
+                        (),
+                        expected_stdout="outside\n",
+                    )
+            finally:
+                outside.unlink()
+            alias = root / "alias.py"
+            alias.symlink_to(app)
+            with self.assertRaises(AdapterError):
+                run_local_app_fixture(root, alias, (), expected_stdout="ok\n")
 
 if __name__ == "__main__":
     unittest.main()

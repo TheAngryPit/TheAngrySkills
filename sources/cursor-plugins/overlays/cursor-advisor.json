@@ -16,7 +16,7 @@
         "native bounded delegation"
       ],
       "fallback": "No delegate means briefing plus an explicit not-run result.",
-      "availability": "bundled_native_hook_adapter_fixture_only; source_Cursor_model_state_and_invocation_unadapted",
+      "availability": "bundled_native_hook_adapter_fixture_only; explicit task-bound lifecycle fixture checked; source_Cursor_invocation_unadapted",
       "upstream_agent_dependency": {
         "path": "advisor/agents/advisor-subagent.md",
         "status": "bundled_as_native_role_reference",
@@ -33,7 +33,7 @@
     ],
     "behavioral_proof": {
       "positive": "Synthetic PostToolUse/SubagentStop/Stop payloads cover a known patch marker, expected advisor identity and verdict, and a one-time nudge. No live advisor consult is proven.",
-      "missing_tool_or_input": "Missing delegate or trusted project hook reports not-run; the source model selection and mode lifecycle remain unadapted.",
+      "missing_tool_or_input": "Missing selected model prevents enablement; wrong-session status, expected-agent registration and disable do not alter another task's state. Missing delegate or trusted project hook remains not-run.",
       "error": "Wrong agent ID/type, malformed verdict, wrong session, and question-ending turn preserve pending state in synthetic tests."
     },
     "promotion_status": "held_until_native_mode_and_role_behavior_proof",
@@ -49,10 +49,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation boundary\n\nThe bundled [native hook adapter](scripts/cursor_native_hook_adapters.py) has synthetic event tests for patch markers, advisor identity/verdict, and one-time Stop nudges. It does not register a project hook, trust it, or invoke an advisor. The source below still contains Cursor-specific model defaults, state paths, Task fields, and custom-mode behavior. Do not use those commands in Codex as written. The pinned [advisor role](references/advisor-subagent.md) is bundled as an instruction reference; native read-only permission still requires the selected host surface. Explicit operator-selected model/effort, task-bound state lifecycle, and live consult are required before this skill can be indexed. Never enable advisor mode without a user trigger.\n",
+  "codex_note": "## Codex adaptation boundary\n\nThe bundled [native hook adapter](scripts/cursor_native_hook_adapters.py) has synthetic event tests for patch markers, advisor identity/verdict, one-time Stop nudges, and explicit task-bound enable/status/expected-agent/disable. It does not register a project hook, trust it, or invoke an advisor. The source below still contains Cursor-specific model defaults, state paths, Task fields, and custom-mode behavior. Do not use those commands in Codex as written. The pinned [advisor role](references/advisor-subagent.md) is bundled as an instruction reference; native read-only permission still requires the selected host surface. Explicit operator-selected model/effort and a live consult are required before this skill can be indexed. Never enable advisor mode without a user trigger.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Advisor mode. Consult a stronger (or different) model at key checkpoints: before major decisions, when stuck on an error, and before declaring a task done. Use when the user types /advisor, asks to turn the advisor on or off, picks an advisor model, or explicitly asks for a second opinion from a stronger or different model. Never enable it on your own.",
-  "proof": "Pinned source, deterministic renderer, and synthetic native hook payloads prove only state/continuation mechanics. The advisor role, native model selection, mode lifecycle, and live consult remain unproven.",
+  "proof": "Pinned source, deterministic renderer, and synthetic native hook payloads prove state/continuation mechanics and an isolated task-bound enable/status/expected-agent/disable lifecycle. The advisor role, native model selection at a real host, trusted hook, and live consult remain unproven.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "advisor/skills/advisor/SKILL.md",

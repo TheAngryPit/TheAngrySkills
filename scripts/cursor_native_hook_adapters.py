@@ -131,6 +131,68 @@ def ralph_config(project: Path) -> dict:
     return {"hooks": {"Stop": [{"hooks": [{"type": "command", "command": command}]}]}}
 
 
+def advisor_enable(project: Path, session_id: str, model: str | None,
+                   nudge: bool | None = None) -> dict:
+    """Bind an explicitly requested advisor mode to one native task session."""
+    if not project.is_dir() or not session_id:
+        raise HookInputError("advisor needs a project and session")
+    path = _state_path(project, "advisor")
+    existing = _load(path) or {}
+    selected = model if model is not None else existing.get("model")
+    if not isinstance(selected, str) or not selected.strip():
+        raise HookInputError("advisor model must be explicitly selected or previously saved")
+    if any(character.isspace() for character in selected):
+        raise HookInputError("advisor model must be one native model slug")
+    chosen_nudge = nudge if nudge is not None else existing.get("nudge", True)
+    if type(chosen_nudge) is not bool:
+        raise HookInputError("invalid advisor nudge setting")
+    _save(path, {
+        "enabled": True, "session_id": session_id, "model": selected,
+        "nudge": chosen_nudge, "consults": 0, "pending": False,
+        "expected_agent_id": None,
+    })
+    return {"status": "BOUND_HOOK_TRUST_UNVERIFIED", "model": selected,
+            "nudge": chosen_nudge, "consults": 0}
+
+
+def advisor_status(project: Path, session_id: str) -> dict:
+    state = _load(_state_path(project, "advisor"))
+    if state is None:
+        return {"status": "INACTIVE"}
+    if not session_id or state.get("session_id") != session_id:
+        return {"status": "OTHER_SESSION"}
+    return {"status": "BOUND_HOOK_TRUST_UNVERIFIED" if state.get("enabled") else "INACTIVE",
+            "model": state.get("model"), "nudge": state.get("nudge"),
+            "consults": state.get("consults", 0)}
+
+
+def advisor_expect(project: Path, session_id: str, agent_id: str) -> dict:
+    """Register the id returned by a bounded native delegate before its result."""
+    if not agent_id or any(character.isspace() for character in agent_id):
+        raise HookInputError("advisor needs one returned native agent id")
+    path = _state_path(project, "advisor")
+    state = _load(path)
+    if state is None or state.get("session_id") != session_id or not state.get("enabled"):
+        return {"status": "NOT_BOUND_HERE"}
+    if state.get("expected_agent_id") is not None:
+        return {"status": "CONSULT_ALREADY_PENDING"}
+    state["expected_agent_id"] = agent_id
+    state["pending"] = True
+    _save(path, state)
+    return {"status": "AWAITING_ADVISOR", "agent_id": agent_id}
+
+
+def advisor_disable(project: Path, session_id: str) -> dict:
+    path = _state_path(project, "advisor")
+    state = _load(path)
+    if state is None:
+        return {"status": "INACTIVE"}
+    if not session_id or state.get("session_id") != session_id:
+        return {"status": "OTHER_SESSION"}
+    path.unlink()
+    return {"status": "DISABLED"}
+
+
 def ralph_stop(event: dict, project: Path) -> dict:
     """Continue one bounded Ralph iteration or close only this session's state."""
     if not _bound_event(event, project, "Stop"):
@@ -183,8 +245,6 @@ def advisor_subagent_stop(event: dict, project: Path) -> dict:
     if not isinstance(agent_id, str) or agent_id != state.get("expected_agent_id"):
         return {}
     if event.get("agent_type") != "advisor-subagent":
-        return {}
-    if agent_id == state.get("last_recorded_agent_id"):
         return {}
     message = event.get("last_assistant_message")
     if not isinstance(message, str) or not re.search(r"^Verdict:\s*(proceed|proceed with changes|stop)\b", message, re.M):
@@ -350,12 +410,15 @@ HOOK_HANDLERS = {
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("handler", choices=sorted((*HOOK_HANDLERS, "ralph-start", "ralph-cancel", "render-ralph-config")))
+    parser.add_argument("handler", choices=sorted((*HOOK_HANDLERS, "ralph-start", "ralph-cancel", "render-ralph-config", "advisor-enable", "advisor-status", "advisor-expect", "advisor-disable")))
     parser.add_argument("--project", type=Path, required=True)
     parser.add_argument("--session-id")
     parser.add_argument("--prompt-file", type=Path)
     parser.add_argument("--max-iterations", type=int, default=0)
     parser.add_argument("--completion-promise")
+    parser.add_argument("--advisor-model")
+    parser.add_argument("--advisor-agent-id")
+    parser.add_argument("--nudge", choices=("on", "off"))
     args = parser.parse_args()
     try:
         if args.handler in HOOK_HANDLERS:
@@ -371,6 +434,15 @@ def main() -> int:
                                  args.completion_promise)
         elif args.handler == "ralph-cancel":
             result = ralph_cancel(args.project, args.session_id or "")
+        elif args.handler == "advisor-enable":
+            result = advisor_enable(args.project, args.session_id or "", args.advisor_model,
+                                    None if args.nudge is None else args.nudge == "on")
+        elif args.handler == "advisor-status":
+            result = advisor_status(args.project, args.session_id or "")
+        elif args.handler == "advisor-expect":
+            result = advisor_expect(args.project, args.session_id or "", args.advisor_agent_id or "")
+        elif args.handler == "advisor-disable":
+            result = advisor_disable(args.project, args.session_id or "")
         else:
             result = ralph_config(args.project)
     except (HookInputError, OSError, json.JSONDecodeError, ValueError) as exc:

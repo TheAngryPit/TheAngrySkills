@@ -2407,7 +2407,7 @@
   },
   "native_support_files": {
     "scripts/cursor_native_hook_adapters.py": {
-      "sha256": "abf2e03e18a8ae3af216c0b5d5e477bfb9a5ec3e326993ad2e01b86ad7c926c7",
+      "sha256": "1e0b3887e0bbb43faa3a2c1e16282d5058a09679463a05a62facc8ef8c1e1a02",
       "related_skills": [
         "cursor-advisor",
         "cursor-cancel-ralph",

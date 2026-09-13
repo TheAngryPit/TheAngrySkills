@@ -38,6 +38,13 @@ class CursorNativeHookTests(unittest.TestCase):
         )
         return json.loads(result.stdout)
 
+    def command(self, handler, *arguments):
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), handler, "--project", str(self.project),
+             *arguments], text=True, capture_output=True, check=True,
+        )
+        return json.loads(result.stdout)
+
     def stop_event(self, *, turn="turn-1", session="task-1", project=None, message=None):
         return {
             "hook_event_name": "Stop", "cwd": str(project or self.project),
@@ -154,6 +161,62 @@ class CursorNativeHookTests(unittest.TestCase):
         self.assertFalse(state["pending"])
         self.assertEqual(self.call("advisor-subagent-stop", event), {})
         self.assertEqual(json.loads(path.read_text())["consults"], 1)
+
+    def test_advisor_explicit_task_binding_expectation_and_disable(self):
+        missing = self.command("advisor-enable", "--session-id", "task-1")
+        self.assertIn("model must be explicitly selected", missing["systemMessage"])
+        self.assertFalse((self.project / ".codex/cursor-mirror-state/advisor/state.json").exists())
+        enabled = self.command("advisor-enable", "--session-id", "task-1",
+                               "--advisor-model", "gpt-6-astra", "--nudge", "off")
+        self.assertEqual(enabled["status"], "BOUND_HOOK_TRUST_UNVERIFIED")
+        self.assertEqual(enabled["model"], "gpt-6-astra")
+        self.assertFalse(enabled["nudge"])
+        self.assertEqual(self.command("advisor-status", "--session-id", "other"),
+                         {"status": "OTHER_SESSION"})
+        self.assertEqual(self.command("advisor-expect", "--session-id", "other",
+                                      "--advisor-agent-id", "advisor-42"),
+                         {"status": "NOT_BOUND_HERE"})
+        expected = self.command("advisor-expect", "--session-id", "task-1",
+                                "--advisor-agent-id", "advisor-42")
+        self.assertEqual(expected["status"], "AWAITING_ADVISOR")
+        path = self.project / ".codex/cursor-mirror-state/advisor/state.json"
+        self.assertEqual(json.loads(path.read_text())["expected_agent_id"], "advisor-42")
+        self.assertEqual(self.command("advisor-expect", "--session-id", "task-1",
+                                      "--advisor-agent-id", "advisor-43"),
+                         {"status": "CONSULT_ALREADY_PENDING"})
+        verdict = {"hook_event_name": "SubagentStop", "cwd": str(self.project),
+                   "session_id": "task-1", "turn_id": "turn-1",
+                   "agent_id": "advisor-42", "agent_type": "advisor-subagent",
+                   "last_assistant_message": "Verdict: proceed with changes\nFix the edge case."}
+        self.assertEqual(self.call("advisor-subagent-stop", verdict), {})
+        status = self.command("advisor-status", "--session-id", "task-1")
+        self.assertEqual(status["consults"], 1)
+        self.assertEqual(self.command("advisor-expect", "--session-id", "task-1",
+                                      "--advisor-agent-id", "advisor-42")["status"],
+                         "AWAITING_ADVISOR")
+        self.assertEqual(self.call("advisor-subagent-stop", verdict | {"turn_id": "turn-2"}), {})
+        self.assertEqual(self.command("advisor-status", "--session-id", "task-1")["consults"], 2)
+        self.assertEqual(self.command("advisor-disable", "--session-id", "other"),
+                         {"status": "OTHER_SESSION"})
+        self.assertTrue(path.exists())
+        self.assertEqual(self.command("advisor-disable", "--session-id", "task-1"),
+                         {"status": "DISABLED"})
+        self.assertFalse(path.exists())
+
+    def test_advisor_rebind_preserves_selection_but_clears_old_session_state(self):
+        self.state("advisor", {"enabled": True, "session_id": "old-task",
+                               "model": "gpt-6-astra", "nudge": False, "consults": 4,
+                               "pending": True, "expected_agent_id": "old-agent"})
+        rebound = self.command("advisor-enable", "--session-id", "new-task")
+        self.assertEqual(rebound["model"], "gpt-6-astra")
+        self.assertFalse(rebound["nudge"])
+        state = json.loads((self.project / ".codex/cursor-mirror-state/advisor/state.json").read_text())
+        self.assertEqual(state["session_id"], "new-task")
+        self.assertEqual(state["consults"], 0)
+        self.assertFalse(state["pending"])
+        self.assertIsNone(state["expected_agent_id"])
+        self.assertEqual(self.command("advisor-disable", "--session-id", "old-task"),
+                         {"status": "OTHER_SESSION"})
 
     def test_advisor_patch_event_marks_only_successful_task_edits(self):
         path = self.state("advisor", {

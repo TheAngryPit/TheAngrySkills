@@ -71,6 +71,16 @@
       "file": "SKILL.md",
       "before": "Present the explainer's output to the user. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.",
       "after": "Check the cited source paths and explain the result to the user in the requested scope. Correct factual errors before presenting it; the coordinator owns the final answer."
+    },
+    {
+      "file": "references/explorer-prompt.md",
+      "before": "Use Glob to find directories and files, Grep to find key symbols, Read to understand the actual implementation.",
+      "after": "Use the available native file search and read tools (for example `rg --files`, `rg` and file reads) to locate directories, symbols and implementations."
+    },
+    {
+      "file": "references/explainer-prompt.md",
+      "before": "Use Read, Grep, and Glob as needed.",
+      "after": "Use the native Codex file search and read tools available in this task as needed."
     }
   ],
   "source_path": "pstack/skills/how/SKILL.md",

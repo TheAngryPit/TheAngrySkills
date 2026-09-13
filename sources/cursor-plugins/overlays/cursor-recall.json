@@ -69,6 +69,26 @@
       "file": "SKILL.md",
       "before": "Tell every subagent to order candidates by real modification time (`ls -t`) and never by UUID name, grep the topic first and then read only the matching chats and only their relevant regions, and skip the current chat plus obvious noise (subagent, eval, and test chats).",
       "after": "Tell each investigator to order accessible tasks by verified update time, search the topic before opening a transcript, read only relevant regions, and skip the current task plus obvious eval/test noise. Do not assume a filename UUID encodes recency."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "One specific prior chat to resume is the `session-pickup` playbook, not this. Turning habits into a durable skill is `automate-me`.",
+      "after": "One specific prior chat to resume uses the [session-pickup playbook](../cursor-poteto-mode/playbooks/session-pickup.md) from `cursor-poteto-mode`, not this skill. Turning habits into a durable skill is `cursor-automate-me`."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "That second record is what the **why** skill searches",
+      "after": "That second record is what `cursor-why` searches"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Hand it to the **why** skill's source investigators",
+      "after": "Hand it to `cursor-why` source investigators"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Write the brief through the **unslop** skill",
+      "after": "Write the brief through `cursor-unslop`"
     }
   ],
   "source_path": "pstack/skills/recall/SKILL.md",

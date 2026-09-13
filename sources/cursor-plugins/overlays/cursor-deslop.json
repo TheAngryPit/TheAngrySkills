@@ -1,0 +1,10 @@
+{
+  "codex_note": "",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Remove AI-generated code slop and clean up code style",
+  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
+  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "replacements": [],
+  "source_path": "cursor-team-kit/skills/deslop/SKILL.md",
+  "source_sha256": "2f7b7def74af7ed11f5b44b4d32f0f91fca8c5d1f92bf2171e8d12fd33a0f810"
+}

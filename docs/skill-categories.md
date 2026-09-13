@@ -100,6 +100,7 @@ Approved mirror prefixes include:
 - `effective-`
 - `hyperframes-`
 - `emil-`
+- `cursor-`
 
 An upstream name that is already product-namespaced may remain unchanged. The
 HyperFrames mirror preserves `hyperframes`, existing `hyperframes-*` names, and
@@ -110,3 +111,8 @@ explicit project-selection mirror and is not part of the owned default install
 sets.
 
 Mirror folders are created only when that source is intentionally mirrored.
+The Cursor mirror is path-keyed: the `cursor-` prefix avoids collisions, and
+duplicate upstream names receive their physical family name as an additional
+qualifier. The source manifest records declared, dormant, indexed, and held
+skills separately; a pinned source skill is not automatically an installable
+Codex workflow.

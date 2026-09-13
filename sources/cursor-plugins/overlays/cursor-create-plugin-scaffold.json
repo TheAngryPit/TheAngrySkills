@@ -1,0 +1,75 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-product-gated",
+    "name_mapping": {
+      "upstream_skill": "create-plugin-scaffold",
+      "published_name": "cursor-create-plugin-scaffold",
+      "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md"
+    },
+    "preserved_semantics": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
+    "native_mapping": {
+      "capabilities": [
+        "local file writer",
+        "manifest validator"
+      ],
+      "required_tools": [
+        "local file writer",
+        "manifest validator"
+      ],
+      "fallback": "An unsafe destination or invalid component stops before writing.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor plugin layout",
+      "hooks",
+      "MCP servers",
+      "marketplace metadata"
+    ],
+    "permission_gates": [
+      "Use an explicit destination; never write ~/.cursor or activate hooks/MCP/marketplace wiring by default.",
+      "An unsafe destination or invalid component stops before writing.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-create-plugin-scaffold: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-create-plugin-scaffold: An unsafe destination or invalid component stops before writing.",
+      "error": "Error fixture for cursor-create-plugin-scaffold: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "create-plugin/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/create-plugin/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "needs_human_review",
+      "status": "retained_contextual_hold",
+      "decision": "Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval.",
+      "findings": [
+        {
+          "rule_id": "mcp-plugin-hook-install",
+          "severity": "warning",
+          "path": "SKILL.md",
+          "line": 16,
+          "classification": "active_workflow_mutation_surface",
+          "effect": "The required component input explicitly includes hooks and mcpServers; the workflow then creates plugin files and defaults to ~/.cursor/plugins/local.",
+          "credentials": [
+            "MCP server configuration",
+            "marketplace/plugin activation"
+          ],
+          "decision": "Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval."
+        }
+      ]
+    }
+  },
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: mcp-plugin-hook-install at SKILL.md:16 (active_workflow_mutation_surface). Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
+  "replacements": [],
+  "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
+  "source_sha256": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46"
+}

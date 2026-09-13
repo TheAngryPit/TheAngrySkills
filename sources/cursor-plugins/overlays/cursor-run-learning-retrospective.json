@@ -1,0 +1,10 @@
+{
+  "codex_note": "## Codex mirror boundary\n\nResolve the named skill, tool, connector, and account against what is actually available in this Codex session before following the upstream steps. Do not infer connection, authentication, credits, or runtime parity from this mirror. Preserve the external product named upstream and report a concrete missing capability when required.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Evaluate learning progress, identify blockers, and adjust the learning plan",
+  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
+  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "replacements": [],
+  "source_path": "teaching/skills/run-learning-retrospective/SKILL.md",
+  "source_sha256": "71b0159d0d4c19e94d873a11b1dc96d5fe0600e1e46a0eae3fab92e05bb0cc91"
+}

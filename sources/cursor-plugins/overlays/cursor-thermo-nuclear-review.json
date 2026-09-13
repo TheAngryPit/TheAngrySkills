@@ -1,0 +1,10 @@
+{
+  "codex_note": "",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Comprehensive security and correctness audit of a branch's changes. Use for thermo nuclear, thermonuclear, or deep review requests, or branch/PR diff audits focused on bugs, breaking changes, security issues, devex regressions, and feature-gate leaks.",
+  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
+  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
+  "replacements": [],
+  "source_path": "thermos/skills/thermo-nuclear-review/SKILL.md",
+  "source_sha256": "5091011c4490932d40658ae958fb55b9aaca8e2bba5196860295ab945180e434"
+}

@@ -1,0 +1,57 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-canvas-gated",
+    "name_mapping": {
+      "upstream_skill": "pr-review-canvas",
+      "published_name": "cursor-pr-review-canvas-pr-review-canvas",
+      "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md"
+    },
+    "preserved_semantics": "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview.",
+    "native_mapping": {
+      "capabilities": [
+        "local diff reader",
+        "local document renderer"
+      ],
+      "required_tools": [
+        "local diff reader",
+        "local document renderer"
+      ],
+      "fallback": "Absent Canvas returns the local artifact path and a parity gap.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor Canvas surface"
+    ],
+    "permission_gates": [
+      "Use a local Markdown/HTML fallback when Canvas is unavailable.",
+      "Absent Canvas returns the local artifact path and a parity gap.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-pr-review-canvas-pr-review-canvas: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-pr-review-canvas-pr-review-canvas: Absent Canvas returns the local artifact path and a parity gap.",
+      "error": "Error fixture for cursor-pr-review-canvas-pr-review-canvas: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pr-review-canvas/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pr-review-canvas/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nUse a local Markdown/HTML fallback when Canvas is unavailable. Required native capabilities: local diff reader, local document renderer. External dependencies remain explicit: Cursor Canvas surface. Absent Canvas returns the local artifact path and a parity gap. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
+  "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03"
+}

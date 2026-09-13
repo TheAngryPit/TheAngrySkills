@@ -1,0 +1,10 @@
+{
+  "codex_note": "## Codex publication boundary\n\nTreat repository review, local edits, pushing a branch, opening or updating a PR, and merging as distinct effects. Verify the target repository and current user authorization for each external write. If push or PR publication is not yet authorized, complete the local branch, diff, checks, and draft PR text so approval is the final step. Do not merge unless separately requested. Preserve the upstream review and CI workflow within those boundaries.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Monitor PR checks and fix failures until green. Uses gh pr checks as the source of truth for PR-attached checks.",
+  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
+  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it. Git/PR effects are explicitly separated under Codex permissions.",
+  "replacements": [],
+  "source_path": "cursor-team-kit/skills/loop-on-ci/SKILL.md",
+  "source_sha256": "66b85dbd2bc3700386283539292a55438652bbe227271fd90b73b74525b9b9de"
+}

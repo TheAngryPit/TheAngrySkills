@@ -1,0 +1,59 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-write-gated",
+    "name_mapping": {
+      "upstream_skill": "create-verification-skill",
+      "published_name": "cursor-create-verification-skill",
+      "source_path": "pstack/skills/create-verification-skill/SKILL.md"
+    },
+    "preserved_semantics": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
+    "native_mapping": {
+      "capabilities": [
+        "repository reader",
+        "local verification runner",
+        "evidence collector"
+      ],
+      "required_tools": [
+        "repository reader",
+        "local verification runner",
+        "evidence collector"
+      ],
+      "fallback": "Missing harness or broken startup preserves the source and fails verification.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "application runtime or supplied harness"
+    ],
+    "permission_gates": [
+      "Write only to an explicit project-local destination; do not kill processes or drive outside scope.",
+      "Missing harness or broken startup preserves the source and fails verification.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-create-verification-skill: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-create-verification-skill: Missing harness or broken startup preserves the source and fails verification.",
+      "error": "Error fixture for cursor-create-verification-skill: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nWrite only to an explicit project-local destination; do not kill processes or drive outside scope. Required native capabilities: repository reader, local verification runner, evidence collector. External dependencies remain explicit: application runtime or supplied harness. Missing harness or broken startup preserves the source and fails verification. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "pstack/skills/create-verification-skill/SKILL.md",
+  "source_sha256": "644f2551403c1bca01a2855b34611b6e7be0ce0dc5b204514c376c0f6a6e6ac4"
+}

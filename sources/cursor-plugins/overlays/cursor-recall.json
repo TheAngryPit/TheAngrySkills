@@ -1,0 +1,60 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "history-review-gated",
+    "name_mapping": {
+      "upstream_skill": "recall",
+      "published_name": "cursor-recall",
+      "source_path": "pstack/skills/recall/SKILL.md"
+    },
+    "preserved_semantics": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
+    "native_mapping": {
+      "capabilities": [
+        "scoped task history",
+        "live repository state",
+        "shared record"
+      ],
+      "required_tools": [
+        "scoped task history",
+        "live repository state",
+        "shared record"
+      ],
+      "fallback": "Mismatched workspace/export is partial and does not alter state.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor transcript history or supplied Codex record",
+      "GitHub read-only metadata if requested"
+    ],
+    "permission_gates": [
+      "Use the exact workspace/topic/time scope and preserve missing exports.",
+      "Mismatched workspace/export is partial and does not alter state.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-recall: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-recall: Mismatched workspace/export is partial and does not alter state.",
+      "error": "Error fixture for cursor-recall: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nUse the exact workspace/topic/time scope and preserve missing exports. Required native capabilities: scoped task history, live repository state, shared record. External dependencies remain explicit: Cursor transcript history or supplied Codex record, GitHub read-only metadata if requested. Mismatched workspace/export is partial and does not alter state. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "pstack/skills/recall/SKILL.md",
+  "source_sha256": "d265b0e5b6dc5b89c0407f3387d24462c988e1990a37d5359735137908128c5a"
+}

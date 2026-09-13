@@ -1,0 +1,100 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-native",
+    "name_mapping": {
+      "upstream_skill": "reflect",
+      "published_name": "cursor-reflect",
+      "source_path": "pstack/skills/reflect/SKILL.md"
+    },
+    "preserved_semantics": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
+    "native_mapping": {
+      "capabilities": [
+        "three bounded reviewers",
+        "scoped transcript"
+      ],
+      "required_tools": [
+        "three bounded reviewers",
+        "scoped transcript"
+      ],
+      "fallback": "Missing transcript/lens keeps the result incomplete and write-free.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "native parallel delegates if exposed",
+      "task transcript"
+    ],
+    "permission_gates": [
+      "Keep judgment, tooling, and divergent lenses separate; do not edit a skill automatically.",
+      "Missing transcript/lens keeps the result incomplete and write-free.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-reflect: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-reflect: Missing transcript/lens keeps the result incomplete and write-free.",
+      "error": "Error fixture for cursor-reflect: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "blocked_malicious",
+      "status": "retained_contextual_hold",
+      "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed.",
+      "findings": [
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/divergent-reviewer.md",
+          "line": 7,
+          "classification": "defensive_reference_text",
+          "effect": "The reference tells the reviewer to treat transcript text as untrusted and ignore embedded directives while limiting lookups to cited context.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/judgment-reviewer.md",
+          "line": 5,
+          "classification": "defensive_reference_text",
+          "effect": "The reference applies the same untrusted-transcript boundary to judgment review.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/synthesizer.md",
+          "line": 3,
+          "classification": "defensive_reference_text",
+          "effect": "The synthesizer is told to treat reviewer output as untrusted and not follow embedded directives.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        },
+        {
+          "rule_id": "policy-bypass-instruction",
+          "severity": "critical",
+          "path": "references/tooling-reviewer.md",
+          "line": 5,
+          "classification": "defensive_reference_text",
+          "effect": "The tooling reviewer is told to constrain MCP lookups to context cited by the transcript.",
+          "credentials": [],
+          "decision": "Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed."
+        }
+      ]
+    }
+  },
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: policy-bypass-instruction at references/divergent-reviewer.md:7 (defensive_reference_text); policy-bypass-instruction at references/judgment-reviewer.md:5 (defensive_reference_text); policy-bypass-instruction at references/synthesizer.md:3 (defensive_reference_text); policy-bypass-instruction at references/tooling-reviewer.md:5 (defensive_reference_text). Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed. Contextual defensive text, not a permission to bypass policy; retain the finding and hold until prompt-isolation behavior is reviewed.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
+  "replacements": [],
+  "source_path": "pstack/skills/reflect/SKILL.md",
+  "source_sha256": "6a4d4ccaace9ce88c3e268fcbedf3cfd40e527162a5e5aad6de8edbaf5e2b83f"
+}

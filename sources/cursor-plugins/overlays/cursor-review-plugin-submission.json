@@ -1,0 +1,59 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-audit-security-hold",
+    "name_mapping": {
+      "upstream_skill": "review-plugin-submission",
+      "published_name": "cursor-review-plugin-submission",
+      "source_path": "create-plugin/skills/review-plugin-submission/SKILL.md"
+    },
+    "preserved_semantics": "Audit a Cursor plugin for marketplace readiness. Use when validating manifests, component metadata, discovery paths, and submission quality before publishing.",
+    "native_mapping": {
+      "capabilities": [
+        "local manifest reader",
+        "static component audit"
+      ],
+      "required_tools": [
+        "local manifest reader",
+        "static component audit"
+      ],
+      "fallback": "The active plugin submission surface and hook/MCP behavior require human review before any promotion.",
+      "availability": "security_hold"
+    },
+    "external_dependencies": [
+      "Cursor marketplace metadata",
+      "hooks",
+      "mcpServers"
+    ],
+    "permission_gates": [
+      "Use this only to audit a supplied plugin statically. Never enable hooks, mcpServers, marketplace submission, or external publication from the mirror.",
+      "The active plugin submission surface and hook/MCP behavior require human review before any promotion.",
+      "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
+    ],
+    "behavioral_proof": {
+      "positive": "A fixture audits manifest names, component paths, and metadata without activating a component.",
+      "missing_tool_or_input": "Missing plugin metadata produces an incomplete audit and no activation.",
+      "error": "A hook or mcpServers entry is flagged for human review and is not executed."
+    },
+    "promotion_status": "security_hold_human_review",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "create-plugin/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/create-plugin/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "needs_human_review",
+      "status": "retained",
+      "decision": "The needs_human_review verdict is retained. Hook and mcpServers findings at SKILL.md:23-24 are audit inputs, not permission to activate them."
+    }
+  },
+  "codex_note": "## Codex security hold\n\nUse this only to audit a supplied plugin statically. Never enable hooks, mcpServers, marketplace submission, or external publication from the mirror. The active plugin submission surface and hook/MCP behavior require human review before any promotion. This candidate remains unindexed. The needs_human_review verdict is retained. Hook and mcpServers findings at SKILL.md:23-24 are audit inputs, not permission to activate them.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Audit a Cursor plugin for marketplace readiness. Use when validating manifests, component metadata, discovery paths, and submission quality before publishing.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Security hold requires contextual review and behavior proof before promotion.",
+  "reason": "Security-hold contract records the external surface, explicit permission gate, positive/missing/error cases, pinned README provenance, and retained scanner verdict.",
+  "replacements": [],
+  "source_path": "create-plugin/skills/review-plugin-submission/SKILL.md",
+  "source_sha256": "ff7411fc0426934871ac18f8ed55edcfc49f19443701dbe9109a3395ccded61d"
+}

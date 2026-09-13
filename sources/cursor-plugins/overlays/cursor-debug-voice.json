@@ -1,0 +1,57 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "local-evidence-plan",
+    "name_mapping": {
+      "upstream_skill": "debug-voice",
+      "published_name": "cursor-debug-voice",
+      "source_path": "grok-voice/skills/debug-voice/SKILL.md"
+    },
+    "preserved_semantics": "Use when the user runs /debug-voice, says voice mode has flaws, asks to see or capture what happened in a Grok realtime voice session, or a voice integration has no debug logging yet. Proposes a plan, then installs a dev-only log pipeline (client logger → local NDJSON) in the app's own language and conventions, then runs the fix loop: match the user's report to log signatures, fix one thing, re-test.",
+    "native_mapping": {
+      "capabilities": [
+        "local log reader",
+        "redaction check"
+      ],
+      "required_tools": [
+        "local log reader",
+        "redaction check"
+      ],
+      "fallback": "Missing logs or failed redaction yields INCONCLUSIVE and no write.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "user-provided voice runtime"
+    ],
+    "permission_gates": [
+      "Read scoped logs only; never expose audio, tokens, or production credentials.",
+      "Missing logs or failed redaction yields INCONCLUSIVE and no write.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-debug-voice: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-debug-voice: Missing logs or failed redaction yields INCONCLUSIVE and no write.",
+      "error": "Error fixture for cursor-debug-voice: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "grok-voice/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/grok-voice/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nRead scoped logs only; never expose audio, tokens, or production credentials. Required native capabilities: local log reader, redaction check. External dependencies remain explicit: user-provided voice runtime. Missing logs or failed redaction yields INCONCLUSIVE and no write. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Use when the user runs /debug-voice, says voice mode has flaws, asks to see or capture what happened in a Grok realtime voice session, or a voice integration has no debug logging yet. Proposes a plan, then installs a dev-only log pipeline (client logger → local NDJSON) in the app's own language and conventions, then runs the fix loop: match the user's report to log signatures, fix one thing, re-test.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "grok-voice/skills/debug-voice/SKILL.md",
+  "source_sha256": "0bd730539335ceff9c10570c12c2b98518b2c5dc30be401a93b3e782de751f2c"
+}

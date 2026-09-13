@@ -1,0 +1,96 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-governed-style",
+    "name_mapping": {
+      "upstream_skill": "Poteto Mode",
+      "published_name": "cursor-poteto-mode",
+      "source_path": "pstack/skills/poteto-mode/SKILL.md"
+    },
+    "preserved_semantics": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
+    "native_mapping": {
+      "capabilities": [
+        "local skill reader",
+        "native bounded delegation if exposed"
+      ],
+      "required_tools": [
+        "local skill reader",
+        "native bounded delegation if exposed"
+      ],
+      "fallback": "Missing companion playbook leaves the mode inactive.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "Cursor playbooks",
+      "native delegated reviewers if exposed"
+    ],
+    "permission_gates": [
+      "Preserve the 23 principle IDs and autonomy gates; style never enables unattended execution.",
+      "Missing companion playbook leaves the mode inactive.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-poteto-mode: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-poteto-mode: Missing companion playbook leaves the mode inactive.",
+      "error": "Error fixture for cursor-poteto-mode: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "needs_human_review",
+      "status": "retained_contextual_hold",
+      "decision": "Hold. Do not admit or run the bundled scripts until their code, dependency, and egress behavior is reviewed. Hold. Treat the files as executable code, not passive style guidance, until separately reviewed. Hold. No dependency installation or script activation is authorized by this mirror.",
+      "findings": [
+        {
+          "rule_id": "bundled-script-review",
+          "severity": "warning",
+          "path": "scripts/**",
+          "line": null,
+          "count": 20,
+          "classification": "bundled_executable_surface",
+          "effect": "The pack ships Bun/TypeScript scripts for orchestration, PR watching, worktree audit, and plan checks.",
+          "credentials": [
+            "environment credentials consumed by gh or project tools"
+          ],
+          "decision": "Hold. Do not admit or run the bundled scripts until their code, dependency, and egress behavior is reviewed."
+        },
+        {
+          "rule_id": "executable-file",
+          "severity": "warning",
+          "path": "scripts/check-plan.mjs,scripts/worktree-audit.sh,scripts/orch/orch.ts,scripts/watch-pr/watch-pr",
+          "line": null,
+          "count": 4,
+          "classification": "active_executable_surface",
+          "effect": "Executable helpers can spawn processes, inspect git/worktrees, fetch PR state, or write orchestration state.",
+          "credentials": [
+            "gh/authentication environment where used"
+          ],
+          "decision": "Hold. Treat the files as executable code, not passive style guidance, until separately reviewed."
+        },
+        {
+          "rule_id": "dependency-manifest-surface",
+          "severity": "warning",
+          "path": "scripts/package.json",
+          "line": null,
+          "classification": "active_dependency_surface",
+          "effect": "The package manifest and bootstrap path can install Bun dependencies before running helpers.",
+          "credentials": [],
+          "decision": "Hold. No dependency installation or script activation is authorized by this mirror."
+        }
+      ]
+    }
+  },
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: bundled-script-review at scripts/**:n/a (bundled_executable_surface); executable-file at scripts/check-plan.mjs,scripts/worktree-audit.sh,scripts/orch/orch.ts,scripts/watch-pr/watch-pr:n/a (active_executable_surface); dependency-manifest-surface at scripts/package.json:n/a (active_dependency_surface). Hold. Do not admit or run the bundled scripts until their code, dependency, and egress behavior is reviewed. Hold. Treat the files as executable code, not passive style guidance, until separately reviewed. Hold. No dependency installation or script activation is authorized by this mirror.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
+  "replacements": [],
+  "source_path": "pstack/skills/poteto-mode/SKILL.md",
+  "source_sha256": "b3c505602b82fb3641a3983e9c46fb974881faa12ece1af804fae27afb7be532"
+}

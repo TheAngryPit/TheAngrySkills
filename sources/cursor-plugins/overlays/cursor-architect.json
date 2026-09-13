@@ -1,0 +1,57 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-native",
+    "name_mapping": {
+      "upstream_skill": "architect",
+      "published_name": "cursor-architect",
+      "source_path": "pstack/skills/architect/SKILL.md"
+    },
+    "preserved_semantics": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
+    "native_mapping": {
+      "capabilities": [
+        "bounded design delegate",
+        "local file reader"
+      ],
+      "required_tools": [
+        "bounded design delegate",
+        "local file reader"
+      ],
+      "fallback": "Missing delegate triggers a labeled sequential fallback.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "native delegated reviewer if exposed"
+    ],
+    "permission_gates": [
+      "Keep planning separate from implementation; do not invent a model or arena result.",
+      "Missing delegate triggers a labeled sequential fallback.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-architect: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-architect: Missing delegate triggers a labeled sequential fallback.",
+      "error": "Error fixture for cursor-architect: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nKeep planning separate from implementation; do not invent a model or arena result. Required native capabilities: bounded design delegate, local file reader. External dependencies remain explicit: native delegated reviewer if exposed. Missing delegate triggers a labeled sequential fallback. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "pstack/skills/architect/SKILL.md",
+  "source_sha256": "897a59beaa3cab107d98c256206e062cc4a5e9421a45b9d462fbded19291fea5"
+}

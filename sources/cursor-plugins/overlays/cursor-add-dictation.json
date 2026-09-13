@@ -1,0 +1,72 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "external-voice-gated",
+    "name_mapping": {
+      "upstream_skill": "add-dictation",
+      "published_name": "cursor-add-dictation",
+      "source_path": "grok-voice/skills/add-dictation/SKILL.md"
+    },
+    "preserved_semantics": "Use when the user runs /add-dictation or wants speech turned into text with Grok speech-to-text: a mic button that dictates into the composer, live captions, or transcribing recorded audio (files, uploads, URLs) with word timestamps, diarization, subtitles, meeting notes. STT, transcribe, transcription. For a voice agent that talks back use /add-voice.",
+    "native_mapping": {
+      "capabilities": [
+        "server-side HTTP client",
+        "multipart form encoder"
+      ],
+      "required_tools": [
+        "server-side HTTP client",
+        "multipart form encoder"
+      ],
+      "fallback": "Missing endpoint/auth is a typed error without exposing the key.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "xAI STT API",
+      "XAI_API_KEY"
+    ],
+    "permission_gates": [
+      "Keep XAI_API_KEY on the application server, not in client assets; make any live xAI request only within the user-authorized task scope.",
+      "Missing endpoint/auth is a typed error without exposing the key.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-add-dictation: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-add-dictation: Missing endpoint/auth is a typed error without exposing the key.",
+      "error": "Error fixture for cursor-add-dictation: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "grok-voice/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/grok-voice/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "blocked_malicious",
+      "status": "retained_contextual_hold",
+      "decision": "Hold until the server-side xAI request is authorized, endpoint and key handling are verified, and a safe audio fixture exercises success and error behavior.",
+      "findings": [
+        {
+          "rule_id": "network-exfiltration",
+          "severity": "critical",
+          "path": "SKILL.md",
+          "line": 156,
+          "classification": "active_instruction",
+          "effect": "The smoke command sends an audio file to the external xAI STT endpoint.",
+          "credentials": [
+            "XAI_API_KEY"
+          ],
+          "decision": "Hold until the server-side xAI request is authorized, endpoint and key handling are verified, and a safe audio fixture exercises success and error behavior."
+        }
+      ]
+    }
+  },
+  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: network-exfiltration at SKILL.md:156 (active_instruction). Hold until the server-side xAI request is authorized, endpoint and key handling are verified, and a safe audio fixture exercises success and error behavior.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Use when the user runs /add-dictation or wants speech turned into text with Grok speech-to-text: a mic button that dictates into the composer, live captions, or transcribing recorded audio (files, uploads, URLs) with word timestamps, diarization, subtitles, meeting notes. STT, transcribe, transcription. For a voice agent that talks back use /add-voice.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
+  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
+  "replacements": [],
+  "source_path": "grok-voice/skills/add-dictation/SKILL.md",
+  "source_sha256": "fe0083e27ff2fefa1b5220b98b98db9110aad2e32c58a319b66c776d44e84d0b"
+}

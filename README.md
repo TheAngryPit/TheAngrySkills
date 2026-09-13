@@ -55,7 +55,7 @@ wrote it.
 | Model routing | Build or apply portable model, effort, role, capability, and fallback policy | `model-routing-preset-builder`, `model-capability-router` |
 | Engineering workflow | Skills that shape code work, docs, continuity, or skill quality | `continuity-handoff`, `skill-catalog-curator`, `theangry-ai-code-audit`, `docs-skill-builder` |
 | Design/operator | Skills for visual tooling and creative execution | `adobe-illustrator-operator`, `penpot-mcp-operator` |
-| Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `emil-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
+| Curated mirrors | External skills kept source-prefixed or naturally namespaced so multiple packs can coexist | `openclaw-*`, `cursor-*`, `emil-*`, `taste-*`, `vercel-agent-*`, `marketing-*`, `hyperframes*` |
 
 This matters because skill repos collide fast. Many packs eventually contain
 their own `handoff`, `review`, `browser`, `plan`, or `ingest` skill. Prefixes
@@ -197,6 +197,7 @@ The currently accepted mirror families for public curation are:
 - HyperFrames by HeyGen skills, preserving natural names and using `hyperframes-` for generic names
 - Emil Kowalski skills, preserving existing `emil-` names and using `emil-` for generic names
 - Matt Pocock skills, curated under `mirrors-mattpocock/` with approved overlays and provenance
+- Cursor plugin skills, selectively indexed under `mirrors-cursor/` with a pinned source snapshot and per-skill overlays
 
 The Emil family follows the same one-to-one curated mirror workflow as OpenClaw.
 It is available as the separate `mirrors-emilkowalski` family for explicit
@@ -209,12 +210,17 @@ When mirrors are published here, they should:
 - avoid mixing owned TheAngrySkills workflow logic into upstream material
 - stay clearly marked as curated mirrors, not original work
 
-All accepted mirror families are refreshed daily by the `Sync Curated Mirrors`
-workflow. It discovers valid upstream skill directories, preserves the family
+Families configured in the curated mirror manifest are refreshed daily by the
+`Sync Curated Mirrors` workflow. It discovers valid upstream skill directories, preserves the family
 naming policy, rewrites only frontmatter names and internal skill paths needed
 by the prefix, validates the complete catalog, and opens or updates one review
 PR when upstream changes exist. New or removed upstream skills and changed
 executable surfaces remain visible in that PR and are never merged automatically.
+
+The Cursor family uses a separate pinned snapshot and reviewed per-skill
+overlays. It is not in that daily workflow. Its source, selected candidates,
+holds, and manual update checks are documented in
+[`sources/cursor-plugins/README.md`](sources/cursor-plugins/README.md).
 
 This matters because different skill packs often collide on names like
 `handoff`, `review`, or `browser`. Prefixes keep installs legible.

@@ -1,0 +1,61 @@
+{
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "delegated-native",
+    "name_mapping": {
+      "upstream_skill": "check-agent-compatibility",
+      "published_name": "cursor-check-agent-compatibility",
+      "source_path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md"
+    },
+    "preserved_semantics": "Frontmatter inválido; description bruto não parseável: Run the full repository compatibility pass: scanner score, startup path, validation loop, and docs reliability.",
+    "native_mapping": {
+      "capabilities": [
+        "repo scanner",
+        "startup runner",
+        "validation runner",
+        "docs reader"
+      ],
+      "required_tools": [
+        "repo scanner",
+        "startup runner",
+        "validation runner",
+        "docs reader"
+      ],
+      "fallback": "A missing runner is unavailable and yields a partial report.",
+      "availability": "not_proven_in_current_codex_session"
+    },
+    "external_dependencies": [
+      "native delegated reviewers or local repository commands"
+    ],
+    "permission_gates": [
+      "Keep scanner, startup, validation, and docs checks separate; do not invent a score.",
+      "A missing runner is unavailable and yields a partial report.",
+      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+    ],
+    "behavioral_proof": {
+      "positive": "Positive fixture for cursor-check-agent-compatibility: the bounded path produces its documented result without unrelated side effects.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-check-agent-compatibility: A missing runner is unavailable and yields a partial report.",
+      "error": "Error fixture for cursor-check-agent-compatibility: a malformed input or failed dependency is reported explicitly and does not widen scope."
+    },
+    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "agent-compatibility/README.md",
+      "url": "https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/agent-compatibility/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+    },
+    "security_review": {
+      "scanner_verdict": "safe_docs_only",
+      "status": "retained",
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+    }
+  },
+  "codex_note": "## Codex adaptation\n\nKeep scanner, startup, validation, and docs checks separate; do not invent a score. Required native capabilities: repo scanner, startup runner, validation runner, docs reader. External dependencies remain explicit: native delegated reviewers or local repository commands. A missing runner is unavailable and yields a partial report. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
+  "preserved_requirement": "Frontmatter inválido; description bruto não parseável: Run the full repository compatibility pass: scanner score, startup path, validation loop, and docs reliability.",
+  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "replacements": [],
+  "source_path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md",
+  "source_sha256": "2391a06aec1bfb475690a9c386207e009090e35c624b5ca6cace3ea4c6705970"
+}

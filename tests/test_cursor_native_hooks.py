@@ -86,6 +86,48 @@ class CursorNativeHookTests(unittest.TestCase):
         self.assertIn("invalid", warning["systemMessage"])
         self.assertFalse(path.exists())
 
+    def test_ralph_arm_cancel_and_config_are_project_scoped(self):
+        prompt = self.root / "prompt.txt"
+        prompt.write_text("Fix the flaky test")
+        base = [sys.executable, str(SCRIPT)]
+        render = subprocess.run(
+            [*base, "render-ralph-config", "--project", str(self.project)],
+            text=True, capture_output=True, check=True,
+        )
+        config = json.loads(render.stdout)
+        command = config["hooks"]["Stop"][0]["hooks"][0]["command"]
+        self.assertIn("ralph-stop", command)
+        self.assertIn(str(self.project), command)
+        self.assertFalse((self.project / ".codex").exists())
+
+        armed = subprocess.run(
+            [*base, "ralph-start", "--project", str(self.project),
+             "--session-id", "task-1", "--prompt-file", str(prompt),
+             "--max-iterations", "2", "--completion-promise", "done"],
+            text=True, capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(armed.stdout)["status"], "ARMED_NOT_ACTIVE_UNTIL_HOOK_TRUSTED")
+        path = self.project / ".codex/cursor-mirror-state/ralph/state.json"
+        self.assertEqual(json.loads(path.read_text())["iteration"], 1)
+        duplicate = subprocess.run(
+            [*base, "ralph-start", "--project", str(self.project),
+             "--session-id", "task-2", "--prompt-file", str(prompt)],
+            text=True, capture_output=True, check=True,
+        )
+        self.assertIn("already active", json.loads(duplicate.stdout)["systemMessage"])
+        wrong = subprocess.run(
+            [*base, "ralph-cancel", "--project", str(self.project), "--session-id", "task-2"],
+            text=True, capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(wrong.stdout)["status"], "OTHER_SESSION")
+        self.assertTrue(path.exists())
+        cancelled = subprocess.run(
+            [*base, "ralph-cancel", "--project", str(self.project), "--session-id", "task-1"],
+            text=True, capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(cancelled.stdout)["status"], "CANCELLED")
+        self.assertFalse(path.exists())
+
     def test_advisor_subagent_identity_and_verdict_guard_pending_state(self):
         path = self.state("advisor", {
             "session_id": "task-1", "enabled": True, "nudge": True,

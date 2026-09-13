@@ -11,6 +11,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import sys
 import tempfile
 from pathlib import Path
@@ -67,6 +68,47 @@ def _normalized_promise(message: object) -> str | None:
         return None
     match = re.search(r"<promise>(.*?)</promise>", message, flags=re.DOTALL)
     return " ".join(match.group(1).split()) if match else None
+
+
+def ralph_start(project: Path, session_id: str, prompt: str,
+                maximum: int, promise: str | None) -> dict:
+    """Arm a task-bound local loop; native project hook trust is still required."""
+    if not project.is_dir() or not session_id or not prompt.strip() or maximum < 0:
+        raise HookInputError("project, session, prompt, and nonnegative max are required")
+    path = _state_path(project, "ralph")
+    existing = _load(path)
+    if existing is not None:
+        raise HookInputError("Ralph loop already active; cancel it before starting another")
+    _save(path, {
+        "session_id": session_id,
+        "prompt": prompt,
+        "iteration": 1,
+        "max_iterations": maximum,
+        "completion_promise": promise,
+    })
+    return {"status": "ARMED_NOT_ACTIVE_UNTIL_HOOK_TRUSTED", "iteration": 1}
+
+
+def ralph_cancel(project: Path, session_id: str) -> dict:
+    """Cancel only the caller's loop state; never delete another task's state."""
+    path = _state_path(project, "ralph")
+    state = _load(path)
+    if state is None:
+        return {"status": "INACTIVE"}
+    if not session_id or state.get("session_id") != session_id:
+        return {"status": "OTHER_SESSION"}
+    path.unlink()
+    return {"status": "CANCELLED"}
+
+
+def ralph_config(project: Path) -> dict:
+    """Return an inactive project-hook fragment for review and exact-hash trust."""
+    if not project.is_dir():
+        raise HookInputError("project directory is missing")
+    script = Path(__file__).resolve()
+    command = (f"python3 {shlex.quote(str(script))} ralph-stop "
+               f"--project {shlex.quote(str(project.resolve()))}")
+    return {"hooks": {"Stop": [{"hooks": [{"type": "command", "command": command}]}]}}
 
 
 def ralph_stop(event: dict, project: Path) -> dict:
@@ -164,7 +206,7 @@ def advisor_stop(event: dict, project: Path) -> dict:
     }
 
 
-HANDLERS = {
+HOOK_HANDLERS = {
     "ralph-stop": ralph_stop,
     "advisor-subagent-stop": advisor_subagent_stop,
     "advisor-stop": advisor_stop,
@@ -173,14 +215,29 @@ HANDLERS = {
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("handler", choices=sorted(HANDLERS))
+    parser.add_argument("handler", choices=sorted((*HOOK_HANDLERS, "ralph-start", "ralph-cancel", "render-ralph-config")))
     parser.add_argument("--project", type=Path, required=True)
+    parser.add_argument("--session-id")
+    parser.add_argument("--prompt-file", type=Path)
+    parser.add_argument("--max-iterations", type=int, default=0)
+    parser.add_argument("--completion-promise")
     args = parser.parse_args()
     try:
-        event = json.load(sys.stdin)
-        if not isinstance(event, dict):
-            raise HookInputError("hook input must be an object")
-        result = HANDLERS[args.handler](event, args.project)
+        if args.handler in HOOK_HANDLERS:
+            event = json.load(sys.stdin)
+            if not isinstance(event, dict):
+                raise HookInputError("hook input must be an object")
+            result = HOOK_HANDLERS[args.handler](event, args.project)
+        elif args.handler == "ralph-start":
+            if args.prompt_file is None or args.session_id is None:
+                raise HookInputError("ralph-start requires --prompt-file and --session-id")
+            result = ralph_start(args.project, args.session_id,
+                                 args.prompt_file.read_text(), args.max_iterations,
+                                 args.completion_promise)
+        elif args.handler == "ralph-cancel":
+            result = ralph_cancel(args.project, args.session_id or "")
+        else:
+            result = ralph_config(args.project)
     except (HookInputError, OSError, json.JSONDecodeError, ValueError) as exc:
         result = {"systemMessage": f"Cursor mirror hook skipped: {exc}"}
     print(json.dumps(result, ensure_ascii=False))

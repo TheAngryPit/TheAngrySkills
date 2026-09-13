@@ -2,9 +2,11 @@
 
 Date: 2026-09-13
 
-Status: fixture-only proof. No bundled pstack Bun/TypeScript script was
-installed or executed. No live target application, cloud task, GitHub query,
-worktree operation, or external write was used.
+Status: fixture-only proof. No bundled pstack dependency installation,
+bootstrap, CLI entrypoint, live target application, cloud task, real GitHub
+query, real worktree operation, or external write was used. Bun `1.4.2` did
+execute selected dependency-free TypeScript modules from scratch copies with
+mocked subprocesses.
 
 ## Contextual `bug-fix` proof
 
@@ -66,20 +68,25 @@ isolation remain `not_observed`.
 
 ## Safe bundled-script subset
 
-The critical scripts were first reviewed statically. Only two bounded local
-checks were then run:
+The critical scripts were first reviewed statically. The following bounded
+local checks were then run:
 
 | Script | Fixture and result | Boundary |
 | --- | --- | --- |
 | `scripts/check-plan.mjs` | Node ran against a temporary valid plan: exit 0 and `1 PR sections, 0 problems`; a temporary invalid plan: exit 1 with missing-section diagnostics. | Read-only plan parsing; no subprocess, install, `gh`, or network surface. |
 | `scripts/worktree-audit.sh` | Bash ran against temporary repo/child directories with disposable `HOME` and transcript path, using mocked `git`, `gh`, `jq`, and `rg`; exit 0 and the expected audit header, child path, and `no-remote` classification. | The mock prevented real GitHub/git activity; no real home or repository was read and no deletion was performed. |
+| `orch/store.ts` | Bun `1.4.2` ran five selected store tests from a scratch copy: init/idempotence, unit CRUD/counts, ledger record/check/summary, inbox push/peek/drain, and gates/standing/status; `5 pass`, `0 fail`, no `node_modules`. | Dependency-free module path only; the `orch.ts` CLI and its bootstrap were not loaded or run. |
+| `watch-pr/github.ts` | Bun `1.4.2` ran the real `GhGitHubReader` from a scratch copy with mocked `git` and `gh`; origin, PR facts, open PRs, checks, rollup, threads, and commit status were parsed. A slow mocked `gh` was bounded by an external 1-second timeout and returned `-9` on this host. | This proves parser/command wiring with mocks and an outer timeout, not GitHub access, credentials, real CLI/bootstrap, or an intrinsic child-process timeout. |
 
-`orch` and `watch-pr` were not executed. Bun is available, but
+The `orch` and `watch-pr` CLI entrypoints were not executed. Bun is available, but
 `scripts/node_modules` is absent and their entrypoints call `bootstrap.ts`,
 which can install dependencies and restart with inherited environment/stdio.
-No installation, network egress, credential use, or uncontrolled dependency
-activation was authorized. This is a safe-subset check, not bundled-script
-behavior parity.
+The offline install probe in a scratch copy failed exactly because the lock
+pins were absent from cache: `bun-types`, `typescript`, `commander`,
+`@types/node`, and `undici-types`. No installation, network egress, credential
+use, or uncontrolled dependency activation was authorized. This is a
+dependency-free module and safe-subset check, not CLI/bootstrap or real
+GitHub bundled-script parity.
 
 ## Critical pstack script review
 
@@ -101,8 +108,10 @@ review, not an execution or sandbox proof.
 | `scripts/watch-pr/render.ts` | Rendering only; no write found. | Emits GitHub PR URLs such as `https://github.com/<owner>/<repo>/pull/<number>`; does not fetch them itself. | Treat rendered URLs as external links; no execution was performed. |
 
 Finding disposition: the safe subset confirms the read-only behavior of
-`check-plan.mjs` and exercises only the control flow of `worktree-audit.sh`
-behind mocks. It does not reduce the current hold. Keep the bundled scripts
+`check-plan.mjs`, exercises only the control flow of `worktree-audit.sh` behind
+mocks, and proves selected dependency-free `orch/store.ts` and
+`watch-pr/github.ts` paths with mocks. It does not reduce the current hold.
+Keep the bundled CLI scripts
 disabled and do not install their dependencies until controlled execution,
 inherited-environment/credential review, network/egress policy, and any
 required worktree/store permissions are separately authorized and proven.

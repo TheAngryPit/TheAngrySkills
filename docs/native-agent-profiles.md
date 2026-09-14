@@ -44,6 +44,12 @@ fresh Codex session loaded or selected the profile; that remains a host session
 check. Availability of companion skills and native delegation is also
 host-dependent.
 
+A read-only check of `codex-cli 0.154.0` help and the exposed task-tool schemas
+found no named-agent selector. `codex --profile` selects a configuration
+profile; `codex agents` browses sessions. The task tools expose model and effort
+overrides, but no agent-profile field. This does not disprove profile loading;
+it leaves fresh-session discovery and named dispatch unverified.
+
 ## Invocation matrix
 
 | Upstream/adapted reference | Trigger | Native agent type | Payload and context | Reuse/spawn | Async and return | Codex destination |
@@ -73,6 +79,7 @@ python3 -m unittest -q tests.test_cursor_pstack_core.CursorPstackCoreTests.test_
 
 The checker records the SHA-256 of each public asset and the reviewed pinned
 Markdown source. It does not update the pinned source, alter Cursor's cache, or
-claim that the installed cache is current. The current worktree does not vendor
-the two pstack agent Markdown files; a read-only external pinned source root is
-needed for the exact body comparison.
+claim that the installed cache is current. The two pstack agent Markdown files
+are vendored under `sources/cursor-plugins/snapshot/pstack/agents/`. Pass
+`--pinned-source-root sources/cursor-plugins/snapshot/pstack` or use
+`--require-pinned-source` for the exact body comparison.

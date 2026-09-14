@@ -32,6 +32,12 @@ before it can collide with the generated feature index. This remains
 `FIXTURE_ONLY`: Doctor only checks source file presence/non-symlink; a real
 target, per-feature source-wave delegation, changed-outcome PR, native skill
 activation, and filesystem/network isolation have not been proven.
+The held `cursor-show-me-your-work` preview now requires an explicit root for
+its TSV helper. Ten tests exercise append and sanitization plus path escapes,
+invalid roots, and parent/target symlinks, with external sentinels unchanged.
+The pinned source is unchanged and the skill remains held: simultaneous writers,
+durability, secret redaction, transcript audit, independent review, and live
+activation are not proven.
 The [47-skill pstack audit](pstack-47-skill-audit-20260914.md) compares the
 installed Cursor cache with the pinned snapshot and the generated Codex
 output per skill. The 47 top-level IDs match; two top-level skills and six
@@ -51,14 +57,20 @@ duplicates agent Markdown under its references. The former bounded Comment
 Sicko fixture applied the role text but did not exercise the new profile
 selection. Fresh-session discovery, named dispatch, and complete fix/playbook
 behavior are still unproven. [Invocation matrix](../docs/native-agent-profiles.md).
+The native host inspection used `codex-cli 0.154.0` help and the exposed task
+tool schemas without starting a new session. `codex --profile` selects a
+configuration profile, and `codex agents` browses sessions; neither is a
+documented selector for these agent TOMLs. The exposed task tools accept
+model and effort but no named agent profile. Exact installation bytes therefore
+remain a distribution check, not discovery or dispatch proof.
 The official [Subagents](https://cursor.com/docs/subagents),
 [Cloud Agents API](https://cursor.com/docs/cloud-agent/api/endpoints), and
 [Automations](https://cursor.com/help/ai-features/automations) contracts
 separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
 readonly-removes-MCP claim as unverified rather than granting write access.
-`pytest -q tests` passed 169 tests and 2 subtests; mirror `--check`
-passed at 91 physical, 54 emitted and 167 output files. CI last passed on
-`7421f9e1`; the new integration head awaits publication and CI.
+`pytest -q tests` passed 178 tests and 2 subtests; mirror `--check`
+passed at 91 physical, 54 emitted and 167 output files. CI passed on
+`ed55d66c`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 
@@ -107,7 +119,7 @@ snapshot finding and is not included in the 11.
 | `reflect` | Four `policy-bypass-instruction` findings: `references/divergent-reviewer.md:7`, `judgment-reviewer.md:5`, `synthesizer.md:3`, `tooling-reviewer.md:5`, critical | These are defensive reference instructions that treat transcripts and reviewer output as untrusted and constrain lookups. No credential or write effect is shown at the lines. | Retain the findings as contextual defensive text. Hold until prompt-isolation behavior is reviewed. |
 | `create-plugin-scaffold` | `mcp-plugin-hook-install`, `SKILL.md:16`, warning | Active workflow input includes `hooks` and `mcpServers`, followed by plugin-file creation and a `~/.cursor` default. | Hold. Static scaffolding needs an explicit destination; hooks, MCP, activation, and marketplace wiring need human approval. |
 | `poteto-mode` | 20 `bundled-script-review` warnings, 4 `executable-file` warnings, and `dependency-manifest-surface` at `scripts/package.json` | The pack ships Bun/TypeScript orchestration, PR-watch, worktree-audit, and plan-check scripts. They can spawn processes, inspect GitHub/worktrees, install dependencies, or write state; no direct credential finding was emitted. | Hold. Do not run or admit bundled scripts until code, dependency, and egress behavior is reviewed. |
-| `show-me-your-work` | `executable-file` and `bundled-script-review`, `scripts/log.sh`, warning | Active local shell helper creates/appends TSV and sanitizes formula-like cells. No external egress is shown, but it is executable file-write code. | Hold pending focused script and installation-scope review. |
+| `show-me-your-work` | `executable-file` and `bundled-script-review`, `scripts/log.sh`, warning | Pinned shell helper writes operator-supplied TSV. Held preview adds explicit-root, no-follow local writes; fixture rejects escapes and symlinks. No external egress is shown. | Keep held pending full workflow, concurrency, secret-handling, and installation-scope proof. |
 | `why` | `mcp-plugin-hook-install`, `SKILL.md:62`, warning | Active workflow discovers MCPs and queries external evidence categories in parallel; connector authentication and data access are part of the behavior. | Hold until native connector availability, authorization, and read-only behavior are proven. |
 
 `setup-benny` is documented separately as a dormant extra: its

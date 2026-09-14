@@ -70,6 +70,34 @@ BUG_FIX_FIXTURE_COMPLETED_STEPS = (1, 4, 5)
 BUG_FIX_PARTIAL_STEPS = (2, 3, 6)
 PSTACK_FIXTURE_MARKER = ".pstack-disposable-fixture"
 PSTACK_FIXTURE_MARKER_CONTENT = "pstack-local-bug-fix-fixture-v1\n"
+PSTACK_MODEL_ALIASES = ("inherit-parent", "auto")
+PSTACK_MODEL_ROLES = (
+    "feature, refactoring",
+    "bug-fix",
+    "perf-issue",
+    "hillclimb",
+    "judgment and prose",
+    "hardest tasks",
+    "how explorer",
+    "how explainer",
+    "why investigators",
+    "why synthesizer",
+    "reflect tooling",
+    "reflect judgment, divergent, synthesizer",
+    "arena runners",
+    "arena cross-judge pool",
+    "swarm workers",
+    "architect runners",
+    "interrogate reviewers",
+)
+PSTACK_MODEL_PANEL_ROLES = frozenset(
+    {
+        "arena runners",
+        "arena cross-judge pool",
+        "architect runners",
+        "interrogate reviewers",
+    }
+)
 
 
 def read_pstack_playbook_fixture(
@@ -1370,6 +1398,194 @@ def resolve_capabilities(
             raise MissingCapability("missing capabilities without a fallback")
         return CapabilityResult("FALLBACK", missing, fallback)
     return CapabilityResult("NATIVE")
+
+
+def run_pstack_model_mapping_fixture(
+    inventory: Mapping[str, Iterable[str]],
+    choices: Mapping[str, object],
+) -> dict[str, object]:
+    """Dry-run the pstack role mapping against a supplied channel inventory.
+
+    This is deliberately a fixture-only boundary.  ``inventory`` is the
+    caller's already-observed ``model -> supported efforts`` mapping; this
+    helper does not discover models, call a provider, or persist config.  The
+    two pstack aliases are valid without appearing in that inventory.
+    """
+
+    def fail(reason: str, details: Iterable[str] = ()) -> dict[str, object]:
+        detail_lines = tuple(details)
+        return {
+            "status": "ERROR",
+            "fixture_only": True,
+            "writes_performed": False,
+            "configuration_changed": False,
+            "reason": reason,
+            "details": detail_lines,
+            "dry_run": "DRY-RUN cursor-setup-pstack (fixture-only; no config write)\n"
+            + "ERROR: "
+            + reason
+            + ("\n" + "\n".join(detail_lines) if detail_lines else ""),
+        }
+
+    if not isinstance(inventory, Mapping):
+        return fail("model inventory must be a mapping of model to efforts")
+    if not isinstance(choices, Mapping):
+        return fail("pstack choices must be a mapping of role to selection")
+
+    try:
+        normalized_inventory: dict[str, tuple[str, ...]] = {}
+        for model, efforts in inventory.items():
+            if not isinstance(model, str) or not model.strip():
+                raise AdapterError("inventory model names must be non-empty strings")
+            if isinstance(efforts, (str, bytes)):
+                raise AdapterError(
+                    f"inventory efforts for {model!r} must be an iterable of strings"
+                )
+            normalized_efforts = tuple(efforts)
+            if any(
+                not isinstance(effort, str) or not effort.strip()
+                for effort in normalized_efforts
+            ):
+                raise AdapterError(
+                    f"inventory efforts for {model!r} must be non-empty strings"
+                )
+            normalized_inventory[model] = tuple(dict.fromkeys(normalized_efforts))
+
+        expected_roles = set(PSTACK_MODEL_ROLES)
+        supplied_roles = set(choices)
+        missing_roles = tuple(sorted(expected_roles - supplied_roles))
+        extra_roles = tuple(sorted(supplied_roles - expected_roles))
+        if missing_roles or extra_roles:
+            details = []
+            if missing_roles:
+                details.append("missing roles: " + ", ".join(missing_roles))
+            if extra_roles:
+                details.append("unknown roles: " + ", ".join(extra_roles))
+            return fail("choices must cover exactly every pstack role", details)
+
+        def normalize_selection(selection: object, label: str) -> dict[str, object]:
+            if isinstance(selection, str):
+                model = selection
+                effort = None
+            elif isinstance(selection, Mapping):
+                unknown = set(selection) - {"model", "effort"}
+                if unknown:
+                    raise AdapterError(
+                        f"{label} has unsupported selection fields: {sorted(unknown)}"
+                    )
+                model = selection.get("model")
+                effort = selection.get("effort")
+                if effort is not None and (
+                    not isinstance(effort, str) or not effort.strip()
+                ):
+                    raise AdapterError(f"{label} effort must be a non-empty string")
+            else:
+                raise AdapterError(
+                    f"{label} selection must be a model string or model/effort mapping"
+                )
+            if not isinstance(model, str) or not model.strip():
+                raise AdapterError(f"{label} model must be a non-empty string")
+            result: dict[str, object] = {"model": model}
+            if effort is not None:
+                result["effort"] = effort
+            return result
+
+        normalized_choices: dict[str, tuple[dict[str, object], ...]] = {}
+        for role in PSTACK_MODEL_ROLES:
+            raw = choices[role]
+            if role in PSTACK_MODEL_PANEL_ROLES:
+                if not isinstance(raw, (list, tuple)) or not raw:
+                    raise AdapterError(f"{role} must be a non-empty model panel list")
+                selections = tuple(
+                    normalize_selection(item, f"{role}[{index}]")
+                    for index, item in enumerate(raw)
+                )
+            else:
+                if isinstance(raw, (list, tuple)):
+                    raise AdapterError(f"{role} must be a single model selection")
+                selections = (normalize_selection(raw, role),)
+            normalized_choices[role] = selections
+    except (AdapterError, TypeError, ValueError) as exc:
+        return fail(str(exc))
+
+    unavailable: list[str] = []
+    mapping: dict[str, dict[str, object]] = {}
+    for role in PSTACK_MODEL_ROLES:
+        selections = normalized_choices[role]
+        selection_report: list[dict[str, object]] = []
+        for index, selection in enumerate(selections):
+            model = selection["model"]
+            effort = selection.get("effort")
+            label = f"{role}[{index}]" if role in PSTACK_MODEL_PANEL_ROLES else role
+            if model in PSTACK_MODEL_ALIASES:
+                availability = "alias-preserved"
+            elif model not in normalized_inventory:
+                unavailable.append(f"{label}: unavailable model {model!r}")
+                availability = "unavailable-model"
+            elif effort is not None and effort not in normalized_inventory[model]:
+                unavailable.append(
+                    f"{label}: unavailable effort {effort!r} for model {model!r}"
+                )
+                availability = "unavailable-effort"
+            else:
+                availability = "available"
+            selection_report.append(
+                {
+                    "selection": dict(selection),
+                    "availability": availability,
+                }
+            )
+        mapping[role] = {
+            "panel": role in PSTACK_MODEL_PANEL_ROLES,
+            "count": len(selections),
+            "selections": selection_report,
+        }
+
+    lines = [
+        "DRY-RUN cursor-setup-pstack (fixture-only; no config write)",
+        f"inventory: {len(normalized_inventory)} model(s); roles: {len(mapping)}",
+    ]
+    for role in PSTACK_MODEL_ROLES:
+        entries = mapping[role]["selections"]
+        rendered = ", ".join(
+            "/".join(
+                str(value)
+                for value in (
+                    item["selection"].get("model"),
+                    item["selection"].get("effort"),
+                )
+                if value is not None
+            )
+            for item in entries
+        )
+        suffix = (
+            f" [panel x{mapping[role]['count']}]"
+            if mapping[role]["panel"]
+            else ""
+        )
+        lines.append(f"- {role}{suffix}: {rendered}")
+
+    if unavailable:
+        lines.append("BLOCKED: unavailable model/effort; configuration unchanged")
+        return {
+            "status": "BLOCKED",
+            "fixture_only": True,
+            "writes_performed": False,
+            "configuration_changed": False,
+            "unavailable": tuple(unavailable),
+            "mapping": mapping,
+            "dry_run": "\n".join(lines),
+        }
+
+    lines.append("PASS: every role and panel entry is valid; configuration unchanged")
+    return {
+        "status": "DRY_RUN",
+        "fixture_only": True,
+        "writes_performed": False,
+        "configuration_changed": False,
+        "mapping": mapping,
+        "dry_run": "\n".join(lines),
+    }
 
 
 def prove_rerunnable(first_output: str, second_output: str) -> dict[str, str]:

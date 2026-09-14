@@ -1485,6 +1485,11 @@ def run_pstack_model_mapping_fixture(
                 )
             if not isinstance(model, str) or not model.strip():
                 raise AdapterError(f"{label} model must be a non-empty string")
+            if model in PSTACK_MODEL_ALIASES and effort is not None:
+                raise AdapterError(
+                    f"{label} cannot validate an effort for {model!r} "
+                    "without the parent model"
+                )
             result: dict[str, object] = {"model": model}
             if effort is not None:
                 result["effort"] = effort
@@ -1567,6 +1572,7 @@ def run_pstack_model_mapping_fixture(
 
     if unavailable:
         lines.append("BLOCKED: unavailable model/effort; configuration unchanged")
+        lines.extend(f"- {item}" for item in unavailable)
         return {
             "status": "BLOCKED",
             "fixture_only": True,

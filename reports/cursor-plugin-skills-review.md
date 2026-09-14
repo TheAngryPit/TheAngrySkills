@@ -39,6 +39,11 @@ external sentinels unchanged.
 The pinned source is unchanged and the skill remains held: simultaneous writers,
 durability, secret redaction, transcript audit, independent review, and live
 activation are not proven.
+The held `cursor-setup-pstack` now has a fixture-only dry-run over all 17 role
+labels and four panel lists. It preserves explicit model/effort choices and
+aliases, rejects unavailable choices and malformed panels without writing
+configuration, and requires the parent model before accepting an effort for an
+alias. It does not discover a live inventory, select an agent, or persist policy.
 The [47-skill pstack audit](pstack-47-skill-audit-20260914.md) compares the
 installed Cursor cache with the pinned snapshot and the generated Codex
 output per skill. The 47 top-level IDs match; two top-level skills and six
@@ -69,7 +74,7 @@ The official [Subagents](https://cursor.com/docs/subagents),
 [Automations](https://cursor.com/help/ai-features/automations) contracts
 separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
 readonly-removes-MCP claim as unverified rather than granting write access.
-`pytest -q tests` passed 180 tests and 2 subtests; mirror `--check`
+`pytest -q tests` passed 184 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI passed on
 `158c41a7` after publication.
 None of these fixtures proves full native runtime parity, global installation,

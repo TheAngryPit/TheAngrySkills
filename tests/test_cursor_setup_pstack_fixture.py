@@ -111,6 +111,7 @@ class CursorSetupPstackFixtureTests(unittest.TestCase):
         self.assertTrue(any("unavailable effort" in item for item in result["unavailable"])
         )
         self.assertIn("configuration unchanged", result["dry_run"])
+        self.assertIn("not-in-channel", result["dry_run"])
 
     def test_malformed_panel_is_an_explicit_error_without_write(self):
         choices = choices_for_all_roles()
@@ -121,6 +122,14 @@ class CursorSetupPstackFixtureTests(unittest.TestCase):
         self.assertFalse(result["configuration_changed"])
         self.assertIn("non-empty model panel list", result["reason"])
         self.assertIn("ERROR:", result["dry_run"])
+
+    def test_alias_effort_needs_parent_model_before_validation(self):
+        choices = choices_for_all_roles()
+        choices["hardest tasks"] = {"model": "auto", "effort": "xhigh"}
+        result = run_pstack_model_mapping_fixture(INVENTORY, choices)
+        self.assertEqual(result["status"], "ERROR")
+        self.assertFalse(result["writes_performed"])
+        self.assertIn("without the parent model", result["reason"])
 
 
 if __name__ == "__main__":

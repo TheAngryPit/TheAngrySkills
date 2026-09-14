@@ -584,6 +584,14 @@ console.log(JSON.stringify({{
             self.assertEqual(rerun["changed_features"], ())
             self.assertEqual(rerun["reconciled_features"], ("create-note",))
 
+            outside_evidence = root / "outside-evidence.json"
+            outside_evidence.write_text("preserve me")
+            before_evidence.unlink()
+            before_evidence.symlink_to(outside_evidence)
+            with self.assertRaises(AdapterError):
+                maintain_cli_verification_fixture(root, "notes", app, commands)
+            self.assertEqual(outside_evidence.read_text(), "preserve me")
+
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             app = root / "notes.py"

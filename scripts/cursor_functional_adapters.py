@@ -164,6 +164,12 @@ def _reject_symlink_components(root: Path, relative: Path) -> None:
             raise AdapterError("verification fixture path must not contain symlinks")
 
 
+def _assert_verification_output_path(root: Path, path: Path, label: str) -> None:
+    _reject_symlink_components(root, path.relative_to(root))
+    if path.exists() and not path.is_file():
+        raise AdapterError(f"{label} must be a regular file")
+
+
 def run_verification_fixture(
     project_root: str | Path,
     app_name: str,
@@ -880,15 +886,14 @@ def maintain_cli_verification_fixture(
             path.write_text(expected_document)
             changed.append(feature)
         evidence_path = evidence_dir / f"{feature}.json"
-        _reject_symlink_components(root, evidence_path.relative_to(root))
-        if evidence_path.is_symlink():
-            raise AdapterError("verification evidence must be a regular file")
+        _assert_verification_output_path(root, evidence_path, "verification evidence")
         evidence_path.write_text(
             f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
         )
 
     for feature, spec in normalized.items():
         before_path = evidence_dir / f"maintenance-before-{feature}.json"
+        _assert_verification_output_path(root, before_path, "maintenance-before evidence")
         before_path.write_text(
             f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
         )
@@ -896,6 +901,7 @@ def maintain_cli_verification_fixture(
     for feature, spec in normalized.items():
         after_path = evidence_dir / f"maintenance-after-{feature}.json"
         if feature in second_run:
+            _assert_verification_output_path(root, after_path, "maintenance-after evidence")
             after_path.write_text(
                 f"{json.dumps(_verification_feature_payload(root, app, feature, spec, second_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
             )

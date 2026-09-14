@@ -19,7 +19,7 @@
         "local diff/file reader"
       ],
       "fallback": "If only one reviewer completes, report a partial single-lens review; do not claim a Thermos double review.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_native_two_lens_review_observed; automatic_trigger_unobserved"
     },
     "external_dependencies": [
       "native parallel reviewers",
@@ -37,7 +37,7 @@
       "missing_tool_or_input": "One unavailable reviewer yields a labeled partial result, not a double-review claim.",
       "error": "Malformed diff or failed reviewer is reported with the missing lens and no workspace mutation."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_review_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "thermos/README.md",
@@ -53,7 +53,7 @@
   "codex_note": "## Codex runtime mapping\n\nPass the same scoped diff to two independent read-only native reviewers in parallel. Give the bug/security reviewer [its pinned role](references/bug-security-reviewer.md) and the code-quality reviewer [its pinned role](references/code-quality-reviewer.md); their full rubrics are `cursor-thermo-nuclear-review` and `cursor-thermos-thermo-nuclear-code-quality-review`. Follow the selected model/effort under `model-capability-router`. The coordinator verifies and synthesizes; if one lens fails, label the result partial.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits.",
-  "proof": "Pinned source and role hashes plus deterministic preview prove packaging; live two-reviewer behavior and synthesis remain to be demonstrated.",
+  "proof": "Pinned source and role hashes plus deterministic preview prove packaging. Two independent native reviewers received one real PR #64 diff and returned separate ISSUES findings, which the coordinator deduplicated and synthesized. A second fixture interrupted one reviewer and returned a labeled PARTIAL single-lens result. Automatic selection, other hosts, and malformed-diff behavior remain unobserved; reports/pstack-thermos-swarm-real-20260914.md records the bounded cases.",
   "reason": "Bundle both named upstream agent roles and map the parallel double review to native read-only reviewers without collapsing the two lenses.",
   "replacements": [
     {

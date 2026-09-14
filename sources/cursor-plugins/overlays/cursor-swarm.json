@@ -17,21 +17,23 @@
         "bounded worker delegates",
         "local result collector"
       ],
-      "fallback": "A partial worker is marked PARTIAL/ISSUES and is not silently dropped.",
+      "fallback": "A dropped or unavailable worker is recorded as BLOCKED; the aggregate is partial when required coverage is missing. Never silently drop a worker.",
       "availability": "not_proven_in_current_codex_session"
     },
     "external_dependencies": [
       "native bounded delegates if exposed"
     ],
     "permission_gates": [
-      "Use an explicit worker count and disjoint scope; sequential fallback is not fan-out proof.",
-      "A partial worker is marked PARTIAL/ISSUES and is not silently dropped.",
+      "Open a four-phase todolist (Frame, Fan out, Aggregate, Report) before launching workers.",
+      "Declare the done predicate, output, shape, total N, selection rule for races, worker models, and separate writable outputs before fan-out.",
+      "Launch all N bounded workers in parallel; use local execution only when they need access to the user's computer. Sequential fallback is not fan-out proof.",
+      "Require each worker to report PASS, ISSUES, or BLOCKED with evidence. Preserve dropouts and mark the aggregate partial when required coverage is missing.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-swarm: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-swarm: A partial worker is marked PARTIAL/ISSUES and is not silently dropped.",
-      "error": "Error fixture for cursor-swarm: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "A four-phase todolist precedes one parallel N-worker launch; each worker returns PASS, ISSUES, or BLOCKED with evidence; the coordinator drains and aggregates one report.",
+      "missing_tool_or_input": "An unavailable worker is recorded as BLOCKED and the aggregate explicitly identifies uncovered slices or a partial race.",
+      "error": "Malformed input or failed worker is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -46,7 +48,7 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse an explicit worker count and disjoint scope; sequential fallback is not fan-out proof. Required native capabilities: bounded worker delegates, local result collector. External dependencies remain explicit: native bounded delegates if exposed. A partial worker is marked PARTIAL/ISSUES and is not silently dropped. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nBefore launch, open a four-phase todolist: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Use local workers only when they need access to the user's computer. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",

@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 31,
+  "candidate_not_published": 30,
   "generated_files": {
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "c9b8e41ac8d9045001b560df1459594376a04f88dbca8da0bf7601846e9444ca",
@@ -192,6 +192,12 @@
     "cursor-thermos-thermo-nuclear-code-quality-review/MIRROR.md": "4dab68344a9120ec89cddfa5b4955d84d68bd307235455da3d14c03896a71eb3",
     "cursor-thermos-thermo-nuclear-code-quality-review/SKILL.md": "377ae09127f84b83339ef3635d7d2daeaacb3d93cc771d0d2a2e819ecb30c143",
     "cursor-thermos-thermo-nuclear-code-quality-review/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-thermos/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+    "cursor-thermos/MIRROR.md": "9b6bf190f8af461a98addc4f9ad570e0c53cca9c33a224aeedde6da8944993ed",
+    "cursor-thermos/SKILL.md": "664c10191db464a463809c1462453e7a6e2ee4e8abb264166b45c8ceb4cfeeb6",
+    "cursor-thermos/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-thermos/references/bug-security-reviewer.md": "3d82ed3b009ee0e516e1988fae249f83fea1a695468969eac701f05f2ac6f7ca",
+    "cursor-thermos/references/code-quality-reviewer.md": "b1b15da1e70abdb8c3b0818639d825fb50e3fc273a81146ce24e237b1e64622b",
     "cursor-typescript-best-practices/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-typescript-best-practices/MIRROR.md": "a3150ae32a477af6c745377558bd93d932f139d4590b8702a59f42c0181f99f0",
     "cursor-typescript-best-practices/SKILL.md": "d075754523fd6302ac1f8d2b354d3f84ed1505e9ecf1ea316bc567930c90deda",
@@ -232,7 +238,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 57,
+  "published_skills": 58,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

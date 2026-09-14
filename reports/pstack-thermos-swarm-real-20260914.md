@@ -257,3 +257,34 @@ Only this report delta is owned here. No source, manifest, generated tree,
 renderer, build helper, test suite, CI query, push, PR edit, merge, secret,
 hook, or global installation was performed. `cursor-thermos` and
 `cursor-swarm` remain unpromoted.
+
+### Coordinator reconciliation
+
+The `91/56/223` rows in the append-only show-work trail are timestamped
+verification results from before `cursor-show-me-your-work` was published.
+The linked show-work report already says "at this stage"; the current mirror
+state is `91/57/229`. The historical rows remain unchanged. Epicurus and
+Gibbs correctly noticed the differing numbers, but their stale-accounting
+finding does not establish a current catalog mismatch.
+
+Ohm did not have the current-head CI receipt in its assigned evidence. The
+coordinator separately verified GitHub `Validate skill stack` as
+`COMPLETED/SUCCESS` for exact head `5fdd1894` ([job](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34857778464/job/104021686757)).
+That closes the external CI evidence gap for the PR, without retroactively
+changing Ohm's `BLOCKED` verdict. The source-faithful Swarm delta still lacks
+an observed pre-launch native todolist; its aggregate remains `BLOCKED`.
+
+### Separate promotion decision
+
+`cursor-thermos` is published as an explicit-only, bounded native review. The
+first case exercised the source's central two-lens parallel review and
+coordinator synthesis on one real diff; the second exercised an interrupted
+lens without claiming a double review. `ISSUES` is a valid review result, not
+a failure of the Thermos workflow. The verified historical-count explanation
+does not rewrite either reviewer's original finding. Automatic skill
+selection, malformed-diff behavior, and other hosts remain unobserved.
+
+`cursor-swarm` remains held. Its N=2 fan-out, drain, distinct worker verdicts,
+and aggregate are observed, but the recorded pre-launch checklist is not
+shown as a native four-phase todolist. An equivalent visible four-phase plan
+would satisfy the source's ordering intent; this run did not establish one.

@@ -3,8 +3,8 @@
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
-The pinned manifest contains 91 physical skills. It has 34 `publish:false`
-entries: 31 active entries below plus the three dormant Benny entries
+The pinned manifest contains 91 physical skills. It has 33 `publish:false`
+entries: 30 active entries below plus the three dormant Benny entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
 `cursor-triage-issue-reports`). This ledger does not count dormant Benny as
 active and does not claim 88/88 functional. “Held” means absent from the
@@ -40,17 +40,17 @@ silently recounted as held here.
 | `cursor-recall` | Reconstruct recent context from exact chat history, live state and shared record; preserve missing exports and return a tight current-state brief. | History-gated scoped reader preserves workspace/topic/time mismatch as partial and write-free. | Exact task-history selection, live repository/shared-record reconciliation and missing-export evidence. | Native bounded history reconstruction is unobserved. | Supply a scoped export plus repository state and produce a provenance-tagged brief. |
 | `cursor-reflect` | Spawn three parallel reviewers over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. | Delegated-native judgment/tooling/divergent lenses; missing transcript/lens remains incomplete and write-free. | Three native reviewers, transcript scope, synthesis and explicit edit authorization. | Native task read tools exist; exact scoped transcript access and a three-reviewer run remain unproven. | Run three bounded read-only lenses over a supplied synthetic transcript; propose edits without applying them. |
 | `cursor-setup-pstack` | Detect available Task model slugs and write an always-applied per-role model rule, preserving explicit choices and aliases. | Native config-gated dry-run fixture covers 17 roles/four panels, aliases, malformed input and no-write behavior. | Live entitlement inventory, parent-model resolution, cross-judge family selection, destination and approved write/readback. | Current fixture inventory is caller-supplied; no live model/config dispatch or persistent readback. | Capture live available model inventory, produce a dry-run diff, then write and read back only in the authorized disposable project; any real home config change is separate. |
-| `cursor-swarm` | Fan out N parallel workers, drain them, aggregate one report, and preserve partial worker results. | Delegated-native bounded worker/collector records `PARTIAL/ISSUES`; sequential fallback is explicit. | Native N-worker fan-out, drain/timeout, disjoint scope, aggregation and partial-result handling. | Native parallel worker execution is not observed. | Run a bounded two-worker read-only swarm and retain each worker's evidence plus aggregate. |
-| `cursor-thermos` | Launch thermo-nuclear bug/security and code-quality reviewers in parallel, then coordinator synthesizes both lenses. | Delegated-native two-reviewer adapter keeps lenses independent/read-only and labels a single-lens result partial. | Live parallel reviewers, pinned rubrics, deduplication and coordinator synthesis. | No live two-reviewer Thermos run is proven. | Run both bounded read-only lenses against a disposable diff and capture the combined verdict. |
+| `cursor-swarm` | Open a four-phase todolist before launch; fan out N parallel workers, require each to report `PASS`/`ISSUES`/`BLOCKED`, drain them, and aggregate one report with gaps. | Delegated-native adapter now preserves the source's phase order and worker verdicts; the prior two-worker run produced an aggregate but lacked the prelaunch todolist and source-format verdicts. | Source-faithful native N-worker fan-out, terminal drain, aggregation, and dropout handling. | The first parallel run does not prove the full source workflow. | Run a bounded two-worker read-only swarm on the current head with a prelaunch todolist, source-format worker verdicts, and one evidenced aggregate. |
 | `cursor-cancel-ralph` | On cancel request, inspect `.cursor/ralph/scratchpad.md`, report iteration, and remove `.cursor/ralph` state. | Native state-gated adapter restricts cancellation to matching project/task state; synthetic wrong-session/symlink tests pass. | Trusted live hook state, exact task/session correlation and actual cancellation readback. | No trusted project hook or live loop state is installed. | Inspect one explicitly scoped project state and perform only a matching bounded cancellation proof. |
 | `cursor-ralph-loop` | Start iterative self-referential development loop with completion promise/max iterations, storing `.cursor/ralph` state and feeding prompt after each turn. | Native persistent-loop adapter arms task-bound state and returns Codex continuation in synthetic Stop tests. | Trusted project hook, live continuation, user interruption, scheduler, idempotency and completion readback. | No project hook is trusted and no live automatic continuation is observed. | Prove a bounded max-iteration loop in a disposable project with explicit hook trust and cancellation. |
 ## Newly published bounded workflows
 
-`cursor-how`, `cursor-why` and `cursor-show-me-your-work` moved from this held ledger to the published
-catalog after the [native role-flow case](pstack-how-why-real-20260914.md).
-The scope is bounded read-only `how`/`why` execution and a bounded local TSV
-writer with an independently reviewed trail, not automatic skill selection or
-guaranteed access to every evidence connector. The `why`
+`cursor-how`, `cursor-why`, `cursor-show-me-your-work`, and `cursor-thermos`
+moved from this held ledger to the published catalog after their bounded
+native cases. The scope is read-only `how`/`why` execution, a bounded local TSV
+writer with an independently reviewed trail, and a two-lens Thermos review
+with a labeled missing-lens result. Automatic skill selection, other hosts,
+and guaranteed access to every evidence connector remain unproven. The `why`
 connector-security finding remains in its overlay with the review decision.
 
 ## Group dependency order
@@ -61,7 +61,7 @@ connector-security finding remains in its overlay with the review decision.
    Establish bounded paths, evidence, and wording before orchestration.
 2. **Delegated review and style:** `cursor-advisor`, `cursor-architect`,
    `cursor-arena`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`,
-   `cursor-thermos`, `cursor-no-comments`, and `cursor-poteto-mode`. Prove
+   `cursor-no-comments`, and `cursor-poteto-mode`. Prove
    native named/bounded delegation and coordinator ownership first; Poteto's
    `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` dependencies
    are conditional and must be checked per playbook.
@@ -85,7 +85,7 @@ connector-security finding remains in its overlay with the review decision.
 
 ## Remaining unavailable skills
 
-All 31 rows remain absent from the published catalog and unavailable for a
+All 30 rows remain absent from the published catalog and unavailable for a
 claimed native functional invocation until their row's proof and blocker are
 closed. The already-published guide-only principles and local PR renderer are
 outside this held count and retain their own conditional/native-parity labels.
@@ -101,17 +101,17 @@ outside this held count and retain their own conditional/native-parity labels.
 `cursor-interrogate`, `cursor-maintain-verification-skill`,
 `cursor-make-bot-ui`, `cursor-no-comments`, `cursor-poteto-mode`,
 `cursor-recall`, `cursor-reflect`, `cursor-setup-pstack`,
-`cursor-swarm`, `cursor-thermos`,
+`cursor-swarm`,
 `cursor-cancel-ralph`, and `cursor-ralph-loop`.
 
-The list contains exactly the 31 active `publish:false` names and excludes the
+The list contains exactly the 30 active `publish:false` names and excludes the
 three dormant Benny skills. Optional external-service branches may be
 distributed conditionally only with the local fallback,
 credential boundary, and unavailable-capability result preserved.
 
 ## Evidence checks
 
-- Manifest count: `jq` reports 91 physical skills, 34 `publish:false`, and 31
+- Manifest count: `jq` reports 91 physical skills, 33 `publish:false`, and 30
   active `publish:false` after excluding `pstack/automations/benny`.
 - Every row was reconciled against its pinned
   `sources/cursor-plugins/snapshot/**/SKILL.md`, matching overlay JSON under
@@ -120,9 +120,9 @@ credential boundary, and unavailable-capability result preserved.
 - Hook-specific boundaries and synthetic proof limits are recorded in
   `reports/cursor-native-hooks-crosswalk.md`; this ledger does not promote
   synthetic fixtures to native runtime parity.
-- Current local validation reports `pytest -q tests` 197
+- Before this Thermos promotion, local validation reported `pytest -q tests` 197
   tests plus two subtests and mirror `--check` at 91 physical/57 emitted/229
   output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
-  CI validation for the new published head remains to be read back.
+  CI validation for published head `5fdd1894` completed successfully.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

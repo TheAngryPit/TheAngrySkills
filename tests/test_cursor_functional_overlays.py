@@ -84,6 +84,7 @@ PROMOTED = {
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
+    "cursor-thermos",
 }
 
 GUIDE_ONLY = PROMOTED - {
@@ -91,6 +92,7 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
+    "cursor-thermos",
 }
 
 
@@ -136,6 +138,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                 self.assertIn("automatic skill selection unobserved", entry["availability"])
             if name == "cursor-show-me-your-work":
                 self.assertIn("bounded_local_writer", contract["native_mapping"]["availability"])
+                self.assertIn("trigger_unobserved", contract["promotion_status"])
+                self.assertIn("automatic skill selection unobserved", entry["availability"])
+            if name == "cursor-thermos":
+                self.assertIn("bounded_native_two_lens_review_observed", contract["native_mapping"]["availability"])
                 self.assertIn("trigger_unobserved", contract["promotion_status"])
                 self.assertIn("automatic skill selection unobserved", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())

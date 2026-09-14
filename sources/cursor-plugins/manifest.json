@@ -2146,12 +2146,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native two-lens review and missing-lens partial observed; automatic skill selection unobserved; other hosts unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; require two native bounded reviewers for a double review and report partial if one fails",
       "family": "thermos",
       "files": {
         "SKILL.md": "c272effc404b126d34464e8a1dacec30f6757638db39088ca5afc58dd2c1f472"
@@ -2159,13 +2159,13 @@
       "license_path": "thermos/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "thermos/skills/thermos/SKILL.md",
-      "planned_adaptation": "Preservar as duas lentes e a síntese; trocar a forma literal de subagent/background por duas tarefas bounded nativas, com fallback sequencial.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "planned_adaptation": "Preservar as duas lentes e a síntese; trocar a forma literal de subagent/background por dois revisores bounded nativos em paralelo, com resultado parcial se faltar uma lente.",
+      "promotion_reason": "two independent native lenses reviewed the same real PR #64 diff and coordinator synthesized ISSUES; missing-lens fixture returned PARTIAL without a double-review claim in reports/pstack-thermos-swarm-real-20260914.md",
+      "publish": true,
       "published_name": "cursor-thermos",
       "upstream_purpose": "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits.",
       "upstream_skill": "thermos",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; duas lentes e síntese nativas observadas; missing-lens parcial observado; seleção automática e outros hosts por verificar"
     },
     {
       "availability": "external connector or routing not demonstrated",

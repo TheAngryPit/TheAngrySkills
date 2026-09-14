@@ -196,3 +196,142 @@ installation/merge/cloud parity are outside demonstrated proof.
 No implementation helper, classifier, or preview helper was added. No manifest
 promotion, generated catalog change, global/home change, Doctor run, external
 message, push, merge, installation, or runtime cutover was performed.
+
+## Delta: native role-flow proof
+
+This section records the additional role execution requested after commit
+`d7aaf8a7`. It does not repeat the renderer or mirror-test evidence above.
+
+### `how` simple-path explainer
+
+One native read-only `general-worker` Task was launched for the narrow question
+“how does `--preview-candidates` render a held `cursor-how` candidate without
+indexing it?” It read the pinned `how` skill and
+`references/explainer-prompt.md`, without explorer findings and without
+spawning another agent. The task returned the required sections:
+
+- `Overview`
+- `Key Concepts`
+- `How It Works`
+- `Where Things Live`
+- `Gotchas`
+
+The explainer cited the real entrypoint and symbols, the held/published split,
+the explicit-only policy conversion, and the remaining live trigger,
+delegation, and result-ownership gap. This is proof that the delegated
+explainer role can execute in this host; it is not proof that the held skill is
+automatically discovered or activated by Codex.
+
+### `why` investigators
+
+Four separate native read-only investigators were launched, each reading
+`references/investigator-prompt.md` and only its assigned source playbook:
+
+| Role | Native result |
+|---|---|
+| Source control | Read local Git, manifest, overlays, renderer, tests, and commits `fd69d184`, `06164f98`, `16eaa41c`, `39bf581d`, `0479ea88`. Confirmed the proof-gated hold and the separate preview path. Forge access was not available inside this investigator: the local `gh` token was invalid, the remote was private/local, and direct network access failed. |
+| Linear | Authorized read-only access worked. Searches for `cursor-how`, `cursor-why`, `TheAngrySkills`, `#61`, and `#64` returned only unrelated records or empty results. No ticket rationale was admissible. |
+| Notion | `self` and AI search were available. Exact and wider searches returned no relevant pages. This is an empty result, not an access failure. |
+| Slack | Public and exposed all-conversations read-only searches covered exact terms, URL forms, PR numbers, and broader Cursor/pstack/held/publish terms; every search returned no results. No thread or permalink existed to inspect. |
+
+The role-specific gaps are preserved rather than filled from another source:
+Linear, Notion, and Slack provide no independent rationale; observability,
+error-tracking, and analytics categories have no exposed matching connectors;
+and the source-control subagent could not retrieve forge discussions from its
+own native access path. The coordinator's earlier GitHub read evidence remains
+in the main ledger above, but it is not substituted into the investigator's
+reported access path.
+
+### Native why synthesis
+
+The synthesizer read `references/synthesizer-prompt.md` and
+`references/epistemics.md`, then returned the exact required structure below.
+
+#### The Question
+
+Why do `cursor-how` and `cursor-why` remain held instead of published, and
+what evidence supports that decision?
+
+#### The Code in Question
+
+The manifest entries, per-skill overlays, published-build filter, candidate
+preview path, and static functional-overlay tests identified above.
+
+#### What We Found
+
+- **[Direct]** Both entries say `Codex workflow not demonstrated`, retain
+  `publish: false`, and mark native behavior proof as pending
+  (`sources/cursor-plugins/manifest.json:1028-1049,1985-1992`).
+- **[Direct]** `cursor-how` requires a native reader plus bounded
+  explorer/explainer behavior and remains held until behavior and permission
+  proof (`sources/cursor-plugins/overlays/cursor-how.json:11-46`).
+- **[Direct]** `cursor-why` requires source history plus authorized evidence
+  connectors and remains held until connector availability, authorization, and
+  read-only behavior are proven
+  (`sources/cursor-plugins/overlays/cursor-why.json:11-37,44-60`).
+- **[Supported]** The build mechanically publishes only `publish: true`, while
+  preview renders declared held candidates without indexing them
+  (`scripts/sync-cursor-plugin-skills.py:322-371,413-433`).
+- **[Supported]** The functional tests keep both candidates outside the
+  promoted set and prove static contract shapes, not native runtime behavior
+  (`tests/test_cursor_functional_overlays.py:30-141`).
+- **[Direct]** `fd69d184` introduced the mirror as a pinned source with Codex
+  proof gates; later commits refined adaptation and explicit-only policy but
+  did not promote either entry.
+
+#### What We Can Reasonably Infer
+
+- **[Inferred]** Publication likely waits for demonstrated native behavior,
+  not static source integrity alone, because the ledger, overlays, and build
+  all separate candidate review from publication.
+- **[Inferred]** `cursor-how` is primarily a delegation/result-ownership proof
+  gap; `cursor-why` has the higher bar because it crosses authenticated
+  evidence connectors and must preserve read-only boundaries.
+
+#### Competing Hypotheses
+
+- **Native behavior gap:** supported by both manifest holds and proof cases;
+  exact acceptance order remains unspecified.
+- **Connector/security boundary:** supported specifically for `cursor-why` by
+  its contextual security finding; no concrete incident was found, so this is
+  preventive rather than incident-driven.
+- **Packaging omission:** contradicted by the consistent manifest flags,
+  overlays, tests, preview path, and multi-commit history.
+
+#### What We Don't Know
+
+- No direct owner statement gives final acceptance criteria, owner, or timing.
+- No live `cursor-how` trigger, native explorer/explainer selection,
+  unavailable-capability branch, or coordinator-owned result was run through
+  automatic skill activation.
+- No complete seven-category `cursor-why` run, connector authorization check,
+  or end-to-end cited synthesis was run.
+- Linear and Notion returned no matching rationale; Slack returned no messages
+  or permalinks. Historical, archived, and private-message coverage cannot be
+  inferred from empty search results.
+- No observability, error-tracking, or product-analytics connector was
+  exposed, so no production usage, failure, or adoption claim is possible.
+
+#### Sources Consulted
+
+- **Source control history:** local manifest, overlays, renderer, tests,
+  reports, and five targeted commits; forge access was unavailable to the
+  source-control investigator.
+- **Issue / ticket tracker:** Linear exact searches for `cursor-how`,
+  `cursor-why`, `TheAngrySkills`, `#61`, and `#64`; no matching rationale.
+- **Long-form documents:** Notion exact and wider searches; no relevant pages.
+- **Real-time team chat:** Slack exact, URL, PR-number, and broad searches;
+  no results or permalinks.
+- **Infrastructure observability:** not searched; no matching connector
+  exposed.
+- **Error / exception tracking:** not searched; no matching connector exposed.
+- **Product analytics warehouse:** not searched; no matching connector
+  exposed.
+
+#### Confidence Summary
+
+Confidence is high that the hold is intentional and proof-gated, with an
+additional connector authorization/read-only gate for `cursor-why`. Confidence
+is low about the final human acceptance criteria, owner decision, and any
+production motivation because the relevant external sources were empty or
+unavailable.

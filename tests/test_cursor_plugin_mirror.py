@@ -167,6 +167,31 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(drift.returncode, 0)
         self.assertIn("native support file drift", drift.stderr)
 
+    def test_technical_writing_requires_published_unslop(self):
+        skill = (
+            self.root / "skills/mirrors-cursor/cursor-technical-writing/SKILL.md"
+        ).read_text()
+        self.assertIn("requires `cursor-unslop` for every document", skill)
+        self.assertIn("Apply the **cursor-unslop** skill to every doc", skill)
+        self.assertIn("`cursor-unslop`'s abstract-metaphor rule", skill)
+        self.assertNotIn("optional unslop/style reference", skill)
+        self.assertTrue(
+            (self.root / "skills/mirrors-cursor/cursor-unslop/SKILL.md").is_file()
+        )
+
+    def test_typescript_references_published_principles_and_patterns(self):
+        root = self.root / "skills/mirrors-cursor/cursor-typescript-best-practices"
+        skill = (root / "SKILL.md").read_text()
+        self.assertIn("cursor-principle-type-system-discipline", skill)
+        self.assertIn("cursor-principle-boundary-discipline", skill)
+        self.assertIn("references/patterns.md", skill)
+        self.assertTrue((root / "references/patterns.md").is_file())
+        for name in (
+            "cursor-principle-type-system-discipline",
+            "cursor-principle-boundary-discipline",
+        ):
+            self.assertTrue((self.root / "skills/mirrors-cursor" / name / "SKILL.md").is_file())
+
     def test_named_agent_is_bundled_for_its_skill_only(self):
         preview = self.root / "candidate-preview"
         result = self.run_build("--preview-candidates", str(preview))

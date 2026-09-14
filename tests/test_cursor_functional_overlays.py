@@ -43,6 +43,7 @@ FUNCTIONAL = {
     "cursor-pr-review-canvas-pr-review-canvas",
     "cursor-architect",
     "cursor-arena",
+    "cursor-interrogate",
     "cursor-automate-me",
     "cursor-create-verification-skill",
     "cursor-figure-it-out",
@@ -76,6 +77,7 @@ SECURITY_HOLDS = {
 PROMOTED = {
     "cursor-architect",
     "cursor-arena",
+    "cursor-interrogate",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
     "cursor-principle-guard-the-context-window",
@@ -93,6 +95,8 @@ PROMOTED = {
 GUIDE_ONLY = PROMOTED - {
     "cursor-architect",
     "cursor-arena",
+    "cursor-interrogate",
+    "cursor-interrogate",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-how",
     "cursor-why",
@@ -280,6 +284,29 @@ process.stdout.write(target.innerHTML);
         self.assertIn("&lt;old&gt;", result.stdout)
         self.assertIn("&lt;new&gt;&amp;", result.stdout)
 
+
+    def test_interrogate_bounded_publication_preserves_effective_readback_gap(self):
+        entry = next(
+            item for item in read_manifest()["skills"]
+            if item["published_name"] == "cursor-interrogate"
+        )
+        overlay = json.loads((OVERLAYS / "cursor-interrogate.json").read_text())
+        contract = overlay["codex_contract"]
+        self.assertTrue(entry["publish"])
+        self.assertIn(
+            "bounded_native_two_reviewer_same_scope_dedup_lead_judgment_observed",
+            contract["native_mapping"]["availability"],
+        )
+        self.assertIn("effective backend model/effort readback", contract["native_mapping"]["availability"])
+        self.assertEqual(
+            contract["promotion_status"],
+            "promoted_bounded_native_explicit_only_effective_model_readback_unavailable",
+        )
+        self.assertIn("no auto-apply", overlay["proof"])
+        self.assertIn("PR #66", overlay["proof"])
+        rendered = (REPO / "skills/mirrors-cursor/cursor-interrogate/SKILL.md").read_text()
+        self.assertIn("at least two distinct model requests", rendered)
+        self.assertIn("mark the aggregate PARTIAL", rendered)
 
 if __name__ == "__main__":
     unittest.main()

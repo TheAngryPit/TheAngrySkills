@@ -1049,7 +1049,7 @@
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Bounded native same-scope two-reviewer review and separate PR #66 case observed; requested model selections accepted, effective backend model readback and automatic trigger unproven.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1067,12 +1067,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/interrogate/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded explicit-only native same-scope read-only review with separate outputs, deduplication, lead judgment and no auto-apply",
+      "publish": true,
       "published_name": "cursor-interrogate",
       "upstream_purpose": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
       "upstream_skill": "interrogate",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter and relative references; explicit-only policy; at least two distinct requested native reviewers on same scope/rubric, separate reports, lead judgment, no auto-apply; PARTIAL on missing configured reviewer; effective model readback gap labeled"
     },
     {
       "availability": "Codex adapter renderer, path-state, isolated CLI verification fixture, project-local feature-map evidence, controlled drift reconciliation, persisted before/after maintenance evidence, and clean second execution checked; live target/source-wave/native runner path not demonstrated",

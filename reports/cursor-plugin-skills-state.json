@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 27,
+  "candidate_not_published": 26,
   "generated_files": {
     "cursor-architect/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-architect/MIRROR.md": "1535e091df89d6d7d1aad5010f750c2d2140c0f1cacb0322f971f5c18bb06ca6",
@@ -64,6 +64,14 @@
     "cursor-how/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-how/references/explainer-prompt.md": "0c27930b75d5901278a81c887362235be3d43b4df7e66e3cd05c20828511a296",
     "cursor-how/references/explorer-prompt.md": "41a7695ae16cbabbe5829333f4640bdd43996a528b6ddd91c0ea21777283a4ea",
+    "cursor-interrogate/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-interrogate/MIRROR.md": "6ae1f9ab6554d0616509f9208eac8f0eefdb028ac4a9934776755bcabacc9505",
+    "cursor-interrogate/SKILL.md": "c2e8b3c965549a6f9770b1319cbbb96549cc96bb6078b03bdf4bc2dfeae8753f",
+    "cursor-interrogate/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-interrogate/references/code-quality-review.md": "623d3d8122d075c303b562783b471a732992e84166b318f85ab6d6c118b13304",
+    "cursor-interrogate/references/lead-judgment.md": "6e5bdf5670eb34017692e9b6c546f36ac7552e6bb9f3f2f3429164fcc46a9361",
+    "cursor-interrogate/references/reviewer-prompt.md": "a397cc61102add709803d917fb23d726920525bf23e7c06dc4ed0b5cbeb00e54",
+    "cursor-interrogate/references/rubric.md": "59e9b7cc4556e735e1b859a7dd1f7637b013a2426a84825ac1c51979942c158a",
     "cursor-loop-on-ci/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-loop-on-ci/MIRROR.md": "a404d10c3ab90e6cb08bb36ebdc2a6bb5f26684344c0a5af3f6bcf33cf7cb7a8",
     "cursor-loop-on-ci/SKILL.md": "e0e0ac3c33d401bdb121f5ddeeda18add76d536f82f0ba6ab872abcc1bd7560e",
@@ -253,7 +261,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 61,
+  "published_skills": 62,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

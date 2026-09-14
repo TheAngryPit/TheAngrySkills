@@ -1,13 +1,16 @@
 """Focused local proofs for the four held conditional voice overlays."""
 
 import json
+import io
 import sys
 import tempfile
 import unittest
+import wave
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from cursor_voice_adapters import (  # noqa: E402
+    _synthetic_tts_bytes,
     VoiceAdapterError,
     diagnose_voice_entries,
     diagnose_voice_log,
@@ -53,6 +56,13 @@ class CursorVoiceAdapterTests(unittest.TestCase):
         self.assertGreater(result["audio_bytes"], 0)
         self.assertFalse(result["playback_started"])
         self.assertFalse(result["external_call"])
+        wav_bytes = _synthetic_tts_bytes("Hello locally", "eve", "auto")
+        with wave.open(io.BytesIO(wav_bytes), "rb") as wav:
+            self.assertEqual(wav.getnchannels(), 1)
+            self.assertEqual(wav.getframerate(), 24000)
+            self.assertEqual(wav.getnframes(), 2400)
+            self.assertEqual(len(wav.readframes(2400)), 4800)
+        self.assertEqual(result["audio_bytes"], len(wav_bytes))
 
     def test_read_aloud_rejects_invalid_voice_and_oversized_text(self):
         with self.assertRaises(VoiceAdapterError):

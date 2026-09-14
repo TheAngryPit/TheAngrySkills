@@ -262,6 +262,7 @@
         "./skills/mirrors-cursor/cursor-fix-merge-conflicts",
         "./skills/mirrors-cursor/cursor-get-pr-comments",
         "./skills/mirrors-cursor/cursor-how",
+        "./skills/mirrors-cursor/cursor-interrogate",
         "./skills/mirrors-cursor/cursor-loop-on-ci",
         "./skills/mirrors-cursor/cursor-make-pr-easy-to-review",
         "./skills/mirrors-cursor/cursor-new-branch-and-pr",

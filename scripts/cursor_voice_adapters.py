@@ -166,9 +166,10 @@ def _synthetic_tts_bytes(text: str, voice_id: str, language: str) -> bytes:
     """Make a tiny deterministic WAV marker for local route tests only."""
 
     seed = hashlib.sha256(f"{voice_id}\0{language}\0{text}".encode()).digest()
-    # 100 ms mono PCM16 silence with a digest marker in the metadata-free
-    # payload.  It is never played by this module.
-    frames = b"\x00\x00" * 2400
+    # 100 ms mono PCM16 with a digest marker in the first two samples.
+    # It is never played by this module.
+    frames = bytearray(b"\x00\x00" * 2400)
+    frames[:4] = seed[:4]
     out = bytearray()
     body_size = 36 + len(frames)
     out.extend(b"RIFF")
@@ -179,7 +180,7 @@ def _synthetic_tts_bytes(text: str, voice_id: str, language: str) -> bytes:
     out.extend(b"\x02\x00\x10\x00data")
     out.extend(struct.pack("<I", len(frames)))
     out.extend(frames)
-    return bytes(out) + seed[:4]
+    return bytes(out)
 
 
 def mock_read_aloud(

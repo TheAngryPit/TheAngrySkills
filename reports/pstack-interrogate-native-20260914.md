@@ -122,3 +122,24 @@ is PARTIAL with the missing slot named. Automatic host trigger, full default
 four-reviewer coverage and production parity remain separate gaps. The
 worker's earlier held verdict was superseded only after Sol reviewed both
 case reports, the source contract and the native selection boundary.
+
+## Observed degraded reviewer path
+
+After a reviewer identified that the promotion proof lacked an observed
+dropout, Sol dispatched two native read-only reviewer slots on the same
+immutable scope, `5f040667`'s Interrogate overlay and generated skill, and
+the same bounded rubric. `/root/interrogate_dropout_survivor` was requested as
+Astra low and returned a cited contract review. The configured
+`/root/interrogate_dropout_missing` slot was requested as Luna high, accepted
+by native dispatch, and then deliberately interrupted while `running`; it
+returned no review. Neither slot edited a file.
+
+**Aggregate status: `PARTIAL`.** The missing Luna-high slot is named above.
+The survivor found no blocking issue in the written fallback but explicitly
+said its own inspection did not prove dropout handling. Sol retained that
+single report as evidence, did not deduplicate or claim consensus, and made
+no skill edit from this review. The interrupted slot contributes zero findings
+and cannot be silently replaced. Requested profiles were accepted; effective
+backend model/effort readback was unavailable. This validates the relevant
+degraded no-auto-apply boundary in the current native coordinator, not an
+automatic host-level skill invocation.

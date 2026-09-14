@@ -31,9 +31,9 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "A bounded project-local Markdown source produced linked index.md and index.html files with a table of contents, section anchors, source links, and an explicit Canvas parity gap; no product configuration changed.",
+      "positive": "A bounded project-local Markdown source produced linked index.md and index.html files with document/section-level TOC cross-references, unique anchors, rebased safe source links, escaped emphasis/code, and an explicit Canvas parity gap; no product configuration changed.",
       "missing_tool_or_input": "When Canvas is absent the adapter returns FALLBACK with canvas_parity UNAVAILABLE; missing, empty, oversized, or non-Markdown input is rejected before artifact writes.",
-      "error": "Malformed documentation or an unsafe output/source path is reported explicitly; symlink and root-escape fixtures do not widen scope."
+      "error": "Malformed documentation, unsafe output/source paths, or outside-root source cross-references are reported explicitly; symlink and root-escape fixtures do not widen scope."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -51,7 +51,7 @@
   "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py` for an explicit, bounded project-local Markdown/HTML artifact when Canvas is unavailable; never read ~/.cursor/skills-cursor. The artifact includes a table of contents, section anchors, and links back to source files. External dependencies remain explicit: Cursor Canvas surface and SDK declarations. `canvas_parity` stays `UNAVAILABLE`, and no product configuration is created. This candidate remains held and conditional until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Render a documentation-style Cursor Canvas that organizes architecture notes, API references, walkthroughs, and how-tos into a navigable layout with sections, tables of contents, and cross-references. Use when the user asks for a docs canvas, documentation overview, architecture walkthrough, API reference page, or wants to render structured documentation as an interactive canvas.",
-  "proof": "Pinned source hash and deterministic build establish provenance. The isolated adapter test exercises a bounded Markdown source, linked Markdown/HTML output, explicit-only refusal, and symlink rejection. No Canvas primitive or SDK parity is claimed; live Canvas behavior remains unavailable.",
+  "proof": "Pinned source hash and deterministic build establish provenance. The isolated adapter tests exercise bounded Markdown, linked Markdown/HTML output, unique section anchors, rebased source links, safe URL schemes, inline emphasis/code, explicit-only refusal, symlink rejection, and outside-root cross-reference refusal. No Canvas primitive or SDK parity is claimed; live Canvas behavior remains unavailable.",
   "reason": "Per-skill Codex contract preserves the placeholder's documented intent while adding a safe project-local fallback, explicit-only policy, behavior proof, security retention, and pinned README provenance without changing upstream source text.",
   "local_adapter": {
     "path": "scripts/cursor_canvas_adapters.py",

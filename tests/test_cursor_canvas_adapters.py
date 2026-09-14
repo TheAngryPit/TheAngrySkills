@@ -28,8 +28,13 @@ class CursorCanvasAdapterTests(unittest.TestCase):
 
     def test_docs_produces_linked_markdown_and_html_without_canvas_claim(self) -> None:
         source = self.root / "docs" / "architecture.md"
+        (self.root / "docs" / "operations.md").write_text("# Operations\n", encoding="utf-8")
         source.write_text(
-            "# Architecture\n\n## Components\n\nThe API calls the worker.\n",
+            "# Architecture\n\n## Components\n\nThe **API** calls the `worker`.\n\n"
+            "Unsafe [script](javascript:alert(1)), [payload](data:text/html,owned), "
+            "[tabbed](java\tscript:alert(1)), and [colon](foo:bar).\n"
+            "See [operations](operations.md).\n"
+            "Safe [guide](../README.md), [web](https://example.test), and [mail](mailto:docs@example.test).\n",
             encoding="utf-8",
         )
 
@@ -42,9 +47,46 @@ class CursorCanvasAdapterTests(unittest.TestCase):
         rendered = Path(result["artifacts"]["html"])
         self.assertTrue(markdown.is_file())
         self.assertTrue(rendered.is_file())
-        self.assertIn("architecture.md", markdown.read_text(encoding="utf-8"))
-        self.assertIn("id=\"architecture\"", rendered.read_text(encoding="utf-8"))
-        self.assertIn("Canvas surface and SDK declarations are unavailable", rendered.read_text(encoding="utf-8"))
+        markdown_text = markdown.read_text(encoding="utf-8")
+        self.assertIn("architecture.md", markdown_text)
+        for unsafe in ("javascript:", "data:text", "java\tscript:", "[colon](foo:bar)"):
+            self.assertNotIn(unsafe, markdown_text)
+        self.assertIn("[web](https://example.test)", markdown_text)
+        rendered_text = rendered.read_text(encoding="utf-8")
+        self.assertIn("id=\"doc-1-architecture\"", rendered_text)
+        self.assertIn("<strong>API</strong>", rendered_text)
+        self.assertIn("<code>worker</code>", rendered_text)
+        self.assertNotIn("javascript:", rendered_text)
+        self.assertNotIn("data:text", rendered_text)
+        self.assertNotIn('href="java', rendered_text)
+        self.assertNotIn('href="foo:bar"', rendered_text)
+        self.assertIn('href="../../docs/operations.md"', rendered_text)
+        self.assertIn('href="../../README.md"', rendered_text)
+        self.assertIn('href="https://example.test"', rendered_text)
+        self.assertIn('href="mailto:docs@example.test"', rendered_text)
+        self.assertIn("Canvas surface and SDK declarations are unavailable", rendered_text)
+
+    def test_docs_scopes_duplicate_document_and_section_anchors(self) -> None:
+        (self.root / "docs" / "first.md").write_text(
+            "# Guide\n\n## Setup\n\n## Setup\n", encoding="utf-8"
+        )
+        (self.root / "docs" / "second.md").write_text(
+            "# Guide\n\n## Setup\n", encoding="utf-8"
+        )
+
+        result = render_docs_canvas(self.root, "docs")
+        markdown = Path(result["artifacts"]["markdown"]).read_text(encoding="utf-8")
+        rendered = Path(result["artifacts"]["html"]).read_text(encoding="utf-8")
+        self.assertIn("[Setup](#doc-1-setup)", markdown)
+        self.assertIn("[Setup](#doc-1-setup-2)", markdown)
+        self.assertIn("[Setup](#doc-2-setup)", markdown)
+        self.assertEqual(rendered.count('id="doc-1-setup"'), 1)
+        self.assertEqual(rendered.count('id="doc-1-setup-2"'), 1)
+        self.assertEqual(rendered.count('id="doc-2-setup"'), 1)
+        self.assertNotIn('id="guide"', rendered)
+
+        self.assertEqual(rendered.count('<h3 id="doc-1-setup"'), 1)
+        self.assertEqual(rendered.count('<h3 id="doc-1-setup-2"'), 1)
 
     def test_docs_rejects_implicit_invocation_and_symlink_escape(self) -> None:
         source = self.root / "docs" / "guide.md"
@@ -69,6 +111,13 @@ class CursorCanvasAdapterTests(unittest.TestCase):
         with self.assertRaises(AdapterError):
             render_docs_canvas(self.root, internal_link)
 
+    def test_docs_rejects_cross_reference_escape_before_writing(self) -> None:
+        source = self.root / "docs" / "escape-link.md"
+        source.write_text("# Escape\n\n[Outside](../../outside.md)\n", encoding="utf-8")
+        with self.assertRaises(AdapterError):
+            render_docs_canvas(self.root, source)
+        self.assertFalse((self.root / ".artifacts").exists())
+
     def test_pr_review_groups_fixture_diff_and_surfaces_attention(self) -> None:
         diff = self.root / "change.diff"
         diff.write_text(
@@ -89,9 +138,13 @@ class CursorCanvasAdapterTests(unittest.TestCase):
         self.assertEqual(result["categories"], ("core logic", "boilerplate & mechanical"))
         markdown = Path(result["artifacts"]["markdown"]).read_text(encoding="utf-8")
         self.assertLess(markdown.index("Core Logic"), markdown.index("Boilerplate & Mechanical"))
+        self.assertIn("line 2 evidence", markdown)
         self.assertIn("Authentication or authorization changed", markdown)
-        self.assertIn("TODO/FIXME marker changed", markdown)
+        self.assertIn("TODO/FIXME marker was added or removed", markdown)
         self.assertIn("PR metadata and `gh` access were not used", markdown)
+        self.assertIn("Mechanical change summarized", markdown)
+        mechanical = markdown[markdown.index("## Boilerplate & Mechanical") :]
+        self.assertNotIn("token = old", mechanical)
 
     def test_pr_review_rejects_live_url_and_implicit_invocation(self) -> None:
         with self.assertRaises(MissingCapability):

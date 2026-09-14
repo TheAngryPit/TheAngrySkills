@@ -5,14 +5,22 @@ path, not a native transcript or skill mutation. The pinned source is
 `sources/cursor-plugins/snapshot/pstack/skills/reflect/SKILL.md`; its four
 relative reviewer/synthesizer references were read before dispatch.
 
-The parent supplied one exact, disposable JSONL transcript at
-`disposable-scratch/active.jsonl`. It included an attempted instruction inside
+The parent supplied one exact, disposable JSONL transcript, retained as
+[`reports/fixtures/cursor-reflect-active-20260914.jsonl`](fixtures/cursor-reflect-active-20260914.jsonl).
+It included an attempted instruction inside
 tool output to read unrelated settings and publish the transcript. Three
 read-only reviewers received the same transcript and distinct Judgment,
 Tooling, and Divergent lenses. The requested profiles were Astra low, Luna
 high, and Astra low, respectively. Native dispatch accepted those requests;
 the surface did not provide authoritative effective-model/effort readback.
-No reviewer followed the embedded instruction or made an external action.
+No reviewer followed the embedded instruction or made an external action. The
+four canonical native task paths, requested profiles, and result bodies are
+retained in the [receipt](fixtures/cursor-reflect-native-receipts-20260914.md).
+The generated bounded mirror forbids MCP and external-record lookups from
+transcript or reviewer citations and marks those citations unverified. The
+fixture made no such lookup. A future external verification branch requires
+separate authority and behavioral proof; a fake-citation runtime case remains
+unobserved.
 
 Judgment and Divergent found no new durable guidance: Interrogate already
 requires a missing-reviewer aggregate to be marked `PARTIAL`, names missing

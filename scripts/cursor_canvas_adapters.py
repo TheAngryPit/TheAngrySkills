@@ -14,8 +14,8 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
-from urllib.parse import quote
+from typing import Sequence
+from urllib.parse import quote, urlsplit
 
 
 MAX_DOCUMENTS = 32
@@ -46,7 +46,7 @@ class _Document:
     path: Path
     relative: str
     text: str
-    headings: tuple[str, ...]
+    headings: tuple[tuple[int, str], ...]
 
 
 @dataclass(frozen=True)
@@ -162,9 +162,9 @@ def _read_text(path: Path, maximum: int, label: str) -> str:
     return text
 
 
-def _heading_lines(text: str) -> tuple[str, ...]:
+def _heading_lines(text: str) -> tuple[tuple[int, str], ...]:
     return tuple(
-        match.group(2).strip()
+        (len(match.group(1)), match.group(2).strip())
         for line in text.splitlines()
         if (match := re.match(r"^(#{1,6})\s+(.+?)\s*$", line))
     )
@@ -173,6 +173,17 @@ def _heading_lines(text: str) -> tuple[str, ...]:
 def _slug(value: str, fallback: str = "section") -> str:
     result = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
     return result or fallback
+
+
+def _unique_slug(value: str, used: set[str], fallback: str = "section") -> str:
+    base = _slug(value, fallback)
+    candidate = base
+    suffix = 2
+    while candidate in used:
+        candidate = f"{base}-{suffix}"
+        suffix += 1
+    used.add(candidate)
+    return candidate
 
 
 def _collect_documents(root: Path, source: str | Path, max_documents: int) -> tuple[_Document, ...]:
@@ -204,6 +215,99 @@ def _relative_link(from_dir: Path, target: Path) -> str:
     return quote(Path(os.path.relpath(target, from_dir)).as_posix(), safe="/._-~")
 
 
+def _safe_href(raw: str) -> str | None:
+    candidate = html.unescape(raw).strip()
+    parsed = urlsplit(candidate)
+    if parsed.scheme.lower() not in {"", "http", "https", "mailto"}:
+        return None
+    if any(ord(char) < 0x20 or ord(char) == 0x7F or char == "\\" for char in candidate):
+        return None
+    if not parsed.scheme and (parsed.netloc or candidate.startswith("//")):
+        return None
+    if not parsed.scheme and ":" in candidate.split("/", 1)[0]:
+        return None
+    return candidate
+
+
+def _document_sections(document: _Document, index: int) -> tuple[tuple[int, str, str], ...]:
+    """Return stable, document-scoped heading anchors for a generated page."""
+
+    used: set[str] = set()
+    title = document.headings[0][1] if document.headings else Path(document.relative).stem
+    sections: list[tuple[int, str, str]] = [(2, title, f"doc-{index}-{_unique_slug(title, used)}")]
+    for source_level, heading in document.headings[1:]:
+        sections.append((min(source_level + 1, 6), heading, f"doc-{index}-{_unique_slug(heading, used)}"))
+    return tuple(sections)
+
+
+def _rebase_document_links(
+    line: str, document: _Document, artifact_dir: Path, root: Path, sections: Sequence[tuple[int, str, str]]
+) -> str:
+    """Rebase relative source links to the generated artifact directory."""
+
+    fragment_map = {_slug(heading): anchor for _, heading, anchor in sections}
+
+    def rebase(match: re.Match[str]) -> str:
+        raw = html.unescape(match.group(2)).strip()
+        if _safe_href(raw) is None:
+            return match.group(1)
+        parsed = urlsplit(raw)
+        if parsed.scheme or parsed.netloc or raw.startswith("//"):
+            return match.group(0)
+        if not parsed.path:
+            fragment = parsed.fragment
+            anchor = fragment_map.get(_slug(fragment), fragment)
+            return f"[{match.group(1)}](#{anchor})"
+        candidate = Path(os.path.abspath(document.path.parent / parsed.path))
+        _inside_root(root, candidate, "documentation cross-reference")
+        if candidate.is_symlink():
+            raise AdapterError("documentation cross-reference must not be a symlink")
+        if candidate.exists() and not candidate.is_file():
+            raise AdapterError("documentation cross-reference must target a regular file")
+        target = _relative_link(artifact_dir, candidate)
+        if parsed.query:
+            target += "?" + parsed.query
+        if parsed.fragment:
+            target += "#" + parsed.fragment
+        return f"[{match.group(1)}]({target})"
+
+    return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", rebase, line)
+
+
+def _rewrite_document_headings(
+    document: _Document, index: int, artifact_dir: Path, root: Path
+) -> str:
+    """Nest source headings below the generated document heading with unique IDs."""
+
+    sections = _document_sections(document, index)
+    title = sections[0][1]
+    section_index = 1
+    output: list[str] = []
+    for line in document.text.rstrip().splitlines():
+        match = re.match(r"^(#{1,6})\s+(.+?)\s*$", line)
+        if not match:
+            output.append(line)
+            continue
+        heading = match.group(2).strip()
+        if section_index == 1 and heading == title:
+            continue
+        if section_index >= len(sections):
+            # A malformed or unusual source heading still receives a stable
+            # anchor rather than colliding with another document.
+            used = {item[2].removeprefix(f"doc-{index}-") for item in sections}
+            anchor = f"doc-{index}-{_unique_slug(heading, used)}"
+            level = min(len(match.group(1)) + 1, 6)
+        else:
+            level, expected, anchor = sections[section_index]
+            if expected != heading:
+                used = {item[2].removeprefix(f"doc-{index}-") for item in sections}
+                anchor = f"doc-{index}-{_unique_slug(heading, used)}"
+                level = min(len(match.group(1)) + 1, 6)
+            section_index += 1
+        output.append(f"{'#' * level} {heading} {{#{anchor}}}")
+    return "\n".join(_rebase_document_links(line, document, artifact_dir, root, sections) for line in output)
+
+
 def _markdown_docs(documents: Sequence[_Document], artifact_dir: Path, root: Path) -> str:
     lines = [
         "# Documentation Canvas fallback",
@@ -214,29 +318,58 @@ def _markdown_docs(documents: Sequence[_Document], artifact_dir: Path, root: Pat
         "",
     ]
     for index, document in enumerate(documents, 1):
-        anchor = _slug(document.headings[0] if document.headings else Path(document.relative).stem, f"document-{index}")
-        lines.append(f"- [{document.relative}](#{anchor})")
+        sections = _document_sections(document, index)
+        lines.append(f"- [{sections[0][1]}](#{sections[0][2]})")
+        for _, heading, anchor in sections[1:]:
+            lines.append(f"  - [{heading}](#{anchor})")
     lines += ["", "## References", "", "This artifact links back to the bounded source files.", ""]
     for index, document in enumerate(documents, 1):
-        title = document.headings[0] if document.headings else Path(document.relative).stem
-        anchor = _slug(title, f"document-{index}")
+        sections = _document_sections(document, index)
+        title, anchor = sections[0][1], sections[0][2]
         link = _relative_link(artifact_dir, root / document.relative)
         lines += [f"## {title} {{#{anchor}}}", "", f"Source: [{document.relative}]({link})", ""]
         if document.headings:
-            lines.append("Sections: " + ", ".join(document.headings))
+            lines.append("Sections: " + ", ".join(f"[{heading}](#{section_anchor})" for _, heading, section_anchor in sections[1:]))
             lines.append("")
-        lines.append(document.text.rstrip())
+        lines.append(_rewrite_document_headings(document, index, artifact_dir, root))
         lines.append("")
-    return "\n".join(lines).rstrip() + "\n"
+    markdown = "\n".join(lines).rstrip() + "\n"
+    return re.sub(
+        r"\[([^\]]+)\]\(([^)]+)\)",
+        lambda match: match.group(0) if _safe_href(match.group(2)) is not None else match.group(1),
+        markdown,
+    )
 
 
 def _inline_markdown(value: str) -> str:
     escaped = html.escape(value, quote=True)
-    return re.sub(
-        r"\[([^\]]+)\]\(([^)]+)\)",
-        lambda match: f'<a href="{html.escape(match.group(2), quote=True)}">{match.group(1)}</a>',
+    replacements: dict[str, str] = {}
+
+    def hold(value: str) -> str:
+        token = f"\x00{len(replacements)}\x00"
+        replacements[token] = value
+        return token
+
+    # Code spans are protected before emphasis/link markup is expanded.
+    escaped = re.sub(
+        r"`([^`]+)`",
+        lambda match: hold(f"<code>{match.group(1)}</code>"),
         escaped,
     )
+
+    def link(match: re.Match[str]) -> str:
+        href = _safe_href(match.group(2))
+        label = match.group(1)
+        if href is None:
+            return label
+        return hold(f'<a href="{html.escape(href, quote=True)}">{label}</a>')
+
+    escaped = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, escaped)
+    escaped = re.sub(r"\*\*([^*]+)\*\*|__([^_]+)__", lambda match: f"<strong>{match.group(1) or match.group(2)}</strong>", escaped)
+    escaped = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)|(?<!_)_([^_]+)_(?!_)", lambda match: f"<em>{match.group(1) or match.group(2)}</em>", escaped)
+    for token, replacement in replacements.items():
+        escaped = escaped.replace(token, replacement)
+    return escaped
 
 
 def _markdown_to_html(markdown: str, title: str) -> str:
@@ -283,12 +416,12 @@ def _markdown_to_html(markdown: str, title: str) -> str:
             flush_paragraph()
             close_list()
             body.append(f"<blockquote>{_inline_markdown(line[2:])}</blockquote>")
-        elif line.startswith("- "):
+        elif re.match(r"^\s*-\s+", line):
             flush_paragraph()
             if not in_list:
                 body.append("<ul>")
                 in_list = True
-            body.append(f"<li>{_inline_markdown(line[2:])}</li>")
+            body.append(f"<li>{_inline_markdown(re.sub(r'^\s*-\s+', '', line))}</li>")
         else:
             close_list()
             paragraph.append(line.strip())
@@ -297,11 +430,16 @@ def _markdown_to_html(markdown: str, title: str) -> str:
     return (
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         f"<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>{html.escape(title)}</title>"
-        "<style>body{font:16px system-ui;line-height:1.55;max-width:960px;margin:2rem auto;padding:0 1rem;color:#18212b}"
-        "pre{background:#f3f5f7;padding:1rem;overflow:auto}a{color:#075985}blockquote{border-left:4px solid #94a3b8;padding-left:1rem;color:#475569}"
-        ".meta{background:#fff7ed;border:1px solid #fdba74;padding:.8rem}</style></head><body>"
+        "<style>body{font:16px system-ui;line-height:1.55;max-width:72ch;margin:2rem auto;padding:0 1rem;color:#18212b}"
+        "h1,h2,h3,h4,h5,h6{line-height:1.2;margin:1.7em 0 .55em}h1{font-size:2.1rem;letter-spacing:-.025em}"
+        "h2{font-size:1.45rem}h3{font-size:1.15rem}code{background:#eef2f7;padding:.08em .28em;border-radius:3px}"
+        "pre{background:#f3f5f7;padding:1rem;overflow:auto;tab-size:2}a{color:#075985;text-underline-offset:3px}"
+        "blockquote{border-left:1px solid #94a3b8;padding-left:1rem;color:#475569}.meta{background:#fff7ed;border:1px solid #fdba74;padding:.8rem}"
+        "@media(max-width:640px){body{font-size:15px;margin:1rem auto;padding:0 .75rem}h1{font-size:1.7rem}h2{font-size:1.3rem}h3{font-size:1.05rem;overflow-wrap:anywhere}"
+        "pre{font-size:.78rem;line-height:1.45;padding:.7rem;white-space:pre-wrap;overflow-wrap:anywhere}ul{padding-left:1.25rem}blockquote{margin-left:.35rem}}"
+        "</style></head><body><main>"
         + "".join(body)
-        + "</body></html>\n"
+        + "</main></body></html>\n"
     )
 
 
@@ -378,17 +516,65 @@ def _category(path: str, patch: str) -> str:
     return "core logic"
 
 
+def _changed_lines(patch: str) -> tuple[tuple[int | None, str], ...]:
+    """Return added/deleted lines with their hunk-local source line numbers."""
+
+    old_line: int | None = None
+    new_line: int | None = None
+    changed: list[tuple[int | None, str]] = []
+    for line in patch.splitlines():
+        hunk = re.match(r"^@@ -(?P<old>\d+)(?:,\d+)? \+(?P<new>\d+)(?:,\d+)? @@", line)
+        if hunk:
+            old_line = int(hunk.group("old"))
+            new_line = int(hunk.group("new"))
+        elif line.startswith(("+++", "---")):
+            continue
+        elif line.startswith("+"):
+            changed.append((new_line, line[1:]))
+            if new_line is not None:
+                new_line += 1
+        elif line.startswith("-"):
+            changed.append((old_line, line[1:]))
+            if old_line is not None:
+                old_line += 1
+        elif old_line is not None and new_line is not None:
+            old_line += 1
+            new_line += 1
+    return tuple(changed)
+
+
 def _callouts(patch: str) -> tuple[str, ...]:
-    lower = patch.lower()
+    changed = _changed_lines(patch)
     markers = {
         "security": "Security-sensitive change: inspect the trust boundary and error path.",
         "auth": "Authentication or authorization changed: verify denial behavior.",
         "migration": "Migration or schema change: check rollout and rollback assumptions.",
         "retry": "Retry or backoff logic changed: check duplicate effects and termination.",
         "concurr": "Concurrency-related change: inspect ordering and shared state.",
-        "todo": "TODO/FIXME marker changed: confirm the follow-up is intentional.",
+        "todo": "TODO/FIXME marker was added or removed: confirm the follow-up is intentional.",
     }
-    return tuple(message for marker, message in markers.items() if marker in lower)
+    callouts: list[str] = []
+    for marker, message in markers.items():
+        evidence = next(
+            ((line_number, line) for line_number, line in changed if marker in line.lower()),
+            None,
+        )
+        # TODO/FIXME is only an attention item when the marker itself changed;
+        # a mention in surrounding context is not evidence of a new task.
+        if marker == "todo":
+            evidence = next(
+                ((line_number, line) for line_number, line in changed if re.search(r"\b(?:TODO|FIXME)\b", line, re.I)),
+                None,
+            )
+        if evidence is None:
+            continue
+        line_number, line = evidence
+        line = re.sub(r"\s+", " ", line).strip().replace("`", "'")
+        if len(line) > 120:
+            line = line[:117] + "..."
+        location = f"line {line_number}" if line_number is not None else "changed line"
+        callouts.append(f"{location} evidence `{line}` — {message}")
+    return tuple(callouts)
 
 
 def _parse_diff(text: str) -> tuple[_DiffFile, ...]:
@@ -442,7 +628,11 @@ def _markdown_review(files: Sequence[_DiffFile]) -> str:
             lines += [f"### `{item.path}`", "", f"Status: {item.status}; +{item.additions}, -{item.deletions}", ""]
             for callout in item.callouts:
                 lines += [f"> **Review attention:** {callout}", ""]
-            lines += ["```diff", item.patch.rstrip(), "```", ""]
+            if category == "boilerplate & mechanical":
+                lines.append("Mechanical change summarized; inspect the source file for the generated or formatting details.")
+            else:
+                lines += ["```diff", item.patch.rstrip(), "```"]
+            lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
 

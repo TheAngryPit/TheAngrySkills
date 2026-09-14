@@ -221,8 +221,9 @@ runtime parity, scheduling, activation, or 88/88 functional claim.
   match the manifest.
 - Confirmed the manifest has 88 non-Benny skills plus exactly three Benny
   entries; all three Benny entries are `publish: false` and dormant, while the
-  non-Benny preview count remains 88. The concurrent local mirror check reports
-  91 physical and 62 published outputs; that sibling change is not part of this
+  non-Benny preview count remains 88. At the time this separate pack was
+  drafted, the concurrent local mirror check reported 91 physical and 62
+  published outputs; later successor promotions are outside this pack and not part of this
   pack.
 - Confirmed the current mirror test explicitly expects 88 candidates and
   excludes `cursor-setup-benny` from the candidate output

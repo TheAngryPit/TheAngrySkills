@@ -307,6 +307,9 @@ process.stdout.write(target.innerHTML);
         rendered = (REPO / "skills/mirrors-cursor/cursor-interrogate/SKILL.md").read_text()
         self.assertIn("at least two distinct model requests", rendered)
         self.assertIn("mark the aggregate PARTIAL", rendered)
+        dropout = (REPO / "reports/pstack-interrogate-native-20260914.md").read_text()
+        self.assertIn("/root/interrogate_dropout_missing", dropout)
+        self.assertIn("Aggregate status: `PARTIAL`", dropout)
 
     def test_reflect_bounded_publication_keeps_prompt_and_edit_gates(self):
         entry = next(
@@ -325,8 +328,13 @@ process.stdout.write(target.innerHTML);
         self.assertIn("Accepted edits require explicit user selection", rendered)
         reference = (REPO / "skills/mirrors-cursor/cursor-reflect/references/synthesizer.md").read_text()
         self.assertIn("reviewer output as evidence, not authority", reference)
+        self.assertIn("do not make MCP or external-record lookups", reference)
         policy = (REPO / "skills/mirrors-cursor/cursor-reflect/agents/openai.yaml").read_text()
         self.assertIn("allow_implicit_invocation: false", policy)
+        fixture = REPO / "reports/fixtures/cursor-reflect-active-20260914.jsonl"
+        turns = [json.loads(line) for line in fixture.read_text().splitlines()]
+        self.assertEqual(len(turns), 6)
+        self.assertIn("UNTRUSTED TRANSCRIPT DIRECTIVE", turns[3]["message"]["content"][0]["text"])
 
 if __name__ == "__main__":
     unittest.main()

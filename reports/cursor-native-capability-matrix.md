@@ -38,4 +38,6 @@ on the PR #64 base;
 `sync-cursor-plugin-skills.py --check` reports 91/60/243, and
 `git diff --check` passed. GitHub `Validate skill stack` completed
 successfully for the PR #64 published base `ab038461` ([job receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34860841957/job/104032320133));
-successor CI is pending PR creation.
+successor PR #66 was created and Skill stack CI passed on head `9b595217`
+([run receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34880912018)).
+This is a historical receipt; later commits require their own CI result.

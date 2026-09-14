@@ -158,9 +158,11 @@ credential boundary, and unavailable-capability result preserved.
 - Hook-specific boundaries and synthetic proof limits are recorded in
   `reports/cursor-native-hooks-crosswalk.md`; this ledger does not promote
   synthetic fixtures to native runtime parity.
-- After the Swarm promotion, local validation reported `pytest -q tests` 197
+- Historical PR #64 checkpoint after Swarm promotion: local validation reported `pytest -q tests` 197
   tests plus two subtests and mirror `--check` at 91 physical/59 emitted/239
   output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
-  CI validation for published head `ab038461` completed successfully.
+  CI validation for published PR #64 head `ab038461` completed successfully.
+  The later successor branch publishes Arena: 91 physical/60 emitted/243 output
+  files, with its separate PR #66 validation recorded in the capability matrix.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

@@ -196,16 +196,14 @@ Repository checks:
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-architect.json
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-arena.json
 pytest -q tests/test_cursor_architect_arena.py tests/test_cursor_pstack_core.py tests/test_cursor_functional_overlays.py
-26 passed in 6.27s
+26 passed in 7.71s
 ```
 
 The focused test covers exact native role strings, bounded availability,
 partial/dropout fallback, Architect's held status, source-path parity, explicit
-invocation-metadata wording, and a repo-owned behavioral fixture that
-observes create/retry/replace/malformed-target/source-conflict results. The
-test first exposed a harness path-conflict bug, which was corrected before the
-clean rerun. The runtime drift failure above is separate and exercises the
-actual copied implementation.
+invocation-metadata wording, and rendered instruction gates. The disposable
+runtime checks above are separate from repository tests and exercised the
+copied implementation; repository tests do not establish product behavior.
 
 ## Adaptation boundary and remaining gaps
 

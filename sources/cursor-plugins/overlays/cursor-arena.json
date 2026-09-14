@@ -32,7 +32,7 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Native bounded proof: N=2 disjoint general-worker candidates were written and read end to end; an independent reviewer cross-judge scored 19/24 versus 17/24, selected Candidate 1, named Candidate 2 grafts/rejections, and the coordinator applied the grafts. A failed hypothesis triggered a planner redesign; the synthesized contract was implemented in a disposable runtime, a revision-only drift failure forced correction, and runtime plus repo-owned behavioral fixture checks then passed create/retry-unchanged/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset. This is fixture-only workflow proof.",
+      "positive": "Native bounded proof: N=2 disjoint general-worker candidates were written and read end to end; an independent reviewer cross-judge scored 19/24 versus 17/24, selected Candidate 1, named Candidate 2 grafts/rejections, and the coordinator applied the grafts. A failed hypothesis triggered a planner redesign; the synthesized contract was implemented in a disposable runtime, a revision-only drift failure forced correction, and disposable runtime checks then passed create/retry-unchanged/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset. This is fixture-only workflow proof.",
       "missing_tool_or_input": "If a candidate or judge is unavailable, record the exact dropout and mark the aggregate partial; one fallback candidate is not an arena and no winner is fabricated.",
       "error": "Malformed input, failed candidate, failed judge, or synthesis verification failure is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope."
     },
@@ -49,7 +49,7 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a local design Arena, not a claim about every code or cloud task. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.\n",
+  "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a bounded local design Arena. Before starting, require at least two authorized, isolated candidates and an available independent judge; retain the same rubric and verification contract. Outside that proven scope, report the workflow as unavailable unless a separate task-specific proof supports it. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
   "proof": "Pinned source hash and deterministic build are static provenance. A disposable native N=2 run produced separate candidate artifacts, a reviewer cross-judge score and base/graft decision, a planner redesign after a failed hypothesis, and a passing disposable runtime contract after a real drift failure was corrected. Exact agent types and requested model/effort metadata are recorded in the companion report; completion messages are self-reports. Work cloud, automatic trigger, production artifact behavior, and cross-host parity remain unproven.",
@@ -67,8 +67,13 @@
     },
     {
       "file": "SKILL.md",
+      "before": "If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record.",
+      "after": "If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record. Mark the aggregate PARTIAL. If fewer than two candidates completed, do not select a winner or claim Arena competition; report the surviving artifact as a single attempt."
+    },
+    {
+      "file": "SKILL.md",
       "before": "choose one model from the `arena cross-judge pool` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model.",
-      "after": "choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish, or have the coordinator perform an explicit independent judgment if no authorized judge is available."
+      "after": "choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict."
     },
     {
       "file": "SKILL.md",
@@ -84,6 +89,11 @@
       "file": "SKILL.md",
       "before": "per the **prove-it-works** principle skill",
       "after": "per `cursor-principle-prove-it-works`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "One synthesized artifact. One short synthesis note alongside, naming the base, the grafts (with source candidate), the rejections, the dropouts if any, and the verification result.",
+      "after": "One synthesized artifact when competition and independent judgment completed; otherwise label the result PARTIAL and state which phase was missing. One short synthesis note alongside, naming the base if selected, the grafts (with source candidate), the rejections, the dropouts if any, the actual judge or coordinator assessment, and the verification result."
     }
   ],
   "source_path": "pstack/skills/arena/SKILL.md",

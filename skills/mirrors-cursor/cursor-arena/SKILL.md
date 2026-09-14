@@ -5,7 +5,7 @@ description: "Spawn N parallel candidates at the same task, pick a base, graft t
 
 ## Codex runtime mapping
 
-This published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a local design Arena, not a claim about every code or cloud task. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.
+This published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a bounded local design Arena. Before starting, require at least two authorized, isolated candidates and an available independent judge; retain the same rubric and verification contract. Outside that proven scope, report the workflow as unavailable unless a separate task-specific proof supports it. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.
 
 # Arena
 
@@ -37,11 +37,11 @@ Launch N independent Codex subagents in parallel when authorized, each with the 
 
 Each rationale names the alternatives the candidate considered and what it rejected.
 
-If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record.
+If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record. Mark the aggregate PARTIAL. If fewer than two candidates completed, do not select a winner or claim Arena competition; report the surviving artifact as a single attempt.
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish, or have the coordinator perform an explicit independent judgment if no authorized judge is available. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.
+After all Phase B candidates complete, choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.
 
 ## Phase D: Pick a base
 
@@ -71,4 +71,4 @@ If verification surfaces a problem the arena did not catch, either Phase A was w
 
 ## Outputs
 
-One synthesized artifact. One short synthesis note alongside, naming the base, the grafts (with source candidate), the rejections, the dropouts if any, and the verification result.
+One synthesized artifact when competition and independent judgment completed; otherwise label the result PARTIAL and state which phase was missing. One short synthesis note alongside, naming the base if selected, the grafts (with source candidate), the rejections, the dropouts if any, the actual judge or coordinator assessment, and the verification result.

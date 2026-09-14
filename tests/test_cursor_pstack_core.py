@@ -3,6 +3,7 @@
 import json
 import importlib.util
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -572,7 +573,18 @@ console.log(JSON.stringify({{
                 "## Helpers",
             ):
                 self.assertIn(heading, skill)
-            self.assertIn("compile(...)", skill)
+            syntax_command = skill.split("Run `", 1)[1].split("`", 1)[0]
+            syntax_result = subprocess.run(
+                shlex.split(syntax_command),
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(
+                (syntax_result.returncode, syntax_result.stdout, syntax_result.stderr),
+                (0, "syntax:ok\n", ""),
+            )
             self.assertIn("--version", skill)
             self.assertIn("health", skill)
             self.assertIn('description: "Verify notes through its short-lived Python CLI', skill)
@@ -675,6 +687,36 @@ console.log(JSON.stringify({{
             with self.assertRaises(AdapterError):
                 run_cli_verification_fixture(
                     root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+                )
+            self.assertFalse((root / ".agents/skills/verify-notes").exists())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP)
+            self.assertEqual(
+                run_cli_verification_fixture(root, "notes", app, commands, doctor=VERIFICATION_DOCTOR)["status"],
+                "FIXTURE_ONLY",
+            )
+            prior_state = '[{"title":"Keep me","body":"existing"}]'
+            (root / "notes.json").write_text(prior_state)
+            with self.assertRaisesRegex(AdapterError, "must be absent"):
+                maintain_cli_verification_fixture(
+                    root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+                )
+            self.assertEqual((root / "notes.json").read_text(), prior_state)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP.replace("store.write_text(json.dumps(notes))", "pass"))
+            with self.assertRaisesRegex(AdapterError, "was not created"):
+                run_cli_verification_fixture(
+                    root,
+                    "notes",
+                    app,
+                    {"create-note": commands["create-note"]},
+                    doctor=VERIFICATION_DOCTOR,
                 )
             self.assertFalse((root / ".agents/skills/verify-notes").exists())
 

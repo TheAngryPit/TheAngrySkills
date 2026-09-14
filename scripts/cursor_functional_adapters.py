@@ -573,12 +573,19 @@ def _normalize_verification_source_wave(
     return normalized
 
 
+_VERIFICATION_SYNTAX_CODE = (
+    "from pathlib import Path; import sys; "
+    "compile(Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec'); "
+    "print('syntax:ok')"
+)
+
+
 def _run_verification_syntax_check(root: Path, app: Path) -> dict[str, object]:
     relative_app = str(app.relative_to(root))
     command = (
         sys.executable,
         "-c",
-        "from pathlib import Path; import sys; compile(Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec'); print('syntax:ok')",
+        _VERIFICATION_SYNTAX_CODE,
         relative_app,
     )
     environment = {
@@ -665,11 +672,14 @@ def _capture_verification_commands_with_cleanup(
     app: Path,
     commands: Mapping[str, Mapping[str, object]],
 ) -> tuple[dict[str, dict[str, object]], dict[str, object] | None, dict[str, object]]:
+    _assert_cleanup_paths_absent(root, commands)
     observations: dict[str, dict[str, object]] = {}
     failure: dict[str, object] | None = None
     cleanup: dict[str, object]
     try:
         observations, failure = _capture_verification_commands(root, app, commands)
+        if failure is None:
+            _assert_cleanup_paths_regular(root, commands)
     finally:
         cleanup = _cleanup_verification_state(root, commands)
     return observations, failure, cleanup
@@ -802,7 +812,8 @@ def _verification_skill_document(
         "syntax, version, and health checks pass. "
         "There is no long-lived process or shared port to keep alive.\n\n"
         "## Doctor\n\n"
-        f"Run `python3 -c 'compile(...)'` against `{app_relative}` for syntax, then `{version_command}` "
+        f"Run `{shlex.join(('python3', '-c', _VERIFICATION_SYNTAX_CODE, app_relative))}` "
+        f"for syntax (expect `syntax:ok`), then `{version_command}` "
         f"(expect `{version_expected}`) and `{health_command}` "
         f"(expect `{health_expected}`). Any failure blocks the run.\n\n"
         "## Drive\n\n"
@@ -950,7 +961,6 @@ def run_cli_verification_fixture(
             }
         )
         return result
-    _assert_cleanup_paths_absent(root, normalized)
     observations, failure, cleanup = _capture_verification_commands_with_cleanup(
         root, app, normalized
     )

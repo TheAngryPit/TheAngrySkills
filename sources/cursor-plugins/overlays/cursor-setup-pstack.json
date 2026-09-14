@@ -18,7 +18,7 @@
         "local config diff"
       ],
       "fallback": "Unavailable model or declined approval leaves configuration unchanged.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "native_subagent_inventory_observed; persistent_role_dispatch_unproven"
     },
     "external_dependencies": [
       "Codex model inventory",
@@ -47,10 +47,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nThe standing `model-capability-router` is the single policy owner. This setup skill maps all pstack roles to available native models/efforts and verifies persistent source changes when requested.\n",
+  "codex_note": "## Codex runtime mapping\n\nThe standing `model-capability-router` is the single policy owner. Read reports/cursor-setup-pstack-native-inventory-20260914.md for the current subagent-channel inventory and 17-role/four-panel candidate map. Current-task, subagent, user-owned task and Work cloud channels differ. This setup skill maps roles only to models/efforts advertised by the target channel and verifies persistent source changes when requested. The current inventory and dry-run fixture do not prove a write, new-session selection, or full pstack execution.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Configure which models pstack uses per role. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", or changing pstack's model choices.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "Pinned source hash and deterministic build establish provenance. Dry-run fixtures cover 17 labels/four panels, aliases, unavailable model/effort, and malformed input without writes. The current native subagent tool advertises Sol/Astra/Terra/Luna/Daybreak model overrides, and this task's turn context reads Sol medium; reports/cursor-setup-pstack-native-inventory-20260914.md records the scoped mapping. Persistent write/readback, task-channel entitlement and actual role dispatch remain unproved.",
   "reason": "Preserve pstack role configuration using canonical Codex model policy and exact-channel capability instead of Cursor-specific rules.",
   "replacements": [
     {

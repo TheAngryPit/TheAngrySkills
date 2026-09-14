@@ -40,6 +40,14 @@ marker is claimed. The CLI emitted `thread.started` and `turn.started`, but no
 model response or skill-read event. A local Python catalogue hit is not evidence
 of Codex discovery or that an agent or delegated agent read the full `SKILL.md`.
 
+The authenticated native task was also checked for a path to this fixture. Its
+working directory was the shared TheAngry-Workflows checkout, not the disposable
+Git project. The available native subagent spawn schema has no working-directory,
+project, or worktree target. No subagent was spawned with a prompt that merely
+mentions the fixture path: such a prompt would not establish its startup project.
+Delegated explicit/implicit activation therefore remains unobserved without
+changing the shared checkout or global home.
+
 ## Commands and verification
 
 ```text

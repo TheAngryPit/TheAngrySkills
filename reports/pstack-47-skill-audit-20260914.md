@@ -7,7 +7,9 @@ Read-only comparison on 2026-09-14. Installed Cursor cache:
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. Candidate output was
 rendered with `sync-cursor-plugin-skills.py --preview-candidates`; published
 output is in `skills/mirrors-cursor/`. A rendered instruction or source hash
-is not evidence of native activation.
+is not evidence of native activation. Publication labels in the table record
+this comparison checkpoint; the later bounded Architect promotion is recorded
+in `pstack-architect-arena-native-20260914.md` and the current capability matrix.
 
 All 47 top-level `skills/*/SKILL.md` IDs match. Forty-five top-level files
 are byte-identical. Only `poteto-mode/SKILL.md` and

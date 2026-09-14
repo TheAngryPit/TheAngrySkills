@@ -865,7 +865,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -882,12 +882,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/architect/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "prospective Ground-before-Sketch native local design case with independent candidates, cross-judge, grafts and observed disposable verification",
+      "publish": true,
       "published_name": "cursor-architect",
       "upstream_purpose": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
       "upstream_skill": "architect",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter and references; explicit-only invocation policy; Ground how/why before Sketch; two distinct candidates, independent judge, synthesis and verified disposable local result; separate automatic trigger and production gaps"
     },
     {
       "availability": "Bounded native local Arena observed: N=2 isolated design candidates, independent cross-judge, base/grafts, runtime verification after a drift correction; automatic trigger, Work cloud and other task shapes remain unproven.",

@@ -1,6 +1,13 @@
 {
-  "candidate_not_published": 28,
+  "candidate_not_published": 27,
   "generated_files": {
+    "cursor-architect/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-architect/MIRROR.md": "1535e091df89d6d7d1aad5010f750c2d2140c0f1cacb0322f971f5c18bb06ca6",
+    "cursor-architect/SKILL.md": "6811db36112d4af088f9e556a2ca1158fe6405c239bf3f9885aa160f052192b2",
+    "cursor-architect/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-architect/references/design-red-flags.md": "905066f9bbac81c573c2b325be47751d2c0f9325e0a0772bd4384e82dafe9336",
+    "cursor-architect/references/rationale-template.md": "be7ca23396b92002bd9c768cfecf3da1f7b2eb72a0c91d42be8c5eea4905ba47",
+    "cursor-architect/references/runner-prompt.md": "983bf2820cc14ed8ecab6e448e1033e5cfe6031967d0a9287b48c7fa9c33d925",
     "cursor-arena/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-arena/MIRROR.md": "5628ee4a06bae0a9869d27f096203384c0a7aec702c2ea6c3b6f5591522dae1a",
     "cursor-arena/SKILL.md": "6e426e672e35f9c3f701712cb3e1f7060d03c6ad1097adb692c72d4626136fcf",
@@ -246,7 +253,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 60,
+  "published_skills": 61,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

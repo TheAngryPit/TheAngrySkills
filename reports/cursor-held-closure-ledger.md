@@ -3,8 +3,8 @@
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
-The pinned manifest contains 91 physical skills. It has 31 `publish:false`
-entries: 28 active entries below plus the three Benny automation entries
+The pinned manifest contains 91 physical skills. It has 30 `publish:false`
+entries: 27 active entries below plus the three Benny automation entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
 `cursor-triage-issue-reports`). The three Benny sources still exist upstream
 under `pstack/automations/benny`; they are installed through Benny's project
@@ -16,7 +16,7 @@ silently recounted as held here.
 
 ## Pstack first
 
-The 12 held pstack slash skills are the critical path before the other 16
+The 11 held pstack slash skills are the critical path before the other 16
 active held skills. Sol owns integration and the setup/poteto/no-comments/router
 link; Luna high owns bounded `architect`/`arena` execution in a separate
 checkout. Verification remains a separate Sol/Luna handoff, with its existing
@@ -31,8 +31,7 @@ groups without waiting for that cleanup or Work cloud permission:
    `cursor-maintain-verification-skill`. Keep the CLI input-only source-wave
    distinct from the two native web source readers. The disposable UI run is
    real for that target; Reset fixture still needs action-time confirmation.
-3. **Delegated reasoning and review:** `cursor-architect`,
-   `cursor-interrogate`, `cursor-reflect`. Require actual bounded role outputs,
+3. **Delegated reasoning and review:** `cursor-interrogate`, `cursor-reflect`. Require actual bounded role outputs,
    synthesis/ownership and verified model metadata before claiming model
    diversity. Luna owns the first two; Sol reviews and integrates.
 4. **Context and learning:** `cursor-recall`, `cursor-figure-it-out`,
@@ -61,7 +60,6 @@ independent safe evidence, but they do not displace these five groups.
 | `cursor-debug-voice` | On `/debug-voice`, install dev-only client-to-local-NDJSON logs, match report to signatures, fix one issue and re-test; never audio/tokens/prod. | Local log reader/redaction adapter; missing logs or failed redaction is `INCONCLUSIVE` and write-free. | App-specific log fixture, redaction, one bounded fix/retest and no-production proof. | No current voice integration/log source has been exercised. | Provide a scoped synthetic NDJSON log and run the redaction/diagnosis fixture. |
 | `cursor-orchestrate` | Only explicit `/orchestrate <goal>` may decompose work into cloud planners/workers/verifiers with structured handoffs, state, cancellation and recovery. The pinned implementation uses Cursor SDK/scripts. | The [Work cloud contract](cursor-orchestrate-work-cloud-contract-20260914.md) maps the operator-selected ChatGPT Work destination to documented native task creation and existing list/read surfaces; local delegation and Cursor scripts are not substitutes. The source/security finding remains held. | Explicit Work root dispatch, child fan-out/drain, structured handoffs, repository artifacts, cancellation and recovery readback. | Auto-review rejected a bounded Work task creation for lack of specific user authorization; no task was created. The current available tools do not document Work child/drain/cancel/artifact parity. | Obtain approval for the exact read-only Work PR #64 proof task in the contract report; then observe task ID/result and separately prove tree/artifact/recovery operations. |
 | `cursor-pr-review-canvas-pr-review-canvas` | Render a PR diff in Cursor Canvas grouped by reviewer importance, boilerplate/core logic and tricky changes; read Canvas prerequisites first. | Local diff reader/document renderer; Canvas absence returns artifact plus parity gap. | Canvas SDK/component contract and live PR metadata/render behavior. | No Canvas primitive or pinned Canvas SDK is available. | Retain conditional local Markdown/HTML review artifact and label Canvas unavailable. |
-| `cursor-architect` | For `/architect` or non-trivial work, ground, sketch types/signatures/modules, agree across perspectives, implement, and scrap a disproven sketch. | Two native design candidates, independent cross-judge, base/grafts, planner redesign, and disposable runtime drift/fix were observed. Generated `cursor-how`/`cursor-why` mirrors were later read and run in bounded read-only roles. [Receipt](pstack-architect-arena-native-20260914.md). | Ordered Phase A `how` grounding and `why` ownership rationale before Sketch/Arena, then the bounded design and implementation sequence; automatic trigger and production remain separate gaps. | The how/why run was retrospective; `why` left the original design motivation unknown. It does not retroactively satisfy the source's before-sketch Ground phase. | Run one new bounded Architect case that records how/why of the existing system before candidates are launched, then reconcile design and implementation against that grounding. |
 | `cursor-automate-me` | Capture corroborated working preferences, then sequence mining, Cursor `create-skill`, and `unslop` to draft/update one `-mode` skill. | History-gated adapter defaults to project-local `.agents/skills`; fixture updates from two bounded evidence slices and preserves uncontradicted sections. | Authorized transcript scope, native skill-creator, `cursor-unslop`, user preference loop and destination writeback. | Native history and skill-creator invocation are not proven in the current host. | Use supplied bounded evidence and run a project-local draft through `cursor-unslop`, with approval before write. |
 | `cursor-create-verification-skill` | Generate `.cursor/skills/verify-<app>/` that launches the real app, drives each feature as a user, captures evidence and cleanup. | Native-write adapter maps to project-local `.agents/skills/verify-<app>/`; disposable notes CLI observes Doctor, actions, protected cleanup and evidence. A separate disposable web app was driven by CUA for create/search/reload with visual receipts. | UI cleanup, native activation and reusable-run permission proof. | The `Reset fixture` UI action that clears localStorage awaits action-time confirmation; no production target parity is claimed. | After confirmation, reset only fixture-owned browser state, inspect post-reset UI, and reconcile the generated skill/feature map. |
 | `cursor-figure-it-out` | When no narrower playbook fits, design an auditable hypothesis loop before code, scale rigor, and log decisions with show-me-your-work. | Native procedure adapter uses local reader/check runner/decision log; failed or ungrounded check blocks done. A [post-change real-case audit](cursor-figure-it-out-real-case-20260914.md) verified the held renderer mapping and bounded trail guard. | Prospective pre-change baseline, native trigger, full task phases, real product result, and independent review. | The mapping fix predates the audit; its runtime behavior cannot be proved retrospectively. | Activate on a disposable Codex project before an actual bounded change; record the hypothesis, failed branch, real-product outcome, and reviewer result. |
@@ -78,7 +76,7 @@ independent safe evidence, but they do not displace these five groups.
 ## Newly published bounded workflows
 
 `cursor-how`, `cursor-why`, `cursor-show-me-your-work`, `cursor-thermos`,
-`cursor-swarm`, and `cursor-arena`
+`cursor-swarm`, `cursor-arena`, and `cursor-architect`
 moved from this held ledger to the published catalog after their bounded
 native cases. The scope is read-only `how`/`why` execution, a bounded local TSV
 writer with an independently reviewed trail, a two-lens Thermos review with a
@@ -91,6 +89,10 @@ cross-judge, a selected base and grafts, a redesign after a failed hypothesis,
 and a disposable implementation whose first drift test failed and was fixed.
 [Arena proof](pstack-architect-arena-native-20260914.md) does not establish
 automatic invocation, Work cloud, other hosts, or production behavior.
+The [Architect proof](pstack-architect-arena-native-20260914.md) records a later
+prospective Ground-before-Sketch case with how/why before two distinct designs,
+an independent judge, base/grafts and disposable runtime probes. It supports
+only bounded explicit local design publication, not production or automatic use.
 
 ## Group dependency order
 
@@ -98,8 +100,7 @@ automatic invocation, Work cloud, other hosts, or production behavior.
    (with published `cursor-how`, `cursor-show-me-your-work`, and guide-only
    principles available under their documented limits).
    Establish bounded paths, evidence, and wording before orchestration.
-2. **Delegated review and style:** `cursor-advisor`, `cursor-architect`,
-   `cursor-interrogate`, `cursor-reflect`,
+2. **Delegated review and style:** `cursor-advisor`, `cursor-interrogate`, `cursor-reflect`,
    `cursor-no-comments`, and `cursor-poteto-mode`. Prove
    native named/bounded delegation and coordinator ownership first; Poteto's
    `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` dependencies
@@ -124,7 +125,7 @@ automatic invocation, Work cloud, other hosts, or production behavior.
 
 ## Remaining unavailable skills
 
-All 28 rows remain absent from the published catalog and unavailable for a
+All 27 rows remain absent from the published catalog and unavailable for a
 claimed native functional invocation until their row's proof and blocker are
 closed. The already-published guide-only principles and local PR renderer are
 outside this held count and retain their own conditional/native-parity labels.
@@ -135,21 +136,21 @@ outside this held count and retain their own conditional/native-parity labels.
 `cursor-workflow-from-chats`, `cursor-docs-canvas`, `cursor-add-dictation`,
 `cursor-add-read-aloud`, `cursor-add-voice`, `cursor-debug-voice`,
 `cursor-orchestrate`, `cursor-pr-review-canvas-pr-review-canvas`,
-`cursor-architect`, `cursor-automate-me`,
+`cursor-automate-me`,
 `cursor-create-verification-skill`, `cursor-figure-it-out`,
 `cursor-interrogate`, `cursor-maintain-verification-skill`,
 `cursor-make-bot-ui`, `cursor-no-comments`, `cursor-poteto-mode`,
 `cursor-recall`, `cursor-reflect`, `cursor-setup-pstack`,
 `cursor-cancel-ralph`, and `cursor-ralph-loop`.
 
-The list contains exactly the 28 active `publish:false` names and excludes the
+The list contains exactly the 27 active `publish:false` names and excludes the
 three dormant Benny skills. Optional external-service branches may be
 distributed conditionally only with the local fallback,
 credential boundary, and unavailable-capability result preserved.
 
 ## Evidence checks
 
-- Manifest count: `jq` reports 91 physical skills, 31 `publish:false`, and 28
+- Manifest count: `jq` reports 91 physical skills, 30 `publish:false`, and 27
   active `publish:false` after excluding `pstack/automations/benny`.
 - Every row was reconciled against its pinned
   `sources/cursor-plugins/snapshot/**/SKILL.md`, matching overlay JSON under
@@ -162,7 +163,8 @@ credential boundary, and unavailable-capability result preserved.
   tests plus two subtests and mirror `--check` at 91 physical/59 emitted/239
   output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
   CI validation for published PR #64 head `ab038461` completed successfully.
-  The later successor branch publishes Arena: 91 physical/60 emitted/243 output
-  files, with its separate PR #66 validation recorded in the capability matrix.
+  The later successor branch publishes Arena and bounded Architect:
+  91 physical/61 emitted/250 output files, with PR #66 validation recorded in
+  the capability matrix.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

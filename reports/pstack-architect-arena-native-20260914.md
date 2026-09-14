@@ -159,7 +159,7 @@ the original design motivation unknown. A new bounded Architect pass must
 ground the existing system and its ownership rationale before Sketch/Arena to
 close that source requirement. The follow-up does not prove automatic picker/trigger behavior,
 exact upstream runner parity, production behavior, independent model/effort
-readback, or external seven-category execution. Promotion remains held.
+readback, or external seven-category execution. At that historical checkpoint promotion remained held.
 
 ## Verification
 
@@ -196,14 +196,102 @@ Repository checks:
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-architect.json
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-arena.json
 pytest -q tests/test_cursor_architect_arena.py tests/test_cursor_pstack_core.py tests/test_cursor_functional_overlays.py
-26 passed in 7.71s
+26 passed in 6.84s
 ```
 
 The focused test covers exact native role strings, bounded availability,
-partial/dropout fallback, Architect's held status, source-path parity, explicit
+partial/dropout fallback, Architect's bounded published status, source-path parity, explicit
 invocation-metadata wording, and rendered instruction gates. The disposable
 runtime checks above are separate from repository tests and exercised the
 copied implementation; repository tests do not establish product behavior.
+
+## Prospective Architect batch case
+
+This follow-up preserved the earlier proofs and opened one new timestamped
+disposable case at
+`disposable-scratch/architect-arena-20260914/prospective-20260914T181925Z`.
+The proposed feature was deliberately small: one normalized query to two or
+more already-configured opaque destinations, with one source read, ordered
+per-destination outcomes, per-target idempotency, and no cross-destination
+transaction claim.
+
+### Ground before sketches
+
+The required A-E checklist and Arena checklist are in
+`prospective-20260914T181925Z/todolist.md`. Ground was created before any new
+candidate was launched:
+
+- `ground-how.md` traces `NoteStore`, `export_matching()`,
+  `_MatchingExportService.execute()`, source/search ownership, destination
+  locks, target identity, canonical payload/revision, full-target comparison,
+  atomic publication and the existing probe boundaries;
+- `ground-why.md` records the direct local ownership constraints, the local
+  history (`c10c7eaa`, `731b2429`, `6f64dd72`), and the unknown product need,
+  batch size, partial-success policy and source-consistency requirement.
+
+The pinned Architect/Arena contracts, Architect red flags, rationale/runner
+templates, and the generated how/why mirrors plus relevant references were read
+in full before sketching.
+
+### Sketch, judge and synthesis sequence
+
+The native sequence was:
+
+1. Candidate 1 (Arendt) and Candidate 2 (Erdos) were launched through
+   `collaboration.spawn_agent` as `general-worker`, requested
+   `gpt-5.6-luna`/`high`, with disjoint output paths. Both packages and both
+   rationales were read end to end.
+2. Candidate 1 kept batch policy behind `NoteStore` with
+   `export_matching_many()`, one immutable source snapshot and private ordered
+   publication. Candidate 2 used a separate configured coordinator and
+   immutable plan. These are different ownership shapes, not point variants.
+3. Cross-judge Hubble used `collaboration.spawn_agent` as `reviewer`, requested
+   `gpt-6-astra`/`low`, and scored Candidate 1 `20/24` and Candidate 2 `14/24`.
+   The returned verdict was materialized by the coordinator at
+   `prospective-20260914T181925Z/cross-judge/cross-judge.md`; no runner
+   self-report was converted into an independent model readback.
+4. Candidate 1 was selected as base. Accepted grafts from Candidate 2 were
+   (a) retry means current reconciliation, not historical resume, and (b) a
+   private snapshot-aware publisher seam that preserves single-export
+   lock-before-load without recursive locking. Rejected were the public
+   coordinator/plan expansion, raw exception outcomes, redundant status state,
+   and any transaction claim. The ledger is in
+   `synthesis/review-redesign.md`, and the contract is in
+   `synthesis/synthesized-design.md`.
+
+### Disposable implementation and real friction
+
+The chosen shape was implemented only in the copied runtime at
+`prospective-20260914T181925Z/runtime`. The implementation added
+`export_matching_many()`, path-free failure values, one source snapshot,
+ordered continuation, duplicate/alias preflight rejection, a private
+lock-aware publication seam, recognized-target validation and current-target
+reconciliation. The existing single-export path was kept and exercised.
+
+The judge's foreign-target finding was real design friction: the baseline
+publisher handled invalid JSON but would replace a valid foreign object or
+raise an unclassified shape error. The disposable implementation corrected
+this by failing closed on unrecognized target shapes; this is recorded as a
+contract correction, not silently claimed as pre-existing behavior.
+
+Commands and outputs:
+
+```text
+PYTHONPATH=disposable-scratch/architect-arena-20260914/prospective-20260914T181925Z/runtime python3 baseline_probe.py
+runtime-after-fix: PASS
+runtime: create/retry/drift-replace/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset
+
+PYTHONPATH=disposable-scratch/architect-arena-20260914/prospective-20260914T181925Z/runtime python3 batch_probe.py
+batch-after-fix: PASS
+batch: one-source-read/ordered-partial/foreign-target/duplicate/alias/source-failure/retry/drift/single
+```
+
+The prospective batch case was reviewed by Sol and supports bounded
+explicit-only publication. The manifest publication change is separate from
+this disposable runtime proof. Automatic picker/trigger, seven-category external
+connector coverage, production parity, crash/power-loss durability,
+hostile-writer behavior, stronger source consistency and end-to-end host
+behavior remain unproven.
 
 ## Adaptation boundary and remaining gaps
 
@@ -216,12 +304,11 @@ The two overlays now map:
   cross-judge, explicit base/graft/rejection, redesign-on-failure, and
   verification.
 
-Arena is published only for the bounded explicit local design path; Architect
-remains held on the ordered Phase A gap above. Generated `cursor-how`/`cursor-why`
-mirrors and their retrospective read/role-flow receipts are observed, but
-automatic skill triggering, exact upstream Cursor
-runner parity, native model/effort runtime readback, production implementation,
-crash/power-loss proof, hostile-writer semantics, complete external connector
-execution, and end-to-end host behavior remain unproven. The fixture/runtime
-and all local state are disposable; no Arena/runtime was rerun in this
-follow-up, and no reset or external mutation was performed.
+Arena and Architect are published only for bounded explicit local design paths.
+The prospective Ground-before-Sketch case closes Architect's prior ordering gap.
+Generated `cursor-how`/`cursor-why` mirrors and their read/role-flow receipts
+are observed. Automatic skill triggering, exact upstream Cursor runner parity,
+native model/effort runtime readback, production implementation, crash/power-loss
+proof, hostile-writer semantics, complete external connector execution, and
+end-to-end host behavior remain unproven. The fixture/runtime and all local
+state are disposable; no reset or external mutation was performed.

@@ -23,11 +23,14 @@ def test_architect_native_roles_and_gates_are_explicit():
     contract = overlay["codex_contract"]
     assert "agent_type general-worker" in " ".join(contract["native_mapping"]["capabilities"])
     assert "agent_type planner" in " ".join(contract["native_mapping"]["capabilities"])
-    assert "bounded_native_two_candidate_architect_pass_and_disposable_runtime_contract_observed" in contract["native_mapping"]["availability"]
-    assert "generated cursor-how/cursor-why mirror read/role-flow observed" in contract["native_mapping"]["availability"]
+    assert "bounded_native_two_candidate_architect_pass_disposable_runtime_and_prospective_batch_contract_observed" in contract["native_mapping"]["availability"]
+    assert "published for bounded explicit-only local design after Sol review" in contract["native_mapping"]["availability"]
     assert "automatic trigger" in contract["native_mapping"]["availability"]
-    assert contract["promotion_status"].startswith("held_until_")
+    assert contract["promotion_status"].startswith("promoted_bounded_native_local_architect_explicit_only")
     assert "invocation metadata" in overlay["proof"]
+    rendered = (ROOT / "skills/mirrors-cursor/cursor-architect/SKILL.md").read_text()
+    assert "at least two structurally distinct candidates" in rendered
+    assert "report PARTIAL or unavailable" in rendered
     assert "collaboration.spawn_agent" in overlay["codex_note"]
     assert "multi_agent_v1__spawn_agent" not in overlay["codex_note"]
     assert contract["name_mapping"]["source_path"] == _manifest_entry("cursor-architect")["path"]

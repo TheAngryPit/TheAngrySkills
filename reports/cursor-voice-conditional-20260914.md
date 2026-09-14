@@ -22,9 +22,11 @@ provides four local entrypoints:
   malformed event closes the fixture with a `MALFORMED_EVENT` diagnostic;
   output audio is represented by byte counts only.
 - `diagnose_voice_log` reads one NDJSON file, redacts audio to decoded byte
-  counts, bounds strings/objects/arrays, redacts credential-shaped fields, and
-  matches the source starter signatures. Missing, mismatched, unsafe, empty,
-  malformed, or unredactable logs return `INCONCLUSIVE` and never write.
+  counts, bounds the file to 4 MiB and 5,000 entries (with 16,000-byte lines),
+  bounds strings/objects/arrays, redacts credential-shaped fields, and matches
+  the source starter signatures. Missing, mismatched, unsafe, empty,
+  malformed, oversize, or unredactable logs return `INCONCLUSIVE` and never
+  write. Malformed numeric and unhashable event fields fail closed.
 
 Each provider-facing capability has an explicit `UNAVAILABLE` result and a
 server-only credential boundary. The module contains no HTTP, WebSocket,
@@ -44,11 +46,12 @@ or exercise those provider paths.
 
 Focused tests: `python3 -m unittest -v tests.test_cursor_voice_adapters`
 
-Result: 8 tests passed. The module and test file also pass `py_compile`, and
+Result: 10 tests passed. The module and test file also pass `py_compile`, and
 all four modified overlays parse as JSON. The focused tests cover positive
 dictation, read-aloud, realtime, and log diagnosis cases plus empty/path-invalid
-input, malformed realtime events, invalid TTS input, missing logs, and failed
-audio redaction.
+input, malformed realtime events, invalid TTS input, missing logs, failed
+audio redaction, malformed numeric/unhashable fields, and oversize log files
+and entry counts.
 
 ## Remaining gaps
 

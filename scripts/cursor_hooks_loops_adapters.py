@@ -31,6 +31,21 @@ class FixtureError(ValueError):
     """Raised when a fixture would escape its disposable project boundary."""
 
 
+_OS_SYMLINK_ALIASES = {Path("/var"), Path("/tmp")}
+
+
+def _reject_symlink_components(path: Path, label: str) -> Path:
+    """Reject lexical symlink components before resolving a caller path."""
+
+    lexical = path if path.is_absolute() else Path.cwd() / path
+    current = Path(lexical.anchor)
+    for component in lexical.parts[1:]:
+        current /= component
+        if current.is_symlink() and current not in _OS_SYMLINK_ALIASES:
+            raise FixtureError(f"{label} path contains a symlink: {current}")
+    return lexical
+
+
 def _event(project: Path, session_id: str, event_name: str, **fields: Any) -> dict[str, Any]:
     return {
         "hook_event_name": event_name,
@@ -44,7 +59,7 @@ class HooksLoopsFixture:
     """Small in-process harness for positive and degraded contract cases."""
 
     def __init__(self, project: Path, session_id: str = "fixture-session") -> None:
-        project = project.resolve()
+        project = _reject_symlink_components(Path(project), "fixture project").resolve()
         if not project.is_dir():
             raise FixtureError("fixture project must already exist")
         if not session_id or any(char.isspace() for char in session_id):
@@ -143,7 +158,9 @@ class HooksLoopsFixture:
     ) -> Path:
         """Arm only fixture state; no transcript is read by the adapter."""
 
-        transcript_root = transcript_root.resolve()
+        transcript_root = _reject_symlink_components(
+            Path(transcript_root), "transcript root"
+        ).resolve()
         if not transcript_root.is_dir():
             raise FixtureError("transcript root must already exist")
         if turns_since_last_run < 0 or last_run_at_ms < 0:
@@ -195,4 +212,3 @@ def disposable_project() -> tempfile.TemporaryDirectory[str]:
     """Return a caller-owned temporary project context for tests."""
 
     return tempfile.TemporaryDirectory(prefix="cursor-hooks-loops-")
-

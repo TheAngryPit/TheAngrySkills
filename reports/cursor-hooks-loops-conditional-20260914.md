@@ -58,11 +58,13 @@ with the same turn id are idempotently ignored by the underlying adapter.
 
 The manifest's baseline security verdict for all four entries is
 `safe_docs_only`, with the finding retained. The fixture adds no permission
-or trust: project/session binding, symlink rejection, absolute transcript-root
-validation, exact turn ids, and no-op behavior for wrong sessions remain
-enforced by the native adapter. No hooks are installed, no global Cursor or
-Codex state is touched, no process is started or killed, and no external
-network or secret is used.
+or trust: before calling the adapter it rejects lexical symlink components in
+the supplied project and transcript root. The underlying adapter additionally
+validates its state descendants, absolute transcript root, exact turn ids,
+and wrong-session no-op behavior. The symlink guarantee belongs to this
+fixture boundary and is not a claim about a live host. No hooks are installed,
+no global Cursor or Codex state is touched, no process is started or killed,
+and no external network or secret is used.
 
 ## Remaining promotion evidence
 
@@ -72,4 +74,3 @@ exact project hook hash and trust, observes a live bounded Stop/SubagentStop
 event, and captures cancellation or updater readback. Continual learning also
 needs an explicitly authorized transcript path and a before/after `AGENTS.md`
 diff. Synthetic payloads and fixture state alone must remain conditional.
-

@@ -101,6 +101,23 @@ class CursorHooksLoopsAdapterTests(unittest.TestCase):
                 self.assertEqual(fixture.continual_learning_stop(project / "outside.jsonl"), {})
             self.assertFalse((project / "outside.jsonl").exists())
 
+    def test_fixture_rejects_project_and_transcript_root_symlink_aliases(self):
+        with self.project() as directory:
+            real_project = Path(directory) / "project"
+            real_project.mkdir()
+            project_alias = Path(directory) / "project-alias"
+            transcript_root = real_project / "transcripts"
+            transcript_root.mkdir()
+            transcript_alias = Path(directory) / "transcripts-alias"
+            os.symlink(real_project, project_alias)
+            os.symlink(transcript_root, transcript_alias)
+
+            with self.assertRaisesRegex(ValueError, "fixture project path contains a symlink"):
+                HooksLoopsFixture(project_alias)
+            fixture = HooksLoopsFixture(real_project)
+            with self.assertRaisesRegex(ValueError, "transcript root path contains a symlink"):
+                fixture.arm_continual_learning(transcript_alias)
+
 
 if __name__ == "__main__":
     unittest.main()

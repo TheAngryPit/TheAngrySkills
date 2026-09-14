@@ -14,6 +14,8 @@ from cursor_voice_adapters import (  # noqa: E402
     VoiceAdapterError,
     diagnose_voice_entries,
     diagnose_voice_log,
+    MAX_LOG_BYTES,
+    MAX_LOG_ENTRIES,
     mock_dictation_route,
     mock_read_aloud_route,
     mock_realtime,
@@ -122,6 +124,29 @@ class CursorVoiceAdapterTests(unittest.TestCase):
             failed = diagnose_voice_log(path, session_id="session1")
             self.assertEqual(failed["status"], "INCONCLUSIVE")
             self.assertFalse(failed["write"])
+
+    def test_debug_diagnosis_fails_closed_on_malformed_types(self):
+        # String numbers and unhashable event types must not escape as a
+        # TypeError or accidentally become a positive diagnosis.
+        for entry in (
+            {"kind": "audio.out", "underruns": "2"},
+            {"kind": "audio.out", "drain_ms_max": []},
+            {"type": []},
+        ):
+            result = diagnose_voice_entries([entry])
+            self.assertEqual(result["status"], "INCONCLUSIVE")
+            self.assertFalse(result["write"])
+
+    def test_debug_log_rejects_oversize_bytes_and_entry_count(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "large.ndjson"
+            path.write_bytes(b"x" * (MAX_LOG_BYTES + 1))
+            self.assertEqual(diagnose_voice_log(path, session_id="large")["status"], "INCONCLUSIVE")
+
+            path = Path(directory) / "many.ndjson"
+            line = json.dumps({"kind": "start", "type": "start"}) + "\n"
+            path.write_text(line * (MAX_LOG_ENTRIES + 1))
+            self.assertEqual(diagnose_voice_log(path, session_id="many")["status"], "INCONCLUSIVE")
 
 
 if __name__ == "__main__":

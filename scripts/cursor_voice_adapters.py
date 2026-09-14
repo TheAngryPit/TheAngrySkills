@@ -16,6 +16,7 @@ import base64
 import binascii
 import hashlib
 import json
+import math
 import re
 import struct
 from pathlib import Path
@@ -35,6 +36,10 @@ class VoiceRedactionError(VoiceAdapterError):
 
 
 SUPPORTED_SAMPLE_RATES = frozenset({8000, 16000, 22050, 24000, 44100, 48000})
+MAX_LOG_BYTES = 4 * 1024 * 1024
+MAX_LOG_ENTRIES = 5_000
+MAX_LOG_LINE_BYTES = 16_000
+MAX_AUDIO_FIELD_CHARS = 16_000
 AUDIO_EVENT_TYPES = frozenset(
     {
         "response.output_audio.delta",
@@ -336,6 +341,8 @@ def _audio_bytes(value: Any) -> int:
         return len(value)
     if not isinstance(value, str):
         raise VoiceRedactionError("audio field must be bytes or base64 text")
+    if len(value) > MAX_AUDIO_FIELD_CHARS:
+        raise VoiceRedactionError("audio field exceeds the bounded log-line limit")
     try:
         return len(base64.b64decode(value, validate=True))
     except (binascii.Error, ValueError) as exc:
@@ -383,6 +390,20 @@ def redact_voice_entry(entry: Mapping[str, Any]) -> dict[str, Any]:
 
     if not isinstance(entry, Mapping):
         raise VoiceRedactionError("voice log entry must be an object")
+    for field in ("type", "kind"):
+        value = entry.get(field)
+        if value is not None and not isinstance(value, str):
+            raise VoiceRedactionError(f"{field} must be text when present")
+    for field in ("underruns", "drain_ms_max", "rms_max", "bytes", "audio_ms", "wall_ms", "queued_ms", "deltas"):
+        value = entry.get(field)
+        if value is not None and (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+        ):
+            raise VoiceRedactionError(f"{field} must be a finite number when present")
+    if "ok" in entry and not isinstance(entry["ok"], bool):
+        raise VoiceRedactionError("ok must be boolean when present")
     kind = entry.get("type", entry.get("kind", ""))
     audio_event = kind in AUDIO_EVENT_TYPES
     result = _redact(entry, depth=0, audio_event=audio_event)
@@ -404,15 +425,25 @@ def _load_ndjson(path: str | Path, *, session_id: str | None = None) -> tuple[st
         return "INCONCLUSIVE", []
     if session_id is not None and target.stem != session_id:
         return "INCONCLUSIVE", []
+    try:
+        if target.stat().st_size > MAX_LOG_BYTES:
+            return "INCONCLUSIVE", []
+    except OSError:
+        return "INCONCLUSIVE", []
     entries: list[dict[str, Any]] = []
     try:
-        for line in target.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
-                continue
-            value = json.loads(line)
-            if not isinstance(value, dict):
-                return "INCONCLUSIVE", []
-            entries.append(value)
+        with target.open("r", encoding="utf-8") as handle:
+            for line_number, line in enumerate(handle, start=1):
+                if line_number > MAX_LOG_ENTRIES:
+                    return "INCONCLUSIVE", []
+                if len(line.encode("utf-8")) > MAX_LOG_LINE_BYTES:
+                    return "INCONCLUSIVE", []
+                if not line.strip():
+                    continue
+                value = json.loads(line)
+                if not isinstance(value, dict):
+                    return "INCONCLUSIVE", []
+                entries.append(value)
     except (OSError, UnicodeError, json.JSONDecodeError):
         return "INCONCLUSIVE", []
     return "READ", entries
@@ -433,7 +464,7 @@ def diagnose_voice_entries(entries: Iterable[Mapping[str, Any]]) -> dict[str, An
 
     try:
         redacted = [redact_voice_entry(entry) for entry in entries]
-    except VoiceRedactionError as exc:
+    except (TypeError, VoiceRedactionError) as exc:
         return {"status": "INCONCLUSIVE", "reason": f"redaction failed: {exc}", "write": False}
     if not redacted:
         return {"status": "INCONCLUSIVE", "reason": "voice log is empty", "write": False}

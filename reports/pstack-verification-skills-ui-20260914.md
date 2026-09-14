@@ -87,6 +87,67 @@ receipt; no screenshot file was added to the repository. This is real UI proof
 of the disposable local app, not proof of the production target, a native
 runner, or a host activation path.
 
+## Auditable browser receipts
+
+The following receipts are from the native Codex in-app browser, not from a
+mocked DOM or a CLI transcript. The stable browser target for the recaptures is
+[`http://127.0.0.1:4173/`](http://127.0.0.1:4173/), tab `4`, title `Notes
+browser fixture`. `AX-*` identifies the accessibility-tree capture and
+`SHOT-*` identifies the paired full-page PNG capture in the CUA tool receipt.
+The CUA tool does not expose a filesystem URL for emitted screenshots, so the
+IDs below are the audit handles and the report deliberately does not fabricate
+file links.
+
+| Receipt | Action and exact observed text | Screenshot receipt |
+| --- | --- | --- |
+| `AX-CREATE-001` | After saving `Release checklist` / `Tag and publish`: `Note saved: Release checklist`; list heading `Release checklist`; body `Tag and publish`. | `SHOT-CREATE-001`, full-page capture emitted during the first create pass; browser URL above. |
+| `AX-MAINT-002` | After saving `Maintenance checklist` / `Re-drive after source-wave`: `Note saved: Maintenance checklist`; both note headings and bodies were visible. | `SHOT-MAINT-002`, emitted during the maintenance re-drive; browser URL above. |
+| `AX-MATCH-005` | Query `Second pass`: searchbox value `Second pass`; list heading `Second pass checklist`; body `Second pass body`. | `SHOT-MATCH-005`, full-page PNG, 40,214 bytes, tab `4`. |
+| `AX-EMPTY-006` | Query `volcano`: list text `No matching notes`. | `SHOT-EMPTY-006`, full-page PNG, 36,433 bytes, tab `4`. |
+| `AX-CLEAR-007` | After `Clear search`: headings/bodies `Release checklist` / `Tag and publish`, `Maintenance checklist` / `Re-drive after source-wave`, and `Second pass checklist` / `Second pass body`. | `SHOT-CLEAR-007`, full-page PNG, 48,945 bytes, tab `4`. |
+| `AX-RELOAD-008` | After reload: `Version: notes-web-fixture 1.0`, `Health: ok`, and all three notes above remained visible. | `SHOT-RELOAD-008`, full-page PNG, 48,945 bytes, tab `4`. |
+| `AX-READBACK-004` | Fresh readback before the recapture: `Version: notes-web-fixture 1.0`, `Health: ok`, `Reset fixture`, and all three persisted notes. | `SHOT-READBACK-004`, full-page PNG, 48,945 bytes; the emitted screenshot visibly shows the complete Notes page. |
+
+The `AX-MATCH-005`, `AX-EMPTY-006`, `AX-CLEAR-007`, and `AX-RELOAD-008`
+receipts were captured in one ordered CUA call with a fresh AX state after
+each action. Their raw AX text includes the active query, `No matching notes`,
+the restored three-note list, and the post-reload three-note list respectively.
+The source-backed expected wording is independently present in the generated
+feature maps at `features/create-note.md:24-27` and
+`features/search-notes.md:21-26`.
+
+## Generated-skill readback after drift removal
+
+Readback was performed from the disposable fixture, not inferred from the
+report. The generated skill contains exactly these four files:
+
+```text
+.agents/skills/verify-notes-web/SKILL.md
+.agents/skills/verify-notes-web/features/README.md
+.agents/skills/verify-notes-web/features/create-note.md
+.agents/skills/verify-notes-web/features/search-notes.md
+```
+
+SHA-256 readback:
+
+```text
+4ebe8e2f5f4152e7549c18839c2192a605af9cc7a96be6d0d87ea14ba93fd1e4  SKILL.md
+a0b71ae7a3687db526ca234fa18878bde51d2cd0d119fa59678eb8e55da5482a  features/README.md
+6caec1f89163c8014ee5095efc66d1d458eee813092769bca949b93573796003  features/create-note.md
+91abba56dda6fd395b84ce42538d1243b1023f7d6867092cbcafe7165e40993a  features/search-notes.md
+```
+
+The drift scan returned `clean: no controlled-drift marker`. The final
+readback also confirmed the maintenance-sensitive lines remain present:
+
+- create: `Note saved: Release checklist`, `Release checklist`, `Tag and
+  publish`, reload/persistence, and evidence requirements;
+- search: `Release`, `volcano`, `No matching notes`, `Clear search`, and
+  evidence requirements.
+
+No generated-skill file, product file, overlay, manifest, or localStorage item
+was changed during this audit delta.
+
 ## Proof classification
 
 | Evidence lane | Result | Boundary |

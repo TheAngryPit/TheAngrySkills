@@ -335,3 +335,47 @@ additional connector authorization/read-only gate for `cursor-why`. Confidence
 is low about the final human acceptance criteria, owner decision, and any
 production motivation because the relevant external sources were empty or
 unavailable.
+
+## Delta: bounded negative-case result
+
+One additional bounded native-task run was executed by agent
+`01a0a049-4863-7c21-8bbc-3ce58523e9e2` (Euler) at authority HEAD
+`dbe21e4cad9ba048a7bfd7e76c4e1faa42fa8716`. No files, connectors, renderer, or
+tests were touched.
+
+Missing-input case, target:
+`sources/cursor-plugins/snapshot/pstack/skills/nonexistent-module/SKILL.md`.
+Observed output:
+
+```text
+exit code: 1
+sed: /private/tmp/theangryskills-pstack-20260913-xcCoXg/repo/sources/cursor-plugins/snapshot/pstack/skills/nonexistent-module/SKILL.md: No such file or directory
+```
+
+The result was treated as explicit unknown; no substitute module was read.
+
+Failed-dependency case, real target
+`sources/cursor-plugins/snapshot/pstack/skills/how/SKILL.md` with missing
+dependency `sources/cursor-plugins/snapshot/pstack/skills/how/references/does-not-exist.md`.
+Observed output:
+
+```text
+exit code: 1
+sed: /private/tmp/theangryskills-pstack-20260913-xcCoXg/repo/sources/cursor-plugins/snapshot/pstack/skills/how/references/does-not-exist.md: No such file or directory
+```
+
+The result was reported as a dependency error without widening the target or
+inventing the missing reference.
+
+This is partial negative-path evidence only. The agent reported that the native
+`Read`/Task capability required by the pinned skill was unavailable inside that
+run; the exact native-tool error and a native explainer output therefore remain
+unproven. The observed `sed` failures prove bounded missing/error handling, not
+automatic skill activation.
+
+For `why`, the existing source-control investigator already recorded invalid
+GitHub auth/private-local forge/network failure, while the Linear, Notion, and
+Slack investigators recorded absent rationale results and the prior ledger
+records unavailable observability/error/analytics connectors. Those existing
+missing/error branches satisfy the contract's requirement to preserve explicit
+unknowns without widening scope; they were not rerun in this delta.

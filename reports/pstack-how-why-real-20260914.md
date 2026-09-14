@@ -2,7 +2,10 @@
 
 Date: 2026-09-14
 Branch: `codex/pstack-how-why-real-20260914`
-HEAD: `0479ea88374bcb9d3843eedb60d4631c63599bb4`
+Initial tested HEAD: `0479ea88374bcb9d3843eedb60d4631c63599bb4`.
+The final publication decision was applied later in PR #64 at `c3ecb261`;
+counts and held-state statements in the initial sections below describe the
+pre-promotion run, not the current catalog.
 Authority clone: `/private/tmp/theangryskills-pstack-20260913-xcCoXg/repo`
 
 Scope: exercise the real Cursor mirror workflow for the held `cursor-how` and
@@ -12,7 +15,8 @@ published output, global installation, merge, push, or external mutation.
 
 ## Decision under review
 
-Both candidates remain held. The manifest records `publish: false` and
+At the initial tested head both candidates were held. The manifest recorded
+`publish: false` and
 `Codex workflow not demonstrated` for `cursor-how` at
 `sources/cursor-plugins/manifest.json:1032-1049` and for `cursor-why` at
 `sources/cursor-plugins/manifest.json:1985-1992`.
@@ -191,7 +195,7 @@ installation/merge/cloud parity are outside demonstrated proof.
   searches, and runtime behavior through a fully authenticated Codex model
   task.
 
-## Actions not taken
+## Actions not taken in the initial read-only run
 
 No implementation helper, classifier, or preview helper was added. No manifest
 promotion, generated catalog change, global/home change, Doctor run, external
@@ -394,8 +398,10 @@ connectors were reported without substituting evidence.
 
 The local mirror's additional promotion criteria require deterministic output,
 positive/missing/error behavior and a permission decision. The generated
-candidate trees and policy passed the mirror checks; the role-flow and bounded
-negative case above supply behavior evidence. The `why` source security
+candidate trees and policy passed the mirror checks; the role-flow supplies a
+native positive path. The negative `how` case is narrower: a shell read failed
+and the native agent reported unknown/error without widening. It does not prove
+an error from a dedicated native Read/Task tool. The `why` source security
 finding at its connector-discovery step remains recorded. Its observed native
 access was read-only, with no credential elevation, write, or external message;
 the overlay now says each later run still needs its own native authorization.

@@ -1,4 +1,4 @@
-"""Behavioral proof for the held, bounded Cursor show-me-your-work preview."""
+"""Behavioral proof for the bounded Cursor show-me-your-work writer."""
 
 import json
 import os
@@ -105,6 +105,26 @@ class ShowWorkFixture(unittest.TestCase):
             ],
         )
 
+    def test_secret_like_input_is_refused_before_log_mutation(self):
+        logfile = self.task / "decisions.tsv"
+        first = self.run_helper(
+            logfile, "phase", "decision", "why", "artifact", "VERIFIED"
+        )
+        self.assertEqual(first.returncode, 0, first.stderr)
+        original = logfile.read_bytes()
+        for candidate in (
+            "Bearer synthetic-not-a-real-credential",
+            "ghp_syntheticnotarealcredential123",
+            '"api_key": "synthetic-not-a-real-credential"',
+        ):
+            rejected = self.run_helper(
+                logfile, "phase", "decision", "why", candidate, "VERIFIED"
+            )
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertIn("secret-like value refused", rejected.stderr)
+            self.assertNotIn(candidate, rejected.stderr)
+            self.assertEqual(logfile.read_bytes(), original)
+
     def test_existing_log_is_appended_without_a_second_header(self):
         logfile = self.task / "existing/decisions.tsv"
         logfile.parent.mkdir()
@@ -125,6 +145,42 @@ class ShowWorkFixture(unittest.TestCase):
         self.assertEqual(lines[0], "ts\tphase\tdecision\twhy\tevidence\tresult")
         self.assertEqual(lines[1], "old\tphase\told\twhy\tevidence\tDONE")
         self.assertEqual(len(lines), 3)
+
+    def test_parallel_writers_keep_one_header_and_complete_rows(self):
+        logfile = self.task / "parallel/decisions.tsv"
+        processes = [
+            subprocess.Popen(
+                [
+                    "bash",
+                    str(self.helper),
+                    "--root",
+                    str(self.task),
+                    str(logfile),
+                    "parallel",
+                    f"decision-{index}",
+                    "bounded writer",
+                    "test:parallel",
+                    "VERIFIED",
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            for index in range(24)
+        ]
+        for process in processes:
+            _, stderr = process.communicate(timeout=10)
+            self.assertEqual(process.returncode, 0, stderr)
+        lines = logfile.read_text().splitlines()
+        self.assertEqual(lines.count("ts\tphase\tdecision\twhy\tevidence\tresult"), 1)
+        self.assertEqual(len(lines), 25)
+        for line in lines[1:]:
+            cells = line.split("\t")
+            self.assertEqual(len(cells), 6)
+            self.assertEqual(cells[1], "parallel")
+            self.assertEqual(cells[3:], ["bounded writer", "test:parallel", "VERIFIED"])
+        decisions = {line.split("\t")[2] for line in lines[1:]}
+        self.assertEqual(decisions, {f"decision-{index}" for index in range(24)})
 
     def test_symlink_target_is_rejected_and_external_sentinel_survives(self):
         outside = self.base / "outside-target"
@@ -302,16 +358,21 @@ class ShowWorkFixture(unittest.TestCase):
         self.assertTrue(logfile.exists())
         self.assertFalse((outside / "nested").exists())
 
-    def test_preview_preserves_source_pin_and_held_state(self):
+    def test_published_writer_matches_preview_and_source_pin(self):
         manifest = json.loads(MANIFEST.read_text())
         entry = next(item for item in manifest["skills"] if item["published_name"] == "cursor-show-me-your-work")
         overlay = json.loads(OVERLAY.read_text())
-        self.assertFalse(entry["publish"])
-        self.assertTrue(overlay["codex_contract"]["promotion_status"].startswith("held_until_"))
+        self.assertTrue(entry["publish"])
+        self.assertTrue(overlay["codex_contract"]["promotion_status"].startswith("promoted_"))
         self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
+        published = REPO / "skills/mirrors-cursor/cursor-show-me-your-work"
         self.assertEqual(
-            overlay["held_preview"]["source_sha256"],
-            entry["files"]["SKILL.md"],
+            (published / "scripts/log.sh").read_bytes(), self.helper.read_bytes()
+        )
+        self.assertIn("scripts/log.sh --root <task-root>", (published / "SKILL.md").read_text())
+        self.assertEqual(
+            (published / "agents/openai.yaml").read_text(),
+            "policy:\n  allow_implicit_invocation: false\n",
         )
 
 

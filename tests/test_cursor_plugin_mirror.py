@@ -58,7 +58,6 @@ class CursorMirrorTests(unittest.TestCase):
 
     def test_cursor_explicit_only_policy_is_native_and_complete(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
-        explicit_names = set()
         for entry in manifest["skills"]:
             if not entry["publish"]:
                 continue
@@ -71,25 +70,21 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertIsNotNone(frontmatter, name)
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1), name)
             if explicit:
-                explicit_names.add(name)
                 self.assertEqual(policy.read_text(), "policy:\n  allow_implicit_invocation: false\n", name)
             else:
                 self.assertFalse(policy.exists(), name)
-        self.assertEqual(len(explicit_names), 36)
 
     def test_held_preview_preserves_explicit_only_policy(self):
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
-        held_explicit = 0
         for entry in manifest["skills"]:
             if not entry["declared_for_distribution"] or entry["publish"]:
                 continue
             source = (REPO / "sources/cursor-plugins/snapshot" / entry["path"]).read_text()
             if not re.search(r"^disable-model-invocation:[ \t]*true[ \t]*$", source, re.MULTILINE):
                 continue
-            held_explicit += 1
             output = preview / entry["published_name"]
             self.assertEqual(
                 (output / "agents/openai.yaml").read_text(),
@@ -98,7 +93,6 @@ class CursorMirrorTests(unittest.TestCase):
             frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
             self.assertIsNotNone(frontmatter, entry["published_name"])
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1))
-        self.assertEqual(held_explicit, 17)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"

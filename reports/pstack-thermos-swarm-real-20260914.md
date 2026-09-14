@@ -184,3 +184,28 @@ is **observed as two-worker fan-out/drain/aggregation with explicit partial
 handling**, but the real diff receives `PARTIAL` because current CI and other
 slice-limited evidence are missing. Neither result justifies promotion of
 `cursor-thermos` or `cursor-swarm`.
+
+## Coordinator disposition after the reviewed head
+
+The Thermos `ISSUES` verdict was retained. The earlier `how`/`why` report now
+labels its `0479ea88` held/count evidence as pre-promotion, while its final
+decision names `c3ecb261`. The `how` overlay now says the negative case was a
+shell-read failure reported by a native agent, not a dedicated native Read/Task
+tool error. The `why` generated note now requires verification of read-only
+connector access in each task and treats denial as unavailable evidence; it
+does not enforce connector permissions itself. These changes qualify the
+claims but do not erase the two reviewers' findings at the original diff.
+
+The explicit-only tests still check every source entry against its generated
+policy, but no longer maintain duplicate literal counts. The separate
+promotion allowlist in `tests/test_cursor_functional_overlays.py` is retained
+as an independent expected-publication gate rather than deriving the expected
+set from the manifest it checks.
+
+Singer's missing CI input was real for that worker's assigned evidence at the
+time. The coordinator subsequently read GitHub `Validate skill stack` as
+`COMPLETED/SUCCESS` for `c3ecb261` and checked the generated explicit-only
+policies; neither fact is retroactively attributed to the Swarm workers. The
+original aggregate stays `PARTIAL`. The `swarm` source also requires a
+four-phase todolist and worker `PASS`/`ISSUES`/`BLOCKED` statuses; those were
+not recorded in this run, so no full Swarm workflow or promotion is claimed.

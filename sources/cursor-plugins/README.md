@@ -14,13 +14,15 @@ evidence beside each published skill. The upstream skill text otherwise stays
 in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
-The merged baseline indexes 53 candidates under `skills/mirrors-cursor/`. This branch adds `cursor-ralph-loop-help` as guide-only and `cursor-how`/`cursor-why` as bounded explicit-only native workflows, for 56 emitted mirrors. The other 32 active skills have contracts and pinned sources but remain held and unindexed; all 88 active skills are in scope. The three Benny skills remain dormant. Public availability of this branch requires PR review and merge.
+The merged baseline indexes 53 candidates under `skills/mirrors-cursor/`. This branch adds `cursor-ralph-loop-help` as guide-only and `cursor-how`, `cursor-why`, and `cursor-show-me-your-work` as bounded explicit-only native workflows, for 57 emitted mirrors. The other 31 active skills have contracts and pinned sources but remain held and unindexed; all 88 active skills are in scope. The three Benny skills remain dormant. Public availability of this branch requires PR review and merge.
 The cursor-team-kit PR review canvas is published for a read-only local artifact
 path with executable renderer proof. Six instruction-only candidates are
 `guide_only`: the four principles, technical writing, and Ralph help. The
 `how`/`why` role-flow [evidence](../../reports/pstack-how-why-real-20260914.md)
 supports bounded read-only publication while automatic skill selection remains
-unobserved. The remaining held functional
+unobserved. The `show-me-your-work` [audit](../../reports/cursor-show-work-review-20260914.md)
+supports a bounded local decision writer and independent review with explicit
+redaction limits. The remaining held functional
 adaptations stay held with a per-skill Codex contract recording native mapping,
 permission gates, and positive, missing-capability/input, and error scenarios
 still to prove.

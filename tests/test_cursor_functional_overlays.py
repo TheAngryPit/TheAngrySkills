@@ -83,12 +83,14 @@ PROMOTED = {
     "cursor-ralph-loop-help",
     "cursor-how",
     "cursor-why",
+    "cursor-show-me-your-work",
 }
 
 GUIDE_ONLY = PROMOTED - {
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-how",
     "cursor-why",
+    "cursor-show-me-your-work",
 }
 
 
@@ -130,6 +132,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                 self.assertIn("full PR workflow not proven", entry["availability"])
             if name in {"cursor-how", "cursor-why"}:
                 self.assertIn("bounded_native", contract["native_mapping"]["availability"])
+                self.assertIn("trigger_unobserved", contract["promotion_status"])
+                self.assertIn("automatic skill selection unobserved", entry["availability"])
+            if name == "cursor-show-me-your-work":
+                self.assertIn("bounded_local_writer", contract["native_mapping"]["availability"])
                 self.assertIn("trigger_unobserved", contract["promotion_status"])
                 self.assertIn("automatic skill selection unobserved", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())

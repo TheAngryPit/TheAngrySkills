@@ -1801,7 +1801,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1817,12 +1817,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/show-me-your-work/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "reviewed local writer with root/regular-file guards, 24-process append and credential-shaped refusal tests; actual append-only trail and independent gpt-6-astra audit in reports/cursor-show-work-review-20260914.md",
+      "publish": true,
       "published_name": "cursor-show-me-your-work",
       "upstream_purpose": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
       "upstream_skill": "show-me-your-work",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; writer bounded, trail e auditoria cross-model observados; seleção automática e outros hosts por verificar"
     },
     {
       "availability": "Codex workflow not demonstrated",

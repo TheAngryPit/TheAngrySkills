@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 32,
+  "candidate_not_published": 31,
   "generated_files": {
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "c9b8e41ac8d9045001b560df1459594376a04f88dbca8da0bf7601846e9444ca",
@@ -166,6 +166,12 @@
     "cursor-run-smoke-tests/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-run-smoke-tests/MIRROR.md": "e97cb7ebe2ae16bc63793d4073be25af83b0bd3a1469ee6cd4f1e5272be4bb78",
     "cursor-run-smoke-tests/SKILL.md": "9c846f2cd8696218cc5acb6576ef1c6d730a5e4ecb60f5aa60a276d2b588920b",
+    "cursor-show-me-your-work/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-show-me-your-work/MIRROR.md": "de322e3660fd47256802115eec251e11cb995b823ddd7e1ec7474ff2902818ab",
+    "cursor-show-me-your-work/SKILL.md": "55a7f0b58bfb463504f56125bd8e64b6a69cee7457456f91684940b6fd014eba",
+    "cursor-show-me-your-work/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-show-me-your-work/references/decision-log-template.tsv": "6779378006a2f5225e8c06deb84f1d913fb532041ebbb6e50d94600bfe3f4b76",
+    "cursor-show-me-your-work/scripts/log.sh": "cbf46bf7909b74c4916e42b9a66035bc4e81fbe24e4bdd09340cf54d47283295",
     "cursor-tdd/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-tdd/MIRROR.md": "08ce73cdbbe29f2afd4227f94b055b094d7d5372a935034310d8057065f4384d",
     "cursor-tdd/SKILL.md": "7a031b56b0444d60909b8a05438067acc22fe9273235e233150d55d26d9de64a",
@@ -206,7 +212,7 @@
     "cursor-what-did-i-get-done/SKILL.md": "9b3ccd5de17e3ff4b6c5bd473390bb10c12036a16f4900dd796fa68fe2937b4b",
     "cursor-why/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-why/MIRROR.md": "40d62b440d66cd4fc2120de12504743d52375c001b4af2796db723e22094f3f1",
-    "cursor-why/SKILL.md": "562aca8e0959499dc9f4ba2e3720348cb3650dc2f48bc4109e55bbf3d64f151e",
+    "cursor-why/SKILL.md": "9aeca42b3b0f60c89ff66e46310265a39689e9b8ba0a31e2f320d5e9ff90a4a0",
     "cursor-why/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-why/references/epistemics.md": "fcc0f559c072832c869a5ada72434b4849320a637ae63c09e8ee14f7ad787059",
     "cursor-why/references/investigator-prompt.md": "6892956a7ab0b5ee6c4babaf4f793703abe89b350ea7cb9463b4a56eea1c8266",
@@ -226,7 +232,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 56,
+  "published_skills": 57,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

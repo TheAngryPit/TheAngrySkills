@@ -6,6 +6,7 @@ description: "Use for 'why does X work this way', 'why we picked Y', design rati
 ## Codex runtime mapping
 
 Use the connectors and read-only scopes actually available in this Codex task. Preserve the seven-category coverage map, source investigators, null results, epistemic framework, citation checks and synthesis. Native model/effort follows the standing `model-capability-router`; delegation does not grant source or write authority. The pinned Cursor skill says readonly mode strips MCP access; current official Cursor Subagents documentation describes readonly as restricting writes and separately says local subagents inherit MCP tools. Treat the source claim as unverified policy, not a platform contract or a reason to grant Codex write access.
+Before each connector query, verify read-only access in this task; do not request write scope, relay credentials, or send messages. Treat denial as unavailable evidence, not permission to switch tools or infer the answer.
 
 # Why
 

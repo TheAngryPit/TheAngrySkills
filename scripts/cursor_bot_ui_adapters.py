@@ -135,9 +135,9 @@ def dispatch_local_mock(
     }
     try:
         response = responder(request, 8)
-    except TimeoutError as error:
+    except TimeoutError:
         _record_failure(failure_log, log_root, payload)
-        result.update({"status": "FAILED", "reason": str(error), "failure_logged": True})
+        result.update({"status": "FAILED", "reason": "webhook timed out after 8s", "failure_logged": True})
         return result
     if response.status_code != 200:
         _record_failure(failure_log, log_root, payload)

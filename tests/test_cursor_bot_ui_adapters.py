@@ -58,6 +58,24 @@ class CursorBotUiAdapterTests(unittest.TestCase):
             self.assertNotIn("secret", json.dumps(result))
             self.assertEqual(failure_log.read_text(), '{"action": "refresh"}\n')
 
+    def test_timeout_reason_does_not_reflect_responder_error_text(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            failure_log = Path(temporary) / "failures.jsonl"
+
+            def responder(_request, _timeout):
+                raise TimeoutError("secret-in-url-and-header")
+
+            result = dispatch_local_mock(
+                "http://localhost:4173/webhook",
+                "secret",
+                {"action": "refresh"},
+                responder,
+                failure_log,
+                Path(temporary),
+            )
+            self.assertEqual(result["reason"], "webhook timed out after 8s")
+            self.assertNotIn("secret-in-url-and-header", json.dumps(result))
+
     def test_non_200_response_is_failed_and_not_retried(self):
         with tempfile.TemporaryDirectory() as temporary:
             failure_log = Path(temporary) / "failures.jsonl"

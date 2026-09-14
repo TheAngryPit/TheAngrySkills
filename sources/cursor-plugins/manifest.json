@@ -113,7 +113,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
     },
     {
-      "availability": "safe local mock webhook adapter proves server-side key redaction, required headers, one-attempt timeout/error handling, and local payload validation; external connector, sender-key retrieval, routine wake, Tailscale state, and privileged install path remain unproven",
+      "availability": "external connector or routing not demonstrated",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
@@ -1097,7 +1097,7 @@
       "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state; real disposable CLI subprocess fixture with project-local .agents/skills/verify-* creation, explicit cleanup ownership, drift reconciliation, persisted maintenance-before/after evidence, and clean second execution; doctor remains minimum existence check; source-wave delegation, live target, native runner, failed-doctor handling, PR/merge, and host activation remain unproven; teste de comportamento no host Codex"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "safe local mock webhook adapter proves server-side key redaction, required headers, one-attempt timeout/error handling, and local payload validation; external connector, sender-key retrieval, routine wake, Tailscale state, and privileged install path remain unproven",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "quarantine",
       "decision_classification": "adaptação nominal",
@@ -2446,7 +2446,7 @@
       ]
     },
     "scripts/cursor_bot_ui_adapters.py": {
-      "sha256": "757ffaf80ed016d7293db30eda2373460426bc99cccf8def467d3faaafc2ba7d",
+      "sha256": "1748970d4b548a400d2236952107a796fc4d85e0acd6feb639db7f46f237d1ee",
       "related_skills": [
         "cursor-make-bot-ui"
       ]

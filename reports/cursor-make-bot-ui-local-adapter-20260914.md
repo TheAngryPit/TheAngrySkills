@@ -17,10 +17,12 @@ key headers. The request body contained only the fixture payload.
 
 The timeout branch returned `FAILED`, wrote one payload-only JSONL record, and
 did not retry. The non-200 branch has the same one-attempt behavior. A list
-payload was rejected before dispatch, and a remote HTTPS webhook URL was
-rejected before dispatch. The mock received exactly one successful request.
+payload and a nested `sender_key` field were rejected before dispatch, and a
+remote HTTPS webhook URL was rejected before dispatch. A timeout error
+containing a sentinel secret was reduced to a constant public reason. The
+mock received exactly one successful request.
 
-Focused proof passed with five tests in
+Focused proof passed with seven tests in
 `tests/test_cursor_bot_ui_adapters.py`. No network, secret, Tailscale state,
 privileged command, routine creation, wake turn, or browser surface was
 observed. Those source subflows remain conditional and are not represented as

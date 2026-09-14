@@ -1,7 +1,7 @@
 # Conditional proof: advisor, continual learning, and Ralph hooks
 
-Date: 2026-09-14  
-Scope: `cursor-advisor`, `cursor-continual-learning`, `cursor-ralph-loop`, and `cursor-cancel-ralph`  
+Date: 2026-09-14
+Scope: `cursor-advisor`, `cursor-continual-learning`, `cursor-ralph-loop`, and `cursor-cancel-ralph`
 Upstream pin: `cursor/plugins@889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`
 
 ## Decision

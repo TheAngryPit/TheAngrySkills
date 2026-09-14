@@ -1,7 +1,7 @@
 # Benny automation pack: separate conditional native plan
 
-Date: 2026-09-14  
-Upstream pin: `cursor/plugins` commit `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`  
+Date: 2026-09-14
+Upstream pin: `cursor/plugins` commit `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`
 Scope: the three retained Benny automation sources under `pstack/automations/benny`.
 
 This is a separate automation pack. It is not part of the 88 active slash-skill

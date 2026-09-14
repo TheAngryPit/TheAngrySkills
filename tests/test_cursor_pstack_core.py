@@ -597,9 +597,22 @@ console.log(JSON.stringify({{
             root = Path(temporary)
             app = root / "notes.py"
             app.write_text(BUGGY_NOTES_APP)
-            for unsafe_name in ("notes\n", 'notes"', "README", "readme"):
+            for unsafe_name in ("notes\n", 'notes"'):
                 with self.assertRaises(AdapterError):
                     run_cli_verification_fixture(root, unsafe_name, app, commands)
+
+        for reserved_feature in ("README", "readme"):
+            with tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                app = root / "notes.py"
+                app.write_text(BUGGY_NOTES_APP)
+                reserved_commands = {reserved_feature: commands["create-note"]}
+                with self.assertRaises(AdapterError):
+                    run_cli_verification_fixture(root, "notes", app, reserved_commands)
+                self.assertFalse(
+                    (root / ".agents/skills/verify-notes").exists(),
+                    "reserved README feature must not create or overwrite the feature index",
+                )
 
     def test_local_app_fixture_collects_independent_failure_and_fix(self):
         features = {

@@ -75,6 +75,9 @@ def validate_manifest(manifest: dict) -> list[dict]:
         raise ValueError("duplicate source path or published name")
     for entry in entries:
         safe_relative(entry["path"])
+        if entry.get("excluded_from_mirror"):
+            if entry["publish"] or not entry.get("exclusion_reason", "").strip():
+                raise ValueError(f"excluded source cannot be published: {entry['published_name']}")
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", entry["published_name"]):
             raise ValueError(f"invalid published name: {entry['published_name']}")
         if not entry["path"].endswith("/SKILL.md"):
@@ -344,7 +347,7 @@ def build(check: bool) -> None:
     manifest = load(LEDGER)
     verify_snapshot(manifest)
     entries = validate_manifest(manifest)
-    active = [e for e in entries if e["publish"]]
+    active = [e for e in entries if e["publish"] and not e.get("excluded_from_mirror")]
     marketplace_text = render_marketplace(active)
     source_to_entry = {(SOURCE / e["path"]).resolve(): e for e in entries}
     previous = load(STATE) if STATE.exists() else None
@@ -367,7 +370,8 @@ def build(check: bool) -> None:
             "physical_skills": len(entries),
             "published_skills": len(active),
             "source_dormant_skills": sum(not e["declared_for_distribution"] for e in entries),
-            "candidate_not_published": sum(e["declared_for_distribution"] and not e["publish"] for e in entries),
+            "operator_excluded_skills": sum(bool(e.get("excluded_from_mirror")) for e in entries),
+            "candidate_not_published": sum(e["declared_for_distribution"] and not e["publish"] and not e.get("excluded_from_mirror") for e in entries),
             "generated_files": generated,
         }
         if check:
@@ -416,7 +420,7 @@ def preview_candidates(destination: Path) -> None:
     manifest = load(LEDGER)
     verify_snapshot(manifest)
     entries = validate_manifest(manifest)
-    candidates = [e for e in entries if e["declared_for_distribution"]]
+    candidates = [e for e in entries if e["declared_for_distribution"] and not e.get("excluded_from_mirror")]
     if destination.exists():
         raise ValueError(f"candidate preview destination already exists: {destination}")
     source_to_entry = {

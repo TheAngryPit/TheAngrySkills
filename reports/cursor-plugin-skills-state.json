@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 17,
+  "candidate_not_published": 16,
   "generated_files": {
     "cursor-architect/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-architect/MIRROR.md": "1535e091df89d6d7d1aad5010f750c2d2140c0f1cacb0322f971f5c18bb06ca6",
@@ -347,6 +347,7 @@
     "cursor-x-mcp-guide/SKILL.md": "8c26f88fc6dacab8f09b0836ba4701bce0d98f52c3bf729e443697511d2d2078",
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
+  "operator_excluded_skills": 1,
   "physical_skills": 91,
   "published_skills": 71,
   "schema_version": 1,

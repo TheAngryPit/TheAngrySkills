@@ -1,6 +1,6 @@
 # Cursor plugin skills mirror — implementation review
 
-2026-09-13 PR addendum ([#64](https://github.com/TheAngryPit/TheAngrySkills/pull/64),
+2026-09-14 PR addendum ([#64](https://github.com/TheAngryPit/TheAngrySkills/pull/64),
 `codex/cursor-full-sol-20260913`): `cursor-ralph-loop-help` is emitted as a
 guide to the external Cursor plugin; it never starts or cancels a Codex loop.
 The branch has 54 emitted / 34 active held / 3 upstream dormant, while the
@@ -24,9 +24,17 @@ roles are bundled in a held preview, whose previously invalid frontmatter now
 parses. Held submission-audit and scaffold previews have bounded static fixtures
 for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
 disposable-destination generation; their security holds are retained.
-`pytest -q tests` passed 162 tests and 2 subtests; mirror `--check`
+The project-local verification fixture now drives each mapped notes CLI action
+in a separate bounded subprocess, captures exit/stdout/stderr and declared
+regular-file state, persists JSON evidence, reconciles controlled feature drift,
+and confirms a second unchanged pass. A feature named `README` is rejected
+before it can collide with the generated feature index. This remains
+`FIXTURE_ONLY`: Doctor only checks source file presence/non-symlink; a real
+target, per-feature source-wave delegation, changed-outcome PR, native skill
+activation, and filesystem/network isolation have not been proven.
+`pytest -q tests` passed 163 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI last passed on
-`f5a77fa0`; the new integration head awaits publication and CI.
+`7d75e8cd`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

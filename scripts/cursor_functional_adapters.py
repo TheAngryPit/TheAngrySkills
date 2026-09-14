@@ -433,6 +433,8 @@ def _validate_verification_slug(value: str, label: str) -> None:
         raise AdapterError(
             f"{label} must match [A-Za-z0-9][A-Za-z0-9_-]* without whitespace or quoting characters"
         )
+    if value.casefold() == "readme":
+        raise AdapterError(f"{label} README is reserved for the generated feature index")
 
 
 def _normalize_verification_commands(

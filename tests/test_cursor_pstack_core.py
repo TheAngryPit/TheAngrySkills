@@ -597,7 +597,7 @@ console.log(JSON.stringify({{
             root = Path(temporary)
             app = root / "notes.py"
             app.write_text(BUGGY_NOTES_APP)
-            for unsafe_name in ("notes\n", 'notes"'):
+            for unsafe_name in ("notes\n", 'notes"', "README", "readme"):
                 with self.assertRaises(AdapterError):
                     run_cli_verification_fixture(root, unsafe_name, app, commands)
 

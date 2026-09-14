@@ -31,7 +31,8 @@ The source adds native-agent profile distribution instructions; the routing
 paragraphs are otherwise the same. No installation or home change was made.
 Another local TheAngrySkills checkout now hashes its router source as
 `2303be6127a66c480b8b89fd8b99ac9db9b824d81dd29c5d030d132a6103f3fe`;
-it is a separate checkout, not evidence that this pinned branch or the installed
+it is a separate, older routing text without this branch's named-agent profile
+distribution section, not evidence that this pinned branch or the installed
 router changed. Reconcile the exact checkout before any future persistence or
 installation decision.
 

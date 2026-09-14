@@ -1,9 +1,12 @@
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.cursor_bot_ui_adapters import (
+REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "scripts"))
+from cursor_bot_ui_adapters import (  # noqa: E402
     BotUiAdapterError,
     MockResponse,
     MockWebhook,

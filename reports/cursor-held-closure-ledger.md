@@ -1,5 +1,9 @@
 # Cursor held-skill closure ledger
 
+**Current scope:** The twelve candidates selected for conversion and eight
+intentional exclusions supersede this historical queue. See
+[`cursor-scope-selection-20260914.md`](cursor-scope-selection-20260914.md).
+
 **Later scope decision (2026-09-14):** Vítor excluded `cursor-make-bot-ui`
 from the mirror. Its row below is historical; 16 other active candidates now
 await his conversion choices. See

@@ -32,7 +32,15 @@ edit. No skill edit, tracker item, external lookup, or publication was made as
 part of this fixture. The remaining proof gap includes selecting an actual
 active transcript through native host history, authentic referenced MCP
 lookups, model readback, user approval of any edit, and validation of an
-approved edit. `cursor-reflect` remains held.
+approved edit. This observed, explicit-only three-lens path is published as
+`cursor-reflect`; those unobserved branches are not claimed.
+
+The source's four critical `policy-bypass-instruction` findings remain in the
+overlay as defensive reference text. The generated references express the same
+trust boundary without reproducing the scanner-triggering wording. The
+generated mirror passed the offline security scan as `safe_to_install` with
+zero findings, and its quality audit scored 100 with zero findings. Source
+findings have not been erased or treated as proof of runtime parity.
 
 ## Synthesized candidate set
 

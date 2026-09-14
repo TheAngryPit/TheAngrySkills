@@ -5,7 +5,7 @@ publication, native activation, global installation, and full source parity are
 the same event. The pinned input has 91 physical skills: 88 active slash skills
 and three Benny automation sources. PR #66 publishes 61 active mirrors and
 leaves 27 active mirrors held; this isolated successor branch adds bounded
-`cursor-interrogate`, reaching 62 published and 26 held. Benny is a separate automation pack and is not
+`cursor-interrogate` and `cursor-reflect`, reaching 63 published and 25 held. Benny is a separate automation pack and is not
 silently subtracted from the physical inventory.
 
 ## Closure rule
@@ -22,12 +22,11 @@ where the source disables model invocation, baseline-comparative security
 scan, public-safe diff, tests, and CI before PR review. No global install,
 automation activation, external communication, or merge follows from a mirror.
 
-## Pstack first: 10 held active skills
+## Pstack first: 9 held active skills
 
 | Batch | Skills | Owner and next reviewable result | Dependency or honest limit |
 | --- | --- | --- | --- |
 | Native model/role routing | `cursor-setup-pstack`, `cursor-poteto-mode`, `cursor-no-comments` | Sol: exact fresh-session role/profile readback, a bounded named-agent loop, and a reviewed project-local mapping diff before changing persistent routing. | Preserve `model-capability-router` authority. Existing named-agent self-reports are not authoritative model readback. |
-| Adversarial review | `cursor-reflect` | Sol: run three separate Reflect lenses over an exact scoped transcript with a proposed edit only. | The published bounded Interrogate route records requested model metadata and retains the effective-model readback gap; Reflect must not auto-apply review findings. |
 | Context and learning | `cursor-figure-it-out`, `cursor-recall`, `cursor-automate-me` | Sol: prospective local hypothesis loop with pre-change baseline; exact native task-history selection/reconciliation; then one scoped preference-backed draft skill through unslop. | A post-hoc audit is not prospective proof. Transcript scope and write destination must be explicit. |
 | User verification | `cursor-create-verification-skill`, `cursor-maintain-verification-skill` | Sol and existing Luna handoff: reconcile the real disposable UI/CLI receipts, cleanup, source readers, persisted Doctor evidence, feature map, and clean second run. | UI Reset and any live target/provider action remain separate from fixture-only proof; no corrective PR when there is no proven defect. |
 | External bot UI | `cursor-make-bot-ui` | Sol: local mock webhook UI with server-only key boundary and negative malformed/timeout paths; retain installer quarantine. | No real xAI sender key, provider request, privileged Tailscale installer, or public exposure without specific authorization and review. |

@@ -1753,7 +1753,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Bounded explicit-only native three-lens review and synthesis on scoped disposable transcript observed; live native transcript selection and effective backend readback unproven.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -1771,12 +1771,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/reflect/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "three read-only native lenses plus separate synthesis, prompt-isolation fixture, PARTIAL fallback, and approval-before-edit contract",
+      "publish": true,
       "published_name": "cursor-reflect",
       "upstream_purpose": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
       "upstream_skill": "reflect",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter/relative refs, explicit-only policy, three distinct lenses plus synthesis on one scoped transcript, adversarial prompt-isolation proof, source findings retained, no auto-edit, generated security scan"
     },
     {
       "availability": "Codex workflow not demonstrated",

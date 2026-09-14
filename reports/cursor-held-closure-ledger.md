@@ -3,8 +3,8 @@
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
-The pinned manifest contains 91 physical skills. It has 29 `publish:false`
-entries: 26 active entries below plus the three Benny automation entries
+The pinned manifest contains 91 physical skills. It has 28 `publish:false`
+entries: 25 active entries below plus the three Benny automation entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
 `cursor-triage-issue-reports`). The three Benny sources still exist upstream
 under `pstack/automations/benny`; they are installed through Benny's project
@@ -16,7 +16,7 @@ silently recounted as held here.
 
 ## Pstack first
 
-The 10 held pstack slash skills are the critical path before the other 16
+The 9 held pstack slash skills are the critical path before the other 16
 active held skills. Sol owns integration and the setup/poteto/no-comments/router
 link; Luna high owns bounded `architect`/`arena` execution in a separate
 checkout. Verification remains a separate Sol/Luna handoff, with its existing
@@ -31,9 +31,9 @@ groups without waiting for that cleanup or Work cloud permission:
    `cursor-maintain-verification-skill`. Keep the CLI input-only source-wave
    distinct from the two native web source readers. The disposable UI run is
    real for that target; Reset fixture still needs action-time confirmation.
-3. **Delegated reasoning and review:** `cursor-reflect`. Require actual bounded role outputs,
-   synthesis/ownership and verified model metadata before claiming model
-   diversity. Luna owns the first two; Sol reviews and integrates.
+3. **Delegated reasoning and review:** Published bounded `cursor-interrogate` and
+   `cursor-reflect` provide separate review and reflection paths; effective
+   backend model identity and live transcript selection remain open.
 4. **Context and learning:** `cursor-recall`, `cursor-figure-it-out`,
    `cursor-automate-me`. Require source-scoped history, a prospective real
    case, and a reviewed project-local skill edit respectively.
@@ -68,14 +68,13 @@ independent safe evidence, but they do not displace these five groups.
 | `cursor-no-comments` | Spawn Comment Sicko on current scope/diff, inspect findings, reject bad flags, act on accepted findings, and offer constraint encodings. | Generated held skill was read, then its exact `agent_type: "comment-sicko"` dispatched on a disposable JS scope; reviewer deleted one redundant comment, kept SPDX, and Sol accepted after syntax/runtime readback. [Receipt](cursor-no-comments-role-fixture.md) and [chain](../docs/native-agent-profiles.md). | Fresh top-level load, exact first-output marker, ambiguous/constraint comments, rejected-report rerun, architect branch, optional encoding and automatic skill trigger. | The simplest read-and-dispatch and accepted-finding path works in this task; full source workflow and installed skill activation remain unproven. | Run a bounded ambiguous-comment/rejected-report case with conditional `cursor-how`/`cursor-why`, then verify a fresh task's named profile load. |
 | `cursor-poteto-mode` | Apply Poteto style, all 23 playbooks/principles, deliberate bounded subagents, unslopped prose, simple code and verified work; no silent scope widening. | Native adapter renders all 23 playbooks; generated skill now names exact `agent_type: "poteto-agent"` and follow-up reuse. Existing named agent was reused for a setup Investigation and reported reading full mode, selected playbook and an applied principle leaf. [Chain](../docs/native-agent-profiles.md). Notes bug-fix and Bun/CLI checks remain bounded fixtures. | Independently observed profile loading/skill read, full playbook application, script egress, polling/stack and real PR behavior. | Agent self-report of full skill read is not host tool metadata; executable/dependency and cloud parity remain unproven. | Exercise one end-to-end selected playbook with native trace and coordinator verification; retain security hold on active scripts. |
 | `cursor-recall` | Reconstruct recent context from exact chat history, live state and shared record; preserve missing exports and return a tight current-state brief. | History-gated scoped reader preserves workspace/topic/time mismatch as partial and write-free. | Exact task-history selection, live repository/shared-record reconciliation and missing-export evidence. | Native bounded history reconstruction is unobserved. | Supply a scoped export plus repository state and produce a provenance-tagged brief. |
-| `cursor-reflect` | Spawn three parallel reviewers over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. | Delegated-native judgment/tooling/divergent lenses; missing transcript/lens remains incomplete and write-free. | Three native reviewers, transcript scope, synthesis and explicit edit authorization. | Native task read tools exist; exact scoped transcript access and a three-reviewer run remain unproven. | Run three bounded read-only lenses over a supplied synthetic transcript; propose edits without applying them. |
 | `cursor-setup-pstack` | Detect available Task model slugs and write an always-applied per-role model rule, preserving explicit choices and aliases. | Native config-gated dry-run fixture covers 17 roles/four panels, aliases, malformed input and no-write behavior. [Current-channel inventory](cursor-setup-pstack-native-inventory-20260914.md) reads advertised subagent models/efforts and Sol-medium turn context, with a candidate map under the standing router. | User-owned task/Work channel entitlement, actual role dispatch, parent alias behavior, persistent destination/write and new-session readback. | The live inventory is scoped to this subagent channel; no persistent policy change was requested or tested. Installed router lacks the source's later profile-distribution section. | Use the observed inventory for a reviewed project-local role diff if the operator requests changed choices; then exercise selected roles and read back a new session before promotion. |
 | `cursor-cancel-ralph` | On cancel request, inspect `.cursor/ralph/scratchpad.md`, report iteration, and remove `.cursor/ralph` state. | Native state-gated adapter restricts cancellation to matching project/task state; synthetic wrong-session/symlink tests pass. | Trusted live hook state, exact task/session correlation and actual cancellation readback. | No trusted project hook or live loop state is installed. | Inspect one explicitly scoped project state and perform only a matching bounded cancellation proof. |
 | `cursor-ralph-loop` | Start iterative self-referential development loop with completion promise/max iterations, storing `.cursor/ralph` state and feeding prompt after each turn. | Native persistent-loop adapter arms task-bound state and returns Codex continuation in synthetic Stop tests. | Trusted project hook, live continuation, user interruption, scheduler, idempotency and completion readback. | No project hook is trusted and no live automatic continuation is observed. | Prove a bounded max-iteration loop in a disposable project with explicit hook trust and cancellation. |
 ## Newly published bounded workflows
 
 `cursor-how`, `cursor-why`, `cursor-show-me-your-work`, `cursor-thermos`,
-`cursor-swarm`, `cursor-arena`, `cursor-architect`, and `cursor-interrogate`
+`cursor-swarm`, `cursor-arena`, `cursor-architect`, `cursor-interrogate`, and `cursor-reflect`
 moved from this held ledger to the published catalog after their bounded
 native cases. The scope is read-only `how`/`why` execution, a bounded local TSV
 writer with an independently reviewed trail, a two-lens Thermos review with a
@@ -93,6 +92,11 @@ read-only native reviews of one scope/rubric, a separate PR #66 same-diff case,
 deduplication, lead judgment and no auto-apply. Its explicit-only publication
 retains PARTIAL for missing configured reviewers and does not claim effective
 backend model attestation.
+The [Reflect fixture](cursor-reflect-disposable-20260914.md) records three read-only
+lenses and one synthesizer on a scoped transcript with embedded prompt injection
+ignored. It publishes the bounded explicit-only path; actual native transcript
+selection and an approved skill edit remain unproven. Source security findings
+remain recorded; the generated mirror scans safe.
 The [Architect proof](pstack-architect-arena-native-20260914.md) records a later
 prospective Ground-before-Sketch case with how/why before two distinct designs,
 an independent judge, base/grafts and disposable runtime probes. It supports
@@ -104,7 +108,7 @@ only bounded explicit local design publication, not production or automatic use.
    (with published `cursor-how`, `cursor-show-me-your-work`, and guide-only
    principles available under their documented limits).
    Establish bounded paths, evidence, and wording before orchestration.
-2. **Delegated review and style:** `cursor-advisor`, `cursor-reflect`,
+2. **Delegated review and style:** `cursor-advisor`,
    `cursor-no-comments`, and `cursor-poteto-mode`. Prove
    native named/bounded delegation and coordinator ownership first; Poteto's
    `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` dependencies
@@ -129,7 +133,7 @@ only bounded explicit local design publication, not production or automatic use.
 
 ## Remaining unavailable skills
 
-All 26 rows remain absent from the published catalog and unavailable for a
+All 25 rows remain absent from the published catalog and unavailable for a
 claimed native functional invocation until their row's proof and blocker are
 closed. The already-published guide-only principles and local PR renderer are
 outside this held count and retain their own conditional/native-parity labels.
@@ -144,17 +148,17 @@ outside this held count and retain their own conditional/native-parity labels.
 `cursor-create-verification-skill`, `cursor-figure-it-out`,
 `cursor-maintain-verification-skill`,
 `cursor-make-bot-ui`, `cursor-no-comments`, `cursor-poteto-mode`,
-`cursor-recall`, `cursor-reflect`, `cursor-setup-pstack`,
+`cursor-recall`, `cursor-setup-pstack`,
 `cursor-cancel-ralph`, and `cursor-ralph-loop`.
 
-The list contains exactly the 26 active `publish:false` names and excludes the
+The list contains exactly the 25 active `publish:false` names and excludes the
 three dormant Benny skills. Optional external-service branches may be
 distributed conditionally only with the local fallback,
 credential boundary, and unavailable-capability result preserved.
 
 ## Evidence checks
 
-- Manifest count: `jq` reports 91 physical skills, 29 `publish:false`, and 26
+- Manifest count: `jq` reports 91 physical skills, 28 `publish:false`, and 25
   active `publish:false` after excluding `pstack/automations/benny`.
 - Every row was reconciled against its pinned
   `sources/cursor-plugins/snapshot/**/SKILL.md`, matching overlay JSON under
@@ -168,7 +172,7 @@ credential boundary, and unavailable-capability result preserved.
   output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
   CI validation for published PR #64 head `ab038461` completed successfully.
   PR #66 publishes Arena and bounded Architect at 91/61/250; the isolated
-  full-catalog successor adds bounded Interrogate at 91/62/258. Their distinct
+  full-catalog successor adds bounded Interrogate and Reflect at 91/63/266. Their distinct
   validation receipts are recorded in the capability matrix.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

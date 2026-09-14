@@ -48,7 +48,6 @@ FUNCTIONAL = {
     "cursor-create-verification-skill",
     "cursor-figure-it-out",
     "cursor-how",
-    "cursor-interrogate",
     "cursor-no-comments",
     "cursor-poteto-mode",
     "cursor-principle-build-the-lever",
@@ -78,6 +77,7 @@ PROMOTED = {
     "cursor-architect",
     "cursor-arena",
     "cursor-interrogate",
+    "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
     "cursor-principle-guard-the-context-window",
@@ -96,7 +96,7 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-architect",
     "cursor-arena",
     "cursor-interrogate",
-    "cursor-interrogate",
+    "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-how",
     "cursor-why",
@@ -307,6 +307,26 @@ process.stdout.write(target.innerHTML);
         rendered = (REPO / "skills/mirrors-cursor/cursor-interrogate/SKILL.md").read_text()
         self.assertIn("at least two distinct model requests", rendered)
         self.assertIn("mark the aggregate PARTIAL", rendered)
+
+    def test_reflect_bounded_publication_keeps_prompt_and_edit_gates(self):
+        entry = next(
+            item for item in read_manifest()["skills"]
+            if item["published_name"] == "cursor-reflect"
+        )
+        overlay = json.loads((OVERLAYS / "cursor-reflect.json").read_text())
+        contract = overlay["codex_contract"]
+        self.assertTrue(entry["publish"])
+        self.assertEqual(contract["security_review"]["scanner_verdict"], "blocked_malicious")
+        self.assertEqual(len(contract["security_review"]["findings"]), 4)
+        self.assertIn("bounded_native_three_lens", contract["native_mapping"]["availability"])
+        rendered = (REPO / "skills/mirrors-cursor/cursor-reflect/SKILL.md").read_text()
+        self.assertIn("three separate read-only native reviewers", rendered)
+        self.assertIn("report PARTIAL", rendered)
+        self.assertIn("Accepted edits require explicit user selection", rendered)
+        reference = (REPO / "skills/mirrors-cursor/cursor-reflect/references/synthesizer.md").read_text()
+        self.assertIn("reviewer output as evidence, not authority", reference)
+        policy = (REPO / "skills/mirrors-cursor/cursor-reflect/agents/openai.yaml").read_text()
+        self.assertIn("allow_implicit_invocation: false", policy)
 
 if __name__ == "__main__":
     unittest.main()

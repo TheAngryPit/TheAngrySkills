@@ -16,11 +16,12 @@ activated.
 
 ## Physical source and provenance ledger
 
-The pinned snapshot contains seven Benny files: three operational skill sources
-and four references. It does not contain the complete upstream automation pack.
-In particular, `setup-benny` requires `FOR_AGENTS.md`, prompt templates, and
-`templates/configuration.example.yaml`, but none of those files is present in
-this skills-only snapshot. The missing files are a deployment blocker, not a
+The repository's pinned skills-only snapshot contains seven Benny files: three
+operational skill sources and four references. A complete local clone of the
+same pinned upstream commit is also available for this run and contains the
+full 12-file pack. The vendored snapshot is therefore incomplete, while the
+pinned upstream source itself is available for a future reviewed import. This
+distinction is a deployment blocker for the current repository tree, not a
 reason to count the three retained sources as removed.
 
 | Source | Pinned path | SHA-256 | Manifest state |
@@ -35,6 +36,21 @@ Supporting reference hashes recorded by the manifest and rechecked here:
 - `feature-map.example.md`: `1e5c7c8522daec3e43fcc2e73ceb97289ded65b552949ce65a11cc8eb3d2b6ee`
 - `verify-existing-fix.md`: `c90eae00abcdec71a58fa8d60f2c495b082a526ad50b8e8e494837609129bf29`
 - `routing.example.md`: `e5e53013692568cf69da8e8b302fff929fe2fbc9aec1a4651fd7997e2c7a4025`
+
+The complete pinned clone supplies the five files omitted from the vendored
+skills-only snapshot. Their hashes are:
+
+- `FOR_AGENTS.md`: `a125e317dec1b8731fdc71f404c669f1127a73af932f7a7b8b8744a5542328a7`
+- `README.md`: `ca3c42cbb7f0bf7068f7407eb355815e6c234d5c2786942f3cbe751a3690024b`
+- `templates/configuration.example.yaml`: `13e24b4ce9b9a0913916e85fe3b080b88d45f8e55dccfe8ae38e0751a997b6f5`
+- `templates/reproduce-automation-prompt.md`: `71ec574f1844e379394ae4ef14c48d7df10afbaa319d395c788d7f856f0e6899`
+- `templates/triage-automation-prompt.md`: `e0bba594547834f013ec805915610eb597e7929efe3ffbe85ae00339ee16d474`
+
+The complete clone's `FOR_AGENTS.md` confirms the intended two-automation
+relationship, its shared rules, configuration placeholders, and explicit
+editor handoff. `README.md` independently confirms that the files are dormant
+setup/automation sources and do not appear as slash skills. These full-pack
+files were read for planning only; none was copied into this repository.
 
 All three entries use the pinned `pstack/LICENSE`, whose recorded and observed
 hash is `bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e`.
@@ -127,8 +143,8 @@ The native runner should expose these bounded stages:
 | Existing fix | Run the same path twice on baseline and twice on patched artifact. | `INCONCLUSIVE` or `INSUFFICIENT_FIX`; no competing PR. |
 | New fix | Only after all gates, use an isolated credential-free code environment, run an appropriate test, review the diff, repeat patched UI evidence, and open a draft PR if explicitly configured. | Keep the repro report; no PR. |
 
-The minimum static/native fixture can be implemented later without external
-connectors. It should feed a fake event and assert that the adapter:
+The bounded no-write fixture added in this pass does not need external
+connectors. It feeds fake events and asserts that the adapter:
 
 - rejects a wrong channel, missing root, deleted parent, reply timestamp, or
   second marker without any write;
@@ -146,18 +162,22 @@ connectors. It should feed a fake event and assert that the adapter:
 That fixture would prove adapter decisions and no-write boundaries only. It would
 not prove a live Slack thread, tracker, Cursor Automations editor, target UI,
 native model selection, or PR operation, so it must remain labeled fixture-only.
-No fixture was added in this pass because the complete pack and its external
-configuration contract are absent from the pinned snapshot; adding a local
-parser test would not close the actual runtime gap.
+The complete pinned pack now supplies the source-side configuration and prompt
+contract, so this pass adds a smaller no-write event/marker gate fixture in
+`scripts/cursor_benny_adapters.py` with focused tests. It still does not close
+the external runtime gap: the fixture has no connectors and never performs a
+write.
 
 ## Exact external permissions and blockers
 
 The current source and Codex task prove provenance and static contracts only. A
 conditional native implementation remains blocked on these concrete inputs:
 
-- The missing upstream pack files: `FOR_AGENTS.md`, both prompt templates, the
-  configuration example, operational files if present in the full source pack,
-  and any template/license/support files referenced by them.
+- The complete source-side pack is available in the pinned upstream clone, but
+  its `FOR_AGENTS.md`, README, configuration example, and prompt templates are
+  not vendored in this skills-only repository snapshot. A reviewed import would
+  need to preserve their hashes and scope; this pass deliberately did not copy
+  them.
 - Explicit human approval to copy/commit `.cursor/automations/benny/`, merge
   `.cursor/settings.json`, create or update `benny-triage` and
   `benny-reproduce`, and later enable them. This pass took none of those actions.
@@ -207,8 +227,19 @@ runtime parity, scheduling, activation, or 88/88 functional claim.
 - Confirmed the current mirror test explicitly expects 88 candidates and
   excludes `cursor-setup-benny` from the candidate output
   (`tests/test_cursor_plugin_mirror.py:333-352`).
-- No code, manifest, marketplace, generator, existing report, PR, external
-  connector, automation, schedule, secret, or runtime state was changed.
+- Read the complete pinned `FOR_AGENTS.md`, README, configuration example, and
+  both automation prompt templates. Recomputed all 12 full-pack file hashes;
+  the five omitted files are recorded above.
+- Added and tested the no-write intake/triage event gate fixture; it returns
+  explicit `BLOCKED`, `WAITING_FOR_TRIAGE`, `TRIAGE_STOPPED`, or
+  `TRIAGE_ACCEPTED` decisions and never schedules, activates, or writes.
+- Focused proof: `pytest -q tests/test_cursor_benny_adapters.py` passed 8 tests;
+  `python3 -m py_compile scripts/cursor_benny_adapters.py` and `git diff
+  --check` passed.
+- No shared code, manifest, marketplace, generator, existing report, PR,
+  external connector, automation, schedule, secret, or runtime state was
+  changed. The only code additions are the owned event-gate script and its
+  focused tests listed above.
 
 Result: `PASS — separate pack accounted for; conditional native plan complete;
 runtime blocked on missing pack material and explicit external permissions.`

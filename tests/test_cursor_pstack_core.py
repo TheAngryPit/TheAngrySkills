@@ -1,4 +1,4 @@
-"""Functional and renderer-boundary proof for the three held pstack core skills."""
+"""Functional and renderer-boundary proof for the pstack core skills."""
 
 import json
 import importlib.util
@@ -43,7 +43,7 @@ render_skill = _SYNC.render_skill
 
 MANIFEST = REPO / "sources/cursor-plugins/manifest.json"
 OVERLAYS = REPO / "sources/cursor-plugins/overlays"
-CORE = ("cursor-poteto-mode",)
+CORE = ()
 BUGGY_NOTES_APP = """
 from pathlib import Path
 import json

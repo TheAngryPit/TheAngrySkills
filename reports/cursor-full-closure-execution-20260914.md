@@ -3,9 +3,12 @@
 Date: 2026-09-14. This is the execution queue after PR #66, not a claim that
 publication, native activation, global installation, and full source parity are
 the same event. The pinned input has 91 physical skills: 88 active slash skills
-and three Benny automation sources. PR #66 publishes 61 active mirrors and
-leaves 27 active mirrors held; this isolated successor branch adds bounded
-`cursor-interrogate` and `cursor-reflect`, reaching 63 published and 25 held. Benny is a separate automation pack and is not
+and three Benny automation sources. PR #66 is the historical 61-skill base; this
+isolated successor branch adds bounded `cursor-interrogate`, `cursor-reflect`,
+`cursor-create-verification-skill`, `cursor-maintain-verification-skill`,
+`cursor-no-comments`, `cursor-automate-me`, `cursor-figure-it-out`,
+`cursor-poteto-mode`, `cursor-recall`, and `cursor-setup-pstack`, reaching 71
+published and 17 active held. Benny is a separate automation pack and is not
 silently subtracted from the physical inventory.
 
 ## Closure rule
@@ -22,14 +25,14 @@ where the source disables model invocation, baseline-comparative security
 scan, public-safe diff, tests, and CI before PR review. No global install,
 automation activation, external communication, or merge follows from a mirror.
 
-## Pstack first: 9 held active skills
+## Pstack first: nine active closure batch
 
 | Batch | Skills | Owner and next reviewable result | Dependency or honest limit |
 | --- | --- | --- | --- |
-| Native model/role routing | `cursor-setup-pstack`, `cursor-poteto-mode`, `cursor-no-comments` | Sol: exact fresh-session role/profile readback, a bounded named-agent loop, and a reviewed project-local mapping diff before changing persistent routing. | Preserve `model-capability-router` authority. Existing named-agent self-reports are not authoritative model readback. |
-| Context and learning | `cursor-figure-it-out`, `cursor-recall`, `cursor-automate-me` | Sol: prospective local hypothesis loop with pre-change baseline; exact native task-history selection/reconciliation; then one scoped preference-backed draft skill through unslop. | A post-hoc audit is not prospective proof. Transcript scope and write destination must be explicit. |
-| User verification | `cursor-create-verification-skill`, `cursor-maintain-verification-skill` | Sol and existing Luna handoff: reconcile the real disposable UI/CLI receipts, cleanup, source readers, persisted Doctor evidence, feature map, and clean second run. | UI Reset and any live target/provider action remain separate from fixture-only proof; no corrective PR when there is no proven defect. |
-| External bot UI | `cursor-make-bot-ui` | Sol: local mock webhook UI with server-only key boundary and negative malformed/timeout paths; retain installer quarantine. | No real xAI sender key, provider request, privileged Tailscale installer, or public exposure without specific authorization and review. |
+| Native model/role routing | `cursor-setup-pstack`, `cursor-poteto-mode`, `cursor-no-comments` | All three are bounded explicit-only promotions: setup role mapping remains dry-run, Poteto guidance is admitted with bundled scripts gated, and no-comments keeps the named `comment-sicko` loop. | Preserve `model-capability-router` authority. Persistent dispatch, fresh profile loading and exact model readback remain unproven. |
+| Context and learning | `cursor-figure-it-out`, `cursor-recall`, `cursor-automate-me` | All three have bounded explicit-only receipts: isolated hypothesis loop, scoped history/shared-record reconciliation, and approved project-local preference draft. | Native trigger/history/skill-creator telemetry, production target and global writeback remain explicit gaps. |
+| User verification | `cursor-create-verification-skill`, `cursor-maintain-verification-skill` | Both are bounded explicit-only promotions backed by the existing CLI/UI receipts, source-wave evidence, cleanup ownership, persisted Doctor evidence, feature map, and clean second run. | Production target parity, host activation and action-time UI Reset remain separate gaps; no corrective PR when there is no proven defect. |
+| External bot UI | `cursor-make-bot-ui` | Sol: local mock webhook UI with server-only key boundary and negative malformed/timeout paths; retain installer quarantine. The current native surface lacks the real webhook-routine, sender-key secret-request and wake capability; optional Tailnet exposure additionally needs Tailscale/network-ingress state. | No real provider request, secret, privileged Tailscale installer, or public exposure without specific authorization and review. |
 
 ## Other active skills: 16 held
 

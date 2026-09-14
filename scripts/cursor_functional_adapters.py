@@ -1919,6 +1919,191 @@ def bound_context(
     return {"status": "BOUNDED", "items": selected, "omitted": max(0, omitted)}
 
 
+def run_automate_me_fixture(
+    project_root: str | Path,
+    evidence_slices: Mapping[str, Iterable[str]],
+    user_preferences: Iterable[str],
+    *,
+    unslop_available: bool,
+    draft_approved: bool,
+) -> dict[str, object]:
+    """Draft one project-local mode skill from corroborated bounded evidence.
+
+    This is an isolated adapter proof, not native task-history or skill-creator
+    telemetry.  It requires two distinct evidence slices, accepts only
+    preferences corroborated in both, and never writes a personal/global path.
+    """
+
+    root = Path(project_root)
+    if not root.is_absolute() or not root.is_dir() or root.is_symlink():
+        raise AdapterError("project root must be an existing regular directory")
+    if not isinstance(evidence_slices, Mapping):
+        raise AdapterError("evidence_slices must be a mapping of source to items")
+    normalized: dict[str, tuple[str, ...]] = {}
+    for source, items in evidence_slices.items():
+        if not isinstance(source, str) or not source.strip():
+            raise AdapterError("evidence source names must be non-empty strings")
+        if isinstance(items, (str, bytes)):
+            raise AdapterError("evidence slice items must be an iterable of strings")
+        values = tuple(item for item in items if isinstance(item, str) and item.strip())
+        if any(any(ord(char) < 32 for char in item) for item in values):
+            raise AdapterError("evidence items must not contain control characters")
+        normalized[source] = tuple(dict.fromkeys(values))
+    if len(normalized) < 2:
+        return {
+            "status": "PARTIAL",
+            "reason": "at least two distinct bounded evidence slices are required",
+            "writes_performed": False,
+            "destination": ".agents/skills/fixture-mode/fixture-mode-mode/SKILL.md",
+        }
+    preferences = tuple(dict.fromkeys(item for item in user_preferences if isinstance(item, str) and item.strip()))
+    if any(any(ord(char) < 32 for char in item) for item in preferences):
+        raise AdapterError("user preferences must not contain control characters")
+    counts = {
+        preference: sum(preference in values for values in normalized.values())
+        for preference in preferences
+    }
+    confirmed = tuple(preference for preference, count in counts.items() if count >= 2)
+    omitted = tuple(preference for preference, count in counts.items() if count < 2)
+    if not confirmed:
+        return {
+            "status": "PARTIAL",
+            "reason": "no user preference is corroborated by two evidence slices",
+            "confirmed": (),
+            "omitted": omitted,
+            "writes_performed": False,
+        }
+    if not unslop_available:
+        return {
+            "status": "PARTIAL",
+            "reason": "cursor-unslop is unavailable; existing skill preserved",
+            "confirmed": confirmed,
+            "omitted": omitted,
+            "writes_performed": False,
+        }
+
+    destination = root / ".agents/skills/fixture-mode/fixture-mode-mode/SKILL.md"
+    component = root
+    for part in (".agents", "skills", "fixture-mode", "fixture-mode-mode"):
+        component /= part
+        if component.is_symlink():
+            raise AdapterError("project-local mode destination contains a symlink component")
+    if destination.exists() and (destination.is_symlink() or not destination.is_file()):
+        raise AdapterError("project-local mode destination must be a regular file")
+    existing = destination.read_text(encoding="utf-8") if destination.exists() else (
+        "---\nname: fixture-mode\ndescription: bounded fixture mode\n---\n\n"
+        "## Existing contract\n\nKeep explicit evidence and project-local scope.\n"
+    )
+    marker = "\n## Confirmed preferences\n"
+    base = existing.split(marker, 1)[0].rstrip()
+    draft = base + marker + "\n" + "\n".join(f"- {item}" for item in confirmed) + "\n"
+    prose = review_prose(draft, unslop_available=True)
+    if prose["status"] != "PASS":
+        return {
+            "status": "PARTIAL",
+            "reason": "bounded prose review did not pass",
+            "review": prose,
+            "writes_performed": False,
+        }
+    if not draft_approved:
+        return {
+            "status": "PARTIAL",
+            "reason": "draft requires explicit approval before landing",
+            "review": prose,
+            "writes_performed": False,
+        }
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(draft, encoding="utf-8")
+    readback = destination.read_text(encoding="utf-8")
+    if readback != draft:
+        raise AdapterError("project-local mode readback mismatch")
+    return {
+        "status": "FIXTURE_ONLY",
+        "destination": str(destination),
+        "confirmed": confirmed,
+        "omitted": omitted,
+        "evidence_sources": tuple(normalized),
+        "review": prose,
+        "writes_performed": True,
+        "global_write": False,
+        "native_history": False,
+        "native_skill_creator": False,
+    }
+
+
+def run_recall_fixture(
+    history_records: Iterable[Mapping[str, object]],
+    *,
+    topic: str,
+    workspace: str,
+    live_state: Mapping[str, object],
+    shared_record: Mapping[str, object] | None,
+    current_thread_id: str | None = None,
+) -> dict[str, object]:
+    """Reconcile a supplied bounded history slice with live/shared records."""
+
+    if not topic.strip() or not workspace.strip():
+        raise AdapterError("topic and workspace must be non-empty")
+    if not isinstance(live_state, Mapping):
+        raise AdapterError("live_state must be a mapping")
+    if live_state.get("workspace") != workspace:
+        return {
+            "status": "PARTIAL",
+            "reason": "live state workspace does not match requested scope",
+            "writes_performed": False,
+        }
+    selected: list[Mapping[str, object]] = []
+    for record in history_records:
+        if not isinstance(record, Mapping):
+            raise AdapterError("history records must be mappings")
+        record_id = record.get("thread_id")
+        if current_thread_id and record_id == current_thread_id:
+            continue
+        if record.get("workspace") != workspace:
+            continue
+        searchable = " ".join(str(record.get(key, "")) for key in ("title", "summary", "topic"))
+        if topic.casefold() in searchable.casefold():
+            selected.append(record)
+    if not selected:
+        return {
+            "status": "PARTIAL",
+            "reason": "no exact scoped history record matched",
+            "writes_performed": False,
+            "missing_export": True,
+        }
+    if shared_record is None:
+        return {
+            "status": "PARTIAL",
+            "reason": "shared record is missing; history and live state preserved",
+            "writes_performed": False,
+            "selected_history": tuple(record.get("thread_id") for record in selected),
+            "missing_export": True,
+        }
+    if shared_record.get("workspace") != workspace or topic.casefold() not in str(shared_record.get("topic", "")).casefold():
+        return {
+            "status": "PARTIAL",
+            "reason": "shared record does not match requested scope",
+            "writes_performed": False,
+            "selected_history": tuple(record.get("thread_id") for record in selected),
+        }
+    brief = {
+        "scope": {"workspace": workspace, "topic": topic},
+        "history": [
+            {"thread_id": record.get("thread_id"), "title": record.get("title"), "updated_at": record.get("updated_at")}
+            for record in selected
+        ],
+        "live_state": dict(live_state),
+        "shared_record": {"record_id": shared_record.get("record_id"), "summary": shared_record.get("summary")},
+    }
+    return {
+        "status": "FIXTURE_ONLY",
+        "brief": brief,
+        "selected_history": tuple(record.get("thread_id") for record in selected),
+        "writes_performed": False,
+        "missing_export": False,
+    }
+
+
 def choose_smallest(
     original: str, candidate: str, *, tests_pass: bool, deletion_safe: bool
 ) -> dict[str, str]:

@@ -3,7 +3,7 @@
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
-and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. A separate hash-checked native adapter is bundled only into the held Advisor, Ralph and continual-learning previews; it is not registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
+and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Separate hash-checked native adapters are bundled only into the held Advisor, Ralph, continual-learning, and make-bot-ui previews; they are not registered as hooks. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three Benny automation skills outside the ordinary
 slash-skill distribution. Their upstream sources still exist under
 `pstack/automations/benny` and are installed through Benny's project setup,
@@ -23,8 +23,10 @@ bounded explicit-only `cursor-how`, `cursor-why`, `cursor-show-me-your-work`,
 workflows. This isolated successor branch adds bounded explicit-only
 `cursor-interrogate` and `cursor-reflect`, then promotes the bounded native
 `cursor-create-verification-skill`, `cursor-maintain-verification-skill`, and
-`cursor-no-comments` paths, bringing the catalog to 66 published mirrors. The other
-22 active skills
+`cursor-no-comments`, `cursor-automate-me`, `cursor-figure-it-out`,
+`cursor-poteto-mode`, `cursor-recall`, and `cursor-setup-pstack` paths, bringing
+the catalog to 71 published mirrors. The other
+17 active skills
 have contracts and pinned sources but remain held and unindexed; all 88 active
 slash skills remain in scope. The three Benny automation sources are retained
 outside this slash catalog. Publication is not proof of full native execution.

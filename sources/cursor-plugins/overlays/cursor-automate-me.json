@@ -20,7 +20,7 @@
         "native skill-creator"
       ],
       "fallback": "If bounded transcript access is unavailable, use only the current task and user-supplied evidence; label the history gap and ask for missing preferences.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_project_local_draft_fixture_observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven"
     },
     "external_dependencies": [
       "skill-creator and cursor-unslop skills",
@@ -33,11 +33,11 @@
       "Follow the existing task authorization for commit/PR; do not infer publication or installation."
     ],
     "behavioral_proof": {
-      "positive": "Fixture updates an existing project-local mode skill from two corroborated bounded evidence slices and the user’s preferences while preserving uncontradicted sections.",
+      "positive": "Fixture shows a draft from two corroborated bounded evidence slices and explicit user preferences, preserves uncontradicted sections, reads it back, and lands only after explicit draft approval.",
       "missing_tool_or_input": "Without transcript access, current-task/user-provided evidence is labeled partial and no history pattern is invented.",
-      "error": "An ambiguous existing destination or failed skill-creator run preserves the original skill and reports the exact gap."
+      "error": "An ambiguous existing destination, failed skill-creator run, unsafe path component, control text, or unapproved draft preserves the original skill and reports the exact gap."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_native_history_and_global_writeback_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -53,7 +53,7 @@
   "codex_note": "## Codex runtime mapping\n\nUse `skill-creator` for authoring, `cursor-unslop` for prose, and `cursor-poteto-mode` only as a shape example. Search `.agents/skills/` in the project and the personal Codex skills root only when it is relevant and readable. Mine bounded history from the current workspace/task, never unrelated task roots. Native user-input surfaces may allow fewer choices and no multiselect; retain the broad-to-specific preference inquiry in concise rounds with free text. Project-local writes follow the current task scope; personal installation is a separate explicit choice.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
-  "proof": "Pinned source and deterministic preview prove static mapping only; live authoring/update and user preference loop remain untested.",
+  "proof": "A bounded isolated fixture corroborates user-selected preferences across two evidence slices, preserves an existing project-local mode skill, reads the result back, omits one-off observations, and refuses writes when history or unslop is unavailable. Native task-history selection, native skill-creator telemetry, the full preference loop, and global writeback remain unproven.",
   "reason": "Preserve the full mode-skill authoring and evidence flow while mapping Cursor skill names, storage, transcript scope, and preference input to native Codex.",
   "replacements": [
     {
@@ -145,6 +145,11 @@
       "file": "SKILL.md",
       "before": "`create-skill` alone, no mining required.",
       "after": "`skill-creator` alone, no mining required."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "That's a regular skill, not a mode skill.\n\n",
+      "after": "That's a regular skill, not a mode skill.\n"
     }
   ],
   "source_path": "pstack/skills/automate-me/SKILL.md",

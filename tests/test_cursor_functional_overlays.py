@@ -76,10 +76,14 @@ SECURITY_HOLDS = {
 PROMOTED = {
     "cursor-architect",
     "cursor-arena",
+    "cursor-automate-me",
     "cursor-create-verification-skill",
+    "cursor-figure-it-out",
     "cursor-interrogate",
     "cursor-maintain-verification-skill",
     "cursor-no-comments",
+    "cursor-poteto-mode",
+    "cursor-recall",
     "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
@@ -93,22 +97,28 @@ PROMOTED = {
     "cursor-show-me-your-work",
     "cursor-swarm",
     "cursor-thermos",
+    "cursor-setup-pstack",
 }
 
 GUIDE_ONLY = PROMOTED - {
     "cursor-architect",
     "cursor-arena",
+    "cursor-automate-me",
     "cursor-interrogate",
     "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-create-verification-skill",
+    "cursor-figure-it-out",
     "cursor-maintain-verification-skill",
     "cursor-no-comments",
+    "cursor-poteto-mode",
+    "cursor-recall",
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
     "cursor-swarm",
     "cursor-thermos",
+    "cursor-setup-pstack",
 }
 
 
@@ -194,9 +204,14 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
     def test_pstack_bounded_promotions_retain_explicit_gaps(self):
         skills = {item["published_name"]: item for item in read_manifest()["skills"]}
         expected = {
+            "cursor-automate-me": "promoted_bounded_explicit_only_native_history_and_global_writeback_unproven",
             "cursor-create-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
+            "cursor-figure-it-out": "promoted_bounded_explicit_only_native_trigger_and_production_parity_unproven",
             "cursor-maintain-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
             "cursor-no-comments": "promoted_bounded_native_explicit_only_complex_branches_unproven",
+            "cursor-poteto-mode": "promoted_bounded_explicit_only_script_execution_gated",
+            "cursor-recall": "promoted_bounded_explicit_only_native_history_selection_unproven",
+            "cursor-setup-pstack": "promoted_bounded_explicit_only_persistent_write_and_dispatch_unproven",
         }
         for name, status in expected.items():
             entry = skills[name]
@@ -338,6 +353,24 @@ process.stdout.write(target.innerHTML);
         dropout = (REPO / "reports/pstack-interrogate-native-20260914.md").read_text()
         self.assertIn("/root/interrogate_dropout_missing", dropout)
         self.assertIn("Aggregate status: `PARTIAL`", dropout)
+
+    def test_published_pstack_routes_require_explicit_invocation(self):
+        for name in (
+            "cursor-automate-me",
+            "cursor-create-verification-skill",
+            "cursor-figure-it-out",
+            "cursor-maintain-verification-skill",
+            "cursor-no-comments",
+            "cursor-poteto-mode",
+            "cursor-recall",
+            "cursor-setup-pstack",
+        ):
+            policy = REPO / "skills/mirrors-cursor" / name / "agents/openai.yaml"
+            self.assertEqual(
+                policy.read_text(),
+                "policy:\n  allow_implicit_invocation: false\n",
+                name,
+            )
 
     def test_reflect_bounded_publication_keeps_prompt_and_edit_gates(self):
         entry = next(

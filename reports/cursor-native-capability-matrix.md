@@ -39,6 +39,6 @@ on the PR #64 base;
 `sync-cursor-plugin-skills.py --check` reports 91/61/250, and
 `git diff --check` passed. GitHub `Validate skill stack` completed
 successfully for the PR #64 published base `ab038461` ([job receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34860841957/job/104032320133));
-successor PR #66 Skill stack CI passed on heads `9b595217` and `4e4139a0`
-([latest run receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34882325803)).
-The Architect promotion requires a fresh run on its final head.
+successor PR #66 Skill stack CI passed on bounded Architect head `66fa8704`
+([run receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34883047695)),
+with 17 blocking and 39 review signals unchanged from the base.

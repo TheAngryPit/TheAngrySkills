@@ -7,6 +7,9 @@ published repository or install surface.
 
 ## Repository and ownership
 
+This section records the initial disposable worker checkout. The later Sol
+integration and bounded publication are described below.
+
 - Canonical repository: `TheAngrySkills`.
 - Immutable requested base: `ddfb440691f4513bc2d90968c79d54c7cdb6cb42`
   (`feat(cursor): stage native adapters for the full active catalog (#64)`).

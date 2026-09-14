@@ -117,8 +117,8 @@ explicitly:
   `references/sources/code-archaeology.md`, and
   `references/synthesizer-prompt.md`.
 
-The native read-only role flow was then executed through bounded workers. The
-receipts are the Ground/Scrap inputs at
+The native read-only role flow was then executed through bounded workers. These
+are retrospective Ground/Scrap receipts at
 `/private/tmp/architect-arena-20260914/how-why-followup/how-receipt.md` and
 `why-receipt.md`. The exact invocations and outputs are kept separate from
 claims about automatic picker behavior:
@@ -149,7 +149,12 @@ returned an absence receipt; that failed attempt is retained as a worker-level
 gap, while the absolute-path rerun above is the valid Ground/Scrap receipt.
 
 This closes the read/role-flow observation for the generated `cursor-how` and
-`cursor-why` mirrors. It does not prove automatic picker/trigger behavior,
+`cursor-why` mirrors. It does not establish Architect's ordered Phase A: `how`
+and `why` were run after candidate selection, redesign, and runtime
+implementation. The `why` receipt examined the mirror/hold history and left
+the original design motivation unknown. A new bounded Architect pass must
+ground the existing system and its ownership rationale before Sketch/Arena to
+close that source requirement. The follow-up does not prove automatic picker/trigger behavior,
 exact upstream runner parity, production behavior, independent model/effort
 readback, or external seven-category execution. Promotion remains held.
 
@@ -211,8 +216,9 @@ The two overlays now map:
   verification.
 
 Arena is published only for the bounded explicit local design path; Architect
-remains held. Generated `cursor-how`/`cursor-why` mirrors and their read/role-flow
-receipts are observed, but automatic skill triggering, exact upstream Cursor
+remains held on the ordered Phase A gap above. Generated `cursor-how`/`cursor-why`
+mirrors and their retrospective read/role-flow receipts are observed, but
+automatic skill triggering, exact upstream Cursor
 runner parity, native model/effort runtime readback, production implementation,
 crash/power-loss proof, hostile-writer semantics, complete external connector
 execution, and end-to-end host behavior remain unproven. The fixture/runtime

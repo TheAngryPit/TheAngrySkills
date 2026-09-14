@@ -2,12 +2,15 @@
 
 Date: 2026-09-14
 
+`disposable-scratch/` denotes local proof artifacts that are not part of the
+published repository or install surface.
+
 ## Repository and ownership
 
 - Canonical repository: `TheAngrySkills`.
 - Immutable requested base: `ddfb440691f4513bc2d90968c79d54c7cdb6cb42`
   (`feat(cursor): stage native adapters for the full active catalog (#64)`).
-- Checkout: `/private/tmp/theangryskills-architect-arena-20260914`.
+- Checkout: `disposable-scratch/theangryskills-architect-arena-20260914`.
 - Branch: `codex/architect-arena-20260914`.
 - Owned changes: `cursor-architect` overlay, `cursor-arena` overlay, one
   focused contract test, and this report.
@@ -36,10 +39,10 @@ read back its model:
 
 | Role | Agent ID | Public surface | Native `agent_type` | Requested model/effort | Output |
 | --- | --- | --- | --- | --- | --- |
-| Candidate 1 | `01a0a0f9-78a7-7911-aa9c-29b349bf2a81` (Descartes) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-1/{candidate,rationale}.md` |
-| Candidate 2 | `01a0a0f9-8003-71b1-a971-a8daa53ade17` (Mill) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-2/{candidate,rationale}.md` |
-| Cross-judge | `01a0a0fe-28fe-7941-8968-8ebe57428d7d` (Euclid) | `collaboration.spawn_agent` | `reviewer` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/judge/cross-judge.md` materialized by coordinator from returned verdict |
-| Review/redesign | `01a0a100-8583-7240-9203-f4b3681810c6` (Copernicus) | `collaboration.spawn_agent` | `planner` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/synthesis/{review-redesign,synthesized-design}.md` materialized by coordinator from returned verdict |
+| Candidate 1 | `01a0a0f9-78a7-7911-aa9c-29b349bf2a81` (Descartes) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `disposable-scratch/architect-arena-20260914/candidate-1/{candidate,rationale}.md` |
+| Candidate 2 | `01a0a0f9-8003-71b1-a971-a8daa53ade17` (Mill) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `disposable-scratch/architect-arena-20260914/candidate-2/{candidate,rationale}.md` |
+| Cross-judge | `01a0a0fe-28fe-7941-8968-8ebe57428d7d` (Euclid) | `collaboration.spawn_agent` | `reviewer` | `gpt-6-astra` / `low` | `disposable-scratch/architect-arena-20260914/judge/cross-judge.md` materialized by coordinator from returned verdict |
+| Review/redesign | `01a0a100-8583-7240-9203-f4b3681810c6` (Copernicus) | `collaboration.spawn_agent` | `planner` | `gpt-6-astra` / `low` | `disposable-scratch/architect-arena-20260914/synthesis/{review-redesign,synthesized-design}.md` materialized by coordinator from returned verdict |
 
 Technical invocation receipt: the public calls were backed by the internal
 `multi_agent_v1__spawn_agent` tool identifier. This backend identifier is kept
@@ -56,7 +59,7 @@ independently verified worker assertion. No Work cloud worker was used.
 
 ## Disposable architect/arena case
 
-The fixture is `/private/tmp/architect-arena-fixture-20260914`:
+The fixture is `disposable-scratch/architect-arena-fixture-20260914`:
 
 - `notes_store.py` is a real Python domain boundary with frozen `Note`, private
   JSON persistence, ordered `strip().lower()` substring search, and unchanged
@@ -101,7 +104,7 @@ base and produced a redesign that:
   managed destination directory.
 
 The synthesized design is in
-`/private/tmp/architect-arena-20260914/synthesis/synthesized-design.md`; the
+`disposable-scratch/architect-arena-20260914/synthesis/synthesized-design.md`; the
 failure ledger is in `review-redesign.md`.
 
 ## Phase A native how/why follow-up
@@ -119,7 +122,7 @@ explicitly:
 
 The native read-only role flow was then executed through bounded workers. These
 are retrospective Ground/Scrap receipts at
-`/private/tmp/architect-arena-20260914/how-why-followup/how-receipt.md` and
+`disposable-scratch/architect-arena-20260914/how-why-followup/how-receipt.md` and
 `why-receipt.md`. The exact invocations and outputs are kept separate from
 claims about automatic picker behavior:
 
@@ -162,7 +165,7 @@ readback, or external seven-category execution. Promotion remains held.
 
 The coordinator first ran the synthesized disposable contract check, then
 implemented the final contract in a copied runtime app at
-`/private/tmp/architect-arena-runtime-20260914`.
+`disposable-scratch/architect-arena-runtime-20260914`.
 
 ```text
 synthesis-contract: PASS
@@ -172,7 +175,7 @@ proof: create, retry-unchanged, changed-replace, malformed-conflict, source-conf
 The runtime implementation then produced this reproducible readback:
 
 ```text
-PYTHONPATH=/private/tmp/architect-arena-runtime-20260914 python3 runtime_probe.py
+PYTHONPATH=disposable-scratch/architect-arena-runtime-20260914 python3 runtime_probe.py
 runtime-after-fix: PASS
 runtime: create/retry/drift-replace/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset
 ```

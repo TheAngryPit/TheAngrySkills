@@ -209,3 +209,51 @@ policies; neither fact is retroactively attributed to the Swarm workers. The
 original aggregate stays `PARTIAL`. The `swarm` source also requires a
 four-phase todolist and worker `PASS`/`ISSUES`/`BLOCKED` statuses; those were
 not recorded in this run, so no full Swarm workflow or promotion is claimed.
+
+## Source-faithful delta at PR #64 head `5fdd1894`
+
+This delta uses the newly published PR #64 head `5fdd1894` on branch
+`codex/thermos-swarm-delta-20260914`. The pinned Swarm source and overlays were
+read again before delegation. The source requires the four phases Frame, Fan
+out, Aggregate, and Report, and requires worker verdicts `PASS`, `ISSUES`, or
+`BLOCKED` (`sources/cursor-plugins/snapshot/pstack/skills/swarm/SKILL.md:11-18,34`).
+
+The native Codex tool surface exposed no todolist/checklist tool in this
+session. The coordinator used the four phases as a local pre-launch checklist,
+but exact native todolist proof is **unavailable** and is not claimed.
+
+### Swarm delta
+
+Two workers were launched together with N=2 and disjoint local slices:
+
+| Slice | Agent | Verdict | Evidence |
+|---|---|---|---|
+| Marketplace, manifest publication, and `cursor-show-me-your-work` overlay | Epicurus `01a0a063-215c-76c3-be50-7d422fc06077` | `ISSUES` | P2 stale accounting: trail/report says 91/56/223 while current matrix/state says 91/57/229 (`reports/cursor-show-work-review-20260914.md:44-50`; `reports/cursor-show-work-live-trail-20260914.tsv:5,9`; `reports/cursor-native-capability-matrix.md:9`; `reports/cursor-plugin-skills-state.json:234-238`). |
+| Evidence ledger, capability matrix, and report delta | Ohm `01a0a063-2063-76c0-8432-c31020c9d291` | `BLOCKED` | Current-head validation receipt/artifact tied to `5fdd1894` is missing; the report still names the older authority and diff (`reports/pstack-thermos-swarm-real-20260914.md:3-7`; `reports/cursor-held-closure-ledger.md:123-126`; `reports/cursor-native-capability-matrix.md:32-36`). |
+
+Both results were drained and retained. The aggregate is `BLOCKED` (one
+`ISSUES`, one `BLOCKED`), not `PASS`; no current-head CI success was inferred.
+The source-faithful fan-out and disjoint ownership were observed, while native
+todolist proof and current-head validation remain gaps. No worker dropout
+occurred in this delta.
+
+### Thermos missing-lens fixture
+
+The same bounded `5fdd1894` diff scope was sent to two native read-only
+reviewers. Jason `01a0a068-42aa-79d2-acd1-f4b41dcd5d24` was deliberately closed
+while `running` before returning a verdict. Gibbs
+`01a0a068-43de-7760-9ea2-ce40c40620e0` completed with `ISSUES`, identifying the
+same stale 91/56/223 versus 91/57/229 accounting contradiction and preserving
+the missing-lens limitation.
+
+This safely exercises the native unavailable-reviewer surface: Thermos result
+is **`PARTIAL` single-lens review**, not a double-review claim. No full Thermos
+synthesis is asserted for this fixture. Historical Thermos `ISSUES` findings
+remain retained above.
+
+### Delta limits
+
+Only this report delta is owned here. No source, manifest, generated tree,
+renderer, build helper, test suite, CI query, push, PR edit, merge, secret,
+hook, or global installation was performed. `cursor-thermos` and
+`cursor-swarm` remain unpromoted.

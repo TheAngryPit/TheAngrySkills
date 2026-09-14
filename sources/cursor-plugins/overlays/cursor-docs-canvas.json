@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "external-canvas-gated",
+    "adapter_mode": "external-canvas-gated-local-artifact",
     "name_mapping": {
       "upstream_skill": "docs-canvas",
       "published_name": "cursor-docs-canvas",
@@ -11,27 +11,29 @@
     "native_mapping": {
       "capabilities": [
         "local Markdown reader",
-        "local document renderer"
+        "local Markdown/HTML document renderer",
+        "project-local linked artifact writer"
       ],
       "required_tools": [
         "local Markdown reader",
-        "local document renderer"
+        "local Markdown/HTML document renderer"
       ],
-      "fallback": "Absent Canvas selects the fallback and does not create product configuration.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "Absent Canvas selects the bounded local Markdown/HTML artifact and does not create product configuration.",
+      "availability": "bounded_local_linked_markdown_html_artifact_observed; Cursor Canvas SDK/surface unavailable"
     },
     "external_dependencies": [
       "Cursor Canvas surface and SDK declarations"
     ],
     "permission_gates": [
-      "Use a linked document fallback when Canvas is unavailable; never read ~/.cursor/skills-cursor.",
+      "Use the project-local linked Markdown/HTML fallback when Canvas is unavailable; never read ~/.cursor/skills-cursor.",
       "Absent Canvas selects the fallback and does not create product configuration.",
+      "Require an explicit invocation and an explicit project root; reject symlinked or escaping paths and bounded-input violations.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-docs-canvas: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-docs-canvas: Absent Canvas selects the fallback and does not create product configuration.",
-      "error": "Error fixture for cursor-docs-canvas: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "A bounded project-local Markdown source produced linked index.md and index.html files with a table of contents, section anchors, source links, and an explicit Canvas parity gap; no product configuration changed.",
+      "missing_tool_or_input": "When Canvas is absent the adapter returns FALLBACK with canvas_parity UNAVAILABLE; missing, empty, oversized, or non-Markdown input is rejected before artifact writes.",
+      "error": "Malformed documentation or an unsafe output/source path is reported explicitly; symlink and root-escape fixtures do not widen scope."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -46,11 +48,17 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse a linked document fallback when Canvas is unavailable; never read ~/.cursor/skills-cursor. Required native capabilities: local Markdown reader, local document renderer. External dependencies remain explicit: Cursor Canvas surface and SDK declarations. Absent Canvas selects the fallback and does not create product configuration. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py` for an explicit, bounded project-local Markdown/HTML artifact when Canvas is unavailable; never read ~/.cursor/skills-cursor. The artifact includes a table of contents, section anchors, and links back to source files. External dependencies remain explicit: Cursor Canvas surface and SDK declarations. `canvas_parity` stays `UNAVAILABLE`, and no product configuration is created. This candidate remains held and conditional until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Render a documentation-style Cursor Canvas that organizes architecture notes, API references, walkthroughs, and how-tos into a navigable layout with sections, tables of contents, and cross-references. Use when the user asks for a docs canvas, documentation overview, architecture walkthrough, API reference page, or wants to render structured documentation as an interactive canvas.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build establish provenance. The isolated adapter test exercises a bounded Markdown source, linked Markdown/HTML output, explicit-only refusal, and symlink rejection. No Canvas primitive or SDK parity is claimed; live Canvas behavior remains unavailable.",
+  "reason": "Per-skill Codex contract preserves the placeholder's documented intent while adding a safe project-local fallback, explicit-only policy, behavior proof, security retention, and pinned README provenance without changing upstream source text.",
+  "local_adapter": {
+    "path": "scripts/cursor_canvas_adapters.py",
+    "entrypoint": "render_docs_canvas",
+    "output": "project-local index.md and index.html",
+    "parity": "fallback_only"
+  },
   "replacements": [],
   "source_path": "docs-canvas/skills/docs-canvas/SKILL.md",
   "source_sha256": "6b38908f9ab810c72f1d85b7f104520c91ee04f3b4fb84a4352c83be15a60b1d"

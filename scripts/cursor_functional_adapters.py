@@ -912,7 +912,7 @@ def run_cli_verification_fixture(
 ) -> dict[str, object]:
     """Create a project-local verification fixture from real CLI observations.
 
-    Doctor syntax/version/health checks run before every feature drive. Each
+    Doctor syntax/version/health checks run before the feature drives. Each
     feature command is a separate subprocess before any skill file is written;
     declared app state is cleaned after the drives while captured evidence
     survives. This is a disposable fixture proof, not live target verification.
@@ -1202,11 +1202,11 @@ def maintain_cli_verification_fixture(
             "first_cleanup": first_cleanup,
             "second_cleanup": second_cleanup,
             "doctor": doctor_result,
-            "source_wave": "OBSERVED" if normalized_source_wave is not None else "NOT_OBSERVED",
+            "source_wave": "OBSERVED_INPUT_ONLY" if normalized_source_wave is not None else "NOT_OBSERVED",
             "launch": {
                 "status": "PASS",
                 "mode": "short-lived-cli",
-                "readiness": "Doctor syntax/version/health passed before each maintenance pass",
+                "readiness": "Doctor syntax/version/health passed before maintenance drives",
             },
             "reconciled_features": expected_features,
             "observation_source": "independent subprocess stdout/stderr/exit capture",

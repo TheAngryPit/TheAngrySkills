@@ -612,7 +612,7 @@ console.log(JSON.stringify({{
             self.assertEqual(maintained["status"], "FIXTURE_ONLY")
             self.assertEqual(maintained["changed_features"], ("create-note",))
             self.assertEqual(maintained["doctor"]["status"], "PASS")
-            self.assertEqual(maintained["source_wave"], "OBSERVED")
+            self.assertEqual(maintained["source_wave"], "OBSERVED_INPUT_ONLY")
             self.assertEqual(maintained["first_cleanup"]["status"], "PASS")
             self.assertEqual(maintained["second_cleanup"]["status"], "PASS")
             self.assertEqual(

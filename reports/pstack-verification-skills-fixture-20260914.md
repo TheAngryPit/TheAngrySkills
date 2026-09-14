@@ -1,7 +1,7 @@
 # Verification-skill fixture proof
 
 Date: 2026-09-14
-Repository: `TheAngry-Workflows`
+Repository: `TheAngrySkills` (isolated clone)
 Branch: `codex/verification-skills-b-20260914`
 Authority head: `5fdd1894ea10716a51e5f42ce87a24d1da33013a`
 
@@ -23,8 +23,8 @@ captured exit code, stdout, stderr, and regular-file side effects.
 
 ## Create proof
 
-The generated target is `.agents/skills/verify-notes/`. Before any feature
-drive, the fixture runs a read-only Doctor with all three required checks:
+The generated target is `.agents/skills/verify-notes/`. Before the feature
+drives, the fixture runs a read-only Doctor with all three required checks:
 
 - Syntax: `syntax:ok`, exit `0`, empty stderr.
 - Version: `notes-fixture 1.0`, exit `0`, empty stderr.
@@ -60,8 +60,8 @@ The first maintenance pass:
 - cleaned declared app state after the pass.
 
 Observed result: `FIXTURE_ONLY`, `changed_features=("create-note",)`, source
-wave `OBSERVED`, and both cleanup results `PASS`. A second maintenance pass
-returned `changed_features=()` with the same successful feature observations.
+wave `OBSERVED_INPUT_ONLY`, and both cleanup results `PASS`. A second maintenance
+invocation returned `changed_features=()` with the same successful feature observations.
 
 ## Missing and error branches
 

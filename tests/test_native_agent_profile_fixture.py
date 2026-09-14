@@ -15,21 +15,25 @@ from native_agent_profile_fixture import (  # noqa: E402
 )
 
 
-OBSERVED_NATIVE_SURFACE = {
+OBSERVED_TOP_LEVEL_TASK_SURFACE = {
     "create_thread": ("prompt", "target", "thinking", "model", "title"),
     "send_message_to_thread": ("threadId", "prompt", "thinking", "model"),
     "wait_threads": ("targets", "timeoutMs"),
 }
+OBSERVED_SUBAGENT_SURFACE = {
+    "spawn_agent": ("task_name", "agent_type", "fork_turns", "message"),
+    "followup_task": ("target", "message"),
+}
 
 
 class NativeAgentProfileFixtureTests(unittest.TestCase):
-    def test_current_surface_stops_at_static_fixture_proof(self):
+    def test_top_level_task_surface_stops_at_static_fixture_proof(self):
         with tempfile.TemporaryDirectory() as temporary:
             sentinel = Path(temporary) / "config-sentinel"
             sentinel.write_text("unchanged\n")
             result = run_native_agent_profile_fixture(
                 ASSETS,
-                OBSERVED_NATIVE_SURFACE,
+                OBSERVED_TOP_LEVEL_TASK_SURFACE,
                 synthetic_input="SAFE_SYNTHETIC_PROFILE_PROBE",
             )
             self.assertEqual(result["status"], "STATIC_PROOF_ONLY")
@@ -70,15 +74,21 @@ class NativeAgentProfileFixtureTests(unittest.TestCase):
             self.assertIn("6 limits:", result["report"])
             self.assertEqual(sentinel.read_text(), "unchanged\n")
 
-    def test_surface_with_selector_is_detected_but_never_invoked(self):
-        surface = dict(OBSERVED_NATIVE_SURFACE)
-        surface["hypothetical_native_tool"] = ("agent_type", "prompt")
-        result = run_native_agent_profile_fixture(ASSETS, surface)
+    def test_native_subagent_selector_is_detected_but_fixture_never_invokes_it(self):
+        result = run_native_agent_profile_fixture(ASSETS, OBSERVED_SUBAGENT_SURFACE)
         self.assertEqual(result["status"], "STATIC_PROOF_ONLY")
         self.assertEqual(result["discovery"]["status"], "EXPOSED_NOT_RUN")
         self.assertEqual(result["discovery"]["exposed_selectors"], ("agent_type",))
         self.assertEqual(result["nominal_selection"]["status"], "NOT_ATTEMPTED")
         self.assertFalse(result["session_created"])
+
+    def test_generic_configuration_profile_is_not_a_named_agent_selector(self):
+        result = run_native_agent_profile_fixture(
+            ASSETS,
+            {"codex_cli": ("profile", "model")},
+        )
+        self.assertEqual(result["discovery"]["status"], "NOT_EXPOSED")
+        self.assertEqual(result["discovery"]["exposed_selectors"], ())
 
     def test_missing_profile_or_malformed_surface_is_error_without_write(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -100,7 +110,7 @@ class NativeAgentProfileFixtureTests(unittest.TestCase):
 
             malformed = run_native_agent_profile_fixture(
                 root,
-                OBSERVED_NATIVE_SURFACE,
+                OBSERVED_TOP_LEVEL_TASK_SURFACE,
             )
             self.assertEqual(malformed["status"], "ERROR")
             self.assertIn("missing or symlinked profile", malformed["reason"])

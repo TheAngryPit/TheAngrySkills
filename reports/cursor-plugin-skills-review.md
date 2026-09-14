@@ -61,20 +61,23 @@ normalizations of the pinned agent sources, and their bytes match the already
 installed global profiles. The held preview names the profiles and no longer
 duplicates agent Markdown under its references. The former bounded Comment
 Sicko fixture applied the role text but did not exercise the new profile
-selection. Fresh-session discovery, named dispatch, and complete fix/playbook
-behavior are still unproven. [Invocation matrix](../docs/native-agent-profiles.md).
-The native host inspection used `codex-cli 0.154.0` help and the exposed task
-tool schemas without starting a new session. `codex --profile` selects a
-configuration profile, and `codex agents` browses sessions; neither is a
-documented selector for these agent TOMLs. The exposed task tools accept
-model and effort but no named agent profile. Exact installation bytes therefore
-remain a distribution check, not discovery or dispatch proof.
+selection. The current host's native subagent surface now exposed and accepted
+both named types. A [bounded runtime probe](cursor-native-profile-live-probe-20260914.md)
+returned one Comment Sicko review and one Poteto Eval pass on a synthetic file.
+The first-output marker for Comment Sicko was not visible in its returned final
+text. Fresh top-level task loading, raw injected-instruction readback, automatic
+skill triggers, and complete fix/playbook behavior remain unproven.
+[Invocation matrix](../docs/native-agent-profiles.md). The separate
+`codex-cli 0.154.0` and top-level task-tool inspection still found no named
+agent-profile selector there: `codex --profile` is a configuration profile,
+and `codex agents` browses sessions. Installed-byte equality is a distribution
+check; the native subagent probe is the separate runtime observation.
 The official [Subagents](https://cursor.com/docs/subagents),
 [Cloud Agents API](https://cursor.com/docs/cloud-agent/api/endpoints), and
 [Automations](https://cursor.com/help/ai-features/automations) contracts
 separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
 readonly-removes-MCP claim as unverified rather than granting write access.
-`pytest -q tests` passed 184 tests and 2 subtests; mirror `--check`
+`pytest -q tests` passed 188 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI passed on
 `158c41a7` after publication.
 None of these fixtures proves full native runtime parity, global installation,

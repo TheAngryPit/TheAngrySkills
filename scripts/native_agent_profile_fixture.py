@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 PROFILE_NAMES = ("comment-sicko", "poteto-agent")
-SELECTOR_FIELDS = ("agent_type", "agent_profile", "profile", "subagent_type")
+SELECTOR_FIELDS = ("agent_type", "agent_profile", "subagent_type")
 SKILL_REFERENCE_PATTERN = re.compile(r"`(cursor-[a-z0-9*-]+)`")
 
 

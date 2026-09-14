@@ -44,11 +44,14 @@ fresh Codex session loaded or selected the profile; that remains a host session
 check. Availability of companion skills and native delegation is also
 host-dependent.
 
-A read-only check of `codex-cli 0.154.0` help and the exposed task-tool schemas
+A read-only check of `codex-cli 0.154.0` help and the top-level task-tool schemas
 found no named-agent selector. `codex --profile` selects a configuration
-profile; `codex agents` browses sessions. The task tools expose model and effort
-overrides, but no agent-profile field. This does not disprove profile loading;
-it leaves fresh-session discovery and named dispatch unverified.
+profile; `codex agents` browses sessions. The top-level task tools expose model
+and effort overrides, but no agent-profile field. In this host, the separate
+native `collaboration.spawn_agent` surface exposed both named types and a
+[bounded runtime probe](../reports/cursor-native-profile-live-probe-20260914.md)
+returned from each. This does not establish fresh top-level task loading or
+automatic skill invocation.
 
 ## Invocation matrix
 
@@ -61,9 +64,10 @@ it leaves fresh-session discovery and named dispatch unverified.
 | Routed `cursor-how`, `cursor-why`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`, and `cursor-arena` paths | their own trigger, not generic poteto style | Their own bounded explorer, evidence, reviewer, candidate or cross-judge contract | Keep their role-specific payload, file pointers, reviewer count, cross-judge family and evidence category | Do not flatten these routes into `poteto-agent`; reuse only where that skill's contract permits | Native parallelism is conditional on host capability; missing delegates are labeled, not fabricated | Their caller's current task and declared output surface |
 | `cursor-setup-pstack` | role/model override request | model-capability-router's selected native models and efforts | Operator-selected role map, detected availability, panel fan-out, `inherit-parent`/`auto` aliases and cross-judge family rule | Preserve explicit selections; do not replace a configured role with a default profile | Selection/configuration is returned as a bounded plan or approved config change; no automatic profile activation | Explicit project/global destination only after the workflow's approval gate |
 
-The matrix describes routing contracts and output destinations. It does not
-claim that any native delegate was spawned, that a background task completed,
-or that a new session loaded a profile. Those require fresh host evidence.
+The matrix describes routing contracts and output destinations. A separate
+[bounded probe](../reports/cursor-native-profile-live-probe-20260914.md)
+observed two native named delegates returning in this host; it did not exercise
+the full matrix, background completion, or top-level task profile loading.
 
 ## Provenance and audit commands
 

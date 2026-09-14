@@ -74,6 +74,12 @@ the full matrix, background completion, or top-level task profile loading.
 The named profiles carry decision rules, not just personas. The pinned files
 below are the source; the generated held skill and public TOML are the Codex
 entry and role. Read only the source required by the selected workflow.
+An exact-name scan of the pinned pstack snapshot finds five files with
+`Comment Sicko`, `comment-sicko`, or `poteto-agent`: the two agent Markdown
+sources, `no-comments/SKILL.md`, `poteto-mode/SKILL.md`, and
+`poteto-mode/playbooks/multi-phase-plan.md`. The latter three invocation
+references are all mapped above; other routed workflows use their own source
+roles.
 
 | Workflow | Pinned orientation and payload | Codex resolution | Observation and remaining gap |
 | --- | --- | --- | --- |

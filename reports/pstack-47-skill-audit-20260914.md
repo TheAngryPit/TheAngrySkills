@@ -39,7 +39,7 @@ from publication alone.
 | interrogate | Adversarial multi-model diff review, quality check and lead judgment. | Four configurable reviewers, rubric/reviewer/quality/lead references. | Same; held; no live independent reviewer coverage, consensus, or lead judgment proof. |
 | maintain-verification-skill | One read-only source scout per feature; coordinator alone drives live app; distinguish doc drift from product bug; retain evidence and cleanup. | Project `verify-*`, doctor and control surface; source-wave delegates. | Same; held. CLI fixture reconciles controlled drift and clean rerun; no source-wave, live target, changed-outcome PR or native activation. |
 | make-bot-ui | Grok Bot webhook UI, sender-key handoff, local host and Tailscale exposure. | Real webhook, credential, host, Tailscale. | Same; security-held. No Codex equivalent or live webhook proof; heartbeat is not the webhook. |
-| no-comments | Spawn Comment Sicko, parent checks report/diff, one rejected rerun, fixes accepted flags, architect sketch only for shape, optional constraint encoding gate. | Named `comment-sicko`; `cursor-how`, `cursor-why`, `cursor-architect` on their source branches. | Same; held. Old preview bundled role reference but weakened named selection; native profile integration is in progress. One bounded role fixture is not the whole fix loop. |
+| no-comments | Spawn Comment Sicko, parent checks report/diff, one rejected rerun, fixes accepted flags, architect sketch only for shape, optional constraint encoding gate. | Named `comment-sicko`; `cursor-how`, `cursor-why`, `cursor-architect` on their source branches. | Same; held. Native named-profile asset and exact source adaptation now exist, but fresh-session selection and the whole fix loop are unproven. |
 | poteto-mode | Select one of 23 playbooks; conditional reminder; route named companions, delegates, proof and final reply. | Ordinary playbook helpers use `poteto-agent`; routed `how/why/interrogate/reflect/swarm` keep their own types. `cursor-deslop`, `cursor-control-cli`, `cursor-control-ui`, model router, proof orchestrator; Bun scripts. | One top-level wording drift; held. All 23 preview playbooks render, but sticky mode, cross-turn reuse, native agent selection, cloud, script/polling and live completion unproven. |
 | recall | Reconstruct bounded task context and source-backed handoff. | Native thread/history access and `cursor-why` when rationale is needed. | Same; held; actual bounded history reconstruction and selection unproven. |
 | reflect | Three transcript-review lenses, separate synthesizer, Accepted/Rejected/Backlog; ask approval before changing skills. | Judgment/tooling/divergent roles, MCP context access when available. Cursor `readonly:false` is an MCP workaround, not a Codex permission requirement. | Same; held with contextual security findings; no live transcript/reviewer/synthesizer or approved edit proof. |
@@ -91,7 +91,7 @@ skills or the published catalog. The upstream agent source hashes are
 `comment-sicko.md` `c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82`
 and `poteto-agent.md` `c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9`.
 
-The repo's 165 tests plus 2 subtests, mirror `--check` at 91/54/167, and
+The repo's 169 tests plus 2 subtests, mirror `--check` at 91/54/167, and
 the pstack Bun 52/52/typecheck are existing bounded evidence for the current
 draft. They do not prove 47 native workflows. The live proof queue is the
 named-agent selection and no-comments loop, poteto playbook routing,

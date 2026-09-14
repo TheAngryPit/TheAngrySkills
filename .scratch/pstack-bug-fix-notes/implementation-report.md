@@ -213,25 +213,25 @@ are rejected before any write.
 The public distribution surface for the two native profiles is the existing
 `skills/core/model-capability-router/assets/agents/` directory. The committed
 assets are `comment-sicko.toml` and `poteto-agent.toml`; the pinned Markdown
-role files were not copied into this worktree or generated Cursor output.
-`cursor-no-comments` now selects the named `comment-sicko` profile and keeps
+role files remain only in the pinned snapshot and are not duplicated in the
+generated Cursor output. `cursor-no-comments` now names the `comment-sicko`
+profile for native selection and keeps
 `cursor-how`, `cursor-why`, and the Step 5-only constraint-encoding approval
-gate explicit. `cursor-poteto-mode` selects the named `poteto-agent` profile,
+gate explicit. `cursor-poteto-mode` names the `poteto-agent` profile,
 keeps `cursor-principle-*` leaf routing explicit, and preserves role-specific
 contracts for `cursor-how`, `cursor-why`, `cursor-interrogate`,
 `cursor-reflect`, `cursor-swarm`, and `cursor-arena`.
 
 `scripts/check-native-agent-profiles.py` validates TOML syntax, native names,
 absence of Cursor `subagent_type`/`generalPurpose` syntax, explicit installation
-and replacement guards, and target symlink refusal. When pointed read-only at
-the pinned source root from the integration clone, it compared the two
+and replacement guards, and target symlink refusal. In this integration clone,
+the default pinned source root is present; the checker compared the two
 developer-instruction bodies against exact normalized adaptations and matched
 the installed `/Users/vitorcepedalopes/.codex/agents/` TOMLs byte-for-byte.
 The reviewed source hashes are `c0fd0383...01f7c82` for `comment-sicko` and
-`c3850be1...37f288e9` for `poteto-agent`. The source files are absent from this
-worktree's snapshot, so the default checker truthfully reports source comparison
-as `not_observed`; the external read-only source root is required for that
-stronger comparison.
+`c3850be1...37f288e9` for `poteto-agent`. The earlier Luna checkout lacked
+those pinned files and reported `not_observed` there; this integrated checkout
+reports `exact normalized body adaptation` for both.
 
 The public installer is opt-in and refuses differing existing profiles unless
 `--replace` is explicit. Tests prove that a target symlink cannot redirect a

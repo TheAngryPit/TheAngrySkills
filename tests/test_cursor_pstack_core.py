@@ -239,7 +239,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertTrue((target / "scripts/watch-pr/watch-pr").is_file())
             self.assertFalse((target / "references/poteto-agent.md").exists())
             native_profile = (
-                self.root
+                REPO
                 / "skills/core/model-capability-router/assets/agents/poteto-agent.toml"
             )
             self.assertTrue(native_profile.is_file())

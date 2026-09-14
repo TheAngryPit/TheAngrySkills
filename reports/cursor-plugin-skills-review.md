@@ -42,9 +42,23 @@ published technical-writing overlay incorrectly made source-required
 names. The generated output now requires `cursor-unslop`, uses the two
 published `cursor-principle-*` names, and retains `references/patterns.md`.
 These are link/contract corrections; runtime selection is still unproven.
-`pytest -q tests` passed 165 tests and 2 subtests; mirror `--check`
+The public `comment-sicko` and `poteto-agent` TOML assets now provide the
+named native destinations for the held `cursor-no-comments` and
+`cursor-poteto-mode` workflows. Their developer-instruction bodies match exact
+normalizations of the pinned agent sources, and their bytes match the already
+installed global profiles. The held preview names the profiles and no longer
+duplicates agent Markdown under its references. The former bounded Comment
+Sicko fixture applied the role text but did not exercise the new profile
+selection. Fresh-session discovery, named dispatch, and complete fix/playbook
+behavior are still unproven. [Invocation matrix](../docs/native-agent-profiles.md).
+The official [Subagents](https://cursor.com/docs/subagents),
+[Cloud Agents API](https://cursor.com/docs/cloud-agent/api/endpoints), and
+[Automations](https://cursor.com/help/ai-features/automations) contracts
+separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
+readonly-removes-MCP claim as unverified rather than granting write access.
+`pytest -q tests` passed 169 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI last passed on
-`fa7025b6`; the new integration head awaits publication and CI.
+`7421f9e1`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

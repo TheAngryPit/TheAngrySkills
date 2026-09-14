@@ -30,6 +30,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_plugin_scaffold_fixture.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
+            "skills/core/model-capability-router/assets/agents",
             "reports/cursor-plugin-skills-state.json",
             ".claude-plugin/marketplace.json",
         ):

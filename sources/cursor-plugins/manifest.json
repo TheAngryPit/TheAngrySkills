@@ -1138,7 +1138,16 @@
       "published_name": "cursor-no-comments",
       "upstream_purpose": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
       "upstream_skill": "no-comments",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; named comment-sicko profile asset; exact normalized role adaptation against pinned source; fixture de trigger; native session selection and live reviewer remain unproven",
+      "native_agent_profiles": [
+        {
+          "name": "comment-sicko",
+          "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
+          "pinned_source_path": "pstack/agents/comment-sicko.md",
+          "pinned_source_sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+          "loading": "explicit profile installation; fresh-session selection not proven"
+        }
+      ]
     },
     {
       "availability": "Codex adapter renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; fixture-local portions of source steps 1/4/5 exercised and 2/3/6 partial; correction is prewritten by the fixture caller; selected dependency-free orch/store and watch-pr/github module paths run in scratch with Bun 1.4.2 and mocks; exact-lock dependency install, cache-populated bootstrap install/restart, real CLI smoke, and one bounded read-only GitHub status query for authorized PR #64 are proven in scratch; no real PR mutation, live parity, polling/stack behavior, native session, or cloud task lane demonstrated; install cache run was not network-instrumented, the key does not verify package versions, and Review ✅ is not a review-approval claim",
@@ -1204,7 +1213,16 @@
       "published_name": "cursor-poteto-mode",
       "upstream_purpose": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
       "upstream_skill": "Poteto Mode",
-      "validation_requirement": "frontmatter e referências relativas; all 23 playbooks and references rendered in staging; fixture de leitura estrutural de playbook com ausência/erro; fixture contextual bug-fix da app de notas com partes dos passos 1/4/5 exercidas na fixture e 2/3/6 parciais, evidência independente antes/falha/trace/correção/depois, diff apenas registado estruturalmente, commits locais repro-before-fix, simulação de PR em bare remote local e guarda de falha exacta; no real PR mutation/live parity; check-plan seguro e worktree-audit apenas com mocks; exact-lock manual install with --ignore-scripts, cache-populated missing-key bootstrap install/restart, bun test 52/52, typecheck, and real orch/watch-pr CLI smoke with exact commander 14.0.0 plus mocked git/gh and external timeout; one bounded read-only real GitHub status query for authorized PR #64 with raw reviewDecision/isDraft/mergeStateStatus reconciliation; Review ✅ must not be interpreted as review approval, and polling/stack, merge, live native behavior, and broader GitHub parity remain unproven; cache run was not network-instrumented, the key does not verify installed versions; teste de comportamento no host Codex; revisão estática rastreável e execução controlada dos ficheiros de apoio antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; all 23 playbooks and references rendered in staging; named poteto-agent profile asset and exact normalized role adaptation against pinned source; fixture de leitura estrutural de playbook com ausência/erro; fixture contextual bug-fix da app de notas com partes dos passos 1/4/5 exercidas na fixture e 2/3/6 parciais, evidência independente antes/falha/trace/correção/depois, diff apenas registado estruturalmente, commits locais repro-before-fix, simulação de PR em bare remote local e guarda de falha exacta; no real PR mutation/live parity; check-plan seguro e worktree-audit apenas com mocks; exact-lock manual install with --ignore-scripts, cache-populated missing-key bootstrap install/restart, bun test 52/52, typecheck, and real orch/watch-pr CLI smoke with exact commander 14.0.0 plus mocked git/gh and external timeout; one bounded read-only real GitHub status query for authorized PR #64 with raw reviewDecision/isDraft/mergeStateStatus reconciliation; Review ✅ must not be interpreted as review approval, and polling/stack, merge, live native behavior, and broader GitHub parity remain unproven; cache run was not network-instrumented, the key does not verify installed versions; teste de comportamento no host Codex; revisão estática rastreável e execução controlada dos ficheiros de apoio antes de disponibilizar",
+      "native_agent_profiles": [
+        {
+          "name": "poteto-agent",
+          "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
+          "pinned_source_path": "pstack/agents/poteto-agent.md",
+          "pinned_source_sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+          "loading": "explicit profile installation; fresh-session selection not proven"
+        }
+      ]
     },
     {
       "availability": "content available; live selection not demonstrated",

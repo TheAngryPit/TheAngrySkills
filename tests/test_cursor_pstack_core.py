@@ -217,7 +217,11 @@ class CursorPstackCoreTests(unittest.TestCase):
                 )
                 self.assertEqual(
                     contract["native_mapping"]["upstream_agent_dependency"]["status"],
-                    "bundled_as_native_role_reference",
+                    "public_native_profile_asset",
+                )
+                self.assertEqual(
+                    contract["native_mapping"]["upstream_agent_dependency"]["asset_path"],
+                    "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
                 )
 
     def test_poteto_renders_all_playbooks_with_native_markdown_boundary(self):
@@ -233,17 +237,22 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertTrue((target / "scripts/package.json").is_file())
             self.assertTrue((target / "scripts/orch/orch.ts").is_file())
             self.assertTrue((target / "scripts/watch-pr/watch-pr").is_file())
-            delegate_role = target / "references/poteto-agent.md"
-            self.assertTrue(delegate_role.is_file())
-            self.assertIn("cursor-poteto-mode", delegate_role.read_text())
-            self.assertIn("cursor-principle-*", delegate_role.read_text())
+            self.assertFalse((target / "references/poteto-agent.md").exists())
+            native_profile = (
+                self.root
+                / "skills/core/model-capability-router/assets/agents/poteto-agent.toml"
+            )
+            self.assertTrue(native_profile.is_file())
+            self.assertIn("cursor-poteto-mode", native_profile.read_text())
+            self.assertIn("cursor-principle-*", native_profile.read_text())
 
             skill_markdown = (target / "SKILL.md").read_text()
             self.assertIn("per-turn native Codex guidance adapter", skill_markdown)
             self.assertIn("cursor-deslop", skill_markdown)
             self.assertIn("cursor-control-cli", skill_markdown)
             self.assertIn("cursor-control-ui", skill_markdown)
-            self.assertIn("pstack/agents/poteto-agent.md", skill_markdown)
+            self.assertIn("model-capability-router", skill_markdown)
+            self.assertIn("named `poteto-agent` profile", skill_markdown)
             self.assertIn("Cloud-capable task environments", skill_markdown)
             self.assertIn("do not claim parity", skill_markdown)
             opening = (target / "playbooks/opening-a-pr.md").read_text()
@@ -282,6 +291,17 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertEqual(malformed["status"], "ERROR")
             with self.assertRaises(AdapterError):
                 read_pstack_playbook_fixture(target / "playbooks", "not-a-playbook")
+
+    def test_no_comments_renders_named_profile_and_preserves_gates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            target = self.render_core("cursor-no-comments", Path(temporary) / "staging")
+            skill_markdown = (target / "SKILL.md").read_text()
+            self.assertIn("named `comment-sicko` profile", skill_markdown)
+            self.assertIn("cursor-how", skill_markdown)
+            self.assertIn("cursor-why", skill_markdown)
+            self.assertIn("cursor-architect", skill_markdown)
+            self.assertNotIn('subagent_type: "Comment Sicko"', skill_markdown)
+            self.assertIn("Only the optional constraint encoding waits", skill_markdown)
 
     def test_poteto_preview_blocks_review_required_without_overclaiming_no_decision(self):
         bun = shutil.which("bun")

@@ -192,23 +192,21 @@ class CursorMirrorTests(unittest.TestCase):
         ):
             self.assertTrue((self.root / "skills/mirrors-cursor" / name / "SKILL.md").is_file())
 
-    def test_named_agent_is_bundled_for_its_skill_only(self):
+    def test_named_agent_uses_native_profile_without_workbench_copy(self):
         preview = self.root / "candidate-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
         skill = (preview / "cursor-no-comments/SKILL.md").read_text()
-        agent = (preview / "cursor-no-comments/references/comment-sicko-agent.md").read_text()
-        self.assertIn("references/comment-sicko-agent.md", skill)
+        self.assertIn("named `comment-sicko` profile", skill)
+        self.assertFalse(
+            (preview / "cursor-no-comments/references/comment-sicko-agent.md").exists()
+        )
+        agent = (
+            self.root
+            / "skills/core/model-capability-router/assets/agents/comment-sicko.toml"
+        ).read_text()
         self.assertIn("cursor-how", agent)
         self.assertNotIn("`Task`", skill)
-
-        overlay = self.root / "sources/cursor-plugins/overlays/cursor-no-comments.json"
-        data = json.loads(overlay.read_text())
-        data["bundled_support_files"][0]["source_path"] = "pstack/agents/poteto-agent.md"
-        overlay.write_text(json.dumps(data, indent=2) + "\n")
-        invalid = self.run_build("--preview-candidates", str(self.root / "invalid-preview"))
-        self.assertNotEqual(invalid.returncode, 0)
-        self.assertIn("unreviewed plugin-level support dependency", invalid.stderr)
 
     def test_thermos_bundles_two_distinct_review_lenses(self):
         preview = self.root / "thermos-preview"

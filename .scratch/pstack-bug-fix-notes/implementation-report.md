@@ -207,3 +207,35 @@ A third pass returned `changed_features=()`; this is a fixture-only
 reconciliation/clean result, not a source wave, live target pass, PR, or
 native host activation. Unsafe app/feature names containing newline or quotes
 are rejected before any write.
+
+## Native pstack agent-profile distribution proof
+
+The public distribution surface for the two native profiles is the existing
+`skills/core/model-capability-router/assets/agents/` directory. The committed
+assets are `comment-sicko.toml` and `poteto-agent.toml`; the pinned Markdown
+role files were not copied into this worktree or generated Cursor output.
+`cursor-no-comments` now selects the named `comment-sicko` profile and keeps
+`cursor-how`, `cursor-why`, and the Step 5-only constraint-encoding approval
+gate explicit. `cursor-poteto-mode` selects the named `poteto-agent` profile,
+keeps `cursor-principle-*` leaf routing explicit, and preserves role-specific
+contracts for `cursor-how`, `cursor-why`, `cursor-interrogate`,
+`cursor-reflect`, `cursor-swarm`, and `cursor-arena`.
+
+`scripts/check-native-agent-profiles.py` validates TOML syntax, native names,
+absence of Cursor `subagent_type`/`generalPurpose` syntax, explicit installation
+and replacement guards, and target symlink refusal. When pointed read-only at
+the pinned source root from the integration clone, it compared the two
+developer-instruction bodies against exact normalized adaptations and matched
+the installed `/Users/vitorcepedalopes/.codex/agents/` TOMLs byte-for-byte.
+The reviewed source hashes are `c0fd0383...01f7c82` for `comment-sicko` and
+`c3850be1...37f288e9` for `poteto-agent`. The source files are absent from this
+worktree's snapshot, so the default checker truthfully reports source comparison
+as `not_observed`; the external read-only source root is required for that
+stronger comparison.
+
+The public installer is opt-in and refuses differing existing profiles unless
+`--replace` is explicit. Tests prove that a target symlink cannot redirect a
+write to an external sentinel. `tests.test_native_agent_profiles` covers
+generation/distribution, TOML parsing, exact installed bytes, refusal and
+replacement. Native profile loading or selection in a fresh Codex session and
+availability of companion skills/delegation remain unproven.

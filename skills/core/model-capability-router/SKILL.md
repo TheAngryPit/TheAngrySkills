@@ -105,3 +105,28 @@ native discovery or links. A profile link is not a second independent version.
 Keep source metadata pointed at the normal repository. `npx skills` records
 update provenance; it does not provide an automatic update schedule. Inspect
 the installed CLI's update/check behavior before using it as a read-only check.
+
+## Native named-agent profiles
+
+This skill is also the public distribution surface for the native named-agent
+profiles used by the adapted pstack workflows:
+
+- `assets/agents/comment-sicko.toml` is the named reviewer for
+  `cursor-no-comments`.
+- `assets/agents/poteto-agent.toml` is the named delegate for
+  `cursor-poteto-mode` playbooks.
+
+The assets are not loaded merely because this skill is installed. To make the
+profiles selectable by a new Codex session, copy them explicitly to the native
+agent directory with the checked installer:
+
+```bash
+python3 scripts/check-native-agent-profiles.py \
+  --install --installed-dir ~/.codex/agents
+```
+
+The command refuses to replace a differing existing profile unless
+`--replace` is supplied explicitly. Run it again with only
+`--installed-dir ~/.codex/agents` for a byte-for-byte check. This validates
+distribution and configuration, not that a newly started session has loaded or
+selected the profile; that must be checked by the host session.

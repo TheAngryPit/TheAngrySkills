@@ -74,6 +74,7 @@ SECURITY_HOLDS = {
 }
 
 PROMOTED = {
+    "cursor-arena",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
     "cursor-principle-guard-the-context-window",
@@ -89,6 +90,7 @@ PROMOTED = {
 }
 
 GUIDE_ONLY = PROMOTED - {
+    "cursor-arena",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-how",
     "cursor-why",

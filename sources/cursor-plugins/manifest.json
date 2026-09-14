@@ -890,7 +890,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Bounded native local Arena observed: N=2 isolated design candidates, independent cross-judge, base/grafts, runtime verification after a drift correction; automatic trigger, Work cloud and other task shapes remain unproven.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -904,12 +904,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/arena/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded explicit-only native local Arena design run with candidate, judge, graft and observable verification receipts",
+      "publish": true,
       "published_name": "cursor-arena",
       "upstream_purpose": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
       "upstream_skill": "arena",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and links; explicit-only native invocation policy; isolated candidates, cross-judge, base/graft and verified local result; separately label cloud and automatic trigger gaps"
     },
     {
       "availability": "Codex workflow not demonstrated",

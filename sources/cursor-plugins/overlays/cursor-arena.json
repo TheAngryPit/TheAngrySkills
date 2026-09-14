@@ -20,12 +20,12 @@
         "local candidate artifacts"
       ],
       "fallback": "An unavailable candidate or judge is recorded as missing/partial, not a fabricated winner or full arena result.",
-      "availability": "bounded_native_n2_candidates_cross_judge_graft_verify_and_runtime_contract_observed; Work cloud, exact upstream Cursor roles, cursor-how/cursor-why Phase A previews, and automatic trigger remain unproven"
+      "availability": "bounded_native_n2_candidates_cross_judge_graft_verify_and_runtime_contract_observed; Work cloud, exact upstream Cursor roles, and automatic trigger remain unproven"
     },
     "external_dependencies": [
       "native parallel delegates if exposed"
     ],
-      "permission_gates": [
+    "permission_gates": [
       "Do not use Work cloud or hidden cloud workers without explicit authorization; this observed path used native local subagents.",
       "Launch candidates with the same contract into separate writable paths, then read every artifact before judging.",
       "An unavailable candidate or judge is recorded as missing/partial, not a fabricated winner.",
@@ -36,7 +36,7 @@
       "missing_tool_or_input": "If a candidate or judge is unavailable, record the exact dropout and mark the aggregate partial; one fallback candidate is not an arena and no winner is fabricated.",
       "error": "Malformed input, failed candidate, failed judge, or synthesis verification failure is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope."
     },
-    "promotion_status": "held_until_bounded_native_behavior_and_permission_proof",
+    "promotion_status": "promoted_bounded_native_local_arena_explicit_only_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -49,10 +49,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nUse native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.\n",
+  "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a local design Arena, not a claim about every code or cloud task. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
-  "proof": "Pinned source hash and deterministic build are static provenance. A disposable native N=2 run produced separate candidate artifacts, a reviewer cross-judge score and base/graft decision, a planner redesign after a failed hypothesis, and a passing disposable runtime contract after a real drift failure was corrected. Exact agent types and requested model/effort metadata are recorded in the companion report; completion messages are self-reports. Work cloud, cursor-how/cursor-why Phase A preview invocation, automatic trigger, production artifact behavior, and cross-host parity remain unproven.",
+  "proof": "Pinned source hash and deterministic build are static provenance. A disposable native N=2 run produced separate candidate artifacts, a reviewer cross-judge score and base/graft decision, a planner redesign after a failed hypothesis, and a passing disposable runtime contract after a real drift failure was corrected. Exact agent types and requested model/effort metadata are recorded in the companion report; completion messages are self-reports. Work cloud, automatic trigger, production artifact behavior, and cross-host parity remain unproven.",
   "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
   "replacements": [
     {

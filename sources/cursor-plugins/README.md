@@ -19,7 +19,9 @@ connector, model, hook or cloud availability.
 
 PR #64 merged 59 emitted mirrors under `skills/mirrors-cursor/`, including
 bounded explicit-only `cursor-how`, `cursor-why`, `cursor-show-me-your-work`,
-`cursor-thermos`, and local-computer `cursor-swarm`. The other 29 active skills
+`cursor-thermos`, and local-computer `cursor-swarm`. This branch adds a bounded
+explicit-only local `cursor-arena` workflow, bringing the catalog to 60
+published mirrors. The other 28 active skills
 have contracts and pinned sources but remain held and unindexed; all 88 active
 slash skills remain in scope. The three Benny automation sources are retained
 outside this slash catalog. Publication is not proof of full native execution.

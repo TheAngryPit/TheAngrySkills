@@ -1,6 +1,10 @@
 {
-  "candidate_not_published": 29,
+  "candidate_not_published": 28,
   "generated_files": {
+    "cursor-arena/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-arena/MIRROR.md": "5628ee4a06bae0a9869d27f096203384c0a7aec702c2ea6c3b6f5591522dae1a",
+    "cursor-arena/SKILL.md": "092ab928c953d8076e187e076e6e67fd3d915c4d9ef0081df82a02931cb6771a",
+    "cursor-arena/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "c9b8e41ac8d9045001b560df1459594376a04f88dbca8da0bf7601846e9444ca",
     "cursor-blast-radius/SKILL.md": "329eca1965c7d20f4e267b42b981b61a01003c29a166273ecc997db32a730429",
@@ -242,7 +246,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 59,
+  "published_skills": 60,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

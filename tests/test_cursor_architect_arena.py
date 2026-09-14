@@ -46,7 +46,7 @@ def test_arena_native_roles_and_partial_fallback_are_explicit():
     assert "bounded_native_n2_candidates_cross_judge_graft_verify_and_runtime_contract_observed" in contract["native_mapping"]["availability"]
     assert "Work cloud" in contract["native_mapping"]["availability"]
     assert "partial" in contract["native_mapping"]["fallback"]
-    assert contract["promotion_status"].startswith("held_until_")
+    assert contract["promotion_status"].startswith("promoted_")
     assert "candidate artifacts" in overlay["proof"]
     assert "collaboration.spawn_agent" in overlay["codex_note"]
     assert "multi_agent_v1__spawn_agent" not in overlay["codex_note"]

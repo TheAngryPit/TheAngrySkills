@@ -171,6 +171,24 @@ def normalize_description(frontmatter: str) -> str:
     return "\n".join(result)
 
 
+def codex_invocation_policy(frontmatter: str, target: Path) -> str:
+    """Translate Cursor's explicit-only flag to Codex skill metadata."""
+
+    flag = re.compile(r"^disable-model-invocation:[ \t]*true[ \t]*$", re.MULTILINE)
+    matches = flag.findall(frontmatter)
+    if not matches:
+        return frontmatter
+    if len(matches) != 1:
+        raise ValueError(f"duplicate explicit-only flag: {target}")
+    policy = target / "agents" / "openai.yaml"
+    if policy.exists():
+        raise ValueError(f"explicit-only policy collision: {policy}")
+    policy.parent.mkdir(parents=True, exist_ok=True)
+    policy.write_text("policy:\n  allow_implicit_invocation: false\n")
+    return re.sub(r"\n^disable-model-invocation:[ \t]*true[ \t]*$", "", frontmatter,
+                  count=1, flags=re.MULTILINE)
+
+
 def rewrite_sibling_links(source_file: Path, output_file: Path, text: str,
                           source_to_entry: dict[Path, dict], staging: Path, commit: str) -> str:
     def replace(match: re.Match[str]) -> str:
@@ -253,7 +271,7 @@ def render_skill(entry: dict, staging: Path, commit: str,
         shutil.copy2(ROOT / source_rel, output)
     text = skill_file.read_text()
     marker = SKILL_PATTERN.match(text)
-    normalized = normalize_description(marker.group(1))
+    normalized = codex_invocation_policy(normalize_description(marker.group(1)), target)
     text = text[:marker.start(1)] + normalized + text[marker.end(1):]
     if overlay.get("codex_note"):
         marker = SKILL_PATTERN.match(text)

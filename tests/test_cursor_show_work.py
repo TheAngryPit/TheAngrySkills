@@ -1,6 +1,7 @@
 """Behavioral proof for the held, bounded Cursor show-me-your-work preview."""
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -43,7 +44,7 @@ class ShowWorkFixture(unittest.TestCase):
         self.task = self.base / self._testMethodName
         self.task.mkdir()
 
-    def run_helper(self, logfile, *values, root=None, cwd=None):
+    def run_helper(self, logfile, *values, root=None, cwd=None, timeout=None):
         task_root = self.task if root is None else root
         return subprocess.run(
             [
@@ -58,6 +59,7 @@ class ShowWorkFixture(unittest.TestCase):
             capture_output=True,
             check=False,
             cwd=cwd,
+            timeout=timeout,
         )
 
     def test_normal_two_row_append_stays_under_root(self):
@@ -138,6 +140,46 @@ class ShowWorkFixture(unittest.TestCase):
         self.assertIn("symlink", result.stderr)
         self.assertEqual(sentinel.read_text(), "keep me")
         self.assertTrue(logfile.is_symlink())
+
+    def test_fifo_target_is_rejected_without_blocking(self):
+        logfile = self.task / "decisions.fifo"
+        os.mkfifo(logfile, 0o600)
+
+        result = self.run_helper(
+            logfile,
+            "phase",
+            "new",
+            "why",
+            "evidence",
+            "DONE",
+            timeout=2,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("regular file", result.stderr)
+        self.assertTrue(logfile.is_fifo())
+
+    def test_hardlink_target_is_rejected_without_mutating_external_sentinel(self):
+        outside = self.base / "outside-hardlink"
+        outside.mkdir()
+        sentinel = outside / "sentinel.tsv"
+        sentinel.write_text("keep me")
+        logfile = self.task / "hardlink.tsv"
+        os.link(sentinel, logfile)
+
+        result = self.run_helper(
+            logfile,
+            "phase",
+            "new",
+            "why",
+            "evidence",
+            "DONE",
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("hard-linked", result.stderr)
+        self.assertEqual(sentinel.read_text(), "keep me")
+        self.assertEqual(logfile.read_text(), "keep me")
 
     def test_symlink_parent_escape_is_rejected_and_external_sentinel_survives(self):
         outside = self.base / "outside-parent"

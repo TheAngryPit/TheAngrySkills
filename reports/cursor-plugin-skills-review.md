@@ -33,8 +33,9 @@ before it can collide with the generated feature index. This remains
 target, per-feature source-wave delegation, changed-outcome PR, native skill
 activation, and filesystem/network isolation have not been proven.
 The held `cursor-show-me-your-work` preview now requires an explicit root for
-its TSV helper. Ten tests exercise append and sanitization plus path escapes,
-invalid roots, and parent/target symlinks, with external sentinels unchanged.
+its TSV helper. Twelve tests exercise append and sanitization plus path escapes,
+invalid roots, parent/target symlinks, hardlinks and FIFO rejection, with
+external sentinels unchanged.
 The pinned source is unchanged and the skill remains held: simultaneous writers,
 durability, secret redaction, transcript audit, independent review, and live
 activation are not proven.
@@ -68,7 +69,7 @@ The official [Subagents](https://cursor.com/docs/subagents),
 [Automations](https://cursor.com/help/ai-features/automations) contracts
 separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
 readonly-removes-MCP claim as unverified rather than granting write access.
-`pytest -q tests` passed 178 tests and 2 subtests; mirror `--check`
+`pytest -q tests` passed 180 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI passed on
 `158c41a7` after publication.
 None of these fixtures proves full native runtime parity, global installation,

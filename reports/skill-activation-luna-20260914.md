@@ -1,6 +1,6 @@
 # Skill activation fixture — Luna bounded proof
 
-Date: 2026-09-14
+Date: 2026-09-14. Source contract: [OpenAI Build skills](https://learn.chatgpt.com/docs/build-skills).
 
 ## Scope
 
@@ -10,17 +10,19 @@ synthetic skills under `.agents/skills/` and an exact byte copy of the project
 `model-capability-router` skill. No global skill, config, Doctor, PR, Sol
 checkout, or user-owned Codex task was changed.
 
-## Independent fixture proof
+## Static fixture checks
 
-- Project-local discovery root: `.agents/skills/`.
-- Catalogue entries: `fixture-explicit-only`, `fixture-implicit-eligible`, and
+- Project-local root: `.agents/skills/`. A local Python scanner found
+  `fixture-explicit-only`, `fixture-implicit-eligible`, and
   `model-capability-router`.
 - `fixture-explicit-only` has `policy.allow_implicit_invocation: false`.
 - `fixture-implicit-eligible` has the default implicit policy.
 - `model-capability-router/SKILL.md` matches the Luna source byte-for-byte:
   `e2867ae60d8e2234681056543888c5b4ae2f9249158cf6bc1ecfa9982d1e33cb`.
-- The fixture classifier keeps catalogue discovery separate from selected full
-  `SKILL.md` reads; the name-only router check remains before a full read.
+- The static classifier sees `$fixture-explicit-only` without a path in the
+  prompt and sees the implicit policy. Its selected full `SKILL.md` read is a
+  Python file read, not a Codex read. The tests now build their own temporary
+  fixture so they can run independently of Luna's `/private/tmp` project.
 
 ## Runtime boundary
 
@@ -34,8 +36,9 @@ reached the API but returned:
 
 The explicit-only, unmentioned, implicit-trigger, and delegated-agent cases
 therefore have no live model result. They remain `NOT_OBSERVED`; no activation
-marker is claimed. In particular, a local catalogue hit is not evidence that
-an agent or delegated agent read the full `SKILL.md`.
+marker is claimed. The CLI emitted `thread.started` and `turn.started`, but no
+model response or skill-read event. A local Python catalogue hit is not evidence
+of Codex discovery or that an agent or delegated agent read the full `SKILL.md`.
 
 ## Commands and verification
 

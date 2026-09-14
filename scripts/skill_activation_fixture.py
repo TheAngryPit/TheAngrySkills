@@ -1,4 +1,4 @@
-"""Read-only checks for local Codex skill discovery and activation boundaries."""
+"""Static checks for a disposable project skill fixture, not Codex runtime proof."""
 
 from __future__ import annotations
 
@@ -135,13 +135,13 @@ def classify_activation_request(
         return {"status": "NOT_IN_CATALOGUE", "skill_name": skill_name}
 
     explicit_token = f"${skill_name}"
-    explicit = explicit_token in prompt
+    explicit = re.search(rf"{re.escape(explicit_token)}(?![\w-])", prompt) is not None
     has_path = "/" in prompt or str(catalogue["fixture_root"]) in prompt
     implicit_triggered = bool(implicit_trigger and implicit_trigger in prompt)
     allow_implicit = bool(entry["allow_implicit_invocation"])
 
     if explicit:
-        status = "EXPLICIT_NAME_RESOLVED"
+        status = "EXPLICIT_TOKEN_PRESENT_NOT_OBSERVED"
     elif implicit_triggered and allow_implicit:
         status = "IMPLICIT_ELIGIBLE_NOT_OBSERVED"
     elif implicit_triggered and not allow_implicit:

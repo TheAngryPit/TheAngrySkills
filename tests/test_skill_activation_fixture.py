@@ -1,4 +1,4 @@
-"""Proof boundaries for local Codex skill discovery and activation."""
+"""Static fixture checks; live Codex discovery and activation need runtime proof."""
 
 import sys
 import tempfile
@@ -15,15 +15,38 @@ from skill_activation_fixture import (  # noqa: E402
 )
 
 
-FIXTURE_ROOT = Path("/private/tmp/skill-activation-luna.0xFjUr")
 ROUTER_SOURCE = ROOT / "skills/core/model-capability-router/SKILL.md"
-ROUTER_FIXTURE = FIXTURE_ROOT / ".agents/skills/model-capability-router/SKILL.md"
 
 
 class SkillActivationFixtureTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.fixture_root = Path(self.temporary.name)
+        skills = self.fixture_root / ".agents" / "skills"
+        explicit = skills / "fixture-explicit-only"
+        implicit = skills / "fixture-implicit-eligible"
+        router = skills / "model-capability-router"
+        for skill in (explicit, implicit, router):
+            skill.mkdir(parents=True)
+        (explicit / "SKILL.md").write_text(
+            "---\nname: fixture-explicit-only\ndescription: Synthetic explicit test\n---\n\nEXPLICIT_MARKER\n",
+            encoding="utf-8",
+        )
+        (explicit / "agents").mkdir()
+        (explicit / "agents" / "openai.yaml").write_text(
+            "policy:\n  allow_implicit_invocation: false\n", encoding="utf-8"
+        )
+        (implicit / "SKILL.md").write_text(
+            "---\nname: fixture-implicit-eligible\ndescription: Synthetic implicit test\n---\n\nIMPLICIT_MARKER\n",
+            encoding="utf-8",
+        )
+        self.router_fixture = router / "SKILL.md"
+        self.router_fixture.write_bytes(ROUTER_SOURCE.read_bytes())
+
     def test_catalogue_is_separate_from_selected_full_skill_reads(self):
         result = scan_skill_catalogue(
-            FIXTURE_ROOT,
+            self.fixture_root,
             full_read_names=("fixture-explicit-only",),
         )
         self.assertEqual(
@@ -42,7 +65,7 @@ class SkillActivationFixtureTests(unittest.TestCase):
 
     def test_explicit_only_requires_name_and_no_path(self):
         result = scan_skill_catalogue(
-            FIXTURE_ROOT,
+            self.fixture_root,
             full_read_names=("fixture-explicit-only",),
         )
         explicit_prompt = (
@@ -54,12 +77,12 @@ class SkillActivationFixtureTests(unittest.TestCase):
             prompt=explicit_prompt,
             implicit_trigger="synthetic implicit activation trigger check",
         )
-        self.assertEqual(explicit["status"], "EXPLICIT_NAME_RESOLVED")
+        self.assertEqual(explicit["status"], "EXPLICIT_TOKEN_PRESENT_NOT_OBSERVED")
         self.assertFalse(explicit["prompt_contains_path"])
         self.assertTrue(explicit["full_skill_read"])
 
         unmentioned = classify_activation_request(
-            scan_skill_catalogue(FIXTURE_ROOT),
+            scan_skill_catalogue(self.fixture_root),
             skill_name="fixture-explicit-only",
             prompt="Answer the unrelated synthetic question.",
             implicit_trigger="synthetic implicit activation trigger check",
@@ -68,7 +91,7 @@ class SkillActivationFixtureTests(unittest.TestCase):
         self.assertFalse(unmentioned["full_skill_read"])
 
     def test_implicit_probe_is_eligible_but_runtime_result_is_not_invented(self):
-        result = scan_skill_catalogue(FIXTURE_ROOT)
+        result = scan_skill_catalogue(self.fixture_root)
         implicit = classify_activation_request(
             result,
             skill_name="fixture-implicit-eligible",
@@ -79,7 +102,7 @@ class SkillActivationFixtureTests(unittest.TestCase):
         self.assertFalse(implicit["full_skill_read"])
 
     def test_router_is_exact_copy_and_name_only_catalogue_check_stops_before_body(self):
-        result = scan_skill_catalogue(FIXTURE_ROOT)
+        result = scan_skill_catalogue(self.fixture_root)
         router = classify_activation_request(
             result,
             skill_name="model-capability-router",
@@ -88,7 +111,7 @@ class SkillActivationFixtureTests(unittest.TestCase):
         self.assertEqual(router["status"], "NOT_SELECTED")
         self.assertTrue(router["catalogue_discovered"])
         self.assertFalse(router["full_skill_read"])
-        copy_result = verify_exact_copy(ROUTER_SOURCE, ROUTER_FIXTURE)
+        copy_result = verify_exact_copy(ROUTER_SOURCE, self.router_fixture)
         self.assertTrue(copy_result["byte_match"])
         self.assertEqual(copy_result["source_sha256"], copy_result["candidate_sha256"])
 

@@ -27,8 +27,9 @@ The bounded proof surface is local and write-free:
 
 - `scripts/cursor_plugin_scanner_adapters.py` inventories README/test/startup
   evidence while withholding the compatibility score when the published
-  `agent-compatibility` scanner is not installed or executed. A supplied real
-  scanner result is preserved as input; the adapter never computes a score.
+  `agent-compatibility` scanner is not installed or executed. A supplied score
+  remains explicitly unverified caller input, bounded for reporting only, and
+  is never promoted or returned as an Agent Compatibility Score.
 - `scripts/cursor_plugin_scaffold_fixture.py` creates only a marked disposable
   static fixture and stops before hooks, MCP, marketplace wiring, or the
   default `~/.cursor/plugins/local` destination.
@@ -36,26 +37,30 @@ The bounded proof surface is local and write-free:
   component frontmatter, README presence, and passive hook/MCP signals. It
   never executes components or recommends submission.
 - `scripts/cursor_plugin_scanner_adapters.py` reports SDK symbols as
-  `REFERENCE_ONLY`, keeps runtime support `UNAVAILABLE`, and rejects
-  credential, authentication, execution, network, and MCP configuration
-  inputs.
+  `REFERENCE_ONLY`, keeps runtime support `UNAVAILABLE`, rejects nested
+  credential/authentication/execution/network/MCP configuration inputs, and
+  accepts SDK source text only on stdin from its CLI.
 
 Positive proof: the compatibility fixture reports separate evidence with no
-invented score; a supplied numeric scanner score is retained; the scaffold
+invented score; a supplied numeric scanner score is retained only as
+unverified input; the scaffold
 fixture plus submission auditor produce `FIXTURE_ONLY` and `STRUCTURAL_PASS`;
 and the SDK fixture identifies `@cursor/sdk`, `Agent.create`, and
 `Agent.prompt` without claiming execution.
 
 Negative proof: scanner installation and network remain false; compatibility
-score is `None` without real scanner evidence; invalid or nonempty scaffold
-destinations stop before writing; hooks, MCP, and marketplace requests return
-`REVIEW_REQUIRED`; unsafe manifest paths and missing frontmatter fail the
-submission audit; and SDK requests containing `apiKey`, `CURSOR_API_KEY`,
-`mcpServers`, or execution flags fail closed.
+score is `None` without real scanner evidence, and even a supplied score is
+kept as unverified input (NaN and out-of-range values are discarded); invalid
+or nonempty scaffold destinations stop before writing; hooks, MCP, and
+marketplace requests return `REVIEW_REQUIRED`; unsafe manifest paths and
+missing frontmatter fail the submission audit; and SDK requests containing
+top-level or nested `apiKey`, `CURSOR_API_KEY`, `mcpServers`, or execution
+flags fail closed. The SDK CLI rejects file paths and accepts source text only
+on stdin.
 
 Validation run in the successor worktree:
 
-- `pytest -q tests/test_cursor_plugin_scanner_adapters.py tests/test_cursor_plugin_scaffold_fixture.py tests/test_cursor_plugin_submission_audit.py` — 13 passed.
+- `pytest -q tests/test_cursor_plugin_scanner_adapters.py tests/test_cursor_plugin_scaffold_fixture.py tests/test_cursor_plugin_submission_audit.py` — 15 passed.
 - `python3 -m py_compile scripts/cursor_plugin_scanner_adapters.py scripts/cursor_plugin_scaffold_fixture.py scripts/cursor_plugin_submission_audit.py` — passed.
 - No npm package was installed, no Cursor SDK was imported, no network or
   credentials were used, and no global Cursor directory or marketplace was

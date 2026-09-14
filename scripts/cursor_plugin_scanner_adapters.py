@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
+import sys
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -47,6 +49,16 @@ _CREDENTIAL_KEYS = frozenset(
         "headers",
         "env",
         "mcpServers",
+    }
+)
+_CREDENTIAL_KEY_NORMALIZED = frozenset(
+    re.sub(r"[_-]", "", key.lower()) for key in _CREDENTIAL_KEYS
+) | frozenset(
+    {
+        "clientid",
+        "clientsecret",
+        "token",
+        "secret",
     }
 )
 
@@ -115,9 +127,9 @@ def compatibility_report(
 ) -> dict[str, Any]:
     """Combine a supplied real scanner result with local evidence.
 
-    The adapter never computes or guesses the score.  A caller may pass the
-    scanner's own structured result for provenance; it is copied under
-    ``scanner_result`` and does not trigger execution.
+    The adapter never computes, verifies, or promotes a score.  A caller may
+    pass the scanner's own structured result, but its score remains explicitly
+    unverified caller input and is never returned as ``agent_compatibility_score``.
     """
 
     result = inspect_compatibility_fixture(fixture_root)
@@ -126,15 +138,43 @@ def compatibility_report(
         return result
     if not isinstance(scanner_result, Mapping):
         raise AdapterError("scanner_result must be a mapping")
-    result["status"] = "REAL_SCANNER_RESULT_SUPPLIED"
-    result["scanner_result"] = dict(scanner_result)
+    result["status"] = "UNVERIFIED_SCANNER_RESULT_SUPPLIED"
+    result["score_provenance"] = "UNVERIFIED_CALLER_INPUT"
+    result["scanner_result_fields"] = tuple(sorted(str(key) for key in scanner_result))
     score = scanner_result.get("score")
-    if isinstance(score, (int, float)) and not isinstance(score, bool):
-        result["agent_compatibility_score"] = score
-    else:
+    valid_score = (
+        isinstance(score, (int, float))
+        and not isinstance(score, bool)
+        and math.isfinite(float(score))
+        and 0 <= float(score) <= 100
+    )
+    if valid_score:
+        result["unverified_scanner_score"] = score
         result["agent_compatibility_score"] = None
-        result["reason"] = "scanner result supplied without a numeric score; score withheld"
+        result["reason"] = "numeric scanner result supplied but not independently verified; score withheld"
+    else:
+        result["unverified_scanner_score"] = None
+        result["agent_compatibility_score"] = None
+        result["reason"] = "scanner result lacks a finite score in the range 0..100; score withheld"
     return result
+
+
+def _credential_paths(value: Any, path: str = "request") -> tuple[str, ...]:
+    """Find credential-shaped keys at any depth without inspecting values."""
+
+    findings: list[str] = []
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            key_text = str(key)
+            normalized = re.sub(r"[_-]", "", key_text.lower())
+            child_path = f"{path}.{key_text}"
+            if normalized in _CREDENTIAL_KEY_NORMALIZED:
+                findings.append(child_path)
+            findings.extend(_credential_paths(child, child_path))
+    elif isinstance(value, (list, tuple)):
+        for index, child in enumerate(value):
+            findings.extend(_credential_paths(child, f"{path}[{index}]"))
+    return tuple(findings)
 
 
 def sdk_reference_report(
@@ -155,11 +195,11 @@ def sdk_reference_report(
     requested = set()
     if request:
         requested = {str(key) for key in request}
-        credential_keys = sorted(requested & _CREDENTIAL_KEYS)
-        if credential_keys:
+        credential_paths = _credential_paths(request)
+        if credential_paths:
             raise PermissionDenied(
                 "credential or MCP configuration input is outside the reference-only boundary: "
-                + ", ".join(credential_keys)
+                + ", ".join(credential_paths)
             )
         if request.get("execute") or request.get("authenticate") or request.get("network"):
             raise PermissionDenied("SDK execution, authentication, and network access are unavailable")
@@ -186,12 +226,16 @@ def sdk_reference_report(
 def _main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("compatibility", "sdk-reference"))
-    parser.add_argument("path", help="fixture root or source text file")
+    parser.add_argument("path", nargs="?", help="explicit local fixture root (compatibility mode only)")
     args = parser.parse_args()
     if args.mode == "compatibility":
+        if not args.path:
+            parser.error("compatibility mode requires an explicit fixture root")
         result = compatibility_report(args.path)
     else:
-        result = sdk_reference_report(Path(args.path).read_text(encoding="utf-8"))
+        if args.path:
+            parser.error("sdk-reference accepts source text on stdin; it never reads a path")
+        result = sdk_reference_report(sys.stdin.read())
     print(json.dumps(result, sort_keys=True))
     return 0
 

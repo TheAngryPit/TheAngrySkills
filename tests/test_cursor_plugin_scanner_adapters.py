@@ -39,10 +39,17 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
 
     def test_supplied_real_score_is_preserved_without_execution(self) -> None:
         result = compatibility_report(self.root, scanner_result={"score": 87, "summary": "fixture"})
-        self.assertEqual(result["status"], "REAL_SCANNER_RESULT_SUPPLIED")
-        self.assertEqual(result["agent_compatibility_score"], 87)
-        self.assertEqual(result["scanner_result"]["summary"], "fixture")
+        self.assertEqual(result["status"], "UNVERIFIED_SCANNER_RESULT_SUPPLIED")
+        self.assertIsNone(result["agent_compatibility_score"])
+        self.assertEqual(result["unverified_scanner_score"], 87)
+        self.assertEqual(result["score_provenance"], "UNVERIFIED_CALLER_INPUT")
         self.assertFalse(result["external_writes"])
+
+    def test_nan_and_out_of_range_scores_are_withheld(self) -> None:
+        for score in (float("nan"), -1, 101):
+            result = compatibility_report(self.root, scanner_result={"score": score})
+            self.assertIsNone(result["agent_compatibility_score"])
+            self.assertIsNone(result["unverified_scanner_score"])
 
     def test_sdk_reference_report_has_symbols_but_no_runtime_claim(self) -> None:
         source = (
@@ -66,13 +73,17 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
             sdk_reference_report("Agent.prompt('x');", request={"execute": True})
         with self.assertRaises(PermissionDenied):
             sdk_reference_report("Agent.create({});", request={"mcpServers": {}})
+        with self.assertRaises(PermissionDenied):
+            sdk_reference_report(
+                "Agent.create({});",
+                request={"options": {"credentials": {"apiKey": "redacted"}}},
+            )
 
     def test_cli_is_json_and_read_only(self) -> None:
-        source = self.root / "sdk.ts"
-        source.write_text('import { Agent } from "@cursor/sdk";\nAgent.prompt("x");\n')
         completed = subprocess.run(
-            [sys.executable, "scripts/cursor_plugin_scanner_adapters.py", "sdk-reference", str(source)],
+            [sys.executable, "scripts/cursor_plugin_scanner_adapters.py", "sdk-reference"],
             cwd=Path(__file__).resolve().parent.parent,
+            input='import { Agent } from "@cursor/sdk";\nAgent.prompt("x");\n',
             text=True,
             capture_output=True,
             check=False,
@@ -81,6 +92,17 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
         result = json.loads(completed.stdout)
         self.assertEqual(result["status"], "REFERENCE_ONLY")
         self.assertFalse(result["external_writes"])
+
+    def test_cli_rejects_sdk_file_path(self) -> None:
+        completed = subprocess.run(
+            [sys.executable, "scripts/cursor_plugin_scanner_adapters.py", "sdk-reference", str(self.root / "README.md")],
+            cwd=Path(__file__).resolve().parent.parent,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertNotEqual(completed.returncode, 0)
+        self.assertIn("never reads a path", completed.stderr)
 
 
 if __name__ == "__main__":

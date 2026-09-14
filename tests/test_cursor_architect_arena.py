@@ -29,6 +29,7 @@ def test_architect_native_roles_and_gates_are_explicit():
     assert "agent_type general-worker" in " ".join(contract["native_mapping"]["capabilities"])
     assert "agent_type planner" in " ".join(contract["native_mapping"]["capabilities"])
     assert "bounded_native_two_candidate_architect_pass_and_disposable_runtime_contract_observed" in contract["native_mapping"]["availability"]
+    assert "generated cursor-how/cursor-why mirror read/role-flow observed" in contract["native_mapping"]["availability"]
     assert "automatic trigger" in contract["native_mapping"]["availability"]
     assert contract["promotion_status"].startswith("held_until_")
     assert "invocation metadata" in overlay["proof"]

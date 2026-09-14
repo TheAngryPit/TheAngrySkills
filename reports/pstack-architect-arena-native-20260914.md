@@ -104,25 +104,54 @@ The synthesized design is in
 `/private/tmp/architect-arena-20260914/synthesis/synthesized-design.md`; the
 failure ledger is in `review-redesign.md`.
 
-## Phase A how/why context
+## Phase A native how/why follow-up
 
-The exact installed-skill lookup found no `cursor-how` or `cursor-why` preview
-under the configured Codex skill roots. Therefore no current-session exact-name
-preview invocation is claimed. The pinned snapshot `how/SKILL.md` and
-`why/SKILL.md` were read for the Phase A contract, and the prior
-`reports/pstack-how-why-real-20260914.md` was preserved as context rather than
-replayed as a new invocation.
+The generated published mirrors are present in this checkout and were read
+explicitly:
 
-The manual how grounding traced the fixture's source authority, frozen `Note`,
-private JSON persistence, ordered search, and the required ownership boundary:
-the export policy belongs behind `NoteStore.export_matching`, while destination
-mechanisms remain private. The manual why context used the local overlay/source
-history and retained the proof-gated hold: deterministic rendering and native
-role-flow evidence do not prove automatic trigger or production parity.
+- `skills/mirrors-cursor/cursor-how/SKILL.md`,
+  `references/explainer-prompt.md`, and `references/explorer-prompt.md`;
+- `skills/mirrors-cursor/cursor-why/SKILL.md`,
+  `references/epistemics.md`, `references/investigator-prompt.md`,
+  `references/source-playbook.md`,
+  `references/sources/code-archaeology.md`, and
+  `references/synthesizer-prompt.md`.
 
-This makes Architect Phase A evidence-backed but partial for the exact adapted
-`cursor-how`/`cursor-why` preview path. The gap is recorded, not substituted by
-a guessed trigger, and promotion remains held.
+The native read-only role flow was then executed through bounded workers. The
+receipts are the Ground/Scrap inputs at
+`/private/tmp/architect-arena-20260914/how-why-followup/how-receipt.md` and
+`why-receipt.md`. The exact invocations and outputs are kept separate from
+claims about automatic picker behavior:
+
+| Role | Agent ID | Native surface/type | Requested profile | Receipt |
+| --- | --- | --- | --- | --- |
+| How reader | `01a0a11e-1f91-7ce1-93f7-f34425adc234` (Avicenna) | `collaboration.spawn_agent` / `general-worker` | `gpt-5.6-luna` / `high` | `how-why-followup/how-receipt.md` |
+| Why reader | `01a0a11a-93ad-77a2-bc7a-3338d31abd94` (Pascal) | `collaboration.spawn_agent` / `general-worker` | `gpt-5.6-luna` / `high` | `why-receipt.md` |
+
+The how receipt traced `NoteStore` as source authority,
+`NoteStore.export_matching()` as the public policy boundary, and
+`_MatchingExportService.execute()` as the private destination/locking,
+canonical-payload, revision and atomic-publication owner. It recorded the
+existing runtime readback:
+
+```text
+runtime-after-fix: PASS
+runtime: create/retry/drift-replace/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset
+```
+
+The why receipt applied the generated epistemic and source-control playbooks:
+it separated direct, supported and inferred claims, preserved candidate and
+judge contradictions, and retained nulls for unavailable observability,
+error-tracking and product-analytics connectors plus prior empty/irrelevant
+Linear, Notion and Slack searches. It did not fabricate external rationale or
+connector coverage. A first how worker used an incorrect relative checkout and
+returned an absence receipt; that failed attempt is retained as a worker-level
+gap, while the absolute-path rerun above is the valid Ground/Scrap receipt.
+
+This closes the read/role-flow observation for the generated `cursor-how` and
+`cursor-why` mirrors. It does not prove automatic picker/trigger behavior,
+exact upstream runner parity, production behavior, independent model/effort
+readback, or external seven-category execution. Promotion remains held.
 
 ## Verification
 
@@ -182,9 +211,10 @@ The two overlays now map:
   verification.
 
 Arena is published only for the bounded explicit local design path; Architect
-remains held pending its exact `cursor-how`/`cursor-why` Phase A invocation.
-Automatic skill triggering, exact upstream Cursor runner parity,
-native model/effort runtime readback, production implementation,
-crash/power-loss proof, hostile-writer semantics, and end-to-end host behavior
-remain unproven. The fixture/runtime and all local state are disposable and no
-reset or external mutation was performed.
+remains held. Generated `cursor-how`/`cursor-why` mirrors and their read/role-flow
+receipts are observed, but automatic skill triggering, exact upstream Cursor
+runner parity, native model/effort runtime readback, production implementation,
+crash/power-loss proof, hostile-writer semantics, complete external connector
+execution, and end-to-end host behavior remain unproven. The fixture/runtime
+and all local state are disposable; no Arena/runtime was rerun in this
+follow-up, and no reset or external mutation was performed.

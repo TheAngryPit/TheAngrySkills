@@ -40,7 +40,9 @@ The positive pass then drives both mapped features:
 The generated skill contains Launch, Doctor, Drive, Evidence, Cleanup, and
 Helpers, a feature README, one map file per feature, and JSON evidence. Cleanup
 removed only declared `notes.json`, left no remaining app state, and preserved
-the generated evidence. Result: `FIXTURE_ONLY`.
+the generated evidence, including `doctor.json`. The emitted syntax command
+was executed from the generated skill and returned `syntax:ok`. Result:
+`FIXTURE_ONLY`.
 
 ## Maintain proof
 
@@ -57,6 +59,8 @@ The first maintenance pass:
 - re-drove both features;
 - rewrote only the drifted `create-note` feature file;
 - persisted `maintenance-before-*` and `maintenance-after-*` evidence;
+- persisted `maintenance-doctor.json` and labelled each source-wave record
+  `caller_supplied_input`;
 - cleaned declared app state after the pass.
 
 Observed result: `FIXTURE_ONLY`, `changed_features=("create-note",)`, source
@@ -68,6 +72,11 @@ invocation returned `changed_features=()` with the same successful feature obser
 - `app_available=False` returns `BLOCKED` before creating a skill tree.
 - An unhealthy Doctor returns `BLOCKED`; no target tree is written.
 - A pre-existing `notes.json` is rejected before generation.
+- Maintenance also rejects a pre-existing `notes.json` without altering it.
+- A Doctor that creates declared app state is blocked and that newly created
+  state is cleaned before return.
+- An expected confirmation without its declared regular-file side effect
+  fails instead of returning `FIXTURE_ONLY`.
 - A deliberately wrong expected result returns `ERROR` for `search-note` and
   still reports cleanup `PASS`; no target tree remains.
 - Unsafe app/feature slugs and reserved `README` feature names are rejected.

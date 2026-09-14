@@ -601,6 +601,7 @@ console.log(JSON.stringify({{
                 self.assertIn(heading, feature_text)
             evidence_path = target / "evidence/create-note.json"
             evidence = json.loads(evidence_path.read_text())
+            self.assertEqual(json.loads((target / "evidence/doctor.json").read_text())["status"], "PASS")
             self.assertEqual(
                 evidence["evidence"],
                 {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
@@ -639,6 +640,14 @@ console.log(JSON.stringify({{
             self.assertTrue(after_evidence.is_file())
             self.assertTrue(
                 (target / "evidence/maintenance-source-wave-create-note.json").is_file()
+            )
+            self.assertEqual(
+                json.loads((target / "evidence/maintenance-source-wave-create-note.json").read_text())["provenance"],
+                "caller_supplied_input",
+            )
+            self.assertEqual(
+                json.loads((target / "evidence/maintenance-doctor.json").read_text())["status"],
+                "PASS",
             )
             self.assertTrue(
                 (target / "evidence/maintenance-source-wave-search-note.json").is_file()
@@ -731,6 +740,23 @@ console.log(JSON.stringify({{
             self.assertEqual(blocked["reason"], "verification Doctor failed or was not supplied")
             self.assertEqual(blocked["doctor"]["status"], "FAIL")
             self.assertFalse((root / ".agents/skills/verify-notes").exists())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(
+                BUGGY_NOTES_APP.replace(
+                    'print("health:ok")',
+                    'Path("notes.json").write_text("doctor-data"); raise SystemExit("unhealthy")',
+                )
+            )
+            blocked = run_cli_verification_fixture(
+                root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+            )
+            self.assertEqual(blocked["status"], "BLOCKED")
+            self.assertEqual(blocked["doctor"]["reason"], "Doctor created declared app state")
+            self.assertEqual(blocked["doctor"]["cleanup"]["status"], "PASS")
+            self.assertFalse((root / "notes.json").exists())
 
         with tempfile.TemporaryDirectory() as temporary:
             blocked = run_cli_verification_fixture(

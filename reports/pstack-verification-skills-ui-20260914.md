@@ -82,8 +82,12 @@ screenshots:
    and reloaded the page to confirm all three notes persisted.
 
 The clean pass's AX receipts show the expected status, headings, body text,
-empty state, and restored list. The screenshot was captured by the browser
-receipt; no screenshot file was added to the repository. This is real UI proof
+empty state, and restored list. Three emitted JPEG image blocks from Luna's
+browser transcript were decoded without editing and added as
+[create](assets/pstack-ui-create-20260914.jpg),
+[empty search](assets/pstack-ui-empty-20260914.jpg), and
+[reload readback](assets/pstack-ui-readback-20260914.jpg) review artifacts.
+Sol inspected all three visually. This is real UI proof
 of the disposable local app, not proof of the production target, a native
 runner, or a host activation path.
 
@@ -94,9 +98,10 @@ mocked DOM or a CLI transcript. The stable browser target for the recaptures is
 [`http://127.0.0.1:4173/`](http://127.0.0.1:4173/), tab `4`, title `Notes
 browser fixture`. `AX-*` identifies the accessibility-tree capture and
 `SHOT-*` identifies the paired full-page PNG capture in the CUA tool receipt.
-The CUA tool does not expose a filesystem URL for emitted screenshots, so the
-IDs below are the audit handles and the report deliberately does not fabricate
-file links.
+The CUA tool does not expose a filesystem URL for every emitted screenshot, so
+the IDs below remain transcript audit handles. The three linked JPEGs above
+are exact decoded image blocks from that transcript; the remaining screenshot
+receipts are indexed without fabricated file links.
 
 | Receipt | Action and exact observed text | Screenshot receipt |
 | --- | --- | --- |

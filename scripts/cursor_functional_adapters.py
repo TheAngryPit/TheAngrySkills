@@ -667,6 +667,31 @@ def _cleanup_verification_state(
     return {"status": "PASS" if not remaining else "FAIL", "removed": tuple(removed), "remaining": remaining}
 
 
+def _run_verification_doctor_guarded(
+    root: Path,
+    app: Path,
+    doctor: Mapping[str, Mapping[str, object]],
+    commands: Mapping[str, Mapping[str, object]],
+) -> dict[str, object]:
+    _assert_cleanup_paths_absent(root, commands)
+    result = _run_verification_doctor(root, app, doctor)
+    appeared = tuple(
+        filename
+        for filename in _cleanup_paths(commands)
+        if (root / filename).exists() or (root / filename).is_symlink()
+    )
+    if appeared:
+        cleanup = _cleanup_verification_state(root, commands)
+        return {
+            **result,
+            "status": "FAIL",
+            "reason": "Doctor created declared app state",
+            "unexpected_state": appeared,
+            "cleanup": cleanup,
+        }
+    return result
+
+
 def _capture_verification_commands_with_cleanup(
     root: Path,
     app: Path,
@@ -823,7 +848,7 @@ def _verification_skill_document(
         "## Evidence\n\n"
         "Capture Doctor syntax/version/health evidence plus exit code, stdout, stderr, and the observed "
         "regular-file state for every user-facing drive. "
-        f"The surviving JSON evidence is kept under `.agents/skills/verify-{app_name}/evidence/`; "
+        f"The surviving Doctor and feature JSON evidence is kept under `.agents/skills/verify-{app_name}/evidence/`; "
         "feature-map files are not evidence of a live target. Verify the user-visible output and "
         "the side effect state before calling a feature passed.\n\n"
         "## Cleanup\n\n"
@@ -946,8 +971,9 @@ def run_cli_verification_fixture(
         )
         return result
     _, app = _resolve_local_app_fixture(root, app_path)
+    _assert_cleanup_paths_absent(root, normalized)
     doctor_result = (
-        _run_verification_doctor(root, app, normalized_doctor)
+        _run_verification_doctor_guarded(root, app, normalized_doctor, normalized)
         if normalized_doctor
         else {"status": "NOT_OBSERVED", "checks": {}}
     )
@@ -990,6 +1016,9 @@ def run_cli_verification_fixture(
     )
     evidence_dir = target / "evidence"
     evidence_dir.mkdir()
+    (evidence_dir / "doctor.json").write_text(
+        f"{json.dumps(doctor_result, ensure_ascii=False, indent=2, sort_keys=True)}\n"
+    )
     for feature, spec in normalized.items():
         (features_dir / f"{feature}.md").write_text(
             _verification_feature_document(root, app, feature, spec, observations[feature])
@@ -1084,6 +1113,7 @@ def maintain_cli_verification_fixture(
         )
         return result
     _, app = _resolve_local_app_fixture(root, app_path)
+    _assert_cleanup_paths_absent(root, normalized)
     features_dir = target / "features"
     _reject_symlink_components(root, features_dir.relative_to(root))
     if not features_dir.is_dir() or features_dir.is_symlink():
@@ -1105,7 +1135,7 @@ def maintain_cli_verification_fixture(
         return result
 
     doctor_result = (
-        _run_verification_doctor(root, app, normalized_doctor)
+        _run_verification_doctor_guarded(root, app, normalized_doctor, normalized)
         if normalized_doctor
         else {"status": "NOT_OBSERVED", "checks": {}}
     )
@@ -1145,6 +1175,11 @@ def maintain_cli_verification_fixture(
     if evidence_dir.exists() and (evidence_dir.is_symlink() or not evidence_dir.is_dir()):
         raise AdapterError("verification evidence directory must be a regular directory")
     evidence_dir.mkdir(exist_ok=True)
+    doctor_path = evidence_dir / "maintenance-doctor.json"
+    _assert_verification_output_path(root, doctor_path, "maintenance Doctor evidence")
+    doctor_path.write_text(
+        f"{json.dumps(doctor_result, ensure_ascii=False, indent=2, sort_keys=True)}\n"
+    )
     for feature, spec in normalized.items():
         path = features_dir / f"{feature}.md"
         _reject_symlink_components(root, path.relative_to(root))
@@ -1167,7 +1202,7 @@ def maintain_cli_verification_fixture(
             source_path = evidence_dir / f"maintenance-source-wave-{feature}.json"
             _assert_verification_output_path(root, source_path, "maintenance source-wave evidence")
             source_path.write_text(
-                f"{json.dumps({'feature': feature, **source_result}, ensure_ascii=False, indent=2, sort_keys=True)}\n"
+                f"{json.dumps({'feature': feature, 'provenance': 'caller_supplied_input', **source_result}, ensure_ascii=False, indent=2, sort_keys=True)}\n"
             )
 
     for feature, spec in normalized.items():

@@ -424,7 +424,7 @@ def preview_candidates(destination: Path) -> None:
     if destination.exists():
         raise ValueError(f"candidate preview destination already exists: {destination}")
     source_to_entry = {
-        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"]}
+        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"] and not e.get("excluded_from_mirror")}
         for e in entries
     }
     destination.parent.mkdir(parents=True, exist_ok=True)

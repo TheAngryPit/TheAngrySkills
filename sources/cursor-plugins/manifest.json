@@ -591,6 +591,8 @@
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Grok Voice source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "grok-voice",
       "files": {
         "SKILL.md": "fe0083e27ff2fefa1b5220b98b98db9110aad2e32c58a319b66c776d44e84d0b"
@@ -613,6 +615,8 @@
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Grok Voice source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "grok-voice",
       "files": {
         "SKILL.md": "5b11114611f0950e9973b0e87a2c7562bec72ded8d46ef664249f143dd00b280"
@@ -635,6 +639,8 @@
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Grok Voice source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "grok-voice",
       "files": {
         "SKILL.md": "699b0bf878d06a1205a5d0971152ef55a38454145f88e04d419c89de608bce9d"
@@ -657,6 +663,8 @@
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Grok Voice source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "grok-voice",
       "files": {
         "SKILL.md": "0bd730539335ceff9c10570c12c2b98518b2c5dc30be401a93b3e782de751f2c"
@@ -801,6 +809,8 @@
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "supporting files in this skill: skills/reproduce-and-fix-issues/references/control-adapter.md, skills/reproduce-and-fix-issues/references/feature-map.example.md, skills/reproduce-and-fix-issues/references/verify-existing-fix.md",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "1363cc07343fe86aab42853b1bd4563288cbcbdf12f1c265b3b3b1afa25c09cb",
@@ -826,6 +836,8 @@
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "5a3cbe63360c9f6373b6cb6c79a1eaf7e0eba181bfaa1577e2e6431af3407282"
@@ -848,6 +860,8 @@
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "supporting files in this skill: skills/triage-issue-reports/references/routing.example.md",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "216a758b8711e64d19a55e6032c496527daac6364d010611040f3c04ef1a448f",

@@ -113,7 +113,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "safe local mock webhook adapter proves server-side key redaction, required headers, one-attempt timeout/error handling, and local payload validation; external connector, sender-key retrieval, routine wake, Tailscale state, and privileged install path remain unproven",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
@@ -1111,7 +1111,7 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/make-bot-ui/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
-      "promotion_reason": "security scan: installer/sudo instructions need safe adaptation",
+      "promotion_reason": "local request-boundary adapter is proven; security scan still holds source installer/sudo/webhook instructions",
       "publish": false,
       "published_name": "cursor-make-bot-ui",
       "upstream_purpose": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
@@ -1736,7 +1736,7 @@
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "native scoped task history/read surface; live repository state; shared record through cursor-why or a supplied bounded record; GitHub read-only metadata only when requested",
       "family": "pstack",
       "files": {
         "SKILL.md": "d265b0e5b6dc5b89c0407f3387d24462c988e1990a37d5359735137908128c5a"
@@ -2443,6 +2443,12 @@
       "sha256": "43fa6e7858157997b4563c32bd012afc386622af432116a8168fecf6120acffe",
       "related_skills": [
         "cursor-create-plugin-scaffold"
+      ]
+    },
+    "scripts/cursor_bot_ui_adapters.py": {
+      "sha256": "757ffaf80ed016d7293db30eda2373460426bc99cccf8def467d3faaafc2ba7d",
+      "related_skills": [
+        "cursor-make-bot-ui"
       ]
     }
   }

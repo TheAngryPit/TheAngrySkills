@@ -10,13 +10,17 @@
     "preserved_semantics": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
     "native_mapping": {
       "capabilities": [
-        "local UI reader"
+        "local UI reader",
+        "local mock webhook boundary",
+        "server-side sender-key request construction",
+        "single-attempt timeout/error evidence"
       ],
       "required_tools": [
-        "local UI reader"
+        "local UI reader",
+        "local mock webhook boundary"
       ],
-      "fallback": "The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval.",
-      "availability": "security_hold"
+      "fallback": "The local mock proves request shape only; the webhook, Tailscale state, and privileged install path require separate manual review and explicit approval.",
+      "availability": "safe local mock webhook path observed with server-only key redaction, required headers, malformed-input rejection, one-attempt timeout logging, and non-200 handling; external webhook, sender-key retrieval, Tailscale state, and privileged install path remain unproven"
     },
     "external_dependencies": [
       "Grok Bot webhook",
@@ -29,9 +33,9 @@
       "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
     ],
     "behavioral_proof": {
-      "positive": "A fixture audits the UI/webhook shape without executing an installer, network call, or privileged command.",
-      "missing_tool_or_input": "Missing webhook credentials or Tailscale authorization returns a plan-only result and no write.",
-      "error": "A privileged-command or network-policy violation aborts before execution and records the exact command."
+      "positive": "The local adapter builds one POST with JSON content type, Authorization and X-Automation-Key headers, returns DELIVERED on HTTP 200, and redacts the sender key from evidence.",
+      "missing_tool_or_input": "Non-local webhook URLs and non-object browser payloads are rejected before any request is attempted.",
+      "error": "A timeout or non-200 response returns FAILED, writes the payload-only failure record once, and never retries."
     },
     "promotion_status": "security_hold_quarantine",
     "upstream_readme": {
@@ -46,12 +50,18 @@
       "decision": "The quarantine verdict is retained. Critical privilege-escalation findings at SKILL.md:89 and SKILL.md:95 are active commands, not inert examples; the overlay adds a gate rather than neutralizing them."
     }
   },
-  "codex_note": "## Codex security hold\n\nKeep this as external product reference only. Never execute the source commands `curl -fsSL https://tailscale.com/install.sh | sudo sh` or `sudo tailscale up ...` from the mirror. The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval. This candidate remains unindexed. The quarantine verdict is retained. Critical privilege-escalation findings at SKILL.md:89 and SKILL.md:95 are active commands, not inert examples; the overlay adds a gate rather than neutralizing them.\n",
+  "codex_note": "## Codex security hold\n\nThe bundled local adapter proves only the server-side request boundary against a local mock. Keep the external product path conditional. Never execute the source commands `curl -fsSL https://tailscale.com/install.sh | sudo sh` or `sudo tailscale up ...` from the mirror. The webhook, Tailscale state, and privileged install path require separate manual review and explicit approval. This candidate remains unindexed. The quarantine verdict is retained. Critical privilege-escalation findings at SKILL.md:89 and SKILL.md:95 are active commands, not inert examples; the overlay adds a gate rather than neutralizing them.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. Security hold requires contextual review and behavior proof before promotion.",
+  "proof": "Pinned source hash and deterministic build establish provenance. The bundled local adapter proves the safe native request boundary and negative paths without network, secrets, Tailscale or sudo. The external webhook routine, sender-key request, wake handling, and Tailnet exposure remain separate unproven subflows. See reports/cursor-make-bot-ui-local-adapter-20260914.md.",
   "reason": "Security-hold contract records the external surface, explicit permission gate, positive/missing/error cases, pinned README provenance, and retained scanner verdict.",
   "replacements": [],
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_bot_ui_adapters.py",
+      "target_path": "scripts/cursor_bot_ui_adapters.py"
+    }
+  ],
   "source_path": "pstack/skills/make-bot-ui/SKILL.md",
   "source_sha256": "3624c8ef16cf2e48deb2a4049e72c6962a9431c8d6c6af90e7bd7ea0375224ec"
 }

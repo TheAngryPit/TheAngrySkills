@@ -28,6 +28,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_native_hook_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
+            "scripts/cursor_bot_ui_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "skills/core/model-capability-router/assets/agents",

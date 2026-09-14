@@ -20,10 +20,11 @@
         "shared record"
       ],
       "fallback": "Mismatched workspace/export is partial and does not alter state.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_scoped_history_shared_record_fixture_observed; native task-history selection remains unproven"
     },
     "external_dependencies": [
       "Cursor transcript history or supplied Codex record",
+      "cursor-why or an equivalent bounded shared-record reader",
       "GitHub read-only metadata if requested"
     ],
     "permission_gates": [
@@ -36,7 +37,7 @@
       "missing_tool_or_input": "Missing-capability fixture for cursor-recall: Mismatched workspace/export is partial and does not alter state.",
       "error": "Error fixture for cursor-recall: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_native_history_selection_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -52,7 +53,7 @@
   "codex_note": "## Codex runtime mapping\n\nUse native task history and verified rollout paths, not `~/.cursor/projects`. Preserve the scope window, distinct own-history/shared-record sweep, citations, live-state readback and capsule format. Apply the standing model router to optional read-only delegation.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "A bounded fixture reconciles an exact workspace/topic against a selected prior record, live repository state and a matching shared record without writes; it excludes the current task and marks missing or mismatched exports partial. Native task-history selection and a full `cursor-why` shared-record sweep remain unproven.",
   "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
   "replacements": [
     {

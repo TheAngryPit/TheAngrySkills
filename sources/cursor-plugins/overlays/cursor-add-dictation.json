@@ -20,6 +20,13 @@
       "fallback": "Missing endpoint/auth is a typed error without exposing the key.",
       "availability": "not_proven_in_current_codex_session"
     },
+    "local_mock": {
+      "module": "scripts/cursor_voice_adapters.py",
+      "entrypoint": "mock_dictation_route",
+      "result": "MOCK_VERIFIED",
+      "side_effects": ["no network", "no credentials", "no microphone"],
+      "unavailable_provider": "UNAVAILABLE"
+    },
     "external_dependencies": [
       "xAI STT API",
       "XAI_API_KEY"

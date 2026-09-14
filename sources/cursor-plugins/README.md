@@ -3,7 +3,7 @@
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
-and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. A separate hash-checked native adapter is bundled only into the held Advisor, Ralph and continual-learning previews; it is not registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
+and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Separate hash-checked native adapters are bundled only into the held Advisor, Ralph, continual-learning, and make-bot-ui previews; they are not registered as hooks. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three Benny automation skills outside the ordinary
 slash-skill distribution. Their upstream sources still exist under
 `pstack/automations/benny` and are installed through Benny's project setup,
@@ -19,8 +19,14 @@ connector, model, hook or cloud availability.
 
 PR #64 merged 59 emitted mirrors under `skills/mirrors-cursor/`, including
 bounded explicit-only `cursor-how`, `cursor-why`, `cursor-show-me-your-work`,
-`cursor-thermos`, and local-computer `cursor-swarm`. This branch adds bounded explicit-only local `cursor-arena` and `cursor-architect`
-workflows, bringing the catalog to 61 published mirrors. The other 27 active skills
+`cursor-thermos`, and local-computer `cursor-swarm`. PR #66 adds bounded explicit-only local `cursor-arena` and `cursor-architect`
+workflows. This isolated successor branch adds bounded explicit-only
+`cursor-interrogate` and `cursor-reflect`, then promotes the bounded native
+`cursor-create-verification-skill`, `cursor-maintain-verification-skill`, and
+`cursor-no-comments`, `cursor-automate-me`, `cursor-figure-it-out`,
+`cursor-poteto-mode`, `cursor-recall`, and `cursor-setup-pstack` paths, bringing
+the catalog to 71 published mirrors. The other
+17 active skills
 have contracts and pinned sources but remain held and unindexed; all 88 active
 slash skills remain in scope. The three Benny automation sources are retained
 outside this slash catalog. Publication is not proof of full native execution.
@@ -37,9 +43,15 @@ permission gates, and positive, missing-capability/input, and error scenarios
 still to prove.
 It also holds `cursor-cursor-sdk`, `cursor-make-bot-ui` and
 `cursor-review-plugin-submission` for contextual security review.
-`cursor-maintain-verification-skill` is held after source review showed a
-Cursor-local path, parallel workers, live driving, and PR publication that need
-a Codex-specific proof. All 91 physical skills remain traceable in the manifest and snapshot. The pstack candidate renders all 23 playbooks and bundles its role reference, but application in a live Codex session, cloud task parity, and bundled script safety are still unproven.
+The verification pair is published only for the bounded explicit-only local
+CLI/UI paths. Production target parity, reusable host activation, action-time
+Reset cleanup, and changed-outcome PR publication remain separate gaps. The
+`cursor-no-comments` path is published only for the bounded named
+`comment-sicko` review with coordinator-owned integration. All 91 physical
+skills remain traceable in the manifest and snapshot. The `cursor-poteto-mode`
+candidate renders all 23 playbooks and bundles its role reference, but its
+bundled script security review, cloud task parity, and full live playbook
+behavior remain unproven.
 No held skill is indexed for installation by this batch. The generator keeps
 the repository's `.claude-plugin/marketplace.json` catalog entry
 `mirrors-cursor` aligned with the emitted paths. This is catalog registration;

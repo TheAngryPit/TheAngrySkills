@@ -45,7 +45,7 @@
       "missing_tool_or_input": "Focused adapter tests report BLOCKED when the requested target is absent, and the isolated fixture returns BLOCKED when the app is unavailable; delegation fallback remains unexercised.",
       "error": "Focused adapter tests keep ambiguous targets at NEEDS_INPUT; maintenance returns an explicit mismatch or blocked result for missing targets/app/failed syntax-version-health prerequisites and never edits product code. Missing source-wave results remain explicit and live handling remains unproven."
     },
-    "promotion_status": "held_until_live_behavior_and_permission_proof",
+    "promotion_status": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",

@@ -28,6 +28,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_native_hook_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
+            "scripts/cursor_bot_ui_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "skills/core/model-capability-router/assets/agents",
@@ -65,11 +66,18 @@ class CursorMirrorTests(unittest.TestCase):
             name = entry["published_name"]
             output = REPO / "skills/mirrors-cursor" / name
             explicit = bool(re.search(r"^disable-model-invocation:[ \t]*true[ \t]*$", source, re.MULTILINE))
+            overlay = json.loads((REPO / "sources/cursor-plugins/overlays" / f"{name}.json").read_text())
+            adapted_explicit = overlay.get("codex_contract", {}).get("invocation_policy") == "explicit_only"
+            if adapted_explicit:
+                self.assertTrue(
+                    any("disable-model-invocation: true" in op["after"] for op in overlay.get("replacements", [])),
+                    name,
+                )
             policy = output / "agents/openai.yaml"
             frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
             self.assertIsNotNone(frontmatter, name)
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1), name)
-            if explicit:
+            if explicit or adapted_explicit:
                 self.assertEqual(policy.read_text(), "policy:\n  allow_implicit_invocation: false\n", name)
             else:
                 self.assertFalse(policy.exists(), name)

@@ -18,8 +18,8 @@
         "native Codex subagents when delegated review is authorized",
         "local Git and file read"
       ],
-      "fallback": "If fewer reviewers are available, report actual coverage and do not claim multi-model consensus.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "If a configured reviewer cannot launch or return, mark the aggregate PARTIAL, name the missing slot, and do not claim multi-model consensus or a full configured review.",
+      "availability": "bounded_native_two_reviewer_same_scope_dedup_lead_judgment_observed; two distinct requested model selections accepted by native spawn; effective backend model/effort readback, default four-reviewer coverage and automatic trigger unproven"
     },
     "external_dependencies": [
       "native subagent availability and operator-selected models"
@@ -30,11 +30,11 @@
       "Do not create a repair PR solely because a model name is unavailable."
     ],
     "behavioral_proof": {
-      "positive": "Fixture with two independent read-only reviewers on the same diff and a deduplicated verdict.",
-      "missing_tool_or_input": "Unavailable models or reviewers are recorded as missing; no fabricated consensus.",
-      "error": "A failed reviewer or inaccessible diff produces an explicit gap and no auto-applied patch."
+      "positive": "Two independent read-only native reviewers received one disposable scope and rubric, produced separate reports, four-finding consensus deduplication and a coordinator lead judgment without auto-apply. A separate two-reviewer PR #66 case on immutable head 9b595217 produced distinct accepted findings fixed in 4e4139a0. Two different model requests were accepted; effective backend identity is not exposed.",
+      "missing_tool_or_input": "Observed native dropout on immutable 5f040667: survivor `/root/interrogate_dropout_survivor` returned a read-only report, while configured `/root/interrogate_dropout_missing` was interrupted during execution. Coordinator aggregate was PARTIAL, named the missing slot, claimed no consensus, and made no skill edit.",
+      "error": "The interrupted reviewer returned no result. Coordinator retained only the survivor result, did not substitute or apply a fix, and labeled effective model/effort readback unavailable."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_explicit_only_effective_model_readback_unavailable",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -47,10 +47,10 @@
       "decision": "Pinned source reviewed; native adapter does not waive the source findings."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nUse the native Codex subagent capability for independent read-only reviewers only when delegation is authorized. Follow the standing `model-capability-router` and the operator-selected model/effort; do not force the Cursor default model table. Record actual reviewer models and unavailable slots. Keep the source rubric, lead judgment, and no-auto-apply contract.\n",
+  "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`. Use the native Codex subagent capability for independent read-only reviewers only when delegation is authorized. Require one immutable scope and rubric, at least two distinct model requests accepted by native spawn, separate read-only outputs, and a coordinator lead judgment before claiming a bounded review. If a configured reviewer is missing or fails, mark the aggregate PARTIAL and name the slot; never fabricate multi-model consensus or a complete configured run. Follow the standing `model-capability-router` and the operator-selected model/effort; do not force the Cursor default model table. Record requested reviewer profiles and unavailable slots, and mark effective model/effort readback unavailable unless the native surface supplies it. Keep the source rubric, lead judgment, and no-auto-apply contract.\n",
   "codex_rule": "Preserve independent review and source rubric while respecting native model, scope and permissions.",
   "preserved_requirement": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
-  "proof": "Pinned source hash and deterministic build are static provenance only; native multi-review behavior remains to be demonstrated.",
+  "proof": "Pinned source hash and deterministic build establish provenance. A disposable same-scope review produced two independent read-only reviewer executions, separate reports, consensus deduplication and lead judgment with no auto-apply. A separate exact PR #66 same-diff review produced four accepted findings corrected in 4e4139a0. Native spawn accepted two distinct requested profiles but the surface exposes no authoritative effective model/effort readback, so backend diversity is unverified. The bounded explicit-only review is published with PARTIAL on missing configured reviewers; automatic host trigger and full default four-reviewer coverage remain unproven. A separate native dropout on 5f040667 interrupted one configured slot; aggregate PARTIAL named it, retained only the survivor report, and made no edit.",
   "reason": "Replace Cursor Task and model config with native bounded reviewers while retaining the adversarial judgment workflow.",
   "replacements": [
     {
@@ -61,7 +61,7 @@
     {
       "file": "SKILL.md",
       "before": "| Subagent | Default model |\n|----------|---------------|\n| Reviewer A | `claude-fable-5-1-thinking-max` |\n| Reviewer B | `gpt-5.6-sol-max` |\n| Reviewer C | `grok-4.6-fast-xhigh` |\n| Reviewer D | `claude-opus-5-thinking-xhigh` |",
-      "after": "| Reviewer | Native Codex model |\n|----------|--------------------|\n| A/B/C/D as available | The actual selected or available model and effort, recorded in the result |"
+      "after": "| Reviewer | Native Codex model |\n|----------|--------------------|\n| A/B/C/D as available | Record the requested model and effort; record effective identity only if the native surface exposes authoritative readback |"
     },
     {
       "file": "SKILL.md",

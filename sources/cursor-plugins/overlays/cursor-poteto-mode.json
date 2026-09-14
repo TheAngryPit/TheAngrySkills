@@ -27,7 +27,7 @@
       "playbook_root": "skills/mirrors-cursor/cursor-poteto-mode/playbooks/",
       "playbook_count": 23,
       "fallback": "Missing companion playbook or native capability produces a labeled sequential fallback; the mode never silently widens scope.",
-      "availability": "renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; bug-fix steps 1/4/5 complete locally and 2/3/6 partial; selected dependency-free orch/store and watch-pr/github module paths run in scratch with mocks; exact-lock dependency install, cache-populated missing-key bootstrap install/restart, real CLI smoke, and one bounded read-only GitHub status query for authorized PR #64 are proven in scratch; install cache run was not network-instrumented and the key does not verify package versions; live playbook application, native session, cloud task lane, real PR mutation, polling/stack behavior, and broader real GitHub behavior remain unproven",
+      "availability": "bounded_explicit_only_admitted; renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; bug-fix steps 1/4/5 complete locally and 2/3/6 partial; selected dependency-free orch/store and watch-pr/github module paths run in scratch with mocks; exact-lock dependency install, cache-populated missing-key bootstrap install/restart, real CLI smoke, and one bounded read-only GitHub status query for authorized PR #64 are proven in scratch; install cache run was not network-instrumented and the key does not verify package versions; live playbook application, native session, cloud task lane, real PR mutation, polling/stack behavior, and broader real GitHub behavior remain unproven",
       "routing_authority": "model-capability-router remains the standing model authority; proof-orchestrator selects the proof path",
       "session_behavior": "per-turn guidance only; no sticky mode, background agent, or future invocation is claimed",
       "concrete_skill_dependencies": {
@@ -62,7 +62,7 @@
       "missing_tool_or_input": "Isolated fixture returns the labeled sequential fallback when the selected playbook file is absent or a required capability is unavailable.",
       "error": "Isolated fixture returns an explicit error for an empty playbook file or unknown playbook, and the notes fixture returns `ERROR` without writing the correction unless the exact bug-specific failure evidence matches. Local history also requires an explicit disposable-fixture marker and rejects unexpected root entries or a Git timeout. Selected dependency-free modules plus exact-lock CLI/bootstrap paths are exercised in scratch with mocked subprocesses; real GitHub access and live native session remain unproven. The proof remains partial on source steps 2, 3, and 6."
     },
-    "promotion_status": "held_until_native_behavior_and_script_security_review",
+    "promotion_status": "promoted_bounded_explicit_only_script_execution_gated",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",

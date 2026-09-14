@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "external-canvas-gated",
+    "adapter_mode": "external-canvas-gated-local-artifact",
     "name_mapping": {
       "upstream_skill": "pr-review-canvas",
       "published_name": "cursor-pr-review-canvas-pr-review-canvas",
@@ -11,27 +11,29 @@
     "native_mapping": {
       "capabilities": [
         "local diff reader",
-        "local document renderer"
+        "local Markdown/HTML document renderer",
+        "project-local linked artifact writer"
       ],
       "required_tools": [
         "local diff reader",
-        "local document renderer"
+        "local Markdown/HTML document renderer"
       ],
-      "fallback": "Absent Canvas returns the local artifact path and a parity gap.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "Absent Canvas returns bounded local Markdown/HTML artifact paths and a parity gap; live PR metadata is not fetched.",
+      "availability": "bounded_local_diff_review_artifact_observed; Cursor Canvas surface unavailable"
     },
     "external_dependencies": [
       "Cursor Canvas surface"
     ],
     "permission_gates": [
-      "Use a local Markdown/HTML fallback when Canvas is unavailable.",
-      "Absent Canvas returns the local artifact path and a parity gap.",
+      "Use a local Markdown/HTML fallback when Canvas is unavailable; a GitHub URL requires a separately authorized live capability.",
+      "Absent Canvas returns local artifact paths and a parity gap.",
+      "Require an explicit invocation and an explicit project root; reject symlinked or escaping paths and bounded-input violations.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-pr-review-canvas-pr-review-canvas: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-pr-review-canvas-pr-review-canvas: Absent Canvas returns the local artifact path and a parity gap.",
-      "error": "Error fixture for cursor-pr-review-canvas-pr-review-canvas: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "A bounded local unified diff produced linked index.md and index.html files grouped by core logic, wiring/integration, and boilerplate/mechanical reviewer value, with stats, changed-line evidence callouts, and mechanical summaries; no PR or product state changed.",
+      "missing_tool_or_input": "A GitHub URL returns an explicit missing-capability result because gh/live PR metadata is not invoked; a local fixture returns FALLBACK with canvas_parity UNAVAILABLE.",
+      "error": "Malformed or empty diff input, unsafe paths, and oversized fixtures are reported explicitly before artifact writes; the adapter does not widen to network or publication."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
     "upstream_readme": {
@@ -46,11 +48,17 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse a local Markdown/HTML fallback when Canvas is unavailable. Required native capabilities: local diff reader, local document renderer. External dependencies remain explicit: Cursor Canvas surface. Absent Canvas returns the local artifact path and a parity gap. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py` for an explicit, bounded project-local Markdown/HTML review artifact when Canvas is unavailable. The adapter reads only a local diff fixture, groups files by reviewer value, and reports that live PR metadata/gh access is unavailable; it never claims Canvas SDK parity or publishes a review. External dependency remains explicit: Cursor Canvas surface. This candidate remains held and conditional until the stated behavior and permission proof exists.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "proof": "Pinned source hash and deterministic build establish provenance. The isolated adapter tests exercise a bounded local unified diff, reviewer-value grouping, changed-line evidence callouts, mechanical summarization, explicit-only refusal, and live-URL capability rejection. No Canvas primitive, live PR metadata, or gh parity is claimed.",
+  "reason": "Per-skill Codex contract preserves the pinned review intent while adding a safe project-local fallback, explicit-only policy, behavior proof, security retention, and pinned README provenance without changing upstream source text.",
+  "local_adapter": {
+    "path": "scripts/cursor_canvas_adapters.py",
+    "entrypoint": "render_pr_review_canvas",
+    "output": "project-local index.md and index.html",
+    "parity": "fallback_only"
+  },
   "replacements": [],
   "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
   "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03"

@@ -20,7 +20,7 @@
         "decision log"
       ],
       "fallback": "Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_isolated_bug_fix_playbook_observed; prospective native trigger and production-target parity remain unproven"
     },
     "external_dependencies": [
       "bounded delegate if exposed",
@@ -36,7 +36,7 @@
       "missing_tool_or_input": "Missing-capability fixture for cursor-figure-it-out: Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
       "error": "Error fixture for cursor-figure-it-out: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_native_trigger_and_production_parity_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -52,7 +52,7 @@
   "codex_note": "## Codex runtime mapping\n\nResolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "The renderer and decision-trail guard are verified, with adjacent isolated notes evidence for a falsifiable hypothesis loop: baseline, failure, trace, structural diff, reproduction-before-fix commit, local remote simulation, and after-state. This is explicit guidance evidence, not a native `figure-it-out` invocation; the correction is fixture-supplied and production-target parity remains unproven.",
   "reason": "Resolve pstack sibling names and native Codex model/delegation while retaining the architecture and experiment loop.",
   "replacements": [
     {

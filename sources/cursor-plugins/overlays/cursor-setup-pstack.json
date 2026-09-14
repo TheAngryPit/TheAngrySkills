@@ -2,6 +2,7 @@
   "codex_contract": {
     "schema_version": 1,
     "adapter_mode": "native-config-gated",
+    "invocation_policy": "explicit_only",
     "name_mapping": {
       "upstream_skill": "setup-pstack",
       "published_name": "cursor-setup-pstack",
@@ -18,7 +19,7 @@
         "local config diff"
       ],
       "fallback": "Unavailable model or declined approval leaves configuration unchanged.",
-      "availability": "native_subagent_inventory_observed; persistent_role_dispatch_unproven"
+      "availability": "bounded_dry_run_and_native_inventory_observed; persistent role dispatch remains unproven"
     },
     "external_dependencies": [
       "Codex model inventory",
@@ -34,7 +35,7 @@
       "missing_tool_or_input": "Missing-capability fixture for cursor-setup-pstack: Unavailable model or declined approval leaves configuration unchanged.",
       "error": "Error fixture for cursor-setup-pstack: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_persistent_write_and_dispatch_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -47,12 +48,17 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nThe standing `model-capability-router` is the single policy owner. Read reports/cursor-setup-pstack-native-inventory-20260914.md for the current subagent-channel inventory and 17-role/four-panel candidate map. Current-task, subagent, user-owned task and Work cloud channels differ. This setup skill maps roles only to models/efforts advertised by the target channel and verifies persistent source changes when requested. The current inventory and dry-run fixture do not prove a write, new-session selection, or full pstack execution.\n",
+  "codex_note": "## Codex runtime mapping\n\nThe standing `model-capability-router` is the single policy owner. Read reports/cursor-setup-pstack-native-inventory-20260914.md for the current subagent-channel inventory and 17-role/four-panel candidate map. Current-task, subagent, user-owned task and Work cloud channels differ. This route is explicit-only because persistent model configuration requires a deliberate request. This setup skill maps roles only to models/efforts advertised by the target channel and verifies persistent source changes when requested. The current inventory and dry-run fixture do not prove a write, new-session selection, or full pstack execution.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Configure which models pstack uses per role. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", or changing pstack's model choices.",
   "proof": "Pinned source hash and deterministic build establish provenance. Dry-run fixtures cover 17 labels/four panels, aliases, unavailable model/effort, and malformed input without writes. The current native subagent tool advertises Sol/Astra/Terra/Luna/Daybreak model overrides, and this task's turn context reads Sol medium; reports/cursor-setup-pstack-native-inventory-20260914.md records the scoped mapping. Persistent write/readback, task-channel entitlement and actual role dispatch remain unproved.",
-  "reason": "Preserve pstack role configuration using canonical Codex model policy and exact-channel capability instead of Cursor-specific rules.",
+  "reason": "Preserve pstack role configuration using canonical Codex model policy and exact-channel capability instead of Cursor-specific rules; require explicit invocation before model configuration.",
   "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "name: cursor-setup-pstack\n",
+      "after": "name: cursor-setup-pstack\ndisable-model-invocation: true\n"
+    },
     {
       "file": "SKILL.md",
       "before": "# Setup pstack\n\nWrite `~/.cursor/rules/pstack-models.mdc`, an always-applied rule that sets pstack's model per role.\n\n## Steps\n\n### 1. Detect available models\n\nEnumerate the model slugs you can pass to a `Task` subagent in this session. That is the dependable source. If Cursor also exposes a models API or CLI that lists the user's entitled models, prefer it for completeness. If you cannot detect any, ask the user to paste the slugs they have access to. Never write a real slug you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.\n\n### 2. Load current state\n\nThe default role-to-model mapping is the rule shape shown in step 5 below. If `~/.cursor/rules/pstack-models.mdc` already exists, read it and treat its values as the current choices. Otherwise start from those defaults.\n\n### 3. Map and confirm\n\nShow every role with its current model, marking any real slug not in the detected set as needing a choice. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer AskQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.\n\n### 4. Validate\n\nEvery real slug written must be in the detected set. `inherit-parent` and `auto` always pass. If a chosen real slug is not available, stop and ask again.\n\n### 5. Write the rule\n\nWrite `~/.cursor/rules/pstack-models.mdc` with `alwaysApply: true` and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:\n\n```\n---\ndescription: pstack per-role model choices (overrides skill defaults)\nalwaysApply: true\n---\n# pstack model configuration. One line per role. Delete a line to fall back to the skill default.\n# `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.\nfeature, refactoring: grok-4.6-fast-xhigh\nbug-fix: grok-4.6-fast-xhigh\nperf-issue: grok-4.6-fast-xhigh\nhillclimb: grok-4.6-fast-xhigh\njudgment and prose: claude-fable-5-1-thinking-max\nhardest tasks: claude-fable-5-1-thinking-max\nhow explorer: grok-4.6-fast-xhigh\nhow explainer: claude-fable-5-1-thinking-max\nwhy investigators: grok-4.6-fast-xhigh\nwhy synthesizer: claude-fable-5-1-thinking-max\nreflect tooling: gpt-5.6-sol-max\nreflect judgment, divergent, synthesizer: claude-fable-5-1-thinking-max\narena runners: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-fast-xhigh, claude-opus-5-thinking-xhigh\narena cross-judge pool: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-fast-xhigh, claude-opus-5-thinking-xhigh\nswarm workers: grok-4.6-fast-xhigh\narchitect runners: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-fast-xhigh, claude-opus-5-thinking-xhigh\ninterrogate reviewers: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-fast-xhigh, claude-opus-5-thinking-xhigh\n```\n\n### 6. Confirm\n\nTell the user the rule was written and that it applies to new sessions. Re-running this skill updates it.\n\n",

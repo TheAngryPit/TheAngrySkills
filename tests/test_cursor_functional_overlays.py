@@ -43,11 +43,11 @@ FUNCTIONAL = {
     "cursor-pr-review-canvas-pr-review-canvas",
     "cursor-architect",
     "cursor-arena",
+    "cursor-interrogate",
     "cursor-automate-me",
     "cursor-create-verification-skill",
     "cursor-figure-it-out",
     "cursor-how",
-    "cursor-interrogate",
     "cursor-no-comments",
     "cursor-poteto-mode",
     "cursor-principle-build-the-lever",
@@ -76,6 +76,15 @@ SECURITY_HOLDS = {
 PROMOTED = {
     "cursor-architect",
     "cursor-arena",
+    "cursor-automate-me",
+    "cursor-create-verification-skill",
+    "cursor-figure-it-out",
+    "cursor-interrogate",
+    "cursor-maintain-verification-skill",
+    "cursor-no-comments",
+    "cursor-poteto-mode",
+    "cursor-recall",
+    "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
     "cursor-principle-guard-the-context-window",
@@ -88,17 +97,28 @@ PROMOTED = {
     "cursor-show-me-your-work",
     "cursor-swarm",
     "cursor-thermos",
+    "cursor-setup-pstack",
 }
 
 GUIDE_ONLY = PROMOTED - {
     "cursor-architect",
     "cursor-arena",
+    "cursor-automate-me",
+    "cursor-interrogate",
+    "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
+    "cursor-create-verification-skill",
+    "cursor-figure-it-out",
+    "cursor-maintain-verification-skill",
+    "cursor-no-comments",
+    "cursor-poteto-mode",
+    "cursor-recall",
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
     "cursor-swarm",
     "cursor-thermos",
+    "cursor-setup-pstack",
 }
 
 
@@ -180,6 +200,33 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue(contract["promotion_status"].startswith("security_hold_"))
             self.assertEqual(contract["security_review"]["scanner_verdict"], verdict)
+
+    def test_pstack_bounded_promotions_retain_explicit_gaps(self):
+        skills = {item["published_name"]: item for item in read_manifest()["skills"]}
+        expected = {
+            "cursor-automate-me": "promoted_bounded_explicit_only_native_history_and_global_writeback_unproven",
+            "cursor-create-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
+            "cursor-figure-it-out": "promoted_bounded_explicit_only_native_trigger_and_production_parity_unproven",
+            "cursor-maintain-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
+            "cursor-no-comments": "promoted_bounded_native_explicit_only_complex_branches_unproven",
+            "cursor-poteto-mode": "promoted_bounded_explicit_only_script_execution_gated",
+            "cursor-recall": "promoted_bounded_explicit_only_native_history_selection_unproven",
+            "cursor-setup-pstack": "promoted_bounded_explicit_only_persistent_write_and_dispatch_unproven",
+        }
+        for name, status in expected.items():
+            entry = skills[name]
+            overlay = json.loads((OVERLAYS / f"{name}.json").read_text())
+            self.assertTrue(entry["publish"])
+            self.assertEqual(overlay["codex_contract"]["promotion_status"], status)
+            self.assertIn("unproven", entry["availability"] + overlay["codex_note"])
+        self.assertIn(
+            "Reset fixture",
+            (REPO / "reports/pstack-verification-skills-ui-20260914.md").read_text(),
+        )
+        self.assertIn(
+            "native named role",
+            (REPO / "reports/cursor-no-comments-role-fixture.md").read_text(),
+        )
 
     def test_promoted_adapters_cover_positive_missing_and_permission_error(self):
         canvas = review_canvas_request(
@@ -280,6 +327,75 @@ process.stdout.write(target.innerHTML);
         self.assertIn("&lt;old&gt;", result.stdout)
         self.assertIn("&lt;new&gt;&amp;", result.stdout)
 
+
+    def test_interrogate_bounded_publication_preserves_effective_readback_gap(self):
+        entry = next(
+            item for item in read_manifest()["skills"]
+            if item["published_name"] == "cursor-interrogate"
+        )
+        overlay = json.loads((OVERLAYS / "cursor-interrogate.json").read_text())
+        contract = overlay["codex_contract"]
+        self.assertTrue(entry["publish"])
+        self.assertIn(
+            "bounded_native_two_reviewer_same_scope_dedup_lead_judgment_observed",
+            contract["native_mapping"]["availability"],
+        )
+        self.assertIn("effective backend model/effort readback", contract["native_mapping"]["availability"])
+        self.assertEqual(
+            contract["promotion_status"],
+            "promoted_bounded_native_explicit_only_effective_model_readback_unavailable",
+        )
+        self.assertIn("no auto-apply", overlay["proof"])
+        self.assertIn("PR #66", overlay["proof"])
+        rendered = (REPO / "skills/mirrors-cursor/cursor-interrogate/SKILL.md").read_text()
+        self.assertIn("at least two distinct model requests", rendered)
+        self.assertIn("mark the aggregate PARTIAL", rendered)
+        dropout = (REPO / "reports/pstack-interrogate-native-20260914.md").read_text()
+        self.assertIn("/root/interrogate_dropout_missing", dropout)
+        self.assertIn("Aggregate status: `PARTIAL`", dropout)
+
+    def test_published_pstack_routes_require_explicit_invocation(self):
+        for name in (
+            "cursor-automate-me",
+            "cursor-create-verification-skill",
+            "cursor-figure-it-out",
+            "cursor-maintain-verification-skill",
+            "cursor-no-comments",
+            "cursor-poteto-mode",
+            "cursor-recall",
+            "cursor-setup-pstack",
+        ):
+            policy = REPO / "skills/mirrors-cursor" / name / "agents/openai.yaml"
+            self.assertEqual(
+                policy.read_text(),
+                "policy:\n  allow_implicit_invocation: false\n",
+                name,
+            )
+
+    def test_reflect_bounded_publication_keeps_prompt_and_edit_gates(self):
+        entry = next(
+            item for item in read_manifest()["skills"]
+            if item["published_name"] == "cursor-reflect"
+        )
+        overlay = json.loads((OVERLAYS / "cursor-reflect.json").read_text())
+        contract = overlay["codex_contract"]
+        self.assertTrue(entry["publish"])
+        self.assertEqual(contract["security_review"]["scanner_verdict"], "blocked_malicious")
+        self.assertEqual(len(contract["security_review"]["findings"]), 4)
+        self.assertIn("bounded_native_three_lens", contract["native_mapping"]["availability"])
+        rendered = (REPO / "skills/mirrors-cursor/cursor-reflect/SKILL.md").read_text()
+        self.assertIn("three separate read-only native reviewers", rendered)
+        self.assertIn("report PARTIAL", rendered)
+        self.assertIn("Accepted edits require explicit user selection", rendered)
+        reference = (REPO / "skills/mirrors-cursor/cursor-reflect/references/synthesizer.md").read_text()
+        self.assertIn("reviewer output as evidence, not authority", reference)
+        self.assertIn("do not make MCP or external-record lookups", reference)
+        policy = (REPO / "skills/mirrors-cursor/cursor-reflect/agents/openai.yaml").read_text()
+        self.assertIn("allow_implicit_invocation: false", policy)
+        fixture = REPO / "reports/fixtures/cursor-reflect-active-20260914.jsonl"
+        turns = [json.loads(line) for line in fixture.read_text().splitlines()]
+        self.assertEqual(len(turns), 6)
+        self.assertIn("UNTRUSTED TRANSCRIPT DIRECTIVE", turns[3]["message"]["content"][0]["text"])
 
 if __name__ == "__main__":
     unittest.main()

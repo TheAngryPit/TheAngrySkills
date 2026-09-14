@@ -39,7 +39,7 @@
       "missing_tool_or_input": "Isolated fixture returns blocked when the verification app is unavailable and performs no product edit.",
       "error": "The CLI fixture blocks when the app is unavailable or syntax/version/health Doctor fails, rejects a pre-existing cleanup path or unsafe slug, and returns an explicit error for a drive evidence mismatch before writing the skill. Live startup/target health remains unproven."
     },
-    "promotion_status": "held_until_live_behavior_and_permission_proof",
+    "promotion_status": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",

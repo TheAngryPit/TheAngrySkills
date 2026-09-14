@@ -20,6 +20,13 @@
       "fallback": "Missing logs or failed redaction yields INCONCLUSIVE and no write.",
       "availability": "not_proven_in_current_codex_session"
     },
+    "local_mock": {
+      "module": "scripts/cursor_voice_adapters.py",
+      "entrypoint": "diagnose_voice_log",
+      "result": "DIAGNOSED",
+      "missing_or_unsafe_log": "INCONCLUSIVE with no write",
+      "side_effects": ["read-only", "audio redacted", "credentials redacted"]
+    },
     "external_dependencies": [
       "user-provided voice runtime"
     ],

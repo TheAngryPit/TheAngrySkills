@@ -4,56 +4,55 @@ Date: 2026-09-14
 
 ## Repository and change boundary
 
-- Canonical repository: `TheAngrySkills` (the configured local remote is
-  `/private/tmp/cursor-theangryskills-mirror-20260912`).
-- Local task checkout: `/private/tmp/theangryskills-pstack-20260913-xcCoXg/repo`.
+- Canonical repository: `TheAngrySkills`, using an isolated local checkout.
 - Branch: `codex/verification-ui-delta-20260914`.
 - Authority base: `ea6099fa5b9c80251cfe82467738e133aee17c35`.
 - Current carried commit before this delta: `b3a9046e` (`test(pstack):
   strengthen verification skill fixture proof`).
-- This delta changes only the two held overlay descriptions and this report.
-  It does not alter the manifest, pinned source, global skills, product code,
-  PR state, or push any branch.
-
-The name `TheAngry-Workflows` is the local project context from the original
-task, not the canonical repository identity for this verification-skill
-delta. The report uses `TheAngrySkills` for repository provenance and names the
-checkout path separately.
+- The worker delta changed the two held overlay descriptions and this report;
+  integration added three screenshot review artifacts. The manifest, pinned
+  source, global skills, and product code were not changed by this UI proof.
 
 ## Source-wave input
 
 Native bounded readers were used independently, one per mapped feature. Their
 receipts are separate from the CLI fixture's caller-supplied input:
 
-- Cicero, task `01a0a090-f43a-7853-9604-421ee99f847c`, read the create feature.
+- Native read-only reviewer A read the create feature.
   It cited the form and visible status in
-  `/private/tmp/pstack-web-verify-20260914/index.html:27-38`, persistence in
+  the disposable fixture's `index.html:27-38`, persistence in
   `app.js:10-16`, rendering and save behavior in `app.js:18-57`, and the
   feature map in `features/create-note.md:6-32`. It found no behavior drift;
   it did flag that the map's `Doctor passes` wording is not implemented by the
   static fixture and that the empty-list precondition depends on reset.
-- Aristotle, task `01a0a090-f356-7df2-ac27-9dcc7acdf4b9`, read the search
+- Native read-only reviewer B read the search
   feature. It cited the search controls in
-  `/private/tmp/pstack-web-verify-20260914/index.html:40-48`, filtering and
+  the same fixture's `index.html:40-48`, filtering and
   empty state in `app.js:18-41`, query and clear behavior in `app.js:59-63`,
   and the feature map in `features/search-notes.md:6-32`. It found no behavior
   drift; it flagged only the wording mismatch between “Notes page” and the
   single static page and the need to confirm persistence after clear.
 
-The earlier CLI fixture report remains fixture-only. Its `OBSERVED` source-wave
-field was caller-supplied and must be read as `OBSERVED_INPUT_ONLY` unless
-paired with native-reader receipts. This report records the two native reader
-receipts above separately and does not promote the earlier field.
+The CLI fixture report remains fixture-only. Its `OBSERVED_INPUT_ONLY`
+source-wave field is caller-supplied; the two native-reader receipts above are
+separate evidence and do not change the CLI field's provenance.
 
 ## Disposable UI proof
 
 The generated project-local skill is at
-`/private/tmp/pstack-web-verify-20260914/.agents/skills/verify-notes-web/`.
+`.agents/skills/verify-notes-web/` within the disposable fixture.
 Its launch, Doctor, drive, evidence, and cleanup contract is in `SKILL.md:12-50`.
 The disposable app exposes the visible version/health identity, labelled create
 controls, search controls, and the explicit `Reset fixture` cleanup control in
 `index.html:27-51`; create, persistence, filtering, empty-state, clear, and
 reset behavior are implemented in `app.js:10-72`.
+
+Source readback SHA-256 for the disposable target files: `index.html`
+`282fcd65a5babdfaf6d68058034a70a2c87ba9ac81c49d6d6081ed9dd74d1276`,
+`app.js` `aeb1a79bd68529666a5a8c2635878f54fa3d13aed1462decfc0ba31e1b4da929`,
+and `app.py` `bd0ab1b28c4b75f37636abcc57c49eaac28f07f9d982a3939b8c85e95f9bc392`.
+The source files remain in the disposable fixture; their exact local checkout
+path and internal reviewer IDs are omitted from this public report.
 
 Doctor evidence:
 

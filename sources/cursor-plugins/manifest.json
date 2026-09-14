@@ -673,7 +673,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "ChatGPT Work cloud task creation documented but live dispatch rejected by auto-review; tree, handoff, artifact, cancel and recovery unproven",
       "baseline_classification": "não demonstrada (equivalente nativo não provado)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -764,13 +764,13 @@
       "license_path": "orchestrate/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "orchestrate/skills/orchestrate/SKILL.md",
-      "planned_adaptation": "Manter apenas como referência upstream; não disponibilizar no Codex até existir equivalente nativo, revisão de segurança e prova de comportamento.",
+      "planned_adaptation": "Mapear a orquestração explicit-only para ChatGPT Work cloud escolhido pelo operador; manter scripts/credenciais Cursor apenas como referência, sem publicar até provar criação, filhos, drain, handoffs, artefactos e recuperação nativos.",
       "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
       "publish": false,
       "published_name": "cursor-orchestrate",
       "upstream_purpose": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
       "upstream_skill": "orchestrate",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; pedido explícito de task Work; prova nativa de goal/dispatch/filhos/drain/handoffs/artefactos/cancel/recovery; security findings Cursor mantidos, sem execução dos scripts pinados"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -978,12 +978,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Codex adapter renderer, isolated CLI verification fixture, project-local .agents/skills/verify-notes generation, captured stdout/stderr/exit evidence, controlled drift reconciliation, and second-run evidence checked; live target application and full doctor/harness path not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: references/feature-map-example/README.md, references/feature-map-example/create-note.md, references/feature-map-example/search.md",
+      "dependencies_or_limitations": "supporting files in this skill: references/feature-map-example/README.md, references/feature-map-example/create-note.md, references/feature-map-example/search.md; native verification runner and explicit project-local destination are required",
       "family": "pstack",
       "files": {
         "SKILL.md": "644f2551403c1bca01a2855b34611b6e7be0ce0dc5b204514c376c0f6a6e6ac4",
@@ -994,13 +994,13 @@
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/create-verification-skill/SKILL.md",
-      "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
+      "planned_adaptation": "Preservar SKILL.md e os apoios necessários; trocar .cursor/skills por .agents/skills, mapear o runner nativo, testar o fluxo em staging e manter os apoios fora de instalação implícita.",
+      "promotion_reason": "live target application and permission proof pending; remains unpublished",
       "publish": false,
       "published_name": "cursor-create-verification-skill",
       "upstream_purpose": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
       "upstream_skill": "create-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; CLI fixture real em subprocesso para criar .agents/skills/verify-<app>/ com SKILL.md, feature-map README, required feature headings, captured stdout/stderr/exit evidence, explicit cleanup path, doctor minimum, controlled drift, maintenance reconciliation, persisted before/after evidence, and second execution; unsafe names and pre-existing cleanup state blocked; live target/harness, syntax/version doctor, and native host activation remain unproven; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -1025,7 +1025,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native explorer/explainer role flow observed; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1041,12 +1041,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/how/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "source-faithful read-only role flow and bounded missing/error behavior reviewed in reports/pstack-how-why-real-20260914.md; trigger remains unobserved",
+      "publish": true,
       "published_name": "cursor-how",
       "upstream_purpose": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
       "upstream_skill": "how",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -1075,12 +1075,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "content available; live selection not demonstrated",
+      "availability": "Codex adapter renderer, path-state, isolated CLI verification fixture, project-local feature-map evidence, controlled drift reconciliation, persisted before/after maintenance evidence, and clean second execution checked; live target/source-wave/native runner path not demonstrated",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "intacta",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or the documented sequential fallback; target remains under project-local .agents/skills/verify-*/",
       "family": "pstack",
       "files": {
         "SKILL.md": "515c0eaa054b3f6be1b1fb06f2c2f173c80fddb58bbcac57576f89c479bc68e8"
@@ -1088,13 +1088,13 @@
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/maintain-verification-skill/SKILL.md",
-      "planned_adaptation": "Manter conteúdo e referências; adicionar somente metadata/trigger Codex quando necessário e validar numa fixture pequena.",
-      "promotion_reason": "Codex workflow unproven: upstream targets .cursor/skills/verify-*, concurrent subagents, live app driving and PR publication",
+      "planned_adaptation": "Manter conteúdo e referências; trocar o alvo .cursor/skills/verify-* por .agents/skills/verify-*, usar delegação nativa limitada com fallback sequencial e validar numa fixture pequena.",
+      "promotion_reason": "live target application and permission proof pending; remains unpublished",
       "publish": false,
       "published_name": "cursor-maintain-verification-skill",
       "upstream_purpose": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
       "upstream_skill": "maintain-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state; real disposable CLI subprocess fixture with project-local .agents/skills/verify-* creation, explicit cleanup ownership, drift reconciliation, persisted maintenance-before/after evidence, and clean second execution; doctor remains minimum existence check; source-wave delegation, live target, native runner, failed-doctor handling, PR/merge, and host activation remain unproven; teste de comportamento no host Codex"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1138,15 +1138,24 @@
       "published_name": "cursor-no-comments",
       "upstream_purpose": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
       "upstream_skill": "no-comments",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; named comment-sicko profile asset; exact normalized role adaptation against pinned source; fixture de trigger; native session selection and live reviewer remain unproven",
+      "native_agent_profiles": [
+        {
+          "name": "comment-sicko",
+          "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
+          "pinned_source_path": "pstack/agents/comment-sicko.md",
+          "pinned_source_sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+          "loading": "explicit profile installation; fresh-session selection not proven"
+        }
+      ]
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "Codex adapter renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; fixture-local portions of source steps 1/4/5 exercised and 2/3/6 partial; correction is prewritten by the fixture caller; selected dependency-free orch/store and watch-pr/github module paths run in scratch with Bun 1.4.2 and mocks; exact-lock dependency install, cache-populated bootstrap install/restart, real CLI smoke, and one bounded read-only GitHub status query for authorized PR #64 are proven in scratch; no real PR mutation, live parity, polling/stack behavior, native session, or cloud task lane demonstrated; install cache run was not network-instrumented, the key does not verify package versions, and Review ✅ is not a review-approval claim",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
+      "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); concrete mirror dependencies `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` are conditional and require availability checks; cloud-capable task execution is conditional; bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
       "family": "pstack",
       "files": {
         "SKILL.md": "b3c505602b82fb3641a3983e9c46fb974881faa12ece1af804fae27afb7be532",
@@ -1198,13 +1207,22 @@
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/poteto-mode/SKILL.md",
-      "planned_adaptation": "Preservar intenção e playbooks; adaptar scripts, paths, modelo de permissões e loops ao host Codex, com testes focados antes de disponibilizar.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
+      "planned_adaptation": "Preservar intenção e os 23 playbooks; adaptar frontmatter, Cursor-only paths, delegation, model/permission boundaries, heartbeats, and project tools to the native Codex host, with staging tests before availability.",
+      "promotion_reason": "native session behavior and controlled bundled-script execution/egress proof pending; remains unpublished",
       "publish": false,
       "published_name": "cursor-poteto-mode",
       "upstream_purpose": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
       "upstream_skill": "Poteto Mode",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; all 23 playbooks and references rendered in staging; named poteto-agent profile asset and exact normalized role adaptation against pinned source; fixture de leitura estrutural de playbook com ausência/erro; fixture contextual bug-fix da app de notas com partes dos passos 1/4/5 exercidas na fixture e 2/3/6 parciais, evidência independente antes/falha/trace/correção/depois, diff apenas registado estruturalmente, commits locais repro-before-fix, simulação de PR em bare remote local e guarda de falha exacta; no real PR mutation/live parity; check-plan seguro e worktree-audit apenas com mocks; exact-lock manual install with --ignore-scripts, cache-populated missing-key bootstrap install/restart, bun test 52/52, typecheck, and real orch/watch-pr CLI smoke with exact commander 14.0.0 plus mocked git/gh and external timeout; one bounded read-only real GitHub status query for authorized PR #64 with raw reviewDecision/isDraft/mergeStateStatus reconciliation; Review ✅ must not be interpreted as review approval, and polling/stack, merge, live native behavior, and broader GitHub parity remain unproven; cache run was not network-instrumented, the key does not verify installed versions; teste de comportamento no host Codex; revisão estática rastreável e execução controlada dos ficheiros de apoio antes de disponibilizar",
+      "native_agent_profiles": [
+        {
+          "name": "poteto-agent",
+          "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
+          "pinned_source_path": "pstack/agents/poteto-agent.md",
+          "pinned_source_sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+          "loading": "explicit profile installation; fresh-session selection not proven"
+        }
+      ]
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1783,7 +1801,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1799,20 +1817,20 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/show-me-your-work/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "reviewed local writer with root/regular-file guards, 24-process append and credential-shaped refusal tests; actual append-only trail and independent gpt-6-astra audit in reports/cursor-show-work-review-20260914.md",
+      "publish": true,
       "published_name": "cursor-show-me-your-work",
       "upstream_purpose": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
       "upstream_skill": "show-me-your-work",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; writer bounded, trail e auditoria cross-model observados; seleção automática e outros hosts por verificar"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native local four-phase N=2 swarm observed; automatic skill selection, Work cloud workers, race and other hosts unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "native bounded delegation and coordinator aggregation are observed for a local-computer case; Work cloud default remains unavailable without a proved worker route",
       "family": "pstack",
       "files": {
         "SKILL.md": "d578d877c3b8b9de7163f52579c4683337a940acc0fbe4496a498f5d3b27df30"
@@ -1821,12 +1839,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/swarm/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "visible four-phase checklist before N=2 parallel local launch, disjoint PASS worker handoffs, terminal drain and aggregate in reports/pstack-swarm-four-phase-20260914.md; earlier ISSUES/BLOCKED workers and BLOCKED aggregate retained in reports/pstack-thermos-swarm-real-20260914.md",
+      "publish": true,
       "published_name": "cursor-swarm",
       "upstream_purpose": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
       "upstream_skill": "swarm",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; native local four-phase fanout/drain/aggregate observado; Work cloud default, race, dropout, seleção automática e outros hosts por verificar"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1940,7 +1958,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native read-only investigator/synthesizer flow observed; unavailable evidence categories remain explicit; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1966,12 +1984,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/why/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "source-faithful seven-category coverage with authorized read-only sources and explicit unknowns reviewed in reports/pstack-how-why-real-20260914.md; trigger remains unobserved",
+      "publish": true,
       "published_name": "cursor-why",
       "upstream_purpose": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "upstream_skill": "why",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -2018,7 +2036,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "guide-only; native Ralph loop execution remains unproven",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2032,8 +2050,8 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "ralph-loop/skills/ralph-loop-help/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "This skill only explains the external Cursor Ralph Loop and has no write, hook, or network action; live Codex selection is still unproven.",
+      "publish": true,
       "published_name": "cursor-ralph-loop-help",
       "upstream_purpose": "Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.",
       "upstream_skill": "ralph-loop-help",
@@ -2128,12 +2146,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native two-lens review and missing-lens partial observed; automatic skill selection unobserved; other hosts unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; require two native bounded reviewers for a double review and report partial if one fails",
       "family": "thermos",
       "files": {
         "SKILL.md": "c272effc404b126d34464e8a1dacec30f6757638db39088ca5afc58dd2c1f472"
@@ -2141,13 +2159,13 @@
       "license_path": "thermos/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "thermos/skills/thermos/SKILL.md",
-      "planned_adaptation": "Preservar as duas lentes e a síntese; trocar a forma literal de subagent/background por duas tarefas bounded nativas, com fallback sequencial.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "planned_adaptation": "Preservar as duas lentes e a síntese; trocar a forma literal de subagent/background por dois revisores bounded nativos em paralelo, com resultado parcial se faltar uma lente.",
+      "promotion_reason": "two independent native lenses reviewed the same real PR #64 diff and coordinator synthesized ISSUES; missing-lens fixture returned PARTIAL without a double-review claim in reports/pstack-thermos-swarm-real-20260914.md",
+      "publish": true,
       "published_name": "cursor-thermos",
       "upstream_purpose": "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits.",
       "upstream_skill": "thermos",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; duas lentes e síntese nativas observadas; missing-lens parcial observado; seleção automática e outros hosts por verificar"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -2173,7 +2191,259 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     }
   ],
-  "snapshot_scope": "91 physical SKILL.md files and the 169 supporting files inside their skill directories; nearest ancestor license evidence only",
+  "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3",
-  "upstream_repository": "https://github.com/cursor/plugins.git"
+  "upstream_repository": "https://github.com/cursor/plugins.git",
+  "support_files": {
+    "advisor/agents/advisor-subagent.md": {
+      "sha256": "50debf8b5848c7e9f43c84985631445e554e246b52ecf83d6691bfa79643878e",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/capture-response.sh": {
+      "sha256": "51c249434fbd19fd198fba05a99b6b2637f34877a5bd43adc62b3ecd8f71440a",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/hooks.json": {
+      "sha256": "353d83923e0056f62648c76256d85935fc080ceb2b34d153f13b6cb9356eea49",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/lib.sh": {
+      "sha256": "1ca60db14f4693d75768372ca64f74456591227ba7a39474e5a20960427b8cbe",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/mark-pending.sh": {
+      "sha256": "61096abd683fb13b645a8c038fd05f11bf6f0bab77a9c15cd5ede9cbe7bb18fd",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/record-consult.sh": {
+      "sha256": "ca937ec0a3ab9d97998c18432da11a09c3a6cb720072dacb00b66851e3ccee3e",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "advisor/hooks/stop-hook.sh": {
+      "sha256": "563efd736a5b5a2dc1cadbbd64caefc9f30133d49d02b5312c9e4ea0fc2636bf",
+      "related_skills": [
+        "cursor-advisor"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "agent-compatibility/agents/compatibility-scan-review.md": {
+      "sha256": "4ce59d99d3d882b8768abec5ff839dfe7ec055218507b49e8b89b76c94b40693",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/docs-reliability-review.md": {
+      "sha256": "a0bb33ebc679b0ee0030580924c9d9915632af5e6fb41f6066346f2b688d48e8",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/startup-review.md": {
+      "sha256": "4e713f4dac1997febf48c1a5bdab96e2a4454f7062fed3a0e1142b8d4cfefd36",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "agent-compatibility/agents/validation-review.md": {
+      "sha256": "38612d157dfd443955f2541248bf4b19fae1f50ee7e9fca0ab53c2f7060ce5cd",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
+      ],
+      "relationship": "plugin manifest agent dependency"
+    },
+    "continual-learning/agents/agents-memory-updater.md": {
+      "sha256": "93dfb244f173e2240d8d6bffe4870a647d1da27d402b8de83197e3e2b471527d",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "continual-learning/hooks/continual-learning-stop.ts": {
+      "sha256": "ad2610f3e3fe10981e9aa80a6be56e1d7ee20a203ec94585b003bd49904dc1e2",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "continual-learning/hooks/hooks.json": {
+      "sha256": "bc26f31a03e0cd4be8f62c58e263117191067df726e7363af5a88084304c7c8c",
+      "related_skills": [
+        "cursor-continual-learning"
+      ],
+      "relationship": "plugin manifest hook/agent dependency"
+    },
+    "create-plugin/agents/plugin-architect.md": {
+      "sha256": "100e47bdc94ba67f25c99358a211e8cf7de02564f0cf60a7069b0db07f97ed41",
+      "related_skills": [
+        "cursor-create-plugin-scaffold"
+      ],
+      "relationship": "plugin manifest agent/rule dependency; per-skill activation to verify"
+    },
+    "create-plugin/rules/plugin-quality-gates.mdc": {
+      "sha256": "79efb4b9a58f4565609b52df2f61eb83ea677ab5de96932df0b160341676d1e8",
+      "related_skills": [
+        "cursor-create-plugin-scaffold",
+        "cursor-review-plugin-submission"
+      ],
+      "relationship": "plugin manifest agent/rule dependency; per-skill activation to verify"
+    },
+    "cursor-team-kit/agents/ci-watcher.md": {
+      "sha256": "8bc93b9ced5588f0ece54ce52690e9682ac49a7fd64be7124379b0e2e128556e",
+      "related_skills": [
+        "cursor-loop-on-ci"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "cursor-team-kit/agents/thermo-nuclear-code-quality-review.md": {
+      "sha256": "4d15c05be503f9fdb795a292807334558e7619ffc2fd75ddbc9e97e0d6312234",
+      "related_skills": [
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "cursor-team-kit/rules/no-inline-imports.mdc": {
+      "sha256": "91bb4412f2775b386ddf6af0d235fbe8160907f6104c76928470fdf51be69edd",
+      "related_skills": [
+        "cursor-check-compiler-errors",
+        "cursor-control-cli",
+        "cursor-control-ui",
+        "cursor-deslop",
+        "cursor-fix-ci",
+        "cursor-fix-merge-conflicts",
+        "cursor-get-pr-comments",
+        "cursor-loop-on-ci",
+        "cursor-make-pr-easy-to-review",
+        "cursor-new-branch-and-pr",
+        "cursor-cursor-team-kit-pr-review-canvas",
+        "cursor-review-and-ship",
+        "cursor-run-smoke-tests",
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
+        "cursor-verify-this",
+        "cursor-weekly-review",
+        "cursor-what-did-i-get-done",
+        "cursor-workflow-from-chats"
+      ],
+      "relationship": "plugin-wide rule; specific skill activation unproven"
+    },
+    "cursor-team-kit/rules/typescript-exhaustive-switch.mdc": {
+      "sha256": "58214625757c38b73fc3e66a715ea4b2ae609f6b3e285edc4393c5144430a8f4",
+      "related_skills": [
+        "cursor-check-compiler-errors",
+        "cursor-control-cli",
+        "cursor-control-ui",
+        "cursor-deslop",
+        "cursor-fix-ci",
+        "cursor-fix-merge-conflicts",
+        "cursor-get-pr-comments",
+        "cursor-loop-on-ci",
+        "cursor-make-pr-easy-to-review",
+        "cursor-new-branch-and-pr",
+        "cursor-cursor-team-kit-pr-review-canvas",
+        "cursor-review-and-ship",
+        "cursor-run-smoke-tests",
+        "cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
+        "cursor-verify-this",
+        "cursor-weekly-review",
+        "cursor-what-did-i-get-done",
+        "cursor-workflow-from-chats"
+      ],
+      "relationship": "plugin-wide rule; specific skill activation unproven"
+    },
+    "pstack/agents/comment-sicko.md": {
+      "sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+      "related_skills": [
+        "cursor-no-comments"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "pstack/agents/poteto-agent.md": {
+      "sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+      "related_skills": [
+        "cursor-poteto-mode"
+      ],
+      "relationship": "named agent dependency"
+    },
+    "ralph-loop/hooks/capture-response.sh": {
+      "sha256": "1ed2e9be8dfad78d1391ef635610b9202e3a9715074c1c23058b0d11dcdb9b1f",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "ralph-loop/hooks/hooks.json": {
+      "sha256": "4170ab91da22869fc1356c0e861f14807c0a935553ced808c96635f0c84d6880",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "ralph-loop/hooks/stop-hook.sh": {
+      "sha256": "4ae2529aa75db7258e6b5ba9e01a8ca888489018199603ae9d6e1434867fdcc0",
+      "related_skills": [
+        "cursor-ralph-loop",
+        "cursor-cancel-ralph"
+      ],
+      "relationship": "plugin manifest hook dependency; guide skill excluded"
+    },
+    "thermos/agents/thermo-nuclear-code-quality-review-subagent.md": {
+      "sha256": "636800f1e5acf501f339779a8867b95d633396930b3356a2b0c9a0018343f02d",
+      "related_skills": [
+        "cursor-thermos"
+      ],
+      "relationship": "named agent dependency; individual review skills related"
+    },
+    "thermos/agents/thermo-nuclear-review-subagent.md": {
+      "sha256": "9dfa8ed88d1ea5d775edb5557b8a8ecfa9f2977b904c55c902b0ceb648b563d0",
+      "related_skills": [
+        "cursor-thermos"
+      ],
+      "relationship": "named agent dependency; individual review skills related"
+    }
+  },
+  "native_support_files": {
+    "scripts/cursor_native_hook_adapters.py": {
+      "sha256": "1e0b3887e0bbb43faa3a2c1e16282d5058a09679463a05a62facc8ef8c1e1a02",
+      "related_skills": [
+        "cursor-advisor",
+        "cursor-cancel-ralph",
+        "cursor-continual-learning",
+        "cursor-ralph-loop"
+      ]
+    },
+    "scripts/cursor_plugin_submission_audit.py": {
+      "sha256": "664fb03dcc98385c7b8e91635cd4682597e196532c7e32664d45fae66d8794df",
+      "related_skills": [
+        "cursor-review-plugin-submission"
+      ]
+    },
+    "scripts/cursor_plugin_scaffold_fixture.py": {
+      "sha256": "43fa6e7858157997b4563c32bd012afc386622af432116a8168fecf6120acffe",
+      "related_skills": [
+        "cursor-create-plugin-scaffold"
+      ]
+    }
+  }
 }

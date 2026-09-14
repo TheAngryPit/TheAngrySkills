@@ -1,10 +1,9 @@
 # Cursor plugin skills mirror
 
-This is a skills-only mirror of `cursor/plugins` at
+This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
-and the nearest physical license evidence. It does not import independent
-plugin components or install anything. `manifest.json` is keyed by physical
+and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. A separate hash-checked native adapter is bundled only into the held Advisor, Ralph and continual-learning previews; it is not registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three non-distributed Benny skills as dormant.
 
 Each `overlays/<published-name>.json` declares the exact source hash, optional
@@ -15,12 +14,15 @@ evidence beside each published skill. The upstream skill text otherwise stays
 in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
-This reviewable branch indexes 53 content or naming candidates under
-`skills/mirrors-cursor/`; public availability still requires PR review and merge.
-One functional candidate, the cursor-team-kit PR
-review canvas, is promoted for a read-only local artifact path with executable
-renderer proof. Five instruction-only candidates are promoted as `guide_only`:
-the four principles and technical writing. The remaining 31 functional
+The merged baseline indexes 53 candidates under `skills/mirrors-cursor/`. This branch adds `cursor-ralph-loop-help` as guide-only and `cursor-how`, `cursor-why`, and `cursor-show-me-your-work` as bounded explicit-only native workflows, for 57 emitted mirrors. The other 31 active skills have contracts and pinned sources but remain held and unindexed; all 88 active skills are in scope. The three Benny skills remain dormant. Public availability of this branch requires PR review and merge.
+The cursor-team-kit PR review canvas is published for a read-only local artifact
+path with executable renderer proof. Six instruction-only candidates are
+`guide_only`: the four principles, technical writing, and Ralph help. The
+`how`/`why` role-flow [evidence](../../reports/pstack-how-why-real-20260914.md)
+supports bounded read-only publication while automatic skill selection remains
+unobserved. The `show-me-your-work` [audit](../../reports/cursor-show-work-review-20260914.md)
+supports a bounded local decision writer and independent review with explicit
+redaction limits. The remaining held functional
 adaptations stay held with a per-skill Codex contract recording native mapping,
 permission gates, and positive, missing-capability/input, and error scenarios
 still to prove.
@@ -28,7 +30,7 @@ It also holds `cursor-cursor-sdk`, `cursor-make-bot-ui` and
 `cursor-review-plugin-submission` for contextual security review.
 `cursor-maintain-verification-skill` is held after source review showed a
 Cursor-local path, parallel workers, live driving, and PR publication that need
-a Codex-specific proof. All 91 remain traceable in the manifest and snapshot.
+a Codex-specific proof. All 91 physical skills remain traceable in the manifest and snapshot. The pstack candidate renders all 23 playbooks and bundles its role reference, but application in a live Codex session, cloud task parity, and bundled script safety are still unproven.
 No held skill is indexed for installation by this batch. The generator keeps
 the repository's `.claude-plugin/marketplace.json` catalog entry
 `mirrors-cursor` aligned with the emitted paths. This is catalog registration;

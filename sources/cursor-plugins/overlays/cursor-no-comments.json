@@ -10,27 +10,31 @@
     "preserved_semantics": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
     "native_mapping": {
       "capabilities": [
-        "bounded review delegate",
+        "named comment-sicko profile asset",
+        "bounded native reviewer with explicit file ownership",
+        "cursor-how/cursor-why/cursor-architect sibling skills",
         "local diff/test runner"
       ],
       "required_tools": [
-        "bounded review delegate",
+        "named comment-sicko profile",
         "local diff/test runner"
       ],
-      "fallback": "Reviewer error yields report-only status with no mutation.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "If the named profile, reviewer, or required sibling skill is unavailable, report the exact gap; do not claim the accepted-finding loop ran.",
+      "availability": "public profile asset and bounded role contract present; native session selection not proven"
     },
     "external_dependencies": [
+      "model-capability-router native profile asset",
       "native bounded reviewer if exposed"
     ],
     "permission_gates": [
-      "Apply only accepted findings after approval; reviewer absence means report-only.",
-      "Reviewer error yields report-only status with no mutation.",
+      "The coordinator owns integration and rejects application-code edits made by the reviewer.",
+      "The coordinator owns integration and may implement accepted in-scope findings under the caller's authorization.",
+      "Only the optional constraint encoding waits for the approval required by upstream Step 5; a missing reviewer is reported as an explicit capability gap.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-no-comments: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-no-comments: Reviewer error yields report-only status with no mutation.",
+      "positive": "The named comment-sicko profile preserves the pinned review role and returns a bounded report for coordinator review; live native selection remains unproven.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-no-comments: an unavailable named profile or sibling skill yields a specific partial result, not a completed no-comments run.",
       "error": "Error fixture for cursor-no-comments: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
     "promotion_status": "held_until_behavior_proof_and_permission_gate",
@@ -46,12 +50,36 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nApply only accepted findings after approval; reviewer absence means report-only. Required native capabilities: bounded review delegate, local diff/test runner. External dependencies remain explicit: native bounded reviewer if exposed. Reviewer error yields report-only status with no mutation. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex runtime mapping\n\nUse the named `comment-sicko` profile distributed by `model-capability-router` for a bounded native reviewer. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source hash plus the source-grounded `comment-sicko` TOML asset prove packaging and semantic adaptation. The profile checker proves TOML syntax, byte distribution, and explicit install behavior; native session selection and live reviewer execution remain unproven. An earlier bounded native reviewer applied the pinned role to a small JS fixture, deleted one redundant comment, preserved its SPDX header, left application code unchanged, and passed node --check; that exercise did not select the new named profile or complete the no-comments fix loop.",
+  "reason": "Map the missing upstream reviewer to the public native named profile without copying the pinned Markdown role into the generated workbench.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Spawn `Task` with `subagent_type: \"Comment Sicko\"`. Pass the scope. Do not restate its rules.",
+      "after": "Invoke the named `comment-sicko` profile through native bounded delegation. Pass the exact scope and the profile name. Assign its writable files explicitly and keep the coordinator responsible for integration."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "run `/how` or `/why` on their symbol.",
+      "after": "run `cursor-how` or `cursor-why` on their symbol."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "run `/architect` once for the accepted set",
+      "after": "run `cursor-architect` once for the accepted set"
+    }
+  ],
   "source_path": "pstack/skills/no-comments/SKILL.md",
-  "source_sha256": "5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05"
+  "source_sha256": "5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05",
+  "native_agent_profiles": [
+    {
+      "name": "comment-sicko",
+      "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
+      "pinned_source_path": "pstack/agents/comment-sicko.md",
+      "loading": "explicit profile installation; fresh-session selection not proven"
+    }
+  ]
 }

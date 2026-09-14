@@ -7,35 +7,39 @@
       "published_name": "cursor-create-verification-skill",
       "source_path": "pstack/skills/create-verification-skill/SKILL.md"
     },
-    "preserved_semantics": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
+    "preserved_semantics": "Generate a project-local verification skill that drives the real user surface, records observable evidence, and hands maintenance to a verification loop.",
     "native_mapping": {
       "capabilities": [
         "repository reader",
-        "local verification runner",
+        "native verification runner",
         "evidence collector"
       ],
       "required_tools": [
         "repository reader",
-        "local verification runner",
+        "native verification runner",
         "evidence collector"
       ],
-      "fallback": "Missing harness or broken startup preserves the source and fails verification.",
-      "availability": "not_proven_in_current_codex_session"
+      "project_local_skill_root": ".agents/skills/verify-<app>/",
+      "fallback": "Missing harness, broken startup, or unavailable native surface preserves the source and returns a blocked verification result.",
+      "availability": "renderer, real disposable CLI verification fixture, project-local .agents/skills/verify-<app>/ structure, syntax/version/health Doctor, per-feature drives, captured stdout/stderr/exit evidence, explicit cleanup ownership, unsafe-input guards, and a disposable local web UI driven through the native Codex in-app browser after an escalated localhost launch; production/live target application and full harness remain unproven",
+      "routing_authority": "proof-orchestrator selects the proof path; model-capability-router remains the standing model authority"
     },
     "external_dependencies": [
-      "application runtime or supplied harness"
+      "target application runtime or supplied harness",
+      "project-local .agents/skills destination"
     ],
     "permission_gates": [
-      "Write only to an explicit project-local destination; do not kill processes or drive outside scope.",
+      "Write only to an explicit project-local .agents/skills/verify-<app>/ destination; never write a global skill from this flow.",
+      "Run the generated instructions only against an instance started by the verification run, and never kill by process name.",
       "Missing harness or broken startup preserves the source and fails verification.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Do not publish, open a PR, or mutate product code as part of generation without separate explicit authorization."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-create-verification-skill: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-create-verification-skill: Missing harness or broken startup preserves the source and fails verification.",
-      "error": "Error fixture for cursor-create-verification-skill: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "A disposable Python CLI runs syntax/version/health Doctor checks, drives each mapped notes CLI feature as a separate subprocess, captures stdout/stderr/exit and regular-file side effects, cleans only declared app state, then creates a project-local .agents/skills/verify-<app>/ with Launch/Doctor/Drive/Evidence/Cleanup/Helpers, a feature-map README, required feature headings, and persisted JSON evidence. A separate disposable local web UI was driven through the native Codex in-app browser for create, search-match, no-match, clear, reload/persistence, with accessibility-tree and screenshot evidence. The result remains `FIXTURE_ONLY`: the disposable UI is not production/live target parity.",
+      "missing_tool_or_input": "Isolated fixture returns blocked when the verification app is unavailable and performs no product edit.",
+      "error": "The CLI fixture blocks when the app is unavailable or syntax/version/health Doctor fails, rejects a pre-existing cleanup path or unsafe slug, and returns an explicit error for a drive evidence mismatch before writing the skill. Live startup/target health remains unproven."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_until_live_behavior_and_permission_proof",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -48,12 +52,153 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nWrite only to an explicit project-local destination; do not kill processes or drive outside scope. Required native capabilities: repository reader, local verification runner, evidence collector. External dependencies remain explicit: application runtime or supplied harness. Missing harness or broken startup preserves the source and fails verification. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation boundary\n\nThis mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The feature-map references intentionally retain the reproducible upstream `control-notes` commands; adapt them to concrete commands observed in the target repository before use. Map browser/Electron/web actions to `cursor-control-ui`, and CLI/TUI actions to `cursor-control-cli`, only when those skills are installed and applicable; otherwise record the exact surface gap. The bounded CLI fixture uses separate subprocesses, runs syntax/version/health Doctor checks, drives each mapped feature, captures stdout/stderr/exit plus regular-file side effects, cleans only declared app state, and writes only the explicit project-local skill tree. A separate disposable local web fixture was driven through the native Codex in-app browser with accessibility-tree and screenshot evidence; this still does not claim production/live target or native-host verification.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate and run a disposable Python CLI subprocess with syntax/version/health Doctor, one drive per mapped feature, captured stdout/stderr/exit evidence, explicit cleanup, and persisted JSON. A separate disposable local web fixture was driven through the native Codex in-app browser, proving create/search/empty/clear/reload behavior with accessibility-tree and screenshot evidence. The test preserves evidence after app-state cleanup, rejects pre-existing cleanup state and unsafe names, introduces controlled feature drift, and passes a second clean execution. Filesystem/network isolation, live harness, production target application, and native host activation remain unproven; result remains `FIXTURE_ONLY`.",
+  "reason": "The adapter changes the generated destination and tool boundary while leaving the pinned upstream source unchanged.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "a project-local skill (`.cursor/skills/verify-<app>/`)",
+      "after": "a project-local skill (`.agents/skills/verify-<app>/`)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Write `.cursor/skills/verify-<app>/SKILL.md`",
+      "after": "Write `.agents/skills/verify-<app>/SKILL.md`"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Create `.cursor/skills/verify-<app>/features/README.md`",
+      "after": "Create `.agents/skills/verify-<app>/features/README.md`"
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Put `control-notes` and the `notes` CLI on `PATH`.",
+      "after": "- The upstream example uses `control-notes` and the `notes` CLI on `PATH`. For another project, replace only the harness command with the concrete project command; use `cursor-control-ui` for browser/Electron/web surfaces or `cursor-control-cli` for CLI/TUI surfaces when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run `control-notes doctor` and require the expected URL, data directory, and build revision.",
+      "after": "- In the upstream example, run `control-notes doctor` and require the expected URL, data directory, and build revision. For another project, map this to its concrete read-only doctor command and record the exact surface gap if no applicable harness is available."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run browser actions through `control-notes browser`.",
+      "after": "- In the upstream example, run browser actions through `control-notes browser`. For another project, map them to its concrete browser harness, using `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/README.md",
+      "before": "- Run terminal actions through `control-notes cli -- <command>`.",
+      "after": "- In the upstream example, run terminal actions through `control-notes cli -- <command>`. For another project, map them to its concrete CLI harness, using `cursor-control-cli` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "## Driving it with control-notes",
+      "after": "## Driving the upstream example with `control-notes` (adapt per project; use `cursor-control-ui` when applicable)"
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "- `control-notes doctor` reports the expected URL and disposable data directory.",
+      "after": "- The upstream example's `control-notes doctor` reports the expected URL and disposable data directory; adapt this command to the target project before use."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"New note\"`.",
+      "after": "Run the upstream example command `control-notes browser click --role button --name \"New note\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser fill --role textbox --name \"Title\" --value \"Release checklist\"` and `control-notes browser fill --role textbox --name \"Body\" --value \"Tag and publish\"`.",
+      "after": "Run the upstream example commands `control-notes browser fill --role textbox --name \"Title\" --value \"Release checklist\"` and `control-notes browser fill --role textbox --name \"Body\" --value \"Tag and publish\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"Save note\"`.",
+      "after": "Run the upstream example command `control-notes browser click --role button --name \"Save note\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role link --name \"All notes\"` and `control-notes browser click --role link --name \"Release checklist\"`.",
+      "after": "Run the upstream example commands `control-notes browser click --role link --name \"All notes\"` and `control-notes browser click --role link --name \"Release checklist\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser click --role button --name \"New note\"`, `control-notes browser fill --role textbox --name \"Title\" --value \"Discard me\"`, and `control-notes browser click --role button --name \"Cancel\"`.",
+      "after": "Run the upstream example commands `control-notes browser click --role button --name \"New note\"`, `control-notes browser fill --role textbox --name \"Title\" --value \"Discard me\"`, and `control-notes browser click --role button --name \"Cancel\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes cli -- notes create --title \"CLI note\" --body \"Created from terminal\" --format json`.",
+      "after": "Run the upstream example command `control-notes cli -- notes create --title \"CLI note\" --body \"Created from terminal\" --format json`; adapt the harness command to the target project and use `cursor-control-cli` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/create-note.md",
+      "before": "Run `control-notes browser snapshot --aria --path artifacts/create-note/list.aria.txt` and `control-notes browser screenshot --path artifacts/create-note/list.png`.",
+      "after": "Run the upstream example commands `control-notes browser snapshot --aria --path artifacts/create-note/list.aria.txt` and `control-notes browser screenshot --path artifacts/create-note/list.png`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "## Driving it with control-notes",
+      "after": "## Driving the upstream example with `control-notes` (adapt per project; use `cursor-control-ui` when applicable)"
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "- `control-notes doctor` reports the expected URL and data directory.",
+      "after": "- The upstream example's `control-notes doctor` reports the expected URL and data directory; adapt this command to the target project before use."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role button --name \"Search\"`.",
+      "after": "Run the upstream example command `control-notes browser click --role button --name \"Search\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser press --key \"/\"`.",
+      "after": "Run the upstream example command `control-notes browser press --key \"/\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"quarterly\"`.",
+      "after": "Run the upstream example command `control-notes browser fill --role searchbox --name \"Search notes\" --value \"quarterly\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"budget\"`.",
+      "after": "Run the upstream example command `control-notes browser fill --role searchbox --name \"Search notes\" --value \"budget\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role link --name \"Quarterly plan\"`.",
+      "after": "Run the upstream example command `control-notes browser click --role link --name \"Quarterly plan\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser fill --role searchbox --name \"Search notes\" --value \"volcano\"`.",
+      "after": "Run the upstream example command `control-notes browser fill --role searchbox --name \"Search notes\" --value \"volcano\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser click --role button --name \"Clear search\"`.",
+      "after": "Run the upstream example command `control-notes browser click --role button --name \"Clear search\"`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes cli -- notes search \"quarterly\" --format json`.",
+      "after": "Run the upstream example command `control-notes cli -- notes search \"quarterly\" --format json`; adapt the harness command to the target project and use `cursor-control-cli` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes cli -- notes search \"volcano\" --format json`.",
+      "after": "Run the upstream example command `control-notes cli -- notes search \"volcano\" --format json`; adapt the harness command to the target project and use `cursor-control-cli` when installed and applicable."
+    },
+    {
+      "file": "references/feature-map-example/search.md",
+      "before": "Run `control-notes browser snapshot --aria --path artifacts/search/results.aria.txt` and `control-notes browser screenshot --path artifacts/search/results.png`.",
+      "after": "Run the upstream example commands `control-notes browser snapshot --aria --path artifacts/search/results.aria.txt` and `control-notes browser screenshot --path artifacts/search/results.png`; adapt the harness command to the target project and use `cursor-control-ui` when installed and applicable."
+    }
+  ],
   "source_path": "pstack/skills/create-verification-skill/SKILL.md",
   "source_sha256": "644f2551403c1bca01a2855b34611b6e7be0ce0dc5b204514c376c0f6a6e6ac4"
 }

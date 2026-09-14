@@ -12,7 +12,7 @@
       "capabilities": [],
       "required_tools": [],
       "fallback": "Unavailable stop hook is described as a parity gap and state is unchanged.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "guide_only"
     },
     "external_dependencies": [
       "Cursor Ralph Loop stop hook and state files"
@@ -27,7 +27,7 @@
       "missing_tool_or_input": "Missing-capability fixture for cursor-ralph-loop-help: Unavailable stop hook is described as a parity gap and state is unchanged.",
       "error": "Error fixture for cursor-ralph-loop-help: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_guide_only_live_selection_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
@@ -40,11 +40,11 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nExplain the external Cursor mechanism; help never starts or cancels a loop. Required native capabilities: none; this is instruction-only. External dependencies remain explicit: Cursor Ralph Loop stop hook and state files. Unavailable stop hook is described as a parity gap and state is unchanged. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex guide boundary\n\nExplain the Cursor Ralph Loop accurately. The commands and `.cursor/ralph` state in this guide describe the external Cursor plugin; this guide neither starts nor cancels a loop in Codex. For native Codex loop execution, resolve `cursor-ralph-loop` and its verified runtime separately.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "reason": "The guide is instruction-only and preserves the external Cursor product. Publishing the guide does not promote the stop hook or loop execution.",
   "replacements": [],
   "source_path": "ralph-loop/skills/ralph-loop-help/SKILL.md",
   "source_sha256": "a33a6719a95002f2c2bebf1f63a965954ee166130da17fdf514d719bb394ac65"

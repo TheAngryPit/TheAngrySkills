@@ -1,5 +1,88 @@
 # Cursor plugin skills mirror — implementation review
 
+2026-09-14 PR addendum ([#64](https://github.com/TheAngryPit/TheAngrySkills/pull/64),
+`codex/cursor-full-sol-20260913`): `cursor-ralph-loop-help` is emitted as a
+guide to the external Cursor plugin; it never starts or cancels a Codex loop.
+The branch has 54 emitted / 34 active held / 3 upstream dormant, while the
+public `origin/main` baseline described below was 53 / 35 / 3. The
+`--preview-candidates` path renders all 88 active skills for review without
+changing the published catalog. The pstack core has 23 mapped playbooks,
+fixture-only verification and a local notes-app `bug-fix` path with reproduction,
+trace, prewritten correction, local Git history, and PR simulation.
+`check-plan.mjs` ran on temporary plans; `worktree-audit.sh` ran with mocked
+external commands. Bun exercised dependency-free `orch/store.ts` operations
+and `watch-pr/github.ts` command wiring in scratch with mocked `git`/`gh`;
+the exact lock dependencies then installed in scratch, and a fresh bootstrap
+installed/restarted from the populated cache. Both CLI entrypoints ran against
+scratch state and mocks; 52 bundled tests and strict typecheck passed. Real
+GitHub status-only access to PR #64 also passed. Its `REVIEW_REQUIRED` fact
+exposed a false green review cell in the source. The held preview now shows
+the pending review and blocks a synthetic non-draft PR from `ready`; live
+product behavior remains unproven. Advisor/Ralph/continual-learning
+have inactive synthetic native hook adapters. Four agent-compatibility reviewer
+roles are bundled in a held preview, whose previously invalid frontmatter now
+parses. Held submission-audit and scaffold previews have bounded static fixtures
+for manifest/path/frontmatter presence, passive hook/MCP detection, and explicit
+disposable-destination generation; their security holds are retained.
+The project-local verification fixture now drives each mapped notes CLI action
+in a separate bounded subprocess, captures exit/stdout/stderr and declared
+regular-file state, persists JSON evidence, reconciles controlled feature drift,
+and confirms a second unchanged pass. A feature named `README` is rejected
+before it can collide with the generated feature index. This remains
+`FIXTURE_ONLY`: Doctor only checks source file presence/non-symlink; a real
+target, per-feature source-wave delegation, changed-outcome PR, native skill
+activation, and filesystem/network isolation have not been proven.
+The held `cursor-show-me-your-work` preview now requires an explicit root for
+its TSV helper. Twelve tests exercise append and sanitization plus path escapes,
+invalid roots, parent/target symlinks, hardlinks and FIFO rejection, with
+external sentinels unchanged.
+The pinned source is unchanged and the skill remains held: simultaneous writers,
+durability, secret redaction, transcript audit, independent review, and live
+activation are not proven.
+The held `cursor-setup-pstack` now has a fixture-only dry-run over all 17 role
+labels and four panel lists. It preserves explicit model/effort choices and
+aliases, rejects unavailable choices and malformed panels without writing
+configuration, and requires the parent model before accepting an effort for an
+alias. It does not discover a live inventory, select an agent, or persist policy.
+The [47-skill pstack audit](pstack-47-skill-audit-20260914.md) compares the
+installed Cursor cache with the pinned snapshot and the generated Codex
+output per skill. The 47 top-level IDs match; two top-level skills and six
+nested playbooks have source-version drift, with three delegate model defaults
+different. This did not change the source pin. The audit found that the
+published technical-writing overlay incorrectly made source-required
+`unslop` optional and that the TypeScript guide used unnamespaced principle
+names. The generated output now requires `cursor-unslop`, uses the two
+published `cursor-principle-*` names, and retains `references/patterns.md`.
+These are link/contract corrections; runtime selection is still unproven.
+The public `comment-sicko` and `poteto-agent` TOML assets now provide the
+named native destinations for the held `cursor-no-comments` and
+`cursor-poteto-mode` workflows. Their developer-instruction bodies match exact
+normalizations of the pinned agent sources, and their bytes match the already
+installed global profiles. The held preview names the profiles and no longer
+duplicates agent Markdown under its references. The former bounded Comment
+Sicko fixture applied the role text but did not exercise the new profile
+selection. The current host's native subagent surface now exposed and accepted
+both named types. A [bounded runtime probe](cursor-native-profile-live-probe-20260914.md)
+returned one Comment Sicko review and one Poteto Eval pass on a synthetic file.
+The first-output marker for Comment Sicko was not visible in its returned final
+text. Fresh top-level task loading, raw injected-instruction readback, automatic
+skill triggers, and complete fix/playbook behavior remain unproven.
+[Invocation matrix](../docs/native-agent-profiles.md). The separate
+`codex-cli 0.154.0` and top-level task-tool inspection still found no named
+agent-profile selector there: `codex --profile` is a configuration profile,
+and `codex agents` browses sessions. Installed-byte equality is a distribution
+check; the native subagent probe is the separate runtime observation.
+The official [Subagents](https://cursor.com/docs/subagents),
+[Cloud Agents API](https://cursor.com/docs/cloud-agent/api/endpoints), and
+[Automations](https://cursor.com/help/ai-features/automations) contracts
+separate documented runtime behavior from pstack assumptions. The held `cursor-why` preview now labels its source's
+readonly-removes-MCP claim as unverified rather than granting write access.
+`pytest -q tests` passed 195 tests and 2 subtests; mirror `--check`
+passed at 91 physical, 54 emitted and 201 output files. The latest GitHub CI
+pass before this invocation-policy change was head `625873b8`.
+None of these fixtures proves full native runtime parity, global installation,
+or hook trust. Counts and checks below describe the earlier 53-skill baseline.
+
 Base: TheAngrySkills `main` at `0706a19a4aac46a8db0a01e48dfe9ddc76768ca8`.
 Source: `cursor/plugins` at `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 Scope: skills, support files and required local catalog registration; no
@@ -45,7 +128,7 @@ snapshot finding and is not included in the 11.
 | `reflect` | Four `policy-bypass-instruction` findings: `references/divergent-reviewer.md:7`, `judgment-reviewer.md:5`, `synthesizer.md:3`, `tooling-reviewer.md:5`, critical | These are defensive reference instructions that treat transcripts and reviewer output as untrusted and constrain lookups. No credential or write effect is shown at the lines. | Retain the findings as contextual defensive text. Hold until prompt-isolation behavior is reviewed. |
 | `create-plugin-scaffold` | `mcp-plugin-hook-install`, `SKILL.md:16`, warning | Active workflow input includes `hooks` and `mcpServers`, followed by plugin-file creation and a `~/.cursor` default. | Hold. Static scaffolding needs an explicit destination; hooks, MCP, activation, and marketplace wiring need human approval. |
 | `poteto-mode` | 20 `bundled-script-review` warnings, 4 `executable-file` warnings, and `dependency-manifest-surface` at `scripts/package.json` | The pack ships Bun/TypeScript orchestration, PR-watch, worktree-audit, and plan-check scripts. They can spawn processes, inspect GitHub/worktrees, install dependencies, or write state; no direct credential finding was emitted. | Hold. Do not run or admit bundled scripts until code, dependency, and egress behavior is reviewed. |
-| `show-me-your-work` | `executable-file` and `bundled-script-review`, `scripts/log.sh`, warning | Active local shell helper creates/appends TSV and sanitizes formula-like cells. No external egress is shown, but it is executable file-write code. | Hold pending focused script and installation-scope review. |
+| `show-me-your-work` | `executable-file` and `bundled-script-review`, `scripts/log.sh`, warning | Pinned shell helper writes operator-supplied TSV. Held preview adds explicit-root, no-follow local writes; fixture rejects escapes and symlinks. No external egress is shown. | Keep held pending full workflow, concurrency, secret-handling, and installation-scope proof. |
 | `why` | `mcp-plugin-hook-install`, `SKILL.md:62`, warning | Active workflow discovers MCPs and queries external evidence categories in parallel; connector authentication and data access are part of the behavior. | Hold until native connector availability, authorization, and read-only behavior are proven. |
 
 `setup-benny` is documented separately as a dormant extra: its

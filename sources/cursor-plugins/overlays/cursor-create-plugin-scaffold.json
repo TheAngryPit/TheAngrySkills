@@ -18,7 +18,7 @@
         "manifest validator"
       ],
       "fallback": "An unsafe destination or invalid component stops before writing.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "explicit_disposable_destination_static_fixture_checked; source_home_default_and_active_components_unadapted"
     },
     "external_dependencies": [
       "Cursor plugin layout",
@@ -27,16 +27,17 @@
       "marketplace metadata"
     ],
     "permission_gates": [
-      "Use an explicit destination; never write ~/.cursor or activate hooks/MCP/marketplace wiring by default.",
-      "An unsafe destination or invalid component stops before writing.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Use only an explicitly supplied marked disposable fixture destination in this candidate. Never write ~/.cursor or any global plugin home from this mirror.",
+      "Hooks, mcpServers, and marketplace wiring return REVIEW_REQUIRED before files are written.",
+      "The source default path and activation claims below remain Cursor-specific and must not be followed as written in Codex.",
+      "Preserve native model/effort, current task scope, and actual host permissions."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-create-plugin-scaffold: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-create-plugin-scaffold: An unsafe destination or invalid component stops before writing.",
-      "error": "Error fixture for cursor-create-plugin-scaffold: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Isolated marked fixture creates static Cursor-format manifest, README, supplied LICENSE and four component files; the held submission auditor returns STRUCTURAL_PASS without component execution.",
+      "missing_tool_or_input": "Missing disposable marker, nonempty fixture root, or invalid plugin name blocks before writing and preserves existing files.",
+      "error": "Requests for hooks, mcpServers, or marketplace wiring return REVIEW_REQUIRED before writing."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "security_hold_until_native_destination_and_active_component_review",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "create-plugin/README.md",
@@ -64,12 +65,52 @@
       ]
     }
   },
-  "codex_note": "## Codex security hold\n\nThis candidate remains unindexed. Finding review: mcp-plugin-hook-install at SKILL.md:16 (active_workflow_mutation_surface). Hold. Static scaffolding may be reviewed only at an explicit destination; hooks, MCP, activation, and marketplace wiring require human approval.\n",
+  "codex_note": "## Codex security hold\n\nThe bundled [static scaffold fixture](scripts/cursor_plugin_scaffold_fixture.py) requires an explicit marked disposable destination and writes only Cursor-format manifest, README, caller-supplied LICENSE, and static component placeholders. Synthetic tests run the held submission auditor on that output. The source below still defaults to `~/.cursor/plugins/local/` and describes immediate Cursor availability; do not follow that default or treat this candidate as a native Codex plugin installer. Hooks, mcpServers, and marketplace wiring return `REVIEW_REQUIRED` before any write. The source `mcp-plugin-hook-install` finding is retained and the skill remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. Contextual security findings, active/reference classification, effects, credentials, and hold decisions are recorded in codex_contract.",
-  "reason": "Contextual security review records each retained scanner finding, its source location, whether it is active code or reference text, its effect/credential surface, and the reason for keeping the skill unindexed.",
+  "proof": "Pinned source and deterministic renderer plus isolated fixture prove bounded static file generation and structural audit only. Native Codex plugin format, active hook/MCP components, marketplace wiring, global installation, and publication remain unproven.",
+  "reason": "The held preview bundles hash-checked static scaffold and source role/rule references while retaining the security finding and refusing active components.",
   "replacements": [],
   "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
-  "source_sha256": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46"
+  "source_sha256": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_plugin_scaffold_fixture.py",
+      "target_path": "scripts/cursor_plugin_scaffold_fixture.py"
+    }
+  ],
+  "bundled_support_files": [
+    {
+      "source_path": "create-plugin/agents/plugin-architect.md",
+      "target_path": "references/plugin-architect.md",
+      "replacements": [
+        {
+          "before": "model: inherit\n",
+          "after": ""
+        },
+        {
+          "before": "readonly: true\n",
+          "after": ""
+        },
+        {
+          "before": "The default output location for new plugins is `~/.cursor/plugins/local/<plugin-name>/`.",
+          "after": "For this held Codex preview, use only an explicit disposable project-local destination; no global Cursor plugin home is written."
+        }
+      ]
+    },
+    {
+      "source_path": "create-plugin/rules/plugin-quality-gates.mdc",
+      "target_path": "references/plugin-quality-gates.md",
+      "replacements": [
+        {
+          "before": "alwaysApply: true\n",
+          "after": ""
+        },
+        {
+          "before": "Save new plugins to `~/.cursor/plugins/local/<plugin-name>/` by default so they are immediately available to Cursor. Only use a different location when the user explicitly requests it.",
+          "after": "For this held Codex preview, use only an explicit disposable project-local destination; do not install or activate a plugin."
+        }
+      ]
+    }
+  ]
 }

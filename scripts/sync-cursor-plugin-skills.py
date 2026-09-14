@@ -102,6 +102,41 @@ def verify_snapshot(manifest: dict) -> None:
         license_path = entry.get("license_path")
         if license_path and sha(SOURCE / safe_relative(license_path)) != entry["license_sha256"]:
             raise ValueError(f"license drift: {license_path}")
+    support = manifest.get("support_files")
+    if not isinstance(support, dict):
+        raise ValueError("missing plugin-level support ledger")
+    skill_families = {entry["published_name"]: entry["family"] for entry in entries}
+    expected_support = {}
+    for path, record in support.items():
+        rel = safe_relative(path)
+        if len(rel.parts) < 3 or rel.parts[1] not in {"agents", "hooks", "rules"}:
+            raise ValueError(f"invalid plugin-level support path: {path}")
+        related = record.get("related_skills")
+        if (not isinstance(related, list) or not related
+                or any(skill_families.get(name) != rel.parts[0] for name in related)):
+            raise ValueError(f"invalid plugin-level support relationship: {path}")
+        expected_support[path] = record["sha256"]
+    actual_support = {}
+    for path in files(SOURCE):
+        rel = path.relative_to(SOURCE)
+        if len(rel.parts) >= 3 and rel.parts[1] in {"agents", "hooks", "rules"}:
+            actual_support[rel.as_posix()] = sha(path)
+    if actual_support != expected_support:
+        raise ValueError("plugin-level support inventory or hash drift")
+    native_support = manifest.get("native_support_files", {})
+    if not isinstance(native_support, dict):
+        raise ValueError("invalid native support ledger")
+    for path, record in native_support.items():
+        rel = safe_relative(path)
+        if rel.parts[0] != "scripts" or len(rel.parts) != 2:
+            raise ValueError(f"invalid native support path: {path}")
+        source = ROOT / rel
+        if not source.is_file() or source.is_symlink() or sha(source) != record.get("sha256"):
+            raise ValueError(f"native support file drift: {path}")
+        related = record.get("related_skills")
+        if (not isinstance(related, list) or not related
+                or any(name not in skill_families for name in related)):
+            raise ValueError(f"invalid native support relationship: {path}")
 
 
 def replace_exact(text: str, before: str, after: str, owner: str) -> str:
@@ -109,6 +144,49 @@ def replace_exact(text: str, before: str, after: str, owner: str) -> str:
     if count != 1:
         raise ValueError(f"overlay anchor count {count}, expected 1: {owner}: {before[:80]!r}")
     return text.replace(before, after, 1)
+
+
+def normalize_description(frontmatter: str) -> str:
+    """Keep upstream trigger wording while making common YAML forms parser-safe."""
+
+    lines = frontmatter.splitlines()
+    result = []
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if line.startswith("description: >") or line.startswith("description: |"):
+            parts = []
+            index += 1
+            while index < len(lines) and (lines[index].startswith("  ") or not lines[index]):
+                parts.append(lines[index].strip())
+                index += 1
+            result.append("description: " + json.dumps(" ".join(part for part in parts if part), ensure_ascii=False))
+            continue
+        if line.startswith("description: ") and ": " in line[len("description: "):]:
+            value = line[len("description: "):]
+            if not value.startswith(("'", '"')):
+                line = "description: " + json.dumps(value, ensure_ascii=False)
+        result.append(line)
+        index += 1
+    return "\n".join(result)
+
+
+def codex_invocation_policy(frontmatter: str, target: Path) -> str:
+    """Translate Cursor's explicit-only flag to Codex skill metadata."""
+
+    flag = re.compile(r"^disable-model-invocation:[ \t]*true[ \t]*$", re.MULTILINE)
+    matches = flag.findall(frontmatter)
+    if not matches:
+        return frontmatter
+    if len(matches) != 1:
+        raise ValueError(f"duplicate explicit-only flag: {target}")
+    policy = target / "agents" / "openai.yaml"
+    if policy.exists():
+        raise ValueError(f"explicit-only policy collision: {policy}")
+    policy.parent.mkdir(parents=True, exist_ok=True)
+    policy.write_text("policy:\n  allow_implicit_invocation: false\n")
+    return re.sub(r"\n^disable-model-invocation:[ \t]*true[ \t]*$", "", frontmatter,
+                  count=1, flags=re.MULTILINE)
 
 
 def rewrite_sibling_links(source_file: Path, output_file: Path, text: str,
@@ -162,7 +240,39 @@ def render_skill(entry: dict, staging: Path, commit: str,
         contents = target_file.read_text()
         contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
         target_file.write_text(contents)
+    support_ledger = load(LEDGER).get("support_files", {})
+    for bundle in overlay.get("bundled_support_files", []):
+        source_rel = safe_relative(bundle["source_path"])
+        output_rel = safe_relative(bundle["target_path"])
+        record = support_ledger.get(source_rel.as_posix())
+        if not record or name not in record["related_skills"]:
+            raise ValueError(f"unreviewed plugin-level support dependency: {name}/{source_rel}")
+        output = target / output_rel
+        if output.exists():
+            raise ValueError(f"plugin-level support output collision: {name}/{output_rel}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(SOURCE / source_rel, output)
+        for op in bundle.get("replacements", []):
+            output.write_text(replace_exact(
+                output.read_text(), op["before"], op["after"],
+                f"{name}/{output_rel}",
+            ))
+    native_ledger = load(LEDGER).get("native_support_files", {})
+    for bundle in overlay.get("bundled_native_files", []):
+        source_rel = safe_relative(bundle["source_path"])
+        output_rel = safe_relative(bundle["target_path"])
+        record = native_ledger.get(source_rel.as_posix())
+        if not record or name not in record["related_skills"]:
+            raise ValueError(f"unreviewed native support dependency: {name}/{source_rel}")
+        output = target / output_rel
+        if output.exists():
+            raise ValueError(f"native support output collision: {name}/{output_rel}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / source_rel, output)
     text = skill_file.read_text()
+    marker = SKILL_PATTERN.match(text)
+    normalized = codex_invocation_policy(normalize_description(marker.group(1)), target)
+    text = text[:marker.start(1)] + normalized + text[marker.end(1):]
     if overlay.get("codex_note"):
         marker = SKILL_PATTERN.match(text)
         text = text[:marker.end()] + "\n" + overlay["codex_note"].rstrip() + "\n" + text[marker.end():]
@@ -171,6 +281,8 @@ def render_skill(entry: dict, staging: Path, commit: str,
         if output_file.suffix.lower() not in {".md", ".mdx"}:
             continue
         source_file = source_dir / output_file.relative_to(target)
+        if not source_file.is_file():
+            continue
         original = output_file.read_text()
         rewritten = rewrite_sibling_links(source_file, output_file, original, source_to_entry, staging, commit)
         if rewritten != original:
@@ -298,6 +410,29 @@ def build(check: bool) -> None:
         print(f"built {len(active)} skills, {len(generated)} files; changed={len(changed)}")
 
 
+def preview_candidates(destination: Path) -> None:
+    """Render every active skill, including held candidates, without indexing."""
+
+    manifest = load(LEDGER)
+    verify_snapshot(manifest)
+    entries = validate_manifest(manifest)
+    candidates = [e for e in entries if e["declared_for_distribution"]]
+    if destination.exists():
+        raise ValueError(f"candidate preview destination already exists: {destination}")
+    source_to_entry = {
+        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"]}
+        for e in entries
+    }
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".cursor-candidate-preview-", dir=destination.parent) as tmp:
+        staged = Path(tmp) / "candidates"
+        staged.mkdir()
+        for entry in candidates:
+            render_skill(entry, staged, manifest["upstream_commit"], source_to_entry)
+        staged.rename(destination)
+    print(f"rendered {len(candidates)} active skills, including held candidates, at {destination}")
+
+
 def refresh(upstream: Path) -> None:
     manifest = load(LEDGER)
     entries = validate_manifest(manifest)
@@ -331,9 +466,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="verify committed build without writing")
     parser.add_argument("--compare-upstream", type=Path, help="report upstream changes; never import automatically")
+    parser.add_argument("--preview-candidates", type=Path,
+                        help="render held active skills for review without indexing them")
     args = parser.parse_args()
     if args.compare_upstream:
         refresh(args.compare_upstream.resolve())
+    elif args.preview_candidates:
+        preview_candidates(args.preview_candidates.resolve())
     else:
         build(args.check)
 

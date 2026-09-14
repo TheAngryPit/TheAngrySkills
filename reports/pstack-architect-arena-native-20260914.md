@@ -28,17 +28,23 @@ source hashes remain the manifest values:
 
 ## Native invocation metadata versus self-report
 
-The native tool exposed `multi_agent_v1__spawn_agent`; no exact `architect` or
-`arena` agent type and no upstream Cursor runner slug were available. The
-following is invocation metadata recorded from the coordinator's tool calls,
-not a claim that the worker runtime independently read back its model:
+The public orchestration surface used was `collaboration.spawn_agent`; no exact
+`architect` or `arena` agent type and no upstream Cursor runner slug were
+available. The following is invocation metadata recorded from the
+coordinator's tool calls, not a claim that the worker runtime independently
+read back its model:
 
-| Role | Agent ID | Native `agent_type` | Requested model/effort | Output |
-| --- | --- | --- | --- | --- |
-| Candidate 1 | `01a0a0f9-78a7-7911-aa9c-29b349bf2a81` (Descartes) | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-1/{candidate,rationale}.md` |
-| Candidate 2 | `01a0a0f9-8003-71b1-a971-a8daa53ade17` (Mill) | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-2/{candidate,rationale}.md` |
-| Cross-judge | `01a0a0fe-28fe-7941-8968-8ebe57428d7d` (Euclid) | `reviewer` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/judge/cross-judge.md` materialized by coordinator from returned verdict |
-| Review/redesign | `01a0a100-8583-7240-9203-f4b3681810c6` (Copernicus) | `planner` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/synthesis/{review-redesign,synthesized-design}.md` materialized by coordinator from returned verdict |
+| Role | Agent ID | Public surface | Native `agent_type` | Requested model/effort | Output |
+| --- | --- | --- | --- | --- | --- |
+| Candidate 1 | `01a0a0f9-78a7-7911-aa9c-29b349bf2a81` (Descartes) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-1/{candidate,rationale}.md` |
+| Candidate 2 | `01a0a0f9-8003-71b1-a971-a8daa53ade17` (Mill) | `collaboration.spawn_agent` | `general-worker` | `gpt-5.6-luna` / `high` | `/private/tmp/architect-arena-20260914/candidate-2/{candidate,rationale}.md` |
+| Cross-judge | `01a0a0fe-28fe-7941-8968-8ebe57428d7d` (Euclid) | `collaboration.spawn_agent` | `reviewer` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/judge/cross-judge.md` materialized by coordinator from returned verdict |
+| Review/redesign | `01a0a100-8583-7240-9203-f4b3681810c6` (Copernicus) | `collaboration.spawn_agent` | `planner` | `gpt-6-astra` / `low` | `/private/tmp/architect-arena-20260914/synthesis/{review-redesign,synthesized-design}.md` materialized by coordinator from returned verdict |
+
+Technical invocation receipt: the public calls were backed by the internal
+`multi_agent_v1__spawn_agent` tool identifier. This backend identifier is kept
+as factual receipt metadata; user-facing adaptation guidance uses only
+`collaboration.spawn_agent`.
 
 The candidates and reviewers self-reported completion and paths in their final
 messages. Euclid explicitly self-reported that its requested file was not
@@ -98,18 +104,54 @@ The synthesized design is in
 `/private/tmp/architect-arena-20260914/synthesis/synthesized-design.md`; the
 failure ledger is in `review-redesign.md`.
 
+## Phase A how/why context
+
+The exact installed-skill lookup found no `cursor-how` or `cursor-why` preview
+under the configured Codex skill roots. Therefore no current-session exact-name
+preview invocation is claimed. The pinned snapshot `how/SKILL.md` and
+`why/SKILL.md` were read for the Phase A contract, and the prior
+`reports/pstack-how-why-real-20260914.md` was preserved as context rather than
+replayed as a new invocation.
+
+The manual how grounding traced the fixture's source authority, frozen `Note`,
+private JSON persistence, ordered search, and the required ownership boundary:
+the export policy belongs behind `NoteStore.export_matching`, while destination
+mechanisms remain private. The manual why context used the local overlay/source
+history and retained the proof-gated hold: deterministic rendering and native
+role-flow evidence do not prove automatic trigger or production parity.
+
+This makes Architect Phase A evidence-backed but partial for the exact adapted
+`cursor-how`/`cursor-why` preview path. The gap is recorded, not substituted by
+a guessed trigger, and promotion remains held.
+
 ## Verification
 
-The coordinator ran the synthesized disposable contract check:
+The coordinator first ran the synthesized disposable contract check, then
+implemented the final contract in a copied runtime app at
+`/private/tmp/architect-arena-runtime-20260914`.
 
 ```text
 synthesis-contract: PASS
 proof: create, retry-unchanged, changed-replace, malformed-conflict, source-conflict, reset
 ```
 
-This is a real temporary backend proof of the redesigned contract, not a
-production implementation. It does not prove crash recovery, power-loss
-durability, hostile-writer protection, or a live product adapter.
+The runtime implementation then produced this reproducible readback:
+
+```text
+PYTHONPATH=/private/tmp/architect-arena-runtime-20260914 python3 runtime_probe.py
+runtime-after-fix: PASS
+runtime: create/retry/drift-replace/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset
+```
+
+Before the correction, the same runtime returned `UNCHANGED` after the target
+payload was mutated while its revision field was left unchanged. The probe
+failed with `AssertionError: revision-only equality incorrectly accepted drifted
+target`. The service was reviewed against the redesign and corrected to require
+full current-target payload equality before `UNCHANGED`; the rerun passed.
+This is the requested real failure/drift and revision loop. It remains a
+disposable implementation proof, not production code: crash recovery,
+power-loss durability, hostile-writer protection, and a live product adapter
+remain unproven.
 
 Repository checks:
 
@@ -117,28 +159,31 @@ Repository checks:
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-architect.json
 python3 -m json.tool sources/cursor-plugins/overlays/cursor-arena.json
 pytest -q tests/test_cursor_architect_arena.py tests/test_cursor_pstack_core.py tests/test_cursor_functional_overlays.py
-25 passed in 11.61s
+26 passed in 6.27s
 ```
 
 The focused test covers exact native role strings, bounded availability,
-partial/dropout fallback, held promotion, source-path parity, and explicit
-invocation-metadata wording. An initial test run failed only because the new
-architect assertion required the phrase `invocation metadata` before the
-overlay stated it; that wording was corrected and the clean rerun passed.
+partial/dropout fallback, held promotion, source-path parity, explicit
+invocation-metadata wording, and a repo-owned black-box disposable app that
+observes create/retry/replace/malformed-target/source-conflict results. The
+test first exposed a harness path-conflict bug, which was corrected before the
+clean rerun. The runtime drift failure above is separate and exercises the
+actual copied implementation.
 
 ## Adaptation boundary and remaining gaps
 
 The two overlays now map:
 
-- architect candidates to native `multi_agent_v1__spawn_agent` with
+- architect candidates to native `collaboration.spawn_agent` with
   `agent_type=general-worker`, cross-judge to `reviewer`, and failed-hypothesis
   redesign to `planner`;
 - arena to N=2 separate candidate paths, full-candidate read, independent
   cross-judge, explicit base/graft/rejection, redesign-on-failure, and
   verification.
 
-Promotion remains held. Automatic skill triggering, exact upstream Cursor
-runner parity, native model/effort runtime readback, production implementation,
+Promotion remains held. Exact `cursor-how`/`cursor-why` Phase A preview
+invocation, automatic skill triggering, exact upstream Cursor runner parity,
+native model/effort runtime readback, production implementation,
 crash/power-loss proof, hostile-writer semantics, and end-to-end host behavior
-remain unproven. The fixture and all local state are disposable and no reset or
-external mutation was performed.
+remain unproven. The fixture/runtime and all local state are disposable and no
+reset or external mutation was performed.

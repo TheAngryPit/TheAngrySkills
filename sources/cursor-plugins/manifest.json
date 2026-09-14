@@ -1825,12 +1825,12 @@
       "validation_requirement": "frontmatter e referências relativas; writer bounded, trail e auditoria cross-model observados; seleção automática e outros hosts por verificar"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native local four-phase N=2 swarm observed; automatic skill selection, Work cloud workers, race and other hosts unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "native bounded delegation and coordinator aggregation are observed for a local-computer case; Work cloud default remains unavailable without a proved worker route",
       "family": "pstack",
       "files": {
         "SKILL.md": "d578d877c3b8b9de7163f52579c4683337a940acc0fbe4496a498f5d3b27df30"
@@ -1839,12 +1839,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/swarm/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "visible four-phase checklist before N=2 parallel local launch, disjoint PASS worker handoffs, terminal drain and aggregate in reports/pstack-swarm-four-phase-20260914.md; earlier ISSUES/BLOCKED workers and BLOCKED aggregate retained in reports/pstack-thermos-swarm-real-20260914.md",
+      "publish": true,
       "published_name": "cursor-swarm",
       "upstream_purpose": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
       "upstream_skill": "swarm",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; native local four-phase fanout/drain/aggregate observado; Work cloud default, race, dropout, seleção automática e outros hosts por verificar"
     },
     {
       "availability": "external connector or routing not demonstrated",

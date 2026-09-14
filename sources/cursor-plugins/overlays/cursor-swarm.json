@@ -18,10 +18,10 @@
         "local result collector"
       ],
       "fallback": "A dropped or unavailable worker is recorded as BLOCKED; the aggregate is partial when required coverage is missing. Never silently drop a worker.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_native_local_four_phase_fanout_observed; work_cloud_and_trigger_unobserved"
     },
     "external_dependencies": [
-      "native bounded delegates if exposed"
+      "native bounded delegates on the selected channel; Work cloud worker/task route remains unproven"
     ],
     "permission_gates": [
       "Open a four-phase todolist (Frame, Fan out, Aggregate, Report) before launching workers.",
@@ -35,7 +35,7 @@
       "missing_tool_or_input": "An unavailable worker is recorded as BLOCKED and the aggregate explicitly identifies uncovered slices or a partial race.",
       "error": "Malformed input or failed worker is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_local_swarm_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -48,12 +48,38 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nBefore launch, open a four-phase todolist: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Use local workers only when they need access to the user's computer. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nOpen a visible four-phase todolist or Markdown checklist before launch: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Default to Work cloud only when its native worker route is available and the operator has authorized that destination. Use local workers when they need access to the user's computer. Otherwise report cloud unavailable without substituting local work. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. The read-only two-slice local case and prior blocked worker outcome are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Automatic selection and Work cloud parity remain unobserved.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "The four-phase checklist was written before an N=2 native parallel launch on PR #64 head ea6099fa. Two local Luna-high workers with disjoint slices returned PASS with evidence, were drained, and produced one aggregate. A previous source-faithful run preserved ISSUES/BLOCKED worker verdicts and a BLOCKED aggregate. Both cases and limits are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Work cloud workers, automatic selection, race behavior, dropout and cross-host behavior remain unobserved.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [],
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Fan out N parallel cloud workers.",
+      "after": "Fan out N parallel native workers. Work cloud is the default only when its native worker route is available and authorized. Use local workers when they need the user's computer; never silently substitute local workers for unavailable cloud workers."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Open a todolist with one entry per phase before launching anything.",
+      "after": "Open a visible native todolist or Markdown checklist with one entry per phase before launching anything."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Pick the worker model from `swarm workers` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `grok-4.6-fast-xhigh`. For a model race, name each arm's model up front.",
+      "after": "Pick the worker model and effort from the standing `model-capability-router` and the target channel's advertised inventory. Preserve an explicit operator selection. For a model race, name each arm's model and effort up front; do not invent unavailable Cursor slugs."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Spawn all N workers in one message with `subagent_type: generalPurpose`, `environment: \"cloud\"`, `run_in_background: true`, and the configured model. Use `environment: \"local\"` only when the worker needs access to something on the user's computer.",
+      "after": "Launch all N bounded native workers in parallel with the selected model/effort and standalone briefs. Default to Work cloud only when its native worker route is available and authorized. Use local native subagents when the workers need access to the user's computer; otherwise report cloud unavailable rather than substituting local work."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "When a worker must start from a non-default pushed branch, pass `cloud_base_branch`.",
+      "after": "When a worker must start from a non-default pushed branch, give the exact verified branch/ref in its brief and use a native branch-start option only if that worker channel documents one. Do not invent `cloud_base_branch` support."
+    }
+  ],
   "source_path": "pstack/skills/swarm/SKILL.md",
   "source_sha256": "d578d877c3b8b9de7163f52579c4683337a940acc0fbe4496a498f5d3b27df30"
 }

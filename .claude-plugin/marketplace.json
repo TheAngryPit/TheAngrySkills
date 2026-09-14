@@ -291,6 +291,7 @@
         "./skills/mirrors-cursor/cursor-run-learning-retrospective",
         "./skills/mirrors-cursor/cursor-run-smoke-tests",
         "./skills/mirrors-cursor/cursor-show-me-your-work",
+        "./skills/mirrors-cursor/cursor-swarm",
         "./skills/mirrors-cursor/cursor-tdd",
         "./skills/mirrors-cursor/cursor-teach",
         "./skills/mirrors-cursor/cursor-technical-writing",

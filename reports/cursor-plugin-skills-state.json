@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 30,
+  "candidate_not_published": 29,
   "generated_files": {
     "cursor-blast-radius/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-blast-radius/MIRROR.md": "c9b8e41ac8d9045001b560df1459594376a04f88dbca8da0bf7601846e9444ca",
@@ -172,6 +172,10 @@
     "cursor-show-me-your-work/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-show-me-your-work/references/decision-log-template.tsv": "6779378006a2f5225e8c06deb84f1d913fb532041ebbb6e50d94600bfe3f4b76",
     "cursor-show-me-your-work/scripts/log.sh": "cbf46bf7909b74c4916e42b9a66035bc4e81fbe24e4bdd09340cf54d47283295",
+    "cursor-swarm/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-swarm/MIRROR.md": "9eb52bdf97b5424e927b9eca83c0803e148cde5fa91c302060a8b0d8ee2c808b",
+    "cursor-swarm/SKILL.md": "ce19cb8f38b85f4a5d9b57331e6978fcb0ef2a0588964f58ab6ddec95f8bdc39",
+    "cursor-swarm/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-tdd/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-tdd/MIRROR.md": "08ce73cdbbe29f2afd4227f94b055b094d7d5372a935034310d8057065f4384d",
     "cursor-tdd/SKILL.md": "7a031b56b0444d60909b8a05438067acc22fe9273235e233150d55d26d9de64a",
@@ -238,7 +242,7 @@
     "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
   },
   "physical_skills": 91,
-  "published_skills": 58,
+  "published_skills": 59,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

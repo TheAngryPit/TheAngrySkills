@@ -84,6 +84,7 @@ PROMOTED = {
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
+    "cursor-swarm",
     "cursor-thermos",
 }
 
@@ -92,6 +93,7 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
+    "cursor-swarm",
     "cursor-thermos",
 }
 
@@ -144,6 +146,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                 self.assertIn("bounded_native_two_lens_review_observed", contract["native_mapping"]["availability"])
                 self.assertIn("trigger_unobserved", contract["promotion_status"])
                 self.assertIn("automatic skill selection unobserved", entry["availability"])
+            if name == "cursor-swarm":
+                self.assertIn("bounded_native_local_four_phase_fanout_observed", contract["native_mapping"]["availability"])
+                self.assertIn("trigger_unobserved", contract["promotion_status"])
+                self.assertIn("automatic skill selection", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())
             self.assertTrue(contract["permission_gates"])
             self.assertEqual(

@@ -20,6 +20,13 @@
       "fallback": "Missing endpoint/auth leaves playback idle and exposes no key.",
       "availability": "not_proven_in_current_codex_session"
     },
+    "local_mock": {
+      "module": "scripts/cursor_voice_adapters.py",
+      "entrypoint": "mock_read_aloud_route",
+      "result": "MOCK_VERIFIED",
+      "side_effects": ["no network", "no credentials", "no playback"],
+      "unavailable_provider": "UNAVAILABLE"
+    },
     "external_dependencies": [
       "xAI TTS API",
       "XAI_API_KEY"

@@ -20,6 +20,14 @@
       "fallback": "Missing relay or malformed event closes the mock session with a diagnostic.",
       "availability": "not_proven_in_current_codex_session"
     },
+    "local_mock": {
+      "module": "scripts/cursor_voice_adapters.py",
+      "entrypoint": "mock_realtime",
+      "result": "MOCK_VERIFIED",
+      "malformed_event": "ERROR with MALFORMED_EVENT diagnostic",
+      "side_effects": ["no network", "no credentials", "no microphone", "no playback"],
+      "unavailable_provider": "UNAVAILABLE"
+    },
     "external_dependencies": [
       "xAI realtime WebSocket",
       "client secret relay",

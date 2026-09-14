@@ -28,5 +28,4 @@ the 88-skill active inventory but outside the published skill catalog.
 Validation for the state above: `pytest -q tests` passed 178 tests and 2
 subtests; bundled Bun tests passed 52/52 and strict typecheck passed in scratch;
 `sync-cursor-plugin-skills.py --check` and `git diff --check origin/main` passed.
-GitHub `Validate skill stack` passed on `ed55d66c`; CI for this new
-integration head is pending publication.
+GitHub `Validate skill stack` passed on integration head `158c41a7`.

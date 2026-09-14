@@ -70,7 +70,7 @@ separate documented runtime behavior from pstack assumptions. The held `cursor-w
 readonly-removes-MCP claim as unverified rather than granting write access.
 `pytest -q tests` passed 178 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI passed on
-`ed55d66c`; the new integration head awaits publication and CI.
+`158c41a7` after publication.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

@@ -4,7 +4,10 @@ This is a pinned, reviewable native Codex adaptation of the skills in `cursor/pl
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
 and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. A separate hash-checked native adapter is bundled only into the held Advisor, Ralph and continual-learning previews; it is not registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
-upstream path; it retains the three non-distributed Benny skills as dormant.
+upstream path; it retains the three Benny automation skills outside the ordinary
+slash-skill distribution. Their upstream sources still exist under
+`pstack/automations/benny` and are installed through Benny's project setup,
+not through the plugin's `skills ./skills/` slash catalog.
 
 Each `overlays/<published-name>.json` declares the exact source hash, optional
 exact-text changes and a Codex boundary note. The build rewrites the frontmatter
@@ -14,7 +17,12 @@ evidence beside each published skill. The upstream skill text otherwise stays
 in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
-The merged baseline indexes 53 candidates under `skills/mirrors-cursor/`. This branch adds `cursor-ralph-loop-help` as guide-only and `cursor-how`, `cursor-why`, and `cursor-show-me-your-work` as bounded explicit-only native workflows, for 57 emitted mirrors. The other 31 active skills have contracts and pinned sources but remain held and unindexed; all 88 active skills are in scope. The three Benny skills remain dormant. Public availability of this branch requires PR review and merge.
+PR #64 merged 59 emitted mirrors under `skills/mirrors-cursor/`, including
+bounded explicit-only `cursor-how`, `cursor-why`, `cursor-show-me-your-work`,
+`cursor-thermos`, and local-computer `cursor-swarm`. The other 29 active skills
+have contracts and pinned sources but remain held and unindexed; all 88 active
+slash skills remain in scope. The three Benny automation sources are retained
+outside this slash catalog. Publication is not proof of full native execution.
 The cursor-team-kit PR review canvas is published for a read-only local artifact
 path with executable renderer proof. Six instruction-only candidates are
 `guide_only`: the four principles, technical writing, and Ralph help. The

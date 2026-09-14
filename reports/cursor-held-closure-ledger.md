@@ -4,12 +4,46 @@ Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
 The pinned manifest contains 91 physical skills. It has 32 `publish:false`
-entries: 29 active entries below plus the three dormant Benny entries
+entries: 29 active entries below plus the three Benny automation entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
-`cursor-triage-issue-reports`). This ledger does not count dormant Benny as
-active and does not claim 88/88 functional. “Held” means absent from the
+`cursor-triage-issue-reports`). The three Benny sources still exist upstream
+under `pstack/automations/benny`; they are installed through Benny's project
+automation setup and are outside the slash-skill catalog. The pinned manifest
+does not distribute them as ordinary slash skills. This ledger does not count
+them as active slash skills or claim 88/88 functional. “Held” means absent from the
 published catalog. Published guide-only and local-renderer surfaces are not
 silently recounted as held here.
+
+## Pstack first
+
+The 13 held pstack slash skills are the critical path before the other 16
+active held skills. Sol owns integration and the setup/poteto/no-comments/router
+link; Luna high owns bounded `architect`/`arena` execution in a separate
+checkout. Verification remains a separate Sol/Luna handoff, with its existing
+UI cleanup gate preserved. The remaining pstack skills follow in coherent
+groups without waiting for that cleanup or Work cloud permission:
+
+1. **Core selection and safe execution:** `cursor-setup-pstack`,
+   `cursor-poteto-mode`, `cursor-no-comments`. Prove native role selection,
+   companion availability, exact source routing and readback; avoid
+   unapproved persistent home changes.
+2. **User-surface proof:** `cursor-create-verification-skill` and
+   `cursor-maintain-verification-skill`. Keep the CLI input-only source-wave
+   distinct from the two native web source readers. The disposable UI run is
+   real for that target; Reset fixture still needs action-time confirmation.
+3. **Delegated reasoning and review:** `cursor-architect`, `cursor-arena`,
+   `cursor-interrogate`, `cursor-reflect`. Require actual bounded role outputs,
+   synthesis/ownership and verified model metadata before claiming model
+   diversity. Luna owns the first two; Sol reviews and integrates.
+4. **Context and learning:** `cursor-recall`, `cursor-figure-it-out`,
+   `cursor-automate-me`. Require source-scoped history, a prospective real
+   case, and a reviewed project-local skill edit respectively.
+5. **External product branch:** `cursor-make-bot-ui`. Preserve the source
+   security finding and use a local mock before credentials, installer, or
+   network exposure.
+
+The other 16 held skills remain in scope after pstack and may advance on
+independent safe evidence, but they do not displace these five groups.
 
 | Skill | Exact upstream requirement | Current Codex adaptation and proof | Proof still needed | Concrete blocker | Next executable step |
 | --- | --- | --- | --- | --- | --- |
@@ -35,7 +69,7 @@ silently recounted as held here.
 | `cursor-interrogate` | Spawn one reviewer per configured model over the same scope/rubric, synthesize adversarial findings, and never auto-apply. | Delegated-native read-only reviewers with missing-reviewer accounting; no repair PR from unavailable model. | Multi-model fan-out, independent same-diff review, deduplication and synthesis. | Native multi-review behavior and model routing remain unproven. | Run two bounded read-only reviewers on one disposable diff and preserve separate reports. |
 | `cursor-maintain-verification-skill` | For every feature, read source in parallel, drive every feature live, reconcile feature map and make at most one PR of proven corrections. | CLI fixture captures Doctor, caller-provided source-wave input, drift/re-drives and cleanup. Separately, two native read-only source readers inspected create/search web features, then the coordinator re-drove both in the disposable UI and read back a clean feature map. | UI cleanup, native activation and changed-outcome PR boundary. | The UI reset awaits confirmation; no product bug was found, so a corrective PR is not indicated. | Complete the owned UI cleanup after confirmation, then preserve the clean no-PR maintenance verdict. |
 | `cursor-make-bot-ui` | Build a UI whose server POSTs untrusted JSON to a Grok Bot webhook; keep sender key server-side; optionally expose through Tailscale. | External-product/security adapter is reference-only; no webhook or installer execution. | Authorized webhook routine, sender-key handling, UI/error path and Tailscale exposure review. | Quarantine retains active `curl ...` to `sudo sh` privilege-escalation commands (source lines 89/95). | Do not execute installer; design a local mock webhook and separately review a pinned, non-privileged Tailscale path. |
-| `cursor-no-comments` | Spawn Comment Sicko on current scope/diff, inspect findings, reject bad flags, act on accepted findings, and offer constraint encodings. | Named `comment-sicko` profile asset and bounded role contract; native session selection remains conditional. | Fresh task profile selection, live reviewer output, accepted-finding application and optional constraint approval. | Named `comment-sicko` subagent selection and a bounded output were observed; fresh top-level loading, complete role compliance, and the first-output marker remain unproven. | Run an explicitly selected named reviewer on a disposable diff and capture coordinator-owned findings. |
+| `cursor-no-comments` | Spawn Comment Sicko on current scope/diff, inspect findings, reject bad flags, act on accepted findings, and offer constraint encodings. | Named `comment-sicko` profile selected in this task on a disposable JS scope; reviewer deleted one redundant comment, kept the SPDX header, and Sol accepted the diff after syntax/runtime readback. [Receipt](cursor-no-comments-role-fixture.md). | Fresh top-level load, exact first-output marker, ambiguous/constraint comments, rejected-report rerun, architect branch, optional constraint encoding and automatic skill trigger. | Native role selection and the simplest accepted-finding loop now work in this task; full source workflow and installed skill activation remain unproven. | Run a bounded ambiguous-comment and rejected-report case with `cursor-how`/`cursor-why` available, then verify a fresh task's named profile load. |
 | `cursor-poteto-mode` | Apply Poteto style, all 23 playbooks/principles, deliberate bounded subagents, unslopped prose, simple code and verified work; no silent scope widening. | Native governed-style adapter; all 23 playbooks rendered, notes bug-fix fixture and bounded Bun/CLI/scratch checks recorded. | Live playbook application, profile loading/selection, native session, script security/egress, polling/stack and real PR behavior. | Bundled executable/dependency surface and native session/cloud parity remain unproven. | Keep unpublished; review scripts/egress, then run one explicitly selected playbook in a disposable project. |
 | `cursor-recall` | Reconstruct recent context from exact chat history, live state and shared record; preserve missing exports and return a tight current-state brief. | History-gated scoped reader preserves workspace/topic/time mismatch as partial and write-free. | Exact task-history selection, live repository/shared-record reconciliation and missing-export evidence. | Native bounded history reconstruction is unobserved. | Supply a scoped export plus repository state and produce a provenance-tagged brief. |
 | `cursor-reflect` | Spawn three parallel reviewers over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. | Delegated-native judgment/tooling/divergent lenses; missing transcript/lens remains incomplete and write-free. | Three native reviewers, transcript scope, synthesis and explicit edit authorization. | Native task read tools exist; exact scoped transcript access and a three-reviewer run remain unproven. | Run three bounded read-only lenses over a supplied synthetic transcript; propose edits without applying them. |

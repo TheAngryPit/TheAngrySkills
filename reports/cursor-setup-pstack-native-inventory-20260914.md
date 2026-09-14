@@ -26,9 +26,14 @@ decisions, Astra xhigh exceptionally, Luna high for bounded subtasks, Luna
 xhigh for defined execution and Luna max only when justified. Its current
 installed `SKILL.md` and TheAngrySkills source have different hashes:
 installed `061b66a25e3dc4e28a37a8f04a713101708aeece551a0729496698efce23f087`,
-source `e2867ae60d8e2234681056543888c5b4ae2f9249158cf6bc1ecfa9982d1e33cb`.
+source in this reviewed clone `e2867ae60d8e2234681056543888c5b4ae2f9249158cf6bc1ecfa9982d1e33cb`.
 The source adds native-agent profile distribution instructions; the routing
 paragraphs are otherwise the same. No installation or home change was made.
+Another local TheAngrySkills checkout now hashes its router source as
+`2303be6127a66c480b8b89fd8b99ac9db9b824d81dd29c5d030d132a6103f3fe`;
+it is a separate checkout, not evidence that this pinned branch or the installed
+router changed. Reconcile the exact checkout before any future persistence or
+installation decision.
 
 ## Candidate pstack mapping
 

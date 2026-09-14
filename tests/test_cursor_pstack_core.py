@@ -54,7 +54,11 @@ import sys
 
 store = Path("notes.json")
 command = sys.argv[1]
-if command == "create":
+if command == "--version":
+    print("notes-fixture 1.0")
+elif command == "health":
+    print("health:ok")
+elif command == "create":
     note = {"title": sys.argv[2], "body": sys.argv[3]}
     notes = json.loads(store.read_text()) if store.exists() else []
     notes.append(note)
@@ -84,6 +88,30 @@ FIXED_NOTES_APP = BUGGY_NOTES_APP.replace(
     'query in note["title"]',
     'query.casefold() in note["title"].casefold()',
 )
+VERIFICATION_DOCTOR = {
+    "version": {
+        "arguments": ("--version",),
+        "expected_stdout": "notes-fixture 1.0\n",
+        "description": "Read the fixture version before driving.",
+    },
+    "health": {
+        "arguments": ("health",),
+        "expected_stdout": "health:ok\n",
+        "description": "Check the fixture health before driving.",
+    },
+}
+VERIFICATION_SOURCE_WAVE = {
+    "create-note": {
+        "summary": "Create a titled note and observe the persisted confirmation.",
+        "entry_points": "notes.py create <title> <body>",
+        "recipe": "Run the create command, capture created output, then confirm notes.json.",
+    },
+    "search-note": {
+        "summary": "Search the saved note by its exact title and observe the match.",
+        "entry_points": "notes.py search <query>",
+        "recipe": "Create the note first, then search Release and capture found output.",
+    },
+}
 VALID_PLAN = """# Synthetic bug-fix plan
 
 Short fixture plan.
@@ -513,15 +541,26 @@ console.log(JSON.stringify({{
                 "expected_stdout": "created:Release checklist\n",
                 "cleanup_paths": ("notes.json",),
             },
+            "search-note": {
+                "description": "Search the saved note and verify the matching output.",
+                "arguments": ("search", "Release"),
+                "expected_stdout": "found:Release checklist\n",
+                "cleanup_paths": ("notes.json",),
+            },
         }
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             app = root / "notes.py"
             app.write_text(BUGGY_NOTES_APP)
-            created = run_cli_verification_fixture(root, "notes", app, commands)
+            created = run_cli_verification_fixture(
+                root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+            )
             self.assertEqual(created["status"], "FIXTURE_ONLY")
             self.assertFalse(created["product_code_edits"])
             self.assertEqual(created["app_state_writes"], "allowed within disposable fixture; not prevented")
+            self.assertEqual(created["doctor"]["status"], "PASS")
+            self.assertEqual(created["launch"]["status"], "PASS")
+            self.assertEqual(created["cleanup"], {"status": "PASS", "removed": ("notes.json",), "remaining": ()})
             target = root / ".agents/skills/verify-notes"
             skill = (target / "SKILL.md").read_text()
             for heading in (
@@ -533,9 +572,13 @@ console.log(JSON.stringify({{
                 "## Helpers",
             ):
                 self.assertIn(heading, skill)
+            self.assertIn("compile(...)", skill)
+            self.assertIn("--version", skill)
+            self.assertIn("health", skill)
             self.assertIn('description: "Verify notes through its short-lived Python CLI', skill)
             readme = (target / "features/README.md").read_text()
             self.assertIn("[create-note](./create-note.md)", readme)
+            self.assertIn("[search-note](./search-note.md)", readme)
             feature_text = (target / "features/create-note.md").read_text()
             for heading in (
                 "## Sub-features",
@@ -552,35 +595,26 @@ console.log(JSON.stringify({{
             )
             self.assertEqual(evidence["observation_source"], "independent subprocess stdout/stderr/exit capture")
             self.assertIn("notes.json", evidence["side_effects"]["regular_files"])
-
-            doctor = subprocess.run(
-                [
-                    sys.executable,
-                    "-c",
-                    "from pathlib import Path; p=Path('notes.py'); assert p.is_file() and not p.is_symlink(); print('ready')",
-                ],
-                cwd=str(root),
-                env={"PATH": str(Path(sys.executable).parent), "PYTHONIOENCODING": "utf-8"},
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-                shell=False,
-                timeout=2.0,
-            )
-            self.assertEqual(doctor.returncode, 0)
-            self.assertEqual(doctor.stdout, "ready\n")
             notes_state = root / "notes.json"
-            self.assertTrue(notes_state.is_file())
-            notes_state.unlink()
+            self.assertFalse(notes_state.exists(), "cleanup must remove app state")
             self.assertTrue(evidence_path.is_file(), "cleanup must preserve captured evidence")
 
             drift = introduce_verification_feature_drift(root, "notes", "create-note")
             self.assertEqual(drift["status"], "DRIFT_INTRODUCED")
-            maintained = maintain_cli_verification_fixture(root, "notes", app, commands)
+            maintained = maintain_cli_verification_fixture(
+                root,
+                "notes",
+                app,
+                commands,
+                doctor=VERIFICATION_DOCTOR,
+                source_wave=VERIFICATION_SOURCE_WAVE,
+            )
             self.assertEqual(maintained["status"], "FIXTURE_ONLY")
             self.assertEqual(maintained["changed_features"], ("create-note",))
+            self.assertEqual(maintained["doctor"]["status"], "PASS")
+            self.assertEqual(maintained["source_wave"], "OBSERVED")
+            self.assertEqual(maintained["first_cleanup"]["status"], "PASS")
+            self.assertEqual(maintained["second_cleanup"]["status"], "PASS")
             self.assertEqual(
                 maintained["second_run"]["create-note"]["evidence"],
                 {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
@@ -591,6 +625,12 @@ console.log(JSON.stringify({{
             after_evidence = target / "evidence/maintenance-after-create-note.json"
             self.assertTrue(before_evidence.is_file())
             self.assertTrue(after_evidence.is_file())
+            self.assertTrue(
+                (target / "evidence/maintenance-source-wave-create-note.json").is_file()
+            )
+            self.assertTrue(
+                (target / "evidence/maintenance-source-wave-search-note.json").is_file()
+            )
             self.assertEqual(
                 json.loads(after_evidence.read_text())["evidence"],
                 {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
@@ -599,10 +639,17 @@ console.log(JSON.stringify({{
                 (target / "evidence/create-note.json").is_file(),
                 "captured evidence must survive app-state cleanup",
             )
-            rerun = maintain_cli_verification_fixture(root, "notes", app, commands)
+            rerun = maintain_cli_verification_fixture(
+                root,
+                "notes",
+                app,
+                commands,
+                doctor=VERIFICATION_DOCTOR,
+                source_wave=VERIFICATION_SOURCE_WAVE,
+            )
             self.assertEqual(rerun["status"], "FIXTURE_ONLY")
             self.assertEqual(rerun["changed_features"], ())
-            self.assertEqual(rerun["reconciled_features"], ("create-note",))
+            self.assertEqual(rerun["reconciled_features"], ("create-note", "search-note"))
 
             with tempfile.TemporaryDirectory() as outside_temporary:
                 outside_evidence = Path(outside_temporary) / "outside-evidence.json"
@@ -610,7 +657,14 @@ console.log(JSON.stringify({{
                 before_evidence.unlink()
                 before_evidence.symlink_to(outside_evidence)
                 with self.assertRaises(AdapterError):
-                    maintain_cli_verification_fixture(root, "notes", app, commands)
+                    maintain_cli_verification_fixture(
+                        root,
+                        "notes",
+                        app,
+                        commands,
+                        doctor=VERIFICATION_DOCTOR,
+                        source_wave=VERIFICATION_SOURCE_WAVE,
+                    )
                 self.assertEqual(outside_evidence.read_text(), "preserve me")
 
         with tempfile.TemporaryDirectory() as temporary:
@@ -619,7 +673,51 @@ console.log(JSON.stringify({{
             app.write_text(BUGGY_NOTES_APP)
             (root / "notes.json").write_text("[]")
             with self.assertRaises(AdapterError):
-                run_cli_verification_fixture(root, "notes", app, commands)
+                run_cli_verification_fixture(
+                    root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+                )
+            self.assertFalse((root / ".agents/skills/verify-notes").exists())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP.replace("print(\"health:ok\")", "raise SystemExit('unhealthy')"))
+            blocked = run_cli_verification_fixture(
+                root, "notes", app, commands, doctor=VERIFICATION_DOCTOR
+            )
+            self.assertEqual(blocked["status"], "BLOCKED")
+            self.assertEqual(blocked["reason"], "verification Doctor failed or was not supplied")
+            self.assertEqual(blocked["doctor"]["status"], "FAIL")
+            self.assertFalse((root / ".agents/skills/verify-notes").exists())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            blocked = run_cli_verification_fixture(
+                temporary,
+                "notes",
+                "notes.py",
+                commands,
+                app_available=False,
+                doctor=VERIFICATION_DOCTOR,
+            )
+            self.assertEqual(blocked["status"], "BLOCKED")
+            self.assertEqual(blocked["reason"], "verification app is unavailable")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP)
+            error_commands = dict(commands)
+            error_commands["search-note"] = {
+                **commands["search-note"],
+                "expected_stdout": "unexpected\n",
+            }
+            failed = run_cli_verification_fixture(
+                root, "notes", app, error_commands, doctor=VERIFICATION_DOCTOR
+            )
+            self.assertEqual(failed["status"], "ERROR")
+            self.assertEqual(failed["failed_feature"], "search-note")
+            self.assertEqual(failed["cleanup"]["status"], "PASS")
+            self.assertFalse((root / "notes.json").exists())
             self.assertFalse((root / ".agents/skills/verify-notes").exists())
 
         with tempfile.TemporaryDirectory() as temporary:

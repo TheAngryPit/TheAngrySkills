@@ -526,6 +526,155 @@ def _normalize_verification_commands(
     return normalized
 
 
+def _normalize_verification_doctor(
+    doctor: Mapping[str, Mapping[str, object]] | None,
+) -> dict[str, dict[str, object]]:
+    if doctor is None:
+        return {}
+    normalized = _normalize_verification_commands(doctor)
+    required = {"version", "health"}
+    actual = set(normalized)
+    if actual != required:
+        raise AdapterError(
+            "verification doctor must provide exactly version and health checks"
+        )
+    if any(spec["cleanup_paths"] for spec in normalized.values()):
+        raise AdapterError("verification doctor checks must not declare cleanup paths")
+    return normalized
+
+
+def _normalize_verification_source_wave(
+    features: Iterable[str],
+    source_wave: Mapping[str, Mapping[str, object]] | None,
+) -> dict[str, dict[str, str]] | None:
+    if source_wave is None:
+        return None
+    expected = set(features)
+    if set(source_wave) != expected:
+        raise AdapterError(
+            "verification source wave must return exactly one result per feature"
+        )
+    normalized: dict[str, dict[str, str]] = {}
+    for feature, result in source_wave.items():
+        if not isinstance(result, Mapping):
+            raise AdapterError("verification source-wave result must be a mapping")
+        required = ("summary", "entry_points", "recipe")
+        if any(
+            not isinstance(result.get(key), str) or not result[key].strip()
+            for key in required
+        ):
+            raise AdapterError(
+                "verification source-wave results need summary, entry_points, and recipe"
+            )
+        normalized[feature] = {
+            key: result[key]  # type: ignore[assignment]
+            for key in required
+        }
+    return normalized
+
+
+def _run_verification_syntax_check(root: Path, app: Path) -> dict[str, object]:
+    relative_app = str(app.relative_to(root))
+    command = (
+        sys.executable,
+        "-c",
+        "from pathlib import Path; import sys; compile(Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec'); print('syntax:ok')",
+        relative_app,
+    )
+    environment = {
+        "PATH": str(Path(sys.executable).parent),
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONDONTWRITEBYTECODE": "1",
+    }
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=str(root),
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=2.0,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return {
+            "status": "TIMEOUT",
+            "command": command,
+            "evidence": {
+                "exit_code": None,
+                "stdout": _process_output(exc.stdout),
+                "stderr": _process_output(exc.stderr),
+            },
+        }
+    return {
+        "status": "PASS"
+        if completed.returncode == 0
+        and completed.stdout == "syntax:ok\n"
+        and completed.stderr == ""
+        else "FAIL",
+        "command": command,
+        "evidence": {
+            "exit_code": completed.returncode,
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+        },
+    }
+
+
+def _run_verification_doctor(
+    root: Path, app: Path, doctor: Mapping[str, Mapping[str, object]]
+) -> dict[str, object]:
+    checks: dict[str, object] = {"syntax": _run_verification_syntax_check(root, app)}
+    for name in ("version", "health"):
+        spec = doctor[name]
+        checks[name] = run_local_app_fixture(
+            root,
+            app,
+            spec["arguments"],  # type: ignore[arg-type]
+            expected_stdout=spec["expected_stdout"],  # type: ignore[arg-type]
+            expected_exit_code=spec["expected_exit_code"],  # type: ignore[arg-type]
+            timeout_seconds=spec["timeout_seconds"],  # type: ignore[arg-type]
+        )
+    status = "PASS" if all(check["status"] == "PASS" for check in checks.values()) else "FAIL"
+    return {"status": status, "checks": checks}
+
+
+def _cleanup_verification_state(
+    root: Path, commands: Mapping[str, Mapping[str, object]]
+) -> dict[str, object]:
+    removed: list[str] = []
+    for filename in _cleanup_paths(commands):
+        path = root / filename
+        _reject_symlink_components(root, path.relative_to(root))
+        if path.is_symlink():
+            raise AdapterError(f"verification cleanup path must not be a symlink: {filename}")
+        if path.exists() and not path.is_file():
+            raise AdapterError(f"verification cleanup path must be a regular file: {filename}")
+        if path.is_file():
+            path.unlink()
+            removed.append(filename)
+    remaining = tuple(filename for filename in _cleanup_paths(commands) if (root / filename).exists())
+    return {"status": "PASS" if not remaining else "FAIL", "removed": tuple(removed), "remaining": remaining}
+
+
+def _capture_verification_commands_with_cleanup(
+    root: Path,
+    app: Path,
+    commands: Mapping[str, Mapping[str, object]],
+) -> tuple[dict[str, dict[str, object]], dict[str, object] | None, dict[str, object]]:
+    observations: dict[str, dict[str, object]] = {}
+    failure: dict[str, object] | None = None
+    cleanup: dict[str, object]
+    try:
+        observations, failure = _capture_verification_commands(root, app, commands)
+    finally:
+        cleanup = _cleanup_verification_state(root, commands)
+    return observations, failure, cleanup
+
+
 def _capture_verification_commands(
     root: Path,
     app: Path,
@@ -607,16 +756,31 @@ def _verification_skill_document(
     app: Path,
     app_name: str,
     commands: Mapping[str, Mapping[str, object]],
+    doctor: Mapping[str, Mapping[str, object]] | None = None,
 ) -> str:
     app_relative = str(app.relative_to(root))
     command_lines = [
         f"- `{shlex.join(('python3', app_relative, *tuple(spec['arguments'])))}` — {spec['description']}"
         for spec in commands.values()
     ]
-    doctor = (
-        "`python3 -c 'from pathlib import Path; p=Path("
-        f'"{app_relative}"'
-        "); assert p.is_file() and not p.is_symlink(); print(\"ready\")'"
+    doctor = doctor or {}
+    version_spec = doctor.get("version")
+    health_spec = doctor.get("health")
+    version_command = (
+        shlex.join(("python3", app_relative, *tuple(version_spec["arguments"])))
+        if version_spec
+        else "(version check not observed)"
+    )
+    health_command = (
+        shlex.join(("python3", app_relative, *tuple(health_spec["arguments"])))
+        if health_spec
+        else "(health check not observed)"
+    )
+    version_expected = (
+        version_spec["expected_stdout"].rstrip() if version_spec else "not observed"
+    )
+    health_expected = (
+        health_spec["expected_stdout"].rstrip() if health_spec else "not observed"
     )
     state_files = _cleanup_paths(commands)
     cleanup_state = (
@@ -634,16 +798,20 @@ def _verification_skill_document(
         "It is fixture-only and must run against an instance started by the verification run.\n\n"
         "## Launch\n\n"
         "This app is a short-lived CLI, not a server. Launch means starting each drive in its own "
-        "disposable project directory with `python3`; readiness is the command's exit status. "
+        "disposable project directory with `python3`; readiness is established only after the Doctor "
+        "syntax, version, and health checks pass. "
         "There is no long-lived process or shared port to keep alive.\n\n"
         "## Doctor\n\n"
-        f"Run the read-only source check before driving: {doctor}. A non-zero exit blocks the run.\n\n"
+        f"Run `python3 -c 'compile(...)'` against `{app_relative}` for syntax, then `{version_command}` "
+        f"(expect `{version_expected}`) and `{health_command}` "
+        f"(expect `{health_expected}`). Any failure blocks the run.\n\n"
         "## Drive\n\n"
         "Use the exact observed CLI commands below, one process per feature:\n\n"
         + "\n".join(command_lines)
         + "\n\n"
         "## Evidence\n\n"
-        "Capture exit code, stdout, stderr, and the observed regular-file state for each drive. "
+        "Capture Doctor syntax/version/health evidence plus exit code, stdout, stderr, and the observed "
+        "regular-file state for every user-facing drive. "
         f"The surviving JSON evidence is kept under `.agents/skills/verify-{app_name}/evidence/`; "
         "feature-map files are not evidence of a live target. Verify the user-visible output and "
         "the side effect state before calling a feature passed.\n\n"
@@ -740,16 +908,18 @@ def run_cli_verification_fixture(
     commands: Mapping[str, Mapping[str, object]],
     *,
     app_available: bool = True,
+    doctor: Mapping[str, Mapping[str, object]] | None = None,
 ) -> dict[str, object]:
     """Create a project-local verification fixture from real CLI observations.
 
-    Each feature command is run as a separate subprocess before any skill file
-    is written. The generated ``.agents/skills/verify-<app>/`` tree contains
-    only the captured command and exit/stdout/stderr evidence. This is a
-    disposable fixture proof, not live target verification.
+    Doctor syntax/version/health checks run before every feature drive. Each
+    feature command is a separate subprocess before any skill file is written;
+    declared app state is cleaned after the drives while captured evidence
+    survives. This is a disposable fixture proof, not live target verification.
     """
 
     normalized = _normalize_verification_commands(commands)
+    normalized_doctor = _normalize_verification_doctor(doctor)
     root, target = _resolve_verification_target(
         project_root, app_name, require_existing=False
     )
@@ -760,12 +930,30 @@ def run_cli_verification_fixture(
                 "status": "BLOCKED",
                 "reason": "verification app is unavailable",
                 "observations": {},
+                "doctor": None,
             }
         )
         return result
     _, app = _resolve_local_app_fixture(root, app_path)
+    doctor_result = (
+        _run_verification_doctor(root, app, normalized_doctor)
+        if normalized_doctor
+        else {"status": "NOT_OBSERVED", "checks": {}}
+    )
+    if doctor_result["status"] != "PASS":
+        result.update(
+            {
+                "status": "BLOCKED",
+                "reason": "verification Doctor failed or was not supplied",
+                "doctor": doctor_result,
+                "observations": {},
+            }
+        )
+        return result
     _assert_cleanup_paths_absent(root, normalized)
-    observations, failure = _capture_verification_commands(root, app, normalized)
+    observations, failure, cleanup = _capture_verification_commands_with_cleanup(
+        root, app, normalized
+    )
     if failure is not None:
         result.update(
             {
@@ -773,16 +961,19 @@ def run_cli_verification_fixture(
                 "reason": failure["reason"],
                 "failed_feature": failure["feature"],
                 "observations": observations,
+                "doctor": doctor_result,
+                "cleanup": cleanup,
             }
         )
         return result
-    _assert_cleanup_paths_regular(root, normalized)
+    if cleanup["status"] != "PASS":
+        raise AdapterError("verification cleanup left declared app state behind")
 
     target.mkdir(parents=True, exist_ok=False)
     features_dir = target / "features"
     features_dir.mkdir()
     (target / "SKILL.md").write_text(
-        _verification_skill_document(root, app, app_name, normalized)
+        _verification_skill_document(root, app, app_name, normalized, normalized_doctor)
     )
     (features_dir / "README.md").write_text(
         _verification_feature_readme(app_name, normalized)
@@ -802,6 +993,13 @@ def run_cli_verification_fixture(
             "created_skill": True,
             "reconciled_features": tuple(sorted(normalized)),
             "observations": observations,
+            "doctor": doctor_result,
+            "cleanup": cleanup,
+            "launch": {
+                "status": "PASS",
+                "mode": "short-lived-cli",
+                "readiness": "Doctor syntax/version/health passed before drives",
+            },
             "observation_source": "independent subprocess stdout/stderr/exit capture",
         }
     )
@@ -845,10 +1043,20 @@ def maintain_cli_verification_fixture(
     commands: Mapping[str, Mapping[str, object]],
     *,
     app_available: bool = True,
+    doctor: Mapping[str, Mapping[str, object]] | None = None,
+    source_wave: Mapping[str, Mapping[str, object]] | None = None,
 ) -> dict[str, object]:
-    """Reconcile a project-local verification fixture and rerun its CLI flows."""
+    """Reconcile a project-local verification fixture and rerun its CLI flows.
+
+    When supplied, ``source_wave`` is one read-only source result per feature;
+    it is recorded as evidence but does not claim native delegated readers.
+    """
 
     normalized = _normalize_verification_commands(commands)
+    normalized_doctor = _normalize_verification_doctor(doctor)
+    normalized_source_wave = _normalize_verification_source_wave(
+        normalized, source_wave
+    )
     root, target = _resolve_verification_target(
         project_root, app_name, require_existing=True
     )
@@ -859,6 +1067,9 @@ def maintain_cli_verification_fixture(
                 "status": "BLOCKED",
                 "reason": "verification app is unavailable",
                 "changed_features": (),
+                "source_wave": "NOT_OBSERVED"
+                if normalized_source_wave is None
+                else "OBSERVED_INPUT_ONLY",
             }
         )
         return result
@@ -883,7 +1094,25 @@ def maintain_cli_verification_fixture(
         )
         return result
 
-    first_run, failure = _capture_verification_commands(root, app, normalized)
+    doctor_result = (
+        _run_verification_doctor(root, app, normalized_doctor)
+        if normalized_doctor
+        else {"status": "NOT_OBSERVED", "checks": {}}
+    )
+    if doctor_result["status"] != "PASS":
+        result.update(
+            {
+                "status": "BLOCKED",
+                "reason": "verification Doctor failed or was not supplied",
+                "doctor": doctor_result,
+                "changed_features": (),
+            }
+        )
+        return result
+
+    first_run, failure, first_cleanup = _capture_verification_commands_with_cleanup(
+        root, app, normalized
+    )
     if failure is not None:
         result.update(
             {
@@ -891,10 +1120,14 @@ def maintain_cli_verification_fixture(
                 "reason": failure["reason"],
                 "failed_feature": failure["feature"],
                 "first_run": first_run,
+                "first_cleanup": first_cleanup,
+                "doctor": doctor_result,
                 "changed_features": (),
             }
         )
         return result
+    if first_cleanup["status"] != "PASS":
+        raise AdapterError("verification cleanup left declared app state behind")
 
     changed: list[str] = []
     evidence_dir = target / "evidence"
@@ -919,13 +1152,23 @@ def maintain_cli_verification_fixture(
             f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
         )
 
+    if normalized_source_wave is not None:
+        for feature, source_result in normalized_source_wave.items():
+            source_path = evidence_dir / f"maintenance-source-wave-{feature}.json"
+            _assert_verification_output_path(root, source_path, "maintenance source-wave evidence")
+            source_path.write_text(
+                f"{json.dumps({'feature': feature, **source_result}, ensure_ascii=False, indent=2, sort_keys=True)}\n"
+            )
+
     for feature, spec in normalized.items():
         before_path = evidence_dir / f"maintenance-before-{feature}.json"
         _assert_verification_output_path(root, before_path, "maintenance-before evidence")
         before_path.write_text(
             f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
         )
-    second_run, second_failure = _capture_verification_commands(root, app, normalized)
+    second_run, second_failure, second_cleanup = _capture_verification_commands_with_cleanup(
+        root, app, normalized
+    )
     for feature, spec in normalized.items():
         after_path = evidence_dir / f"maintenance-after-{feature}.json"
         if feature in second_run:
@@ -941,16 +1184,30 @@ def maintain_cli_verification_fixture(
                 "failed_feature": second_failure["feature"],
                 "first_run": first_run,
                 "second_run": second_run,
+                "first_cleanup": first_cleanup,
+                "second_cleanup": second_cleanup,
+                "doctor": doctor_result,
                 "changed_features": tuple(changed),
             }
         )
         return result
+    if second_cleanup["status"] != "PASS":
+        raise AdapterError("verification cleanup left declared app state behind")
     result.update(
         {
             "status": "FIXTURE_ONLY",
             "changed_features": tuple(changed),
             "first_run": first_run,
             "second_run": second_run,
+            "first_cleanup": first_cleanup,
+            "second_cleanup": second_cleanup,
+            "doctor": doctor_result,
+            "source_wave": "OBSERVED" if normalized_source_wave is not None else "NOT_OBSERVED",
+            "launch": {
+                "status": "PASS",
+                "mode": "short-lived-cli",
+                "readiness": "Doctor syntax/version/health passed before each maintenance pass",
+            },
             "reconciled_features": expected_features,
             "observation_source": "independent subprocess stdout/stderr/exit capture",
         }

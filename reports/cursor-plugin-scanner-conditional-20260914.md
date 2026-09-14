@@ -1,5 +1,21 @@
 # Cursor plugin scanner conditional closure
 
+pinned source provenance
+
+| source skill | SHA-256 | baseline finding |
+| --- | --- | --- |
+| `agent-compatibility/skills/check-agent-compatibility/SKILL.md` | `2391a06aec1bfb475690a9c386207e009090e35c624b5ca6cace3ea4c6705970` | `safe_docs_only` |
+| `create-plugin/skills/create-plugin-scaffold/SKILL.md` | `b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46` | `needs_human_review` (`mcp-plugin-hook-install`) |
+| `create-plugin/skills/review-plugin-submission/SKILL.md` | `ff7411fc0426934871ac18f8ed55edcfc49f19443701dbe9109a3395ccded61d` | `needs_human_review` |
+| `cursor-sdk/skills/cursor-sdk/SKILL.md` | `3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979` | `blocked_malicious` |
+
+The compatibility source references four separate role files
+(`compatibility-scan-review`, `startup-review`, `validation-review`, and
+`docs-reliability-review`). The SDK source references its seven local guides:
+`advanced`, `auth`, `error-handling`, `mcp`, `patterns`, `runtime-choice`, and
+`streaming`; all were inspected. The create-plugin source references its
+`plugin-architect` agent and `plugin-quality-gates` rule; both were inspected.
+
 This report covers the four held overlays `check-agent-compatibility`,
 `create-plugin-scaffold`, `review-plugin-submission`, and `cursor-sdk`. The
 pinned source files and every relative reference were read from the local

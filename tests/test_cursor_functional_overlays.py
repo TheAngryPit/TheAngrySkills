@@ -81,9 +81,15 @@ PROMOTED = {
     "cursor-principle-prove-it-works",
     "cursor-technical-writing",
     "cursor-ralph-loop-help",
+    "cursor-how",
+    "cursor-why",
 }
 
-GUIDE_ONLY = PROMOTED - {"cursor-cursor-team-kit-pr-review-canvas"}
+GUIDE_ONLY = PROMOTED - {
+    "cursor-cursor-team-kit-pr-review-canvas",
+    "cursor-how",
+    "cursor-why",
+}
 
 
 def read_manifest():
@@ -122,6 +128,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                     "renderer_proven_full_workflow_unproven",
                 )
                 self.assertIn("full PR workflow not proven", entry["availability"])
+            if name in {"cursor-how", "cursor-why"}:
+                self.assertIn("bounded_native", contract["native_mapping"]["availability"])
+                self.assertIn("trigger_unobserved", contract["promotion_status"])
+                self.assertIn("automatic skill selection unobserved", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())
             self.assertTrue(contract["permission_gates"])
             self.assertEqual(

@@ -379,3 +379,26 @@ Slack investigators recorded absent rationale results and the prior ledger
 records unavailable observability/error/analytics connectors. Those existing
 missing/error branches satisfy the contract's requirement to preserve explicit
 unknowns without widening scope; they were not rerun in this delta.
+
+## Publication decision after review
+
+The pinned source requires `how` to choose simple or complex exploration,
+delegate an explainer on the simple path, and present its cited answer in the
+five prompt sections. The bounded native run did that for a real repository
+question. The `why` source requires a code anchor, one investigator per
+available evidence category, an epistemic synthesizer, and explicit coverage
+for unavailable categories. The native run covered Git, Linear, Notion and
+Slack separately, then returned the required confidence structure. Missing
+inputs, failed dependencies, forge access, empty searches and absent
+connectors were reported without substituting evidence.
+
+The local mirror's additional promotion criteria require deterministic output,
+positive/missing/error behavior and a permission decision. The generated
+candidate trees and policy passed the mirror checks; the role-flow and bounded
+negative case above supply behavior evidence. The `why` source security
+finding at its connector-discovery step remains recorded. Its observed native
+access was read-only, with no credential elevation, write, or external message;
+the overlay now says each later run still needs its own native authorization.
+On that basis both skills were published as **bounded, explicit-only Codex
+workflows**. This does not assert automatic skill selection, the complex `how`
+branch, complete seven-category source access, or Cursor runtime parity.

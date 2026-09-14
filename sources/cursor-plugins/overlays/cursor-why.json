@@ -18,7 +18,7 @@
         "available connector per evidence category"
       ],
       "fallback": "Missing MCP/connector or gh auth yields a partial rationale with unknowns.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_native_read_only_role_flow_proven_trigger_unobserved"
     },
     "external_dependencies": [
       "GitHub gh read-only",
@@ -30,11 +30,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-why: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-why: Missing MCP/connector or gh auth yields a partial rationale with unknowns.",
-      "error": "Error fixture for cursor-why: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Separate native Git, Linear, Notion and Slack investigators plus a native epistemic synthesizer produced the pinned sections for a real repository rationale question; reports/pstack-how-why-real-20260914.md.",
+      "missing_tool_or_input": "The seven-category coverage map records absent observability, error and analytics connectors and null Linear/Notion/Slack results as unknowns, not negative evidence; reports/pstack-how-why-real-20260914.md.",
+      "error": "The Git investigator reported missing forge authentication/access without substituting another source or inventing PR rationale; reports/pstack-how-why-real-20260914.md."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_read_only_role_flow_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -43,8 +43,8 @@
     },
     "security_review": {
       "scanner_verdict": "needs_human_review",
-      "status": "retained_contextual_hold",
-      "decision": "Hold until native connector availability, authorization, and read-only behavior are proven.",
+      "status": "contextual_finding_reviewed_for_bounded_read_only_publication",
+      "decision": "The source finding at SKILL.md Step 3 concerns active connector discovery and authenticated external reads. In the native bounded run, separate investigators used authorized read-only Git, Linear, Notion and Slack access, reported null/auth failures, and performed no writes or external messages. The Codex adaptation grants no connector or credential authority; categories without access remain unavailable. Retain the scanner finding and require native permissions for each future run.",
       "findings": [
         {
           "rule_id": "mcp-plugin-hook-install",
@@ -56,7 +56,7 @@
           "credentials": [
             "connector/MCP authentication"
           ],
-          "decision": "Hold until native connector availability, authorization, and read-only behavior are proven."
+          "decision": "The source finding at SKILL.md Step 3 concerns active connector discovery and authenticated external reads. In the native bounded run, separate investigators used authorized read-only Git, Linear, Notion and Slack access, reported null/auth failures, and performed no writes or external messages. The Codex adaptation grants no connector or credential authority; categories without access remain unavailable. Retain the scanner finding and require native permissions for each future run."
         }
       ]
     }
@@ -161,6 +161,11 @@
       "file": "references/synthesizer-prompt.md",
       "before": "- **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers}, and code comments searched. Or \"Not searched. This should not happen because git and `gh` are always expected.\"\n- **Issue / ticket tracker**: {ticket IDs and keyword searches}. Or \"Not searched. No matching MCP available in this environment.\"\n- **Long-form documents**: {page titles and search queries}. Or \"Not searched. No matching MCP available in this environment.\"\n- **Real-time team chat**: {channels searched, date ranges, queries}. Or \"Not searched. No matching MCP available in this environment.\"\n- **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}. Or \"Not searched. No matching MCP available in this environment.\"\n- **Error / exception tracking**: {issues, events, or releases searched}. Or \"Not searched. No matching MCP available in this environment.\"\n- **Product analytics warehouse**: {fully-qualified tables queried, the time windows, and the numeric summaries (counts, percentiles, first/last-seen timestamps) that bore on the question}. Or \"Not searched. No matching MCP available in this environment.\"",
       "after": "- **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers} when a remote exists, and code comments searched. Otherwise state the Git or forge access gap.\n- **Issue / ticket tracker**: {ticket IDs and keyword searches}, or \"Not searched\" with the unavailable source or authorization reason.\n- **Long-form documents**: {page titles and search queries}, or \"Not searched\" with the unavailable source or authorization reason.\n- **Real-time team chat**: {channels searched, date ranges, queries}, or \"Not searched\" with the unavailable source or authorization reason.\n- **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}, or \"Not searched\" with the unavailable source or authorization reason.\n- **Error / exception tracking**: {issues, events, or releases searched}, or \"Not searched\" with the unavailable source or authorization reason.\n- **Product analytics warehouse**: {fully-qualified tables queried, time windows, numeric summaries}, or \"Not searched\" with the unavailable source or authorization reason."
+    },
+    {
+      "file": "references/synthesizer-prompt.md",
+      "before": "[PR #123](url) / ticket ID / file:line",
+      "after": "PR #123 (link the verified URL when available) / ticket ID / file:line"
     }
   ],
   "source_path": "pstack/skills/why/SKILL.md",

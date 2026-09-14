@@ -75,7 +75,7 @@ class CursorMirrorTests(unittest.TestCase):
                 self.assertEqual(policy.read_text(), "policy:\n  allow_implicit_invocation: false\n", name)
             else:
                 self.assertFalse(policy.exists(), name)
-        self.assertEqual(len(explicit_names), 34)
+        self.assertEqual(len(explicit_names), 36)
 
     def test_held_preview_preserves_explicit_only_policy(self):
         preview = self.root / "native-preview"
@@ -98,7 +98,7 @@ class CursorMirrorTests(unittest.TestCase):
             frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
             self.assertIsNotNone(frontmatter, entry["published_name"])
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1))
-        self.assertEqual(held_explicit, 19)
+        self.assertEqual(held_explicit, 17)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"

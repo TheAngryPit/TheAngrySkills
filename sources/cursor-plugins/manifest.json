@@ -1025,7 +1025,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native explorer/explainer role flow observed; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1041,12 +1041,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/how/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "source-faithful read-only role flow and bounded missing/error behavior reviewed in reports/pstack-how-why-real-20260914.md; trigger remains unobserved",
+      "publish": true,
       "published_name": "cursor-how",
       "upstream_purpose": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
       "upstream_skill": "how",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -1958,7 +1958,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native read-only investigator/synthesizer flow observed; unavailable evidence categories remain explicit; automatic skill selection unobserved",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1984,12 +1984,12 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/why/SKILL.md",
       "planned_adaptation": "Preservar SKILL.md e os apoios necessários; mapear runtime/paths, testar o fluxo da skill e manter os apoios fora de instalação implícita.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "source-faithful seven-category coverage with authorized read-only sources and explicit unknowns reviewed in reports/pstack-how-why-real-20260914.md; trigger remains unobserved",
+      "publish": true,
       "published_name": "cursor-why",
       "upstream_purpose": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "upstream_skill": "why",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar"
     },
     {
       "availability": "Codex workflow not demonstrated",

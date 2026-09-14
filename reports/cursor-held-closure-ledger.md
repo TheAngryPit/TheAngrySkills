@@ -3,8 +3,8 @@
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
-The pinned manifest contains 91 physical skills. It has 37 `publish:false`
-entries: 34 active entries below plus the three dormant Benny entries
+The pinned manifest contains 91 physical skills. It has 35 `publish:false`
+entries: 32 active entries below plus the three dormant Benny entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
 `cursor-triage-issue-reports`). This ledger does not count dormant Benny as
 active and does not claim 88/88 functional. “Held” means absent from the
@@ -32,7 +32,6 @@ silently recounted as held here.
 | `cursor-automate-me` | Capture corroborated working preferences, then sequence mining, Cursor `create-skill`, and `unslop` to draft/update one `-mode` skill. | History-gated adapter defaults to project-local `.agents/skills`; fixture updates from two bounded evidence slices and preserves uncontradicted sections. | Authorized transcript scope, native skill-creator, `cursor-unslop`, user preference loop and destination writeback. | Native history and skill-creator invocation are not proven in the current host. | Use supplied bounded evidence and run a project-local draft through `cursor-unslop`, with approval before write. |
 | `cursor-create-verification-skill` | Generate `.cursor/skills/verify-<app>/` that launches the real app, drives each feature as a user, captures evidence and cleanup. | Native-write adapter maps to project-local `.agents/skills/verify-<app>/`; disposable notes CLI captures subprocess evidence and drift. | Live target/harness, syntax/version Doctor, native activation, all features and permission proof. | No live target application or native verification runner is supplied. | Run against an explicitly authorized disposable app, then verify launch/doctor/drive/evidence/cleanup and second pass. |
 | `cursor-figure-it-out` | When no narrower playbook fits, design an auditable hypothesis loop before code, scale rigor, and log decisions with show-me-your-work. | Native procedure adapter uses local reader/check runner/decision log; failed or ungrounded check blocks done. A [post-change real-case audit](cursor-figure-it-out-real-case-20260914.md) verified the held renderer mapping and bounded trail guard. | Prospective pre-change baseline, native trigger, full task phases, real product result, and independent review. | The mapping fix predates the audit; its runtime behavior cannot be proved retrospectively. | Activate on a disposable Codex project before an actual bounded change; record the hypothesis, failed branch, real-product outcome, and reviewer result. |
-| `cursor-how` | Explain how X works, placement/ownership/layering and runtime flow at senior-onboarding depth; use `why` for motivation. | Delegated-native explorer/explainer with local sequential fallback and explicit unknowns. A native read-only explorer traced the actual preview flow: [case report](pstack-how-why-real-20260914.md). | Native trigger, source-grounded explainer Task output, required presentation sections, and result ownership. | The explorer demonstrates source traversal, but the mandatory explainer output is not yet recorded. | Complete the same narrow repo walkthrough with the pinned explainer prompt; mark any native-role gap precisely. |
 | `cursor-interrogate` | Spawn one reviewer per configured model over the same scope/rubric, synthesize adversarial findings, and never auto-apply. | Delegated-native read-only reviewers with missing-reviewer accounting; no repair PR from unavailable model. | Multi-model fan-out, independent same-diff review, deduplication and synthesis. | Native multi-review behavior and model routing remain unproven. | Run two bounded read-only reviewers on one disposable diff and preserve separate reports. |
 | `cursor-maintain-verification-skill` | For every feature, read source in parallel, drive every feature live, reconcile feature map and make at most one PR of proven corrections. | Project-local maintenance adapter and fixture create `.agents/skills/verify-*`, capture drift and clean second execution. | Live app, source-wave delegation, native runner, failed Doctor, cleanup ownership and PR boundary. | No live target/native runner path is supplied. | Run a disposable feature-map maintenance pass, then prove live feature coverage before any PR. |
 | `cursor-make-bot-ui` | Build a UI whose server POSTs untrusted JSON to a Grok Bot webhook; keep sender key server-side; optionally expose through Tailscale. | External-product/security adapter is reference-only; no webhook or installer execution. | Authorized webhook routine, sender-key handling, UI/error path and Tailscale exposure review. | Quarantine retains active `curl ...` to `sudo sh` privilege-escalation commands (source lines 89/95). | Do not execute installer; design a local mock webhook and separately review a pinned, non-privileged Tailscale path. |
@@ -44,14 +43,21 @@ silently recounted as held here.
 | `cursor-show-me-your-work` | Maintain one local TSV decision row per decision (`what`, `why`, evidence, result); commit only when a reviewer needs the trail. | Native local-trail adapter requires explicit root, no-follow writes, sanitization and path/symlink/hardlink/FIFO tests. | Script review, concurrent-writer behavior, durability, secret redaction, transcript audit and native activation. | `scripts/log.sh` remains executable and concurrent/fsync/native activation behavior is unproven. | Review the helper, then run a bounded concurrent append/redaction fixture in an explicit project root. |
 | `cursor-swarm` | Fan out N parallel workers, drain them, aggregate one report, and preserve partial worker results. | Delegated-native bounded worker/collector records `PARTIAL/ISSUES`; sequential fallback is explicit. | Native N-worker fan-out, drain/timeout, disjoint scope, aggregation and partial-result handling. | Native parallel worker execution is not observed. | Run a bounded two-worker read-only swarm and retain each worker's evidence plus aggregate. |
 | `cursor-thermos` | Launch thermo-nuclear bug/security and code-quality reviewers in parallel, then coordinator synthesizes both lenses. | Delegated-native two-reviewer adapter keeps lenses independent/read-only and labels a single-lens result partial. | Live parallel reviewers, pinned rubrics, deduplication and coordinator synthesis. | No live two-reviewer Thermos run is proven. | Run both bounded read-only lenses against a disposable diff and capture the combined verdict. |
-| `cursor-why` | Investigate motivation/rationale by querying each evidence category (source control, tracker, docs, chat, observability, errors, analytics) through available MCPs; cite unknowns. | History-gated adapter uses git/gh and available connectors; missing categories yield partial rationale. | Connector discovery/authorization, category coverage, read-only behavior and cited synthesis. | A read-only `gh` query of PR #64 succeeded; tracker/chat/observability/error/analytics access and category coverage remain unproven. Source readonly/MCP claim is unverified. | Run a category-by-category read-only inventory, mark unavailable sources, then synthesize only evidenced rationale. |
 | `cursor-cancel-ralph` | On cancel request, inspect `.cursor/ralph/scratchpad.md`, report iteration, and remove `.cursor/ralph` state. | Native state-gated adapter restricts cancellation to matching project/task state; synthetic wrong-session/symlink tests pass. | Trusted live hook state, exact task/session correlation and actual cancellation readback. | No trusted project hook or live loop state is installed. | Inspect one explicitly scoped project state and perform only a matching bounded cancellation proof. |
 | `cursor-ralph-loop` | Start iterative self-referential development loop with completion promise/max iterations, storing `.cursor/ralph` state and feeding prompt after each turn. | Native persistent-loop adapter arms task-bound state and returns Codex continuation in synthetic Stop tests. | Trusted project hook, live continuation, user interruption, scheduler, idempotency and completion readback. | No project hook is trusted and no live automatic continuation is observed. | Prove a bounded max-iteration loop in a disposable project with explicit hook trust and cancellation. |
+## Newly published bounded workflows
+
+`cursor-how` and `cursor-why` moved from this held ledger to the published
+catalog after the [native role-flow case](pstack-how-why-real-20260914.md).
+The scope is bounded read-only execution with explicit unknowns, not automatic
+skill selection or guaranteed access to every evidence connector. The `why`
+connector-security finding remains in its overlay with the review decision.
+
 ## Group dependency order
 
-1. **Foundational local readers:** `cursor-how`, `cursor-figure-it-out`,
-   `cursor-show-me-your-work`, and `cursor-recall` (with the already-published
-   guide-only principles available as conditional guidance).
+1. **Foundational local readers:** `cursor-figure-it-out`,
+   `cursor-show-me-your-work`, and `cursor-recall` (with the published
+   `cursor-how` and guide-only principles available under their documented limits).
    Establish bounded paths, evidence, and wording before orchestration.
 2. **Delegated review and style:** `cursor-advisor`, `cursor-architect`,
    `cursor-arena`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`,
@@ -79,7 +85,7 @@ silently recounted as held here.
 
 ## Remaining unavailable skills
 
-All 34 rows remain absent from the published catalog and unavailable for a
+All 32 rows remain absent from the published catalog and unavailable for a
 claimed native functional invocation until their row's proof and blocker are
 closed. The already-published guide-only principles and local PR renderer are
 outside this held count and retain their own conditional/native-parity labels.
@@ -91,21 +97,21 @@ outside this held count and retain their own conditional/native-parity labels.
 `cursor-add-read-aloud`, `cursor-add-voice`, `cursor-debug-voice`,
 `cursor-orchestrate`, `cursor-pr-review-canvas-pr-review-canvas`,
 `cursor-architect`, `cursor-arena`, `cursor-automate-me`,
-`cursor-create-verification-skill`, `cursor-figure-it-out`, `cursor-how`,
+`cursor-create-verification-skill`, `cursor-figure-it-out`,
 `cursor-interrogate`, `cursor-maintain-verification-skill`,
 `cursor-make-bot-ui`, `cursor-no-comments`, `cursor-poteto-mode`,
 `cursor-recall`, `cursor-reflect`, `cursor-setup-pstack`,
-`cursor-show-me-your-work`, `cursor-swarm`, `cursor-thermos`, `cursor-why`,
+`cursor-show-me-your-work`, `cursor-swarm`, `cursor-thermos`,
 `cursor-cancel-ralph`, and `cursor-ralph-loop`.
 
-The list contains exactly the 34 active `publish:false` names and excludes the
+The list contains exactly the 32 active `publish:false` names and excludes the
 three dormant Benny skills. Optional external-service branches may be
 distributed conditionally only with the local fallback,
 credential boundary, and unavailable-capability result preserved.
 
 ## Evidence checks
 
-- Manifest count: `jq` reports 91 physical skills, 37 `publish:false`, and 34
+- Manifest count: `jq` reports 91 physical skills, 35 `publish:false`, and 32
   active `publish:false` after excluding `pstack/automations/benny`.
 - Every row was reconciled against its pinned
   `sources/cursor-plugins/snapshot/**/SKILL.md`, matching overlay JSON under
@@ -114,8 +120,9 @@ credential boundary, and unavailable-capability result preserved.
 - Hook-specific boundaries and synthetic proof limits are recorded in
   `reports/cursor-native-hooks-crosswalk.md`; this ledger does not promote
   synthetic fixtures to native runtime parity.
-- Current validation reports `pytest -q tests` 195
-  tests plus two subtests, mirror `--check` at 91 physical/54 emitted/201
-  output files, bundled Bun tests 52/52, strict typecheck, and CI validation.
+- Current local validation reports `pytest -q tests` 195
+  tests plus two subtests and mirror `--check` at 91 physical/56 emitted/223
+  output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
+  CI validation for the new published head remains to be read back.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

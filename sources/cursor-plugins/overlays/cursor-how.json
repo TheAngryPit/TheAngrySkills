@@ -18,7 +18,7 @@
         "bounded explorer/explainer if exposed"
       ],
       "fallback": "Missing source/delegate yields explicit unknowns, not a guess.",
-      "availability": "not_proven_in_current_codex_session"
+      "availability": "bounded_native_role_flow_proven_trigger_unobserved"
     },
     "external_dependencies": [
       "native delegated reviewer if exposed"
@@ -29,11 +29,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-how: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-how: Missing source/delegate yields explicit unknowns, not a guess.",
-      "error": "Error fixture for cursor-how: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Native read-only explorer and simple-path explainer traced the real held-candidate preview and returned the five pinned sections; reports/pstack-how-why-real-20260914.md.",
+      "missing_tool_or_input": "A bounded native task reported a nonexistent module as explicit unknown without substituting another source; reports/pstack-how-why-real-20260914.md.",
+      "error": "A bounded native task reported a missing explainer dependency as an error without widening the target; reports/pstack-how-why-real-20260914.md."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_role_flow_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",

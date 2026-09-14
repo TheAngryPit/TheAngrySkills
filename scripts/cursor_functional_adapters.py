@@ -9,7 +9,10 @@ from __future__ import annotations
 
 import difflib
 import hashlib
+import json
 import os
+import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -398,6 +401,525 @@ def run_local_app_fixture(
         "filesystem_isolation": "not_observed",
         "network_isolation": "not_observed",
     }
+
+
+def _resolve_verification_target(
+    project_root: str | Path,
+    app_name: str,
+    *,
+    require_existing: bool,
+) -> tuple[Path, Path]:
+    _validate_verification_slug(app_name, "app_name")
+    root_path = Path(project_root)
+    if root_path.is_symlink():
+        raise AdapterError("verification fixture project root must not be a symlink")
+    root = root_path.resolve()
+    if not root.is_dir():
+        raise AdapterError("verification fixture project root must be a directory")
+    target = root / ".agents" / "skills" / f"verify-{app_name}"
+    _reject_symlink_components(root, target.relative_to(root))
+    if require_existing:
+        if not target.is_dir():
+            raise AdapterError("verification target is not a directory")
+        if target.is_symlink():
+            raise AdapterError("verification target must not be a symlink")
+    elif target.exists():
+        raise AdapterError("verification target already exists")
+    return root, target
+
+
+def _validate_verification_slug(value: str, label: str) -> None:
+    if not isinstance(value, str) or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", value) is None:
+        raise AdapterError(
+            f"{label} must match [A-Za-z0-9][A-Za-z0-9_-]* without whitespace or quoting characters"
+        )
+
+
+def _normalize_verification_commands(
+    commands: Mapping[str, Mapping[str, object]],
+) -> dict[str, dict[str, object]]:
+    if not commands:
+        raise AdapterError("verification commands need at least one feature")
+    normalized: dict[str, dict[str, object]] = {}
+    for feature, spec in commands.items():
+        _validate_verification_slug(feature, "feature name")
+        if not isinstance(spec, Mapping):
+            raise AdapterError("verification command spec must be a mapping")
+        arguments = spec.get("arguments")
+        if isinstance(arguments, (str, bytes)) or not isinstance(arguments, Iterable):
+            raise AdapterError("verification command arguments must be an iterable")
+        argv = tuple(arguments)
+        if any(not isinstance(item, str) or "\x00" in item for item in argv):
+            raise AdapterError("verification command arguments must be NUL-free strings")
+        expected_stdout = spec.get("expected_stdout")
+        if not isinstance(expected_stdout, str) or "\x00" in expected_stdout:
+            raise AdapterError("verification expected_stdout must be NUL-free text")
+        expected_exit_code = spec.get("expected_exit_code", 0)
+        if not isinstance(expected_exit_code, int) or isinstance(expected_exit_code, bool):
+            raise AdapterError("verification expected_exit_code must be an integer")
+        timeout_seconds = spec.get("timeout_seconds", 2.0)
+        if not isinstance(timeout_seconds, (int, float)) or isinstance(timeout_seconds, bool):
+            raise AdapterError("verification timeout_seconds must be a positive number")
+        if timeout_seconds <= 0:
+            raise AdapterError("verification timeout_seconds must be a positive number")
+        description = spec.get("description", f"Run the {feature} CLI flow and record evidence.")
+        if not isinstance(description, str) or not description.strip() or "\x00" in description:
+            raise AdapterError("verification feature description must be non-empty text")
+        cleanup_paths = spec.get("cleanup_paths", ())
+        if isinstance(cleanup_paths, (str, bytes)) or not isinstance(cleanup_paths, Iterable):
+            raise AdapterError("verification cleanup_paths must be an iterable")
+        cleanup = tuple(cleanup_paths)
+        if any(
+            not isinstance(item, str)
+            or "\x00" in item
+            or not item.strip()
+            or item in {".", ".."}
+            or "/" in item
+            or "\\" in item
+            for item in cleanup
+        ):
+            raise AdapterError("verification cleanup_paths must be safe single path components")
+        normalized[feature] = {
+            "arguments": argv,
+            "expected_stdout": expected_stdout,
+            "expected_exit_code": expected_exit_code,
+            "timeout_seconds": float(timeout_seconds),
+            "description": description,
+            "cleanup_paths": cleanup,
+        }
+    return normalized
+
+
+def _capture_verification_commands(
+    root: Path,
+    app: Path,
+    commands: Mapping[str, Mapping[str, object]],
+) -> tuple[dict[str, dict[str, object]], dict[str, object] | None]:
+    observations: dict[str, dict[str, object]] = {}
+    for feature, spec in commands.items():
+        result = run_local_app_fixture(
+            root,
+            app,
+            spec["arguments"],  # type: ignore[arg-type]
+            expected_stdout=spec["expected_stdout"],  # type: ignore[arg-type]
+            expected_exit_code=spec["expected_exit_code"],  # type: ignore[arg-type]
+            timeout_seconds=spec["timeout_seconds"],  # type: ignore[arg-type]
+        )
+        observations[feature] = {
+            "feature": feature,
+            "arguments": tuple(spec["arguments"]),  # type: ignore[arg-type]
+            "evidence": result["evidence"],
+            "side_effects": _capture_verification_side_effects(root),
+            "status": result["status"],
+        }
+        if result["status"] != "PASS":
+            return observations, {
+                "feature": feature,
+                "reason": "verification command evidence did not match the expected result",
+                "result": result,
+            }
+    return observations, None
+
+
+def _capture_verification_side_effects(root: Path) -> dict[str, object]:
+    files: list[str] = []
+    for path in sorted(root.iterdir(), key=lambda item: item.name):
+        if path.name.startswith(".") or not path.is_file() or path.is_symlink():
+            continue
+        files.append(path.name)
+    return {"regular_files": files}
+
+
+def _cleanup_paths(commands: Mapping[str, Mapping[str, object]]) -> tuple[str, ...]:
+    return tuple(
+        sorted(
+            {
+                filename
+                for spec in commands.values()
+                for filename in spec["cleanup_paths"]  # type: ignore[index]
+            }
+        )
+    )
+
+
+def _assert_cleanup_paths_absent(
+    root: Path, commands: Mapping[str, Mapping[str, object]]
+) -> None:
+    for filename in _cleanup_paths(commands):
+        path = root / filename
+        _reject_symlink_components(root, path.relative_to(root))
+        if path.exists() or path.is_symlink():
+            raise AdapterError(
+                f"verification cleanup path must be absent before the first drive: {filename}"
+            )
+
+
+def _assert_cleanup_paths_regular(
+    root: Path, commands: Mapping[str, Mapping[str, object]]
+) -> None:
+    for filename in _cleanup_paths(commands):
+        path = root / filename
+        _reject_symlink_components(root, path.relative_to(root))
+        if path.is_symlink() or not path.is_file():
+            raise AdapterError(
+                f"verification cleanup path was not created as a regular file: {filename}"
+            )
+
+
+def _verification_skill_document(
+    root: Path,
+    app: Path,
+    app_name: str,
+    commands: Mapping[str, Mapping[str, object]],
+) -> str:
+    app_relative = str(app.relative_to(root))
+    command_lines = [
+        f"- `{shlex.join(('python3', app_relative, *tuple(spec['arguments'])))}` — {spec['description']}"
+        for spec in commands.values()
+    ]
+    doctor = (
+        "`python3 -c 'from pathlib import Path; p=Path("
+        f'"{app_relative}"'
+        "); assert p.is_file() and not p.is_symlink(); print(\"ready\")'"
+    )
+    state_files = _cleanup_paths(commands)
+    cleanup_state = (
+        ", ".join(f"`{filename}`" for filename in state_files)
+        if state_files
+        else "no app-state path is declared by this fixture"
+    )
+    return (
+        "---\n"
+        f"name: verify-{app_name}\n"
+        f"description: \"Verify {app_name} through its short-lived Python CLI; use when checking the mapped user flows.\"\n"
+        "---\n\n"
+        f"# Verify {app_name}\n\n"
+        "This project-local verification skill was generated from bounded CLI observations. "
+        "It is fixture-only and must run against an instance started by the verification run.\n\n"
+        "## Launch\n\n"
+        "This app is a short-lived CLI, not a server. Launch means starting each drive in its own "
+        "disposable project directory with `python3`; readiness is the command's exit status. "
+        "There is no long-lived process or shared port to keep alive.\n\n"
+        "## Doctor\n\n"
+        f"Run the read-only source check before driving: {doctor}. A non-zero exit blocks the run.\n\n"
+        "## Drive\n\n"
+        "Use the exact observed CLI commands below, one process per feature:\n\n"
+        + "\n".join(command_lines)
+        + "\n\n"
+        "## Evidence\n\n"
+        "Capture exit code, stdout, stderr, and the observed regular-file state for each drive. "
+        f"The surviving JSON evidence is kept under `.agents/skills/verify-{app_name}/evidence/`; "
+        "feature-map files are not evidence of a live target. Verify the user-visible output and "
+        "the side effect state before calling a feature passed.\n\n"
+        "## Cleanup\n\n"
+        f"Remove only processes and app-state files created by the drives (for this fixture: {cleanup_state}); "
+        f"keep `.agents/skills/verify-{app_name}/` and its `evidence/` directory, then verify the evidence path remains. "
+        "Never kill by process name; these CLI drives are short-lived and are bounded by the runner timeout.\n\n"
+        "## Helpers\n\n"
+        "No helper script is shipped. The invocation is the explicit `python3` command in each feature file; "
+        "a future helper must remain inside this project-local verification skill and document its command.\n"
+    )
+
+
+def _verification_feature_readme(app_name: str, commands: Mapping[str, Mapping[str, object]]) -> str:
+    lines = [
+        f"# verify-{app_name} feature map",
+        "",
+        "This map records user-facing CLI flows generated from independent disposable-process observations.",
+        "Each feature file names the route, exact command, and observable end state; captured JSON lives in `../evidence/`.",
+        "",
+        "## Features",
+        "",
+    ]
+    lines.extend(
+        f"- [{feature}](./{feature}.md) — {spec['description']}"
+        for feature, spec in commands.items()
+    )
+    return "\n".join(lines) + "\n"
+
+
+def _verification_feature_document(
+    root: Path,
+    app: Path,
+    feature: str,
+    spec: Mapping[str, object],
+    observation: Mapping[str, object],
+) -> str:
+    payload = _verification_feature_payload(root, app, feature, spec, observation)
+    command_text = shlex.join(payload["command"])  # type: ignore[arg-type]
+    return (
+        f"# {feature}\n\n{spec['description']}\n\n"
+        "## Sub-features\n\n"
+        "- Run the mapped CLI action and verify its resulting output and file side effect.\n\n"
+        "## How to get to it (user POV)\n\n"
+        f"Start from the disposable notes project and choose the `{feature}` user flow.\n\n"
+        "## Driving it with the bounded Python subprocess runner\n\n"
+        f"Run `{command_text}`. The runner captures the process exit code, stdout, stderr, and regular-file state.\n\n"
+        "## Gotchas\n\n"
+        "This is a short-lived CLI fixture; it is not a live target, and its filesystem/network isolation is not observed. "
+        "The captured observation below is evidence for this run, not an instruction to trust future output.\n\n"
+        "### Captured observation\n\n"
+        "```json\n"
+        f"{json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)}\n"
+        "```\n"
+    )
+
+
+def _verification_feature_payload(
+    root: Path,
+    app: Path,
+    feature: str,
+    spec: Mapping[str, object],
+    observation: Mapping[str, object],
+) -> dict[str, object]:
+    command = [str(app.relative_to(root)), *tuple(spec["arguments"])]  # type: ignore[arg-type]
+    return {
+        "arguments": list(spec["arguments"]),  # type: ignore[arg-type]
+        "command": command,
+        "evidence": observation["evidence"],
+        "feature": feature,
+        "observation_source": "independent subprocess stdout/stderr/exit capture",
+        "side_effects": observation["side_effects"],
+    }
+
+
+def _verification_result_base(target: Path) -> dict[str, object]:
+    return {
+        "target": str(target),
+        "product_code_edits": False,
+        "product_edits": False,
+        "app_state_writes": "allowed within disposable fixture; not prevented",
+        "external_writes": False,
+        "environment": "isolated-project-fixture-process",
+        "evidence_scope": ("exit_code", "stdout", "stderr"),
+        "filesystem_isolation": "not_observed",
+        "network_isolation": "not_observed",
+    }
+
+
+def run_cli_verification_fixture(
+    project_root: str | Path,
+    app_name: str,
+    app_path: str | Path,
+    commands: Mapping[str, Mapping[str, object]],
+    *,
+    app_available: bool = True,
+) -> dict[str, object]:
+    """Create a project-local verification fixture from real CLI observations.
+
+    Each feature command is run as a separate subprocess before any skill file
+    is written. The generated ``.agents/skills/verify-<app>/`` tree contains
+    only the captured command and exit/stdout/stderr evidence. This is a
+    disposable fixture proof, not live target verification.
+    """
+
+    normalized = _normalize_verification_commands(commands)
+    root, target = _resolve_verification_target(
+        project_root, app_name, require_existing=False
+    )
+    result = _verification_result_base(target)
+    if not app_available:
+        result.update(
+            {
+                "status": "BLOCKED",
+                "reason": "verification app is unavailable",
+                "observations": {},
+            }
+        )
+        return result
+    _, app = _resolve_local_app_fixture(root, app_path)
+    _assert_cleanup_paths_absent(root, normalized)
+    observations, failure = _capture_verification_commands(root, app, normalized)
+    if failure is not None:
+        result.update(
+            {
+                "status": "ERROR",
+                "reason": failure["reason"],
+                "failed_feature": failure["feature"],
+                "observations": observations,
+            }
+        )
+        return result
+    _assert_cleanup_paths_regular(root, normalized)
+
+    target.mkdir(parents=True, exist_ok=False)
+    features_dir = target / "features"
+    features_dir.mkdir()
+    (target / "SKILL.md").write_text(
+        _verification_skill_document(root, app, app_name, normalized)
+    )
+    (features_dir / "README.md").write_text(
+        _verification_feature_readme(app_name, normalized)
+    )
+    evidence_dir = target / "evidence"
+    evidence_dir.mkdir()
+    for feature, spec in normalized.items():
+        (features_dir / f"{feature}.md").write_text(
+            _verification_feature_document(root, app, feature, spec, observations[feature])
+        )
+        (evidence_dir / f"{feature}.json").write_text(
+            f"{json.dumps(_verification_feature_payload(root, app, feature, spec, observations[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
+        )
+    result.update(
+        {
+            "status": "FIXTURE_ONLY",
+            "created_skill": True,
+            "reconciled_features": tuple(sorted(normalized)),
+            "observations": observations,
+            "observation_source": "independent subprocess stdout/stderr/exit capture",
+        }
+    )
+    return result
+
+
+def introduce_verification_feature_drift(
+    project_root: str | Path,
+    app_name: str,
+    feature: str,
+    drift_text: str = "\nControlled fixture drift.\n",
+) -> dict[str, object]:
+    """Add controlled content drift to one existing project-local feature file."""
+
+    root, target = _resolve_verification_target(
+        project_root, app_name, require_existing=True
+    )
+    _validate_verification_slug(feature, "feature name")
+    if not isinstance(drift_text, str) or not drift_text.strip() or "\x00" in drift_text:
+        raise AdapterError("drift_text must be non-empty NUL-free text")
+    path = target / "features" / f"{feature}.md"
+    _reject_symlink_components(root, path.relative_to(root))
+    if path.is_symlink() or not path.is_file():
+        raise AdapterError("verification feature must be a regular file")
+    if drift_text in path.read_text():
+        raise AdapterError("verification feature already contains the requested drift")
+    path.write_text(path.read_text() + drift_text)
+    return {
+        "status": "DRIFT_INTRODUCED",
+        "target": str(target),
+        "feature": feature,
+        "product_edits": False,
+        "external_writes": False,
+    }
+
+
+def maintain_cli_verification_fixture(
+    project_root: str | Path,
+    app_name: str,
+    app_path: str | Path,
+    commands: Mapping[str, Mapping[str, object]],
+    *,
+    app_available: bool = True,
+) -> dict[str, object]:
+    """Reconcile a project-local verification fixture and rerun its CLI flows."""
+
+    normalized = _normalize_verification_commands(commands)
+    root, target = _resolve_verification_target(
+        project_root, app_name, require_existing=True
+    )
+    result = _verification_result_base(target)
+    if not app_available:
+        result.update(
+            {
+                "status": "BLOCKED",
+                "reason": "verification app is unavailable",
+                "changed_features": (),
+            }
+        )
+        return result
+    _, app = _resolve_local_app_fixture(root, app_path)
+    features_dir = target / "features"
+    _reject_symlink_components(root, features_dir.relative_to(root))
+    if not features_dir.is_dir() or features_dir.is_symlink():
+        raise AdapterError("verification features directory must be a regular directory")
+    actual_features = tuple(
+        sorted(path.stem for path in features_dir.glob("*.md") if path.name != "README.md")
+    )
+    expected_features = tuple(sorted(normalized))
+    if actual_features != expected_features:
+        result.update(
+            {
+                "status": "ERROR",
+                "reason": "feature file reconciliation mismatch",
+                "expected_features": expected_features,
+                "actual_features": actual_features,
+                "changed_features": (),
+            }
+        )
+        return result
+
+    first_run, failure = _capture_verification_commands(root, app, normalized)
+    if failure is not None:
+        result.update(
+            {
+                "status": "ERROR",
+                "reason": failure["reason"],
+                "failed_feature": failure["feature"],
+                "first_run": first_run,
+                "changed_features": (),
+            }
+        )
+        return result
+
+    changed: list[str] = []
+    evidence_dir = target / "evidence"
+    _reject_symlink_components(root, evidence_dir.relative_to(root))
+    if evidence_dir.exists() and (evidence_dir.is_symlink() or not evidence_dir.is_dir()):
+        raise AdapterError("verification evidence directory must be a regular directory")
+    evidence_dir.mkdir(exist_ok=True)
+    for feature, spec in normalized.items():
+        path = features_dir / f"{feature}.md"
+        _reject_symlink_components(root, path.relative_to(root))
+        if path.is_symlink() or not path.is_file():
+            raise AdapterError("verification feature must be a regular file")
+        expected_document = _verification_feature_document(
+            root, app, feature, spec, first_run[feature]
+        )
+        if path.read_text() != expected_document:
+            path.write_text(expected_document)
+            changed.append(feature)
+        evidence_path = evidence_dir / f"{feature}.json"
+        _reject_symlink_components(root, evidence_path.relative_to(root))
+        if evidence_path.is_symlink():
+            raise AdapterError("verification evidence must be a regular file")
+        evidence_path.write_text(
+            f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
+        )
+
+    for feature, spec in normalized.items():
+        before_path = evidence_dir / f"maintenance-before-{feature}.json"
+        before_path.write_text(
+            f"{json.dumps(_verification_feature_payload(root, app, feature, spec, first_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
+        )
+    second_run, second_failure = _capture_verification_commands(root, app, normalized)
+    for feature, spec in normalized.items():
+        after_path = evidence_dir / f"maintenance-after-{feature}.json"
+        if feature in second_run:
+            after_path.write_text(
+                f"{json.dumps(_verification_feature_payload(root, app, feature, spec, second_run[feature]), ensure_ascii=False, indent=2, sort_keys=True)}\n"
+            )
+    if second_failure is not None:
+        result.update(
+            {
+                "status": "ERROR",
+                "reason": second_failure["reason"],
+                "failed_feature": second_failure["feature"],
+                "first_run": first_run,
+                "second_run": second_run,
+                "changed_features": tuple(changed),
+            }
+        )
+        return result
+    result.update(
+        {
+            "status": "FIXTURE_ONLY",
+            "changed_features": tuple(changed),
+            "first_run": first_run,
+            "second_run": second_run,
+            "reconciled_features": expected_features,
+            "observation_source": "independent subprocess stdout/stderr/exit capture",
+        }
+    )
+    return result
 
 
 def _run_local_git(root: Path, arguments: Iterable[str]) -> str:

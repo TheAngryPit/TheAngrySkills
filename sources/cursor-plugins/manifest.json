@@ -978,7 +978,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex adapter renderer, isolated verification fixture, and independent local-app fixture evidence checked; live target application path not demonstrated",
+      "availability": "Codex adapter renderer, isolated CLI verification fixture, project-local .agents/skills/verify-notes generation, captured stdout/stderr/exit evidence, controlled drift reconciliation, and second-run evidence checked; live target application and full doctor/harness path not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1000,7 +1000,7 @@
       "published_name": "cursor-create-verification-skill",
       "upstream_purpose": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
       "upstream_skill": "create-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de criação/reconciliação/observação; fixture local app com evidência independente de stdout/exit code; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; CLI fixture real em subprocesso para criar .agents/skills/verify-<app>/ com SKILL.md, feature-map README, required feature headings, captured stdout/stderr/exit evidence, explicit cleanup path, doctor minimum, controlled drift, maintenance reconciliation, persisted before/after evidence, and second execution; unsafe names and pre-existing cleanup state blocked; live target/harness, syntax/version doctor, and native host activation remain unproven; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -1075,7 +1075,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
     },
     {
-      "availability": "Codex adapter renderer, path-state, isolated verification fixtures, and independent local-app fixture evidence checked; live target application path not demonstrated",
+      "availability": "Codex adapter renderer, path-state, isolated CLI verification fixture, project-local feature-map evidence, controlled drift reconciliation, persisted before/after maintenance evidence, and clean second execution checked; live target/source-wave/native runner path not demonstrated",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "intacta",
@@ -1094,7 +1094,7 @@
       "published_name": "cursor-maintain-verification-skill",
       "upstream_purpose": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
       "upstream_skill": "maintain-verification-skill",
-      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state e criação/reconciliação/observação; fixture local app com evidência independente de stdout/exit code; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state; real disposable CLI subprocess fixture with project-local .agents/skills/verify-* creation, explicit cleanup ownership, drift reconciliation, persisted maintenance-before/after evidence, and clean second execution; doctor remains minimum existence check; source-wave delegation, live target, native runner, failed-doctor handling, PR/merge, and host activation remain unproven; teste de comportamento no host Codex"
     },
     {
       "availability": "external connector or routing not demonstrated",

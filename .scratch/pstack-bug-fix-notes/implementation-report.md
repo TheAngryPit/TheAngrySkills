@@ -172,3 +172,38 @@ Keep the bundled CLI scripts disabled in normal candidate use and require
 separate authorization for any future install, inherited-environment/credential
 review, network/egress policy, or worktree/store permission beyond this scratch
 proof.
+
+## Verification-skill CLI fixture proof
+
+The held `cursor-create-verification-skill` and
+`cursor-maintain-verification-skill` previews were exercised only through the
+new local adapter helpers; source snapshots, product code, and `publish:false`
+metadata were not changed. A disposable `notes.py` CLI was launched through
+separate `subprocess` calls with `shell=False`, a stripped environment, captured
+`stdout`, `stderr`, exit code, and a regular-file side-effect listing. The
+`create-note` observation returned exit `0`, stdout
+`created:Release checklist`, and empty stderr.
+
+The generated project-local tree was `.agents/skills/verify-notes/`. It
+contains a frontmatter description, Launch/Doctor/Drive/Evidence/Cleanup/
+Helpers sections, `features/README.md`, one feature file with the four required
+user-POV headings, and JSON evidence under `evidence/`. The doctor is
+deliberately minimal: it verifies that `notes.py` exists and is not a symlink;
+it does not prove syntax, interpreter version, or application health. That is a
+known gap, not a live verification claim.
+
+Cleanup scope is explicit, not derived from all files in the project: the
+fixture declares only `notes.json`, requires it to be absent before the first
+drive, and verifies it exists as a regular file after the drive. A pre-existing
+`notes.json` blocks creation and no skill tree is written. Removing the app
+state after the run left the skill and evidence files intact; process and
+filesystem/network isolation remain `not_observed`.
+
+For maintenance, controlled text drift was introduced only in
+`features/create-note.md`. The maintenance pass captured a first run, rewrote
+the drifted feature, persisted `maintenance-before-create-note.json` and
+`maintenance-after-create-note.json`, then captured a second successful run.
+A third pass returned `changed_features=()`; this is a fixture-only
+reconciliation/clean result, not a source wave, live target pass, PR, or
+native host activation. Unsafe app/feature names containing newline or quotes
+are rejected before any write.

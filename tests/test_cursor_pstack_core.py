@@ -23,7 +23,10 @@ from cursor_functional_adapters import (  # noqa: E402
     PSTACK_FIXTURE_MARKER_CONTENT,
     read_pstack_playbook_fixture,
     run_bug_fix_playbook_fixture,
+    run_cli_verification_fixture,
     run_local_app_fixture,
+    maintain_cli_verification_fixture,
+    introduce_verification_feature_drift,
     run_verification_fixture,
     select_verification_target,
 )
@@ -481,6 +484,122 @@ console.log(JSON.stringify({{
             (feature_dir / "search.md").symlink_to(outside_file)
             with self.assertRaises(AdapterError):
                 run_verification_fixture(root, "notes", features, app_available=False)
+
+    def test_verification_cli_fixture_runs_doctor_captures_evidence_and_reconciles_drift(self):
+        commands = {
+            "create-note": {
+                "description": "Create a note and verify the confirmation output.",
+                "arguments": ("create", "Release checklist", "Tag and publish"),
+                "expected_stdout": "created:Release checklist\n",
+                "cleanup_paths": ("notes.json",),
+            },
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP)
+            created = run_cli_verification_fixture(root, "notes", app, commands)
+            self.assertEqual(created["status"], "FIXTURE_ONLY")
+            self.assertFalse(created["product_code_edits"])
+            self.assertEqual(created["app_state_writes"], "allowed within disposable fixture; not prevented")
+            target = root / ".agents/skills/verify-notes"
+            skill = (target / "SKILL.md").read_text()
+            for heading in (
+                "## Launch",
+                "## Doctor",
+                "## Drive",
+                "## Evidence",
+                "## Cleanup",
+                "## Helpers",
+            ):
+                self.assertIn(heading, skill)
+            self.assertIn('description: "Verify notes through its short-lived Python CLI', skill)
+            readme = (target / "features/README.md").read_text()
+            self.assertIn("[create-note](./create-note.md)", readme)
+            feature_text = (target / "features/create-note.md").read_text()
+            for heading in (
+                "## Sub-features",
+                "## How to get to it (user POV)",
+                "## Driving it with the bounded Python subprocess runner",
+                "## Gotchas",
+            ):
+                self.assertIn(heading, feature_text)
+            evidence_path = target / "evidence/create-note.json"
+            evidence = json.loads(evidence_path.read_text())
+            self.assertEqual(
+                evidence["evidence"],
+                {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
+            )
+            self.assertEqual(evidence["observation_source"], "independent subprocess stdout/stderr/exit capture")
+            self.assertIn("notes.json", evidence["side_effects"]["regular_files"])
+
+            doctor = subprocess.run(
+                [
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; p=Path('notes.py'); assert p.is_file() and not p.is_symlink(); print('ready')",
+                ],
+                cwd=str(root),
+                env={"PATH": str(Path(sys.executable).parent), "PYTHONIOENCODING": "utf-8"},
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=2.0,
+            )
+            self.assertEqual(doctor.returncode, 0)
+            self.assertEqual(doctor.stdout, "ready\n")
+            notes_state = root / "notes.json"
+            self.assertTrue(notes_state.is_file())
+            notes_state.unlink()
+            self.assertTrue(evidence_path.is_file(), "cleanup must preserve captured evidence")
+
+            drift = introduce_verification_feature_drift(root, "notes", "create-note")
+            self.assertEqual(drift["status"], "DRIFT_INTRODUCED")
+            maintained = maintain_cli_verification_fixture(root, "notes", app, commands)
+            self.assertEqual(maintained["status"], "FIXTURE_ONLY")
+            self.assertEqual(maintained["changed_features"], ("create-note",))
+            self.assertEqual(
+                maintained["second_run"]["create-note"]["evidence"],
+                {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
+            )
+            self.assertNotIn("Controlled fixture drift.", (target / "features/create-note.md").read_text())
+            self.assertTrue(evidence_path.is_file())
+            before_evidence = target / "evidence/maintenance-before-create-note.json"
+            after_evidence = target / "evidence/maintenance-after-create-note.json"
+            self.assertTrue(before_evidence.is_file())
+            self.assertTrue(after_evidence.is_file())
+            self.assertEqual(
+                json.loads(after_evidence.read_text())["evidence"],
+                {"exit_code": 0, "stdout": "created:Release checklist\n", "stderr": ""},
+            )
+            self.assertTrue(
+                (target / "evidence/create-note.json").is_file(),
+                "captured evidence must survive app-state cleanup",
+            )
+            rerun = maintain_cli_verification_fixture(root, "notes", app, commands)
+            self.assertEqual(rerun["status"], "FIXTURE_ONLY")
+            self.assertEqual(rerun["changed_features"], ())
+            self.assertEqual(rerun["reconciled_features"], ("create-note",))
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP)
+            (root / "notes.json").write_text("[]")
+            with self.assertRaises(AdapterError):
+                run_cli_verification_fixture(root, "notes", app, commands)
+            self.assertFalse((root / ".agents/skills/verify-notes").exists())
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            app = root / "notes.py"
+            app.write_text(BUGGY_NOTES_APP)
+            for unsafe_name in ("notes\n", 'notes"'):
+                with self.assertRaises(AdapterError):
+                    run_cli_verification_fixture(root, unsafe_name, app, commands)
 
     def test_local_app_fixture_collects_independent_failure_and_fix(self):
         features = {

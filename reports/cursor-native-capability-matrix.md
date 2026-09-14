@@ -32,8 +32,10 @@ the 88-skill active inventory but outside the published skill catalog.
 | Cursor plugin scaffold | Held preview bundles a hash-checked static scaffold fixture plus pinned plugin-architect and quality-gate references. A marked disposable root produces a Cursor-format manifest, README, caller-supplied LICENSE and four static component examples; the held auditor returns `STRUCTURAL_PASS`. Hooks, `mcpServers`, and marketplace requests stop before writing. | The pinned source still defaults to `~/.cursor/plugins/local/`; the preview explicitly warns against following it. This is not a native Codex plugin installer, global installation, active component, or publication proof. Source security hold remains. |
 | External service, cloud, hooks/MCP, and unsafe install surfaces | Manifest and per-skill overlays retain contextual scanner findings for xAI voice requests, Cursor SDK credential/MCP references, orchestrate scripts/Slack, create-plugin hooks/MCP, make-bot-ui install, and pstack scripts. | Held until each named service, secret, permission, side effect, and native host capability is reviewed and exercised. No global install, successful cloud task creation, secret submission, hook trust, or merge was performed. |
 
-Validation for the state above: `pytest -q tests` passed 197 tests and 2
-subtests; bundled Bun tests passed 52/52 and strict typecheck passed in scratch;
+Validation for this successor branch: `pytest -q tests` passed 200 tests and 2
+subtests; bundled Bun tests passed 52/52 and strict typecheck passed in scratch
+on the PR #64 base;
 `sync-cursor-plugin-skills.py --check` reports 91/60/243, and
-`git diff --check origin/main` passed. GitHub `Validate skill stack` completed
-successfully for published head `ab038461` ([job receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34860841957/job/104032320133)).
+`git diff --check` passed. GitHub `Validate skill stack` completed
+successfully for the PR #64 published base `ab038461` ([job receipt](https://github.com/TheAngryPit/TheAngrySkills/actions/runs/34860841957/job/104032320133));
+successor CI is pending PR creation.

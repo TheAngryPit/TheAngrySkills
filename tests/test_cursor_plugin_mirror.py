@@ -88,7 +88,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
         for entry in manifest["skills"]:
-            if not entry["declared_for_distribution"] or entry["publish"]:
+            if not entry["declared_for_distribution"] or entry["publish"] or entry.get("excluded_from_mirror"):
                 continue
             source = (REPO / "sources/cursor-plugins/snapshot" / entry["path"]).read_text()
             if not re.search(r"^disable-model-invocation:[ \t]*true[ \t]*$", source, re.MULTILINE):
@@ -101,6 +101,27 @@ class CursorMirrorTests(unittest.TestCase):
             frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
             self.assertIsNotNone(frontmatter, entry["published_name"])
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1))
+
+    def test_operator_exclusion_is_not_rendered_or_promotable(self):
+        manifest_path = self.root / "sources/cursor-plugins/manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        excluded = next(e for e in manifest["skills"] if e["published_name"] == "cursor-make-bot-ui")
+        self.assertTrue(excluded["excluded_from_mirror"])
+        self.assertFalse(excluded["publish"])
+        self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / excluded["path"]).is_file())
+        state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
+        self.assertEqual(state["candidate_not_published"], 16)
+        self.assertEqual(state["operator_excluded_skills"], 1)
+        preview = self.root / "native-preview"
+        result = self.run_build("--preview-candidates", str(preview))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse((preview / "cursor-make-bot-ui").exists())
+        self.assertFalse((self.root / "skills/mirrors-cursor/cursor-make-bot-ui").exists())
+        excluded["publish"] = True
+        manifest_path.write_text(json.dumps(manifest))
+        rejected = self.run_build("--check")
+        self.assertNotEqual(rejected.returncode, 0)
+        self.assertIn("excluded source cannot be published", rejected.stderr)
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"
@@ -344,8 +365,9 @@ class CursorMirrorTests(unittest.TestCase):
         preview = self.root / "candidate-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 88)
+        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 87)
         self.assertFalse((preview / "cursor-setup-benny").exists())
+        self.assertFalse((preview / "cursor-make-bot-ui").exists())
         self.assertEqual(marketplace.read_bytes(), before)
         self.assertEqual(self.run_build("--check").returncode, 0)
         auditor = REPO / "skills/core/skill-catalog-curator/scripts/audit_skill_frontmatter.py"
@@ -356,7 +378,7 @@ class CursorMirrorTests(unittest.TestCase):
         )
         self.assertEqual(audit.returncode, 0, audit.stderr)
         results = json.loads(audit.stdout)["results"]
-        self.assertEqual(len(results), 88)
+        self.assertEqual(len(results), 87)
         self.assertTrue(all(item["counts"]["error"] == 0 for item in results))
         missing = []
         for file in preview.rglob("*.md"):

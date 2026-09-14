@@ -1,5 +1,10 @@
 # Pstack nine-skill closure
 
+**Later scope decision (2026-09-14):** Vítor excluded `cursor-make-bot-ui`
+from the Codex mirror. The eight bounded publications below remain; the
+Bot UI row is historical evidence only. See
+[`cursor-make-bot-ui-exclusion-20260914.md`](cursor-make-bot-ui-exclusion-20260914.md).
+
 Date: 2026-09-14. Base: `eff47293`. Worker branch:
 `codex/cursor-full-closure-worker-20260914`.
 

@@ -1103,6 +1103,8 @@
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": true,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Vítor explicitly excluded cursor-make-bot-ui from the Codex mirror on 2026-09-14; retain the pinned upstream source only for provenance and do not render it as a candidate or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "3624c8ef16cf2e48deb2a4049e72c6962a9431c8d6c6af90e7bd7ea0375224ec"

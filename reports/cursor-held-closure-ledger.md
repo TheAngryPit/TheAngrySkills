@@ -1,5 +1,10 @@
 # Cursor held-skill closure ledger
 
+**Later scope decision (2026-09-14):** Vítor excluded `cursor-make-bot-ui`
+from the mirror. Its row below is historical; 16 other active candidates now
+await his conversion choices. See
+[`cursor-make-bot-ui-exclusion-20260914.md`](cursor-make-bot-ui-exclusion-20260914.md).
+
 Date: 2026-09-14. This is the pre-worker held queue. The current successor
 decision for the nine pstack batch is in
 [`reports/pstack-nine-closure-20260914.md`](pstack-nine-closure-20260914.md).

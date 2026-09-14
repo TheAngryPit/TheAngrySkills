@@ -10,30 +10,33 @@
     "preserved_semantics": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
     "native_mapping": {
       "capabilities": [
-        "bounded design delegate",
+        "collaboration.spawn_agent native design delegates (agent_type general-worker)",
+        "collaboration.spawn_agent native review/redesign delegate (agent_type planner)",
         "local file reader"
       ],
       "required_tools": [
-        "bounded design delegate",
+        "native bounded design delegates",
+        "native review/redesign delegate",
         "local file reader"
       ],
-      "fallback": "Missing delegate triggers a labeled sequential fallback.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "Missing native candidate or review delegate triggers a labeled sequential fallback; a sequential fallback is not arena competition proof.",
+      "availability": "bounded_native_two_candidate_architect_pass_disposable_runtime_and_prospective_batch_contract_observed; published for bounded explicit-only local design after Sol review; automatic trigger, external why connector coverage, and exact upstream Cursor runner slugs remain unproven"
     },
     "external_dependencies": [
       "native delegated reviewer if exposed"
     ],
     "permission_gates": [
       "Keep planning separate from implementation; do not invent a model or arena result.",
-      "Missing delegate triggers a labeled sequential fallback.",
+      "Use separate native output paths for candidate designs and read every candidate before synthesis.",
+      "Missing delegate triggers a labeled sequential fallback; do not fabricate a winner or promote a fixture result.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-architect: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-architect: Missing delegate triggers a labeled sequential fallback.",
-      "error": "Error fixture for cursor-architect: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "Native bounded proof: two independent general-worker design delegates produced caller-first architect packages in separate paths; independent reviewers scored the candidate sets, selected bases and named grafts, and a planner reviewed a failed hypothesis and wrote a redesign. The generated cursor-how/cursor-why mirrors and relevant prompt/epistemic/source-control references were read explicitly, and bounded native how/why role-flow receipts were recorded. A disposable runtime implementation exposed and corrected revision-only drift, then passed the existing single-export probe and a prospective one-source-read/ordered-partial/foreign-target/duplicate/alias/source-failure/retry/drift/single batch probe. This supports only bounded explicit-only local design publication; automatic trigger, external why connector coverage, production implementation, and upstream Cursor runner equivalence remain unproven.",
+      "missing_tool_or_input": "If the native candidate or review delegate is unavailable, record the exact missing capability and labeled fallback; one sequential design is not two-candidate or cross-judge proof.",
+      "error": "Malformed input, failed candidate, failed cross-judge, or a fallen design hypothesis is reported explicitly; review returns to redesign and does not widen scope or promote a static fixture."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_native_local_architect_explicit_only_trigger_unobserved",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
@@ -46,10 +49,10 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nThis workflow depends on `cursor-how`, `cursor-why` when rationale matters, and `cursor-arena` for structural alternatives. Resolve exact installed names before invocation; a published mirror is not proof of availability. Native model and effort selection follows the standing `model-capability-router`. The coordinator owns design synthesis, implementation and re-design when the sketch fails.\n",
+  "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml` and bounded to local design work with observable source grounding, at least two structurally distinct candidates, an independent judge, and disposable verification. If the grounding or competition gate cannot be met, report PARTIAL or unavailable rather than a completed Architect result. This workflow depends on `cursor-how`, `cursor-why` when rationale matters, and `cursor-arena` for structural alternatives. The generated `cursor-how`/`cursor-why` mirrors and their relevant references have been read in a bounded native follow-up; the receipts preserve paths, outputs, nulls and gaps. Resolve exact installed names before invocation; a published mirror and an observed read/role-flow are not proof of automatic availability or triggering. In the observed native path, candidate delegates used `collaboration.spawn_agent` with `agent_type=general-worker`, the cross-judge used `agent_type=reviewer`, and the failed-hypothesis redesign used `agent_type=planner`; these native roles are capability mappings, not proof of the upstream Cursor runner slugs or automatic trigger. Native model and effort selection follows the standing `model-capability-router`; invocation metadata and worker self-report must be recorded separately. The coordinator owns design synthesis, implementation and re-design when the sketch fails.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "Pinned source hashes and deterministic build are static provenance. A disposable native run launched two separate general-worker candidate packages, an independent reviewer cross-judge and a planner redesign after a hypothesis failed; a later read-only native how/why follow-up read the generated mirrors and relevant references and recorded Ground/Scrap receipts with explicit nulls and gaps. A prospective bounded batch case then ran two structurally distinct sketches, an independent reviewer, named grafts, and disposable implementation probes: the existing single-export probe and a one-source-read/ordered-partial/foreign-target/duplicate/alias/source-failure/retry/drift/single batch probe passed. The exact native agent types and requested profile invocation metadata are recorded in the companion report, while worker completion messages are self-reports. This supports bounded explicit-only publication; automatic trigger, external why connector coverage, upstream Cursor runner equivalence, production implementation, and end-to-end host behavior remain unproven.",
   "reason": "Resolve pstack sibling names and native Codex model/delegation while retaining the architecture and experiment loop.",
   "replacements": [
     {

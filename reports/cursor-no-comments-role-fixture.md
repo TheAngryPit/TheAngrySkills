@@ -1,7 +1,22 @@
 # `cursor-no-comments` bounded role fixture
 
-At the time of this fixture, the pinned `pstack/agents/comment-sicko.md` was bundled by the mirror preview as `cursor-no-comments/references/comment-sicko-agent.md`. An existing native Codex reviewer was assigned only `/private/tmp/codex-comment-sicko-fixture-20260913/src/total.js` and instructed to apply that role. The input contained a legal SPDX header and a redundant function-body comment. The current preview instead names the public native `comment-sicko` profile asset, without that duplicate role file.
+`disposable-scratch/` denotes local proof artifacts that are not part of the
+published repository or install surface.
 
-Observed output: the reviewer deleted exactly one redundant comment, retained `// SPDX-License-Identifier: MIT`, changed no application code, reported no `MUST KILL` flag, and reported no restored comments. The final file still has `total(values)` returning the same `reduce()` expression. The coordinator read the final file and ran `node --check /private/tmp/codex-comment-sicko-fixture-20260913/src/total.js` successfully.
+At the time of this fixture, the pinned `pstack/agents/comment-sicko.md` was bundled by the mirror preview as `cursor-no-comments/references/comment-sicko-agent.md`. An existing native Codex reviewer was assigned only `disposable-scratch/codex-comment-sicko-fixture-20260913/src/total.js` and instructed to apply that role. The input contained a legal SPDX header and a redundant function-body comment. The current preview instead names the public native `comment-sicko` profile asset, without that duplicate role file.
+
+Observed output: the reviewer deleted exactly one redundant comment, retained `// SPDX-License-Identifier: MIT`, changed no application code, reported no `MUST KILL` flag, and reported no restored comments. The final file still has `total(values)` returning the same `reduce()` expression. The coordinator read the final file and ran `node --check disposable-scratch/codex-comment-sicko-fixture-20260913/src/total.js` successfully.
 
 This proves one bounded native role execution and the legal-header exception. It does not prove automatic skill trigger, Codex model selection, handling of ambiguous comments, rerun-on-rejection, architect integration, optional constraint encoding, or installation of a named agent profile.
+
+## Named native role run, 2026-09-14
+
+Sol selected `agent_type: "comment-sicko"` in the native subagent tool for a second disposable scope, `disposable-scratch/codex-no-comments-native-20260914/total.js`. The sole writable file contained an SPDX license header and `// Add the numbers.` immediately above a `reduce` sum. The named reviewer removed the redundant comment, kept the SPDX line, changed no application code, and reported one deletion, one keep and no accepted refactor flag. It identified `cursor-how` and `cursor-why` as unavailable in its own skill catalog; this example did not contain an ambiguous thin `IMPORTANT` or constraint comment that required either dependency.
+
+Sol read the final file and verified the original `reduce` expression was intact. `node --check` passed, and a runtime readback returned `total([2, 3]) === 5` and `total([]) === 0`. The coordinator accepted the one in-scope deletion. There were zero restores, reruns, architect sketches, code fixes, encodings and unenforced constraints in this simple case. The role call proves native named selection in this task, but its actual model/effort, fresh top-level profile load, first-output marker, automatic `cursor-no-comments` trigger and more complex workflow branches remain unproven. A selected role is not evidence that the held skill is installed.
+
+## Adapted-skill to named-role chain
+
+After tightening the held overlay, Sol rendered the candidate at `disposable-scratch/cursor-pstack-native-chain-preview-v2-20260914/cursor-no-comments/SKILL.md` and read it before execution. Step 1 now names native `collaboration.spawn_agent` and exact `agent_type: "comment-sicko"`; it prohibits a generic agent or role text copied into a prompt. Sol followed that step using the exposed named type for `disposable-scratch/codex-no-comments-skill-chain-20260914/total.js`, with sole file ownership assigned to the reviewer. The reviewer removed `// This sums the list.`, preserved SPDX, reported no `MUST KILL` and touched no application code or repository file. Sol read the resulting file, accepted the deletion, and passed `node --check` plus runtime readback for `total([1, 4]) === 5` and `total([]) === 0`.
+
+This is an explicit read-and-dispatch proof from the generated held skill to the native named role and coordinator-owned integration. It is still not native picker discovery, automatic skill invocation, exact profile first-output proof, model/effort metadata, or the full ambiguous-comment/constraint/architect branches. The reviewer reported no required adapted dependency for this simple scope.

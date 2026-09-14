@@ -281,7 +281,8 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertIn("cursor-control-cli", skill_markdown)
             self.assertIn("cursor-control-ui", skill_markdown)
             self.assertIn("model-capability-router", skill_markdown)
-            self.assertIn("named `poteto-agent` profile", skill_markdown)
+            self.assertIn('agent_type: "poteto-agent"', skill_markdown)
+            self.assertIn("collaboration.followup_task", skill_markdown)
             self.assertIn("Cloud-capable task environments", skill_markdown)
             self.assertIn("do not claim parity", skill_markdown)
             opening = (target / "playbooks/opening-a-pr.md").read_text()
@@ -325,7 +326,7 @@ class CursorPstackCoreTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             target = self.render_core("cursor-no-comments", Path(temporary) / "staging")
             skill_markdown = (target / "SKILL.md").read_text()
-            self.assertIn("named `comment-sicko` profile", skill_markdown)
+            self.assertIn('agent_type: "comment-sicko"', skill_markdown)
             self.assertIn("cursor-how", skill_markdown)
             self.assertIn("cursor-why", skill_markdown)
             self.assertIn("cursor-architect", skill_markdown)

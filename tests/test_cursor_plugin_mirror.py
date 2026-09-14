@@ -236,7 +236,7 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
         skill = (preview / "cursor-no-comments/SKILL.md").read_text()
-        self.assertIn("named `comment-sicko` profile", skill)
+        self.assertIn('agent_type: "comment-sicko"', skill)
         self.assertFalse(
             (preview / "cursor-no-comments/references/comment-sicko-agent.md").exists()
         )
@@ -246,6 +246,17 @@ class CursorMirrorTests(unittest.TestCase):
         ).read_text()
         self.assertIn("cursor-how", agent)
         self.assertNotIn("`Task`", skill)
+        self.assertIn('agent_type: "comment-sicko"', skill)
+        self.assertIn("collaboration.spawn_agent", skill)
+        self.assertIn("coordinator inspects the reviewer diff", skill)
+
+        poteto = (preview / "cursor-poteto-mode/SKILL.md").read_text()
+        plan = (preview / "cursor-poteto-mode/playbooks/multi-phase-plan.md").read_text()
+        self.assertIn('agent_type: "poteto-agent"', poteto)
+        self.assertIn("collaboration.followup_task", poteto)
+        self.assertIn('agent_type: "poteto-agent"', plan)
+        self.assertIn("collaboration.followup_task", plan)
+        self.assertIn("Routed workflow skills keep their own role-specific", poteto)
 
     def test_thermos_bundles_two_distinct_review_lenses(self):
         preview = self.root / "thermos-preview"

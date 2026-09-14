@@ -246,6 +246,8 @@
     {
       "name": "mirrors-cursor",
       "skills": [
+        "./skills/mirrors-cursor/cursor-architect",
+        "./skills/mirrors-cursor/cursor-arena",
         "./skills/mirrors-cursor/cursor-blast-radius",
         "./skills/mirrors-cursor/cursor-bro",
         "./skills/mirrors-cursor/cursor-check-compiler-errors",

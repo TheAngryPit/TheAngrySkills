@@ -20,7 +20,7 @@
         "local diff/test runner"
       ],
       "fallback": "If the named profile, reviewer, or required sibling skill is unavailable, report the exact gap; do not claim the accepted-finding loop ran.",
-      "availability": "public profile asset and bounded role contract present; native session selection not proven"
+      "availability": "public profile asset present; named native selection and one simple accepted-finding loop observed in this task"
     },
     "external_dependencies": [
       "model-capability-router native profile asset",
@@ -33,7 +33,7 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "The named comment-sicko profile preserves the pinned review role and returns a bounded report for coordinator review; live native selection remains unproven.",
+      "positive": "The named comment-sicko role was selected in this task, deleted one redundant comment in a disposable JS file, kept its SPDX header, and left application code intact; the coordinator verified the result.",
       "missing_tool_or_input": "Missing-capability fixture for cursor-no-comments: an unavailable named profile or sibling skill yields a specific partial result, not a completed no-comments run.",
       "error": "Error fixture for cursor-no-comments: a malformed input or failed dependency is reported explicitly and does not widen scope."
     },
@@ -50,16 +50,16 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nUse the named `comment-sicko` profile distributed by `model-capability-router` for a bounded native reviewer. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks.\n",
+  "codex_note": "## Codex runtime mapping\n\nFor Step 1, call native `collaboration.spawn_agent` with `agent_type: \"comment-sicko\"` when that exact type is exposed. The named profile is distributed by `model-capability-router`; never substitute a generic reviewer or a prompt that merely says to act as Comment Sicko. If the type is unavailable, report the gap and leave this run incomplete. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
-  "proof": "Pinned source hash plus the source-grounded `comment-sicko` TOML asset prove packaging and semantic adaptation. The profile checker proves TOML syntax, byte distribution, and explicit install behavior; native session selection and live reviewer execution remain unproven. An earlier bounded native reviewer applied the pinned role to a small JS fixture, deleted one redundant comment, preserved its SPDX header, left application code unchanged, and passed node --check; that exercise did not select the new named profile or complete the no-comments fix loop.",
+  "proof": "Pinned source hash plus the source-grounded `comment-sicko` TOML asset prove packaging and semantic adaptation. The profile checker proves TOML syntax, byte distribution, and explicit install behavior. After reading the generated held skill Step 1 with its exact native agent_type comment-sicko, Sol selected that named type on a disposable JS file; it removed one redundant comment, retained SPDX, and changed no application code. Sol accepted the diff after node syntax and runtime readback. The role's actual model/effort, fresh top-level loading, first-output marker, complex no-comments branches, and installed skill activation remain unproven. See reports/cursor-no-comments-role-fixture.md.",
   "reason": "Map the missing upstream reviewer to the public native named profile without copying the pinned Markdown role into the generated workbench.",
   "replacements": [
     {
       "file": "SKILL.md",
       "before": "Spawn `Task` with `subagent_type: \"Comment Sicko\"`. Pass the scope. Do not restate its rules.",
-      "after": "Invoke the named `comment-sicko` profile through native bounded delegation. Pass the exact scope and the profile name. Assign its writable files explicitly and keep the coordinator responsible for integration."
+      "after": "Call `collaboration.spawn_agent` with `agent_type: \"comment-sicko\"`, an exact scoped brief, and explicit writable-file ownership. Do not substitute a generic agent type or copy the role into the prompt. If the named type is unavailable, report that gap. The coordinator inspects the reviewer diff and owns accepted implementation fixes."
     },
     {
       "file": "SKILL.md",

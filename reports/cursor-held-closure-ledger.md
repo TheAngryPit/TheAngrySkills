@@ -3,13 +3,46 @@
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`.
 
-The pinned manifest contains 91 physical skills. It has 32 `publish:false`
-entries: 29 active entries below plus the three dormant Benny entries
+The pinned manifest contains 91 physical skills. It has 30 `publish:false`
+entries: 27 active entries below plus the three Benny automation entries
 (`cursor-reproduce-and-fix-issues`, `cursor-setup-benny`, and
-`cursor-triage-issue-reports`). This ledger does not count dormant Benny as
-active and does not claim 88/88 functional. “Held” means absent from the
+`cursor-triage-issue-reports`). The three Benny sources still exist upstream
+under `pstack/automations/benny`; they are installed through Benny's project
+automation setup and are outside the slash-skill catalog. The pinned manifest
+does not distribute them as ordinary slash skills. This ledger does not count
+them as active slash skills or claim 88/88 functional. “Held” means absent from the
 published catalog. Published guide-only and local-renderer surfaces are not
 silently recounted as held here.
+
+## Pstack first
+
+The 11 held pstack slash skills are the critical path before the other 16
+active held skills. Sol owns integration and the setup/poteto/no-comments/router
+link; Luna high owns bounded `architect`/`arena` execution in a separate
+checkout. Verification remains a separate Sol/Luna handoff, with its existing
+UI cleanup gate preserved. The remaining pstack skills follow in coherent
+groups without waiting for that cleanup or Work cloud permission:
+
+1. **Core selection and safe execution:** `cursor-setup-pstack`,
+   `cursor-poteto-mode`, `cursor-no-comments`. Prove native role selection,
+   companion availability, exact source routing and readback; avoid
+   unapproved persistent home changes.
+2. **User-surface proof:** `cursor-create-verification-skill` and
+   `cursor-maintain-verification-skill`. Keep the CLI input-only source-wave
+   distinct from the two native web source readers. The disposable UI run is
+   real for that target; Reset fixture still needs action-time confirmation.
+3. **Delegated reasoning and review:** `cursor-interrogate`, `cursor-reflect`. Require actual bounded role outputs,
+   synthesis/ownership and verified model metadata before claiming model
+   diversity. Luna owns the first two; Sol reviews and integrates.
+4. **Context and learning:** `cursor-recall`, `cursor-figure-it-out`,
+   `cursor-automate-me`. Require source-scoped history, a prospective real
+   case, and a reviewed project-local skill edit respectively.
+5. **External product branch:** `cursor-make-bot-ui`. Preserve the source
+   security finding and use a local mock before credentials, installer, or
+   network exposure.
+
+The other 16 held skills remain in scope after pstack and may advance on
+independent safe evidence, but they do not displace these five groups.
 
 | Skill | Exact upstream requirement | Current Codex adaptation and proof | Proof still needed | Concrete blocker | Next executable step |
 | --- | --- | --- | --- | --- | --- |
@@ -27,16 +60,14 @@ silently recounted as held here.
 | `cursor-debug-voice` | On `/debug-voice`, install dev-only client-to-local-NDJSON logs, match report to signatures, fix one issue and re-test; never audio/tokens/prod. | Local log reader/redaction adapter; missing logs or failed redaction is `INCONCLUSIVE` and write-free. | App-specific log fixture, redaction, one bounded fix/retest and no-production proof. | No current voice integration/log source has been exercised. | Provide a scoped synthetic NDJSON log and run the redaction/diagnosis fixture. |
 | `cursor-orchestrate` | Only explicit `/orchestrate <goal>` may decompose work into cloud planners/workers/verifiers with structured handoffs, state, cancellation and recovery. The pinned implementation uses Cursor SDK/scripts. | The [Work cloud contract](cursor-orchestrate-work-cloud-contract-20260914.md) maps the operator-selected ChatGPT Work destination to documented native task creation and existing list/read surfaces; local delegation and Cursor scripts are not substitutes. The source/security finding remains held. | Explicit Work root dispatch, child fan-out/drain, structured handoffs, repository artifacts, cancellation and recovery readback. | Auto-review rejected a bounded Work task creation for lack of specific user authorization; no task was created. The current available tools do not document Work child/drain/cancel/artifact parity. | Obtain approval for the exact read-only Work PR #64 proof task in the contract report; then observe task ID/result and separately prove tree/artifact/recovery operations. |
 | `cursor-pr-review-canvas-pr-review-canvas` | Render a PR diff in Cursor Canvas grouped by reviewer importance, boilerplate/core logic and tricky changes; read Canvas prerequisites first. | Local diff reader/document renderer; Canvas absence returns artifact plus parity gap. | Canvas SDK/component contract and live PR metadata/render behavior. | No Canvas primitive or pinned Canvas SDK is available. | Retain conditional local Markdown/HTML review artifact and label Canvas unavailable. |
-| `cursor-architect` | For `/architect` or non-trivial work, ground, sketch types/signatures/modules, agree across perspectives, implement, and scrap a disproven sketch. | Delegated-native bounded design delegate plus local reader; missing delegate has labeled sequential fallback. | Trigger, todolist phases, delegated design result, ownership and redesign behavior on a disposable task. | Native delegated design invocation is unobserved. | Run one bounded read-only architecture pass and retain the sketch/result handoff. |
-| `cursor-arena` | Fan out N parallel candidates, read every candidate, cross-judge, pick a base, graft strongest loser ideas, and verify. | Delegated-native candidate adapter records unavailable candidates rather than fabricating a winner. | Real N-way native fan-out, independent candidate artifacts, cross-judge/graft and verification. | Native parallel subagent capability exists, but an Arena candidate/cross-judge/graft run is unobserved; one fallback cannot establish competition. | Run a bounded two-candidate read-only arena when native fan-out is available; otherwise record sequential fallback. |
 | `cursor-automate-me` | Capture corroborated working preferences, then sequence mining, Cursor `create-skill`, and `unslop` to draft/update one `-mode` skill. | History-gated adapter defaults to project-local `.agents/skills`; fixture updates from two bounded evidence slices and preserves uncontradicted sections. | Authorized transcript scope, native skill-creator, `cursor-unslop`, user preference loop and destination writeback. | Native history and skill-creator invocation are not proven in the current host. | Use supplied bounded evidence and run a project-local draft through `cursor-unslop`, with approval before write. |
 | `cursor-create-verification-skill` | Generate `.cursor/skills/verify-<app>/` that launches the real app, drives each feature as a user, captures evidence and cleanup. | Native-write adapter maps to project-local `.agents/skills/verify-<app>/`; disposable notes CLI observes Doctor, actions, protected cleanup and evidence. A separate disposable web app was driven by CUA for create/search/reload with visual receipts. | UI cleanup, native activation and reusable-run permission proof. | The `Reset fixture` UI action that clears localStorage awaits action-time confirmation; no production target parity is claimed. | After confirmation, reset only fixture-owned browser state, inspect post-reset UI, and reconcile the generated skill/feature map. |
 | `cursor-figure-it-out` | When no narrower playbook fits, design an auditable hypothesis loop before code, scale rigor, and log decisions with show-me-your-work. | Native procedure adapter uses local reader/check runner/decision log; failed or ungrounded check blocks done. A [post-change real-case audit](cursor-figure-it-out-real-case-20260914.md) verified the held renderer mapping and bounded trail guard. | Prospective pre-change baseline, native trigger, full task phases, real product result, and independent review. | The mapping fix predates the audit; its runtime behavior cannot be proved retrospectively. | Activate on a disposable Codex project before an actual bounded change; record the hypothesis, failed branch, real-product outcome, and reviewer result. |
 | `cursor-interrogate` | Spawn one reviewer per configured model over the same scope/rubric, synthesize adversarial findings, and never auto-apply. | Delegated-native read-only reviewers with missing-reviewer accounting; no repair PR from unavailable model. | Multi-model fan-out, independent same-diff review, deduplication and synthesis. | Native multi-review behavior and model routing remain unproven. | Run two bounded read-only reviewers on one disposable diff and preserve separate reports. |
 | `cursor-maintain-verification-skill` | For every feature, read source in parallel, drive every feature live, reconcile feature map and make at most one PR of proven corrections. | CLI fixture captures Doctor, caller-provided source-wave input, drift/re-drives and cleanup. Separately, two native read-only source readers inspected create/search web features, then the coordinator re-drove both in the disposable UI and read back a clean feature map. | UI cleanup, native activation and changed-outcome PR boundary. | The UI reset awaits confirmation; no product bug was found, so a corrective PR is not indicated. | Complete the owned UI cleanup after confirmation, then preserve the clean no-PR maintenance verdict. |
 | `cursor-make-bot-ui` | Build a UI whose server POSTs untrusted JSON to a Grok Bot webhook; keep sender key server-side; optionally expose through Tailscale. | External-product/security adapter is reference-only; no webhook or installer execution. | Authorized webhook routine, sender-key handling, UI/error path and Tailscale exposure review. | Quarantine retains active `curl ...` to `sudo sh` privilege-escalation commands (source lines 89/95). | Do not execute installer; design a local mock webhook and separately review a pinned, non-privileged Tailscale path. |
-| `cursor-no-comments` | Spawn Comment Sicko on current scope/diff, inspect findings, reject bad flags, act on accepted findings, and offer constraint encodings. | Named `comment-sicko` profile asset and bounded role contract; native session selection remains conditional. | Fresh task profile selection, live reviewer output, accepted-finding application and optional constraint approval. | Named `comment-sicko` subagent selection and a bounded output were observed; fresh top-level loading, complete role compliance, and the first-output marker remain unproven. | Run an explicitly selected named reviewer on a disposable diff and capture coordinator-owned findings. |
-| `cursor-poteto-mode` | Apply Poteto style, all 23 playbooks/principles, deliberate bounded subagents, unslopped prose, simple code and verified work; no silent scope widening. | Native governed-style adapter; all 23 playbooks rendered, notes bug-fix fixture and bounded Bun/CLI/scratch checks recorded. | Live playbook application, profile loading/selection, native session, script security/egress, polling/stack and real PR behavior. | Bundled executable/dependency surface and native session/cloud parity remain unproven. | Keep unpublished; review scripts/egress, then run one explicitly selected playbook in a disposable project. |
+| `cursor-no-comments` | Spawn Comment Sicko on current scope/diff, inspect findings, reject bad flags, act on accepted findings, and offer constraint encodings. | Generated held skill was read, then its exact `agent_type: "comment-sicko"` dispatched on a disposable JS scope; reviewer deleted one redundant comment, kept SPDX, and Sol accepted after syntax/runtime readback. [Receipt](cursor-no-comments-role-fixture.md) and [chain](../docs/native-agent-profiles.md). | Fresh top-level load, exact first-output marker, ambiguous/constraint comments, rejected-report rerun, architect branch, optional encoding and automatic skill trigger. | The simplest read-and-dispatch and accepted-finding path works in this task; full source workflow and installed skill activation remain unproven. | Run a bounded ambiguous-comment/rejected-report case with conditional `cursor-how`/`cursor-why`, then verify a fresh task's named profile load. |
+| `cursor-poteto-mode` | Apply Poteto style, all 23 playbooks/principles, deliberate bounded subagents, unslopped prose, simple code and verified work; no silent scope widening. | Native adapter renders all 23 playbooks; generated skill now names exact `agent_type: "poteto-agent"` and follow-up reuse. Existing named agent was reused for a setup Investigation and reported reading full mode, selected playbook and an applied principle leaf. [Chain](../docs/native-agent-profiles.md). Notes bug-fix and Bun/CLI checks remain bounded fixtures. | Independently observed profile loading/skill read, full playbook application, script egress, polling/stack and real PR behavior. | Agent self-report of full skill read is not host tool metadata; executable/dependency and cloud parity remain unproven. | Exercise one end-to-end selected playbook with native trace and coordinator verification; retain security hold on active scripts. |
 | `cursor-recall` | Reconstruct recent context from exact chat history, live state and shared record; preserve missing exports and return a tight current-state brief. | History-gated scoped reader preserves workspace/topic/time mismatch as partial and write-free. | Exact task-history selection, live repository/shared-record reconciliation and missing-export evidence. | Native bounded history reconstruction is unobserved. | Supply a scoped export plus repository state and produce a provenance-tagged brief. |
 | `cursor-reflect` | Spawn three parallel reviewers over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. | Delegated-native judgment/tooling/divergent lenses; missing transcript/lens remains incomplete and write-free. | Three native reviewers, transcript scope, synthesis and explicit edit authorization. | Native task read tools exist; exact scoped transcript access and a three-reviewer run remain unproven. | Run three bounded read-only lenses over a supplied synthetic transcript; propose edits without applying them. |
 | `cursor-setup-pstack` | Detect available Task model slugs and write an always-applied per-role model rule, preserving explicit choices and aliases. | Native config-gated dry-run fixture covers 17 roles/four panels, aliases, malformed input and no-write behavior. [Current-channel inventory](cursor-setup-pstack-native-inventory-20260914.md) reads advertised subagent models/efforts and Sol-medium turn context, with a candidate map under the standing router. | User-owned task/Work channel entitlement, actual role dispatch, parent alias behavior, persistent destination/write and new-session readback. | The live inventory is scoped to this subagent channel; no persistent policy change was requested or tested. Installed router lacks the source's later profile-distribution section. | Use the observed inventory for a reviewed project-local role diff if the operator requests changed choices; then exercise selected roles and read back a new session before promotion. |
@@ -44,7 +75,8 @@ silently recounted as held here.
 | `cursor-ralph-loop` | Start iterative self-referential development loop with completion promise/max iterations, storing `.cursor/ralph` state and feeding prompt after each turn. | Native persistent-loop adapter arms task-bound state and returns Codex continuation in synthetic Stop tests. | Trusted project hook, live continuation, user interruption, scheduler, idempotency and completion readback. | No project hook is trusted and no live automatic continuation is observed. | Prove a bounded max-iteration loop in a disposable project with explicit hook trust and cancellation. |
 ## Newly published bounded workflows
 
-`cursor-how`, `cursor-why`, `cursor-show-me-your-work`, `cursor-thermos`, and `cursor-swarm`
+`cursor-how`, `cursor-why`, `cursor-show-me-your-work`, `cursor-thermos`,
+`cursor-swarm`, `cursor-arena`, and `cursor-architect`
 moved from this held ledger to the published catalog after their bounded
 native cases. The scope is read-only `how`/`why` execution, a bounded local TSV
 writer with an independently reviewed trail, a two-lens Thermos review with a
@@ -52,6 +84,15 @@ labeled missing-lens result, and a local-computer Swarm with a visible
 four-phase checklist and two independent workers. Automatic skill selection, other hosts,
 and guaranteed access to every evidence connector remain unproven. The `why`
 connector-security finding remains in its overlay with the review decision.
+The bounded Arena case used two isolated local design candidates, an independent
+cross-judge, a selected base and grafts, a redesign after a failed hypothesis,
+and a disposable implementation whose first drift test failed and was fixed.
+[Arena proof](pstack-architect-arena-native-20260914.md) does not establish
+automatic invocation, Work cloud, other hosts, or production behavior.
+The [Architect proof](pstack-architect-arena-native-20260914.md) records a later
+prospective Ground-before-Sketch case with how/why before two distinct designs,
+an independent judge, base/grafts and disposable runtime probes. It supports
+only bounded explicit local design publication, not production or automatic use.
 
 ## Group dependency order
 
@@ -59,8 +100,7 @@ connector-security finding remains in its overlay with the review decision.
    (with published `cursor-how`, `cursor-show-me-your-work`, and guide-only
    principles available under their documented limits).
    Establish bounded paths, evidence, and wording before orchestration.
-2. **Delegated review and style:** `cursor-advisor`, `cursor-architect`,
-   `cursor-arena`, `cursor-interrogate`, `cursor-reflect`,
+2. **Delegated review and style:** `cursor-advisor`, `cursor-interrogate`, `cursor-reflect`,
    `cursor-no-comments`, and `cursor-poteto-mode`. Prove
    native named/bounded delegation and coordinator ownership first; Poteto's
    `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` dependencies
@@ -85,7 +125,7 @@ connector-security finding remains in its overlay with the review decision.
 
 ## Remaining unavailable skills
 
-All 29 rows remain absent from the published catalog and unavailable for a
+All 27 rows remain absent from the published catalog and unavailable for a
 claimed native functional invocation until their row's proof and blocker are
 closed. The already-published guide-only principles and local PR renderer are
 outside this held count and retain their own conditional/native-parity labels.
@@ -96,21 +136,21 @@ outside this held count and retain their own conditional/native-parity labels.
 `cursor-workflow-from-chats`, `cursor-docs-canvas`, `cursor-add-dictation`,
 `cursor-add-read-aloud`, `cursor-add-voice`, `cursor-debug-voice`,
 `cursor-orchestrate`, `cursor-pr-review-canvas-pr-review-canvas`,
-`cursor-architect`, `cursor-arena`, `cursor-automate-me`,
+`cursor-automate-me`,
 `cursor-create-verification-skill`, `cursor-figure-it-out`,
 `cursor-interrogate`, `cursor-maintain-verification-skill`,
 `cursor-make-bot-ui`, `cursor-no-comments`, `cursor-poteto-mode`,
 `cursor-recall`, `cursor-reflect`, `cursor-setup-pstack`,
 `cursor-cancel-ralph`, and `cursor-ralph-loop`.
 
-The list contains exactly the 29 active `publish:false` names and excludes the
+The list contains exactly the 27 active `publish:false` names and excludes the
 three dormant Benny skills. Optional external-service branches may be
 distributed conditionally only with the local fallback,
 credential boundary, and unavailable-capability result preserved.
 
 ## Evidence checks
 
-- Manifest count: `jq` reports 91 physical skills, 32 `publish:false`, and 29
+- Manifest count: `jq` reports 91 physical skills, 30 `publish:false`, and 27
   active `publish:false` after excluding `pstack/automations/benny`.
 - Every row was reconciled against its pinned
   `sources/cursor-plugins/snapshot/**/SKILL.md`, matching overlay JSON under
@@ -119,9 +159,12 @@ credential boundary, and unavailable-capability result preserved.
 - Hook-specific boundaries and synthetic proof limits are recorded in
   `reports/cursor-native-hooks-crosswalk.md`; this ledger does not promote
   synthetic fixtures to native runtime parity.
-- After the Swarm promotion, local validation reported `pytest -q tests` 197
+- Historical PR #64 checkpoint after Swarm promotion: local validation reported `pytest -q tests` 197
   tests plus two subtests and mirror `--check` at 91 physical/59 emitted/239
   output files. Bundled Bun tests 52/52 and strict typecheck passed in scratch;
-  CI validation for published head `ab038461` completed successfully.
+  CI validation for published PR #64 head `ab038461` completed successfully.
+  The later successor branch publishes Arena and bounded Architect:
+  91 physical/61 emitted/250 output files, with PR #66 validation recorded in
+  the capability matrix.
 - No credentials, global home, fixtures, source files, or code were changed by
   this ledger pass.

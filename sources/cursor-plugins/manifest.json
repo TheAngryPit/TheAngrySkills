@@ -673,7 +673,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "ChatGPT Work cloud task creation documented but live dispatch rejected by auto-review; tree, handoff, artifact, cancel and recovery unproven",
       "baseline_classification": "não demonstrada (equivalente nativo não provado)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -764,13 +764,13 @@
       "license_path": "orchestrate/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "orchestrate/skills/orchestrate/SKILL.md",
-      "planned_adaptation": "Manter apenas como referência upstream; não disponibilizar no Codex até existir equivalente nativo, revisão de segurança e prova de comportamento.",
+      "planned_adaptation": "Mapear a orquestração explicit-only para ChatGPT Work cloud escolhido pelo operador; manter scripts/credenciais Cursor apenas como referência, sem publicar até provar criação, filhos, drain, handoffs, artefactos e recuperação nativos.",
       "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
       "publish": false,
       "published_name": "cursor-orchestrate",
       "upstream_purpose": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
       "upstream_skill": "orchestrate",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; pedido explícito de task Work; prova nativa de goal/dispatch/filhos/drain/handoffs/artefactos/cancel/recovery; security findings Cursor mantidos, sem execução dos scripts pinados"
     },
     {
       "availability": "Codex workflow not demonstrated",

@@ -32,9 +32,19 @@ before it can collide with the generated feature index. This remains
 `FIXTURE_ONLY`: Doctor only checks source file presence/non-symlink; a real
 target, per-feature source-wave delegation, changed-outcome PR, native skill
 activation, and filesystem/network isolation have not been proven.
-`pytest -q tests` passed 163 tests and 2 subtests; mirror `--check`
+The [47-skill pstack audit](pstack-47-skill-audit-20260914.md) compares the
+installed Cursor cache with the pinned snapshot and the generated Codex
+output per skill. The 47 top-level IDs match; two top-level skills and six
+nested playbooks have source-version drift, with three delegate model defaults
+different. This did not change the source pin. The audit found that the
+published technical-writing overlay incorrectly made source-required
+`unslop` optional and that the TypeScript guide used unnamespaced principle
+names. The generated output now requires `cursor-unslop`, uses the two
+published `cursor-principle-*` names, and retains `references/patterns.md`.
+These are link/contract corrections; runtime selection is still unproven.
+`pytest -q tests` passed 165 tests and 2 subtests; mirror `--check`
 passed at 91 physical, 54 emitted and 167 output files. CI last passed on
-`7d75e8cd`; the new integration head awaits publication and CI.
+`fa7025b6`; the new integration head awaits publication and CI.
 None of these fixtures proves full native runtime parity, global installation,
 or hook trust. Counts and checks below describe the earlier 53-skill baseline.
 

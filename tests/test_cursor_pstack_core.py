@@ -43,11 +43,7 @@ render_skill = _SYNC.render_skill
 
 MANIFEST = REPO / "sources/cursor-plugins/manifest.json"
 OVERLAYS = REPO / "sources/cursor-plugins/overlays"
-CORE = (
-    "cursor-poteto-mode",
-    "cursor-create-verification-skill",
-    "cursor-maintain-verification-skill",
-)
+CORE = ("cursor-poteto-mode",)
 BUGGY_NOTES_APP = """
 from pathlib import Path
 import json

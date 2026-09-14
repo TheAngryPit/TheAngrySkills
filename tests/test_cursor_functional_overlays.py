@@ -76,7 +76,10 @@ SECURITY_HOLDS = {
 PROMOTED = {
     "cursor-architect",
     "cursor-arena",
+    "cursor-create-verification-skill",
     "cursor-interrogate",
+    "cursor-maintain-verification-skill",
+    "cursor-no-comments",
     "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-principle-build-the-lever",
@@ -98,6 +101,9 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-interrogate",
     "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
+    "cursor-create-verification-skill",
+    "cursor-maintain-verification-skill",
+    "cursor-no-comments",
     "cursor-how",
     "cursor-why",
     "cursor-show-me-your-work",
@@ -184,6 +190,28 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue(contract["promotion_status"].startswith("security_hold_"))
             self.assertEqual(contract["security_review"]["scanner_verdict"], verdict)
+
+    def test_pstack_bounded_promotions_retain_explicit_gaps(self):
+        skills = {item["published_name"]: item for item in read_manifest()["skills"]}
+        expected = {
+            "cursor-create-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
+            "cursor-maintain-verification-skill": "promoted_bounded_native_explicit_only_live_target_parity_unproven",
+            "cursor-no-comments": "promoted_bounded_native_explicit_only_complex_branches_unproven",
+        }
+        for name, status in expected.items():
+            entry = skills[name]
+            overlay = json.loads((OVERLAYS / f"{name}.json").read_text())
+            self.assertTrue(entry["publish"])
+            self.assertEqual(overlay["codex_contract"]["promotion_status"], status)
+            self.assertIn("unproven", entry["availability"] + overlay["codex_note"])
+        self.assertIn(
+            "Reset fixture",
+            (REPO / "reports/pstack-verification-skills-ui-20260914.md").read_text(),
+        )
+        self.assertIn(
+            "native named role",
+            (REPO / "reports/cursor-no-comments-role-fixture.md").read_text(),
+        )
 
     def test_promoted_adapters_cover_positive_missing_and_permission_error(self):
         canvas = review_canvas_request(

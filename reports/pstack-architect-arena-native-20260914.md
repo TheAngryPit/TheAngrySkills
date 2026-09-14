@@ -163,8 +163,8 @@ pytest -q tests/test_cursor_architect_arena.py tests/test_cursor_pstack_core.py 
 ```
 
 The focused test covers exact native role strings, bounded availability,
-partial/dropout fallback, held promotion, source-path parity, explicit
-invocation-metadata wording, and a repo-owned black-box disposable app that
+partial/dropout fallback, Architect's held status, source-path parity, explicit
+invocation-metadata wording, and a repo-owned behavioral fixture that
 observes create/retry/replace/malformed-target/source-conflict results. The
 test first exposed a harness path-conflict bug, which was corrected before the
 clean rerun. The runtime drift failure above is separate and exercises the
@@ -181,8 +181,9 @@ The two overlays now map:
   cross-judge, explicit base/graft/rejection, redesign-on-failure, and
   verification.
 
-Promotion remains held. Exact `cursor-how`/`cursor-why` Phase A preview
-invocation, automatic skill triggering, exact upstream Cursor runner parity,
+Arena is published only for the bounded explicit local design path; Architect
+remains held pending its exact `cursor-how`/`cursor-why` Phase A invocation.
+Automatic skill triggering, exact upstream Cursor runner parity,
 native model/effort runtime readback, production implementation,
 crash/power-loss proof, hostile-writer semantics, and end-to-end host behavior
 remain unproven. The fixture/runtime and all local state are disposable and no

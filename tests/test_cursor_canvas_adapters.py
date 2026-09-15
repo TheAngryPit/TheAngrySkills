@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
@@ -12,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from cursor_canvas_adapters import (  # noqa: E402
     AdapterError,
     MissingCapability,
+    extract_workflow_from_chats,
     render_docs_canvas,
     render_pr_review_canvas,
 )
@@ -151,6 +153,96 @@ class CursorCanvasAdapterTests(unittest.TestCase):
             render_pr_review_canvas(self.root, "https://github.com/example/repo/pull/1")
         blocked = render_pr_review_canvas(self.root, "missing.diff", explicit=False)
         self.assertEqual(blocked["status"], "BLOCKED")
+        self.assertFalse((self.root / ".artifacts").exists())
+
+    def test_workflow_from_chats_extracts_redacted_parent_scoped_preferences(self) -> None:
+        transcript = self.root / "export.jsonl"
+        transcript.write_text(
+            '{"thread_id":"parent-1","role":"user","timestamp":"2026-09-14T10:00:00Z",'
+            '"text":"I prefer exact evidence and always cite the source file with token=secret-value."}\n'
+            '{"thread_id":"child-1","parent_thread_id":"parent-1","role":"assistant",'
+            '"timestamp":"2026-09-14T10:01:00Z","content":"Always cite the source file."}\n'
+            '{"thread_id":"parent-1","role":"user","timestamp":"2026-09-14T11:00:00Z",'
+            '"message":{"content":[{"text":"I prefer exact evidence and always cite the source file."}]}}\n'
+            '{"thread_id":"other","role":"user","timestamp":"2026-09-14T10:00:00Z",'
+            '"text":"I prefer to expose unrelated private material."}\n',
+            encoding="utf-8",
+        )
+
+        result = extract_workflow_from_chats(
+            self.root,
+            transcript,
+            parent_thread_id="parent-1",
+            now=datetime(2026, 9, 14, 12, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(result["status"], "FIXTURE_ONLY")
+        self.assertEqual(result["history_capability"], "SUPPLIED_EXPORT_ONLY")
+        self.assertEqual(result["records"], 3)
+        self.assertFalse(result["writes_performed"])
+        proposal = Path(result["artifacts"]["proposal"])
+        receipt = Path(result["artifacts"]["receipt"])
+        proposal_text = proposal.read_text(encoding="utf-8")
+        receipt_text = receipt.read_text(encoding="utf-8")
+        self.assertIn("parent-1", proposal_text)
+        self.assertIn("exact evidence", proposal_text)
+        self.assertIn("strong", proposal_text)
+        self.assertIn("<redacted>", proposal_text)
+        self.assertNotIn("secret-value", proposal_text)
+        self.assertNotIn("other", proposal_text)
+        self.assertNotIn("secret-value", receipt_text)
+        self.assertNotIn("/export.jsonl", proposal_text)
+        self.assertIn("no automatic writeback", proposal_text)
+
+    def test_workflow_from_chats_keeps_missing_history_and_bad_scope_write_free(self) -> None:
+        missing = extract_workflow_from_chats(
+            self.root,
+            None,
+            parent_thread_id="parent-1",
+        )
+        self.assertEqual(missing["status"], "PARTIAL")
+        self.assertFalse(missing["writes_performed"])
+        self.assertFalse((self.root / ".artifacts").exists())
+
+        transcript = self.root / "empty-window.jsonl"
+        transcript.write_text(
+            '{"thread_id":"parent-1","role":"user","timestamp":"2020-01-01T00:00:00Z",'
+            '"text":"I prefer exact evidence."}\n',
+            encoding="utf-8",
+        )
+        no_records = extract_workflow_from_chats(
+            self.root,
+            transcript,
+            parent_thread_id="parent-1",
+            now=datetime(2026, 9, 14, tzinfo=timezone.utc),
+        )
+        self.assertEqual(no_records["status"], "PARTIAL")
+        self.assertFalse((self.root / ".artifacts").exists())
+
+        malformed = self.root / "malformed.jsonl"
+        malformed.write_text("not-json\n", encoding="utf-8")
+        with self.assertRaisesRegex(AdapterError, "valid JSON"):
+            extract_workflow_from_chats(
+                self.root,
+                malformed,
+                parent_thread_id="parent-1",
+            )
+        self.assertFalse((self.root / ".artifacts").exists())
+
+    def test_workflow_from_chats_blocks_implicit_and_remote_history(self) -> None:
+        blocked = extract_workflow_from_chats(
+            self.root,
+            "export.jsonl",
+            parent_thread_id="parent-1",
+            explicit=False,
+        )
+        self.assertEqual(blocked["status"], "BLOCKED")
+        remote = extract_workflow_from_chats(
+            self.root,
+            "https://example.test/export.jsonl",
+            parent_thread_id="parent-1",
+        )
+        self.assertEqual(remote["status"], "PARTIAL")
         self.assertFalse((self.root / ".artifacts").exists())
 
 

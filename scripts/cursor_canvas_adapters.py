@@ -10,17 +10,22 @@ network, install anything, or claim Canvas SDK parity.
 from __future__ import annotations
 
 import html
+import json
 import os
 import re
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Mapping, Sequence
 from urllib.parse import quote, urlsplit
 
 
 MAX_DOCUMENTS = 32
 MAX_DOCUMENT_BYTES = 256_000
 MAX_DIFF_BYTES = 512_000
+MAX_TRANSCRIPT_BYTES = 512_000
+MAX_TRANSCRIPT_RECORDS = 256
+MAX_PREFERENCE_ATOMS = 64
 DEFAULT_DOCS_OUTPUT = ".artifacts/cursor-docs-canvas"
 DEFAULT_REVIEW_OUTPUT = ".artifacts/cursor-pr-review-canvas"
 CANVAS_GAP = (
@@ -160,6 +165,154 @@ def _read_text(path: Path, maximum: int, label: str) -> str:
     if not text.strip():
         raise AdapterError(f"{label} must contain non-empty text")
     return text
+
+
+_PREFERENCE_MARKER = re.compile(
+    r"\b(?:i\s+(?:prefer|want|need)|always|never|please|do\s+not|don't|stop|keep|require|avoid|preserve|make\s+sure)\b",
+    re.IGNORECASE,
+)
+_SECRET_VALUE = re.compile(
+    r"(?i)\b(api[_ -]?key|access[_ -]?token|auth(?:orization)?|bearer|password|passwd|secret|token)\b\s*[:=]\s*[^\s,;]+"
+)
+_TOKEN_VALUE = re.compile(r"\b(?:sk-[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{12,})\b")
+_PRIVATE_PATH = re.compile(r"(?:(?:/Users|/private|/Volumes)/[^\s)`\]>,;]+|~/(?:[^\s)`\]>,;]+))")
+_PRIVATE_CONTACT = re.compile(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b")
+
+
+def _redact_preference_text(value: str) -> str:
+    """Keep preference evidence useful without copying private transcript text."""
+
+    redacted = _SECRET_VALUE.sub(lambda match: f"{match.group(1)}: <redacted>", value)
+    redacted = _TOKEN_VALUE.sub("<redacted>", redacted)
+    redacted = _PRIVATE_PATH.sub("<path>", redacted)
+    redacted = _PRIVATE_CONTACT.sub("<private-contact>", redacted)
+    redacted = re.sub(r"\s+", " ", redacted).strip()
+    if any(ord(char) < 32 for char in redacted):
+        raise AdapterError("transcript evidence contains control characters")
+    return redacted
+
+
+def _transcript_message(record: Mapping[str, Any]) -> str:
+    """Extract text from common JSONL message shapes without accepting paths."""
+
+    value: Any = record.get("text", record.get("content", record.get("message", "")))
+    if isinstance(value, Mapping):
+        value = value.get("text", value.get("content", ""))
+    if isinstance(value, list):
+        parts: list[str] = []
+        for item in value:
+            if isinstance(item, Mapping) and isinstance(item.get("text"), str):
+                parts.append(item["text"])
+            elif isinstance(item, str):
+                parts.append(item)
+        value = "\n".join(parts)
+    if not isinstance(value, str):
+        raise AdapterError("transcript record text must be text or content blocks")
+    return value
+
+
+def _transcript_timestamp(record: Mapping[str, Any]) -> datetime:
+    value = record.get("timestamp", record.get("created_at"))
+    if not isinstance(value, str) or not value.strip():
+        raise AdapterError("transcript records need an ISO timestamp")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise AdapterError("transcript timestamp must be ISO-8601") from exc
+    if parsed.tzinfo is None:
+        raise AdapterError("transcript timestamp must include a timezone")
+    return parsed.astimezone(timezone.utc)
+
+
+def _load_scoped_transcript(
+    root: Path,
+    source: str | Path,
+    parent_thread_id: str,
+    *,
+    window_days: int,
+    now: datetime,
+) -> tuple[tuple[dict[str, Any], ...], tuple[str, ...]]:
+    if not isinstance(parent_thread_id, str) or not parent_thread_id.strip():
+        raise AdapterError("parent_thread_id must be a non-empty identifier")
+    _validate_limit(window_days, "window_days", 30)
+    source_path = _resolve_input(root, source, "transcript input")
+    text = _read_text(source_path, MAX_TRANSCRIPT_BYTES, "transcript input")
+    records: list[dict[str, Any]] = []
+    for line_number, line in enumerate(text.splitlines(), 1):
+        if not line.strip():
+            continue
+        if len(records) >= MAX_TRANSCRIPT_RECORDS:
+            raise AdapterError("transcript input exceeds the bounded record limit")
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise AdapterError(f"transcript record {line_number} is not valid JSON") from exc
+        if not isinstance(record, dict):
+            raise AdapterError(f"transcript record {line_number} must be an object")
+        thread_id = record.get("thread_id")
+        child_parent = record.get("parent_thread_id")
+        if thread_id == parent_thread_id:
+            scope = "parent"
+        elif child_parent == parent_thread_id and thread_id and thread_id != parent_thread_id:
+            scope = "subagent"
+        else:
+            continue
+        timestamp = _transcript_timestamp(record)
+        if not (now - timedelta(days=window_days) <= timestamp <= now):
+            continue
+        message = _transcript_message(record)
+        if not message.strip():
+            continue
+        records.append({
+            "scope": scope,
+            "role": record.get("role", "unknown"),
+            "timestamp": timestamp,
+            "message": message,
+        })
+    if not records:
+        return (), ()
+    dates = tuple(sorted({item["timestamp"].date().isoformat() for item in records}))
+    return tuple(records), dates
+
+
+def _preference_atoms(records: Sequence[Mapping[str, Any]]) -> tuple[dict[str, Any], ...]:
+    evidence: dict[str, dict[str, Any]] = {}
+    for record in records:
+        scope = str(record["scope"])
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", str(record["message"])):
+            if not _PREFERENCE_MARKER.search(sentence):
+                continue
+            atom = _redact_preference_text(sentence)
+            if not atom:
+                continue
+            if len(atom) > 180:
+                atom = atom[:177].rstrip() + "..."
+            key = re.sub(r"\s+(?:with\s+)?(?:api[_ -]?key|access[_ -]?token|authorization|bearer|password|passwd|secret|token):\s*<redacted>", "", atom.casefold())
+            key = re.sub(r"\s+", " ", key).strip().rstrip(".!?")
+            entry = evidence.setdefault(key, {"text": atom, "parent": 0, "subagent": 0})
+            entry[scope] += 1
+    atoms: list[dict[str, Any]] = []
+    for entry in evidence.values():
+        parent_count = int(entry["parent"])
+        subagent_count = int(entry["subagent"])
+        total = parent_count + subagent_count
+        if parent_count >= 2:
+            confidence = "strong"
+        elif parent_count and subagent_count:
+            confidence = "medium"
+        else:
+            confidence = "weak"
+        atoms.append({
+            "text": entry["text"],
+            "confidence": confidence,
+            "parent_evidence": parent_count,
+            "subagent_evidence": subagent_count,
+            "evidence_count": total,
+        })
+    atoms.sort(key=lambda item: (-item["evidence_count"], item["text"].casefold()))
+    if len(atoms) > MAX_PREFERENCE_ATOMS:
+        raise AdapterError("transcript input produces too many preference atoms")
+    return tuple(atoms)
 
 
 def _heading_lines(text: str) -> tuple[tuple[int, str], ...]:
@@ -675,10 +828,166 @@ def render_pr_review_canvas(
     }
 
 
+def _validate_thread_identifier(value: str, label: str) -> str:
+    if not isinstance(value, str) or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}", value) is None:
+        raise AdapterError(f"{label} must be a bounded identifier without path separators")
+    return value
+
+
+def _workflow_markdown(
+    parent_thread_id: str,
+    records: Sequence[Mapping[str, Any]],
+    dates: Sequence[str],
+    atoms: Sequence[Mapping[str, Any]],
+    window_days: int,
+) -> str:
+    parent_count = sum(1 for record in records if record["scope"] == "parent")
+    subagent_count = sum(1 for record in records if record["scope"] == "subagent")
+    lines = [
+        "# Workflow from chats proposal",
+        "",
+        "> This is a redacted, project-local proposal from an explicitly supplied transcript export.",
+        "> It does not write a skill, rule, memory, or global setting and does not claim native history access.",
+        "",
+        "## Evidence scope",
+        "",
+        f"- Parent record: `{parent_thread_id}`",
+        f"- Window: last `{window_days}` days; observed dates: `{', '.join(dates)}`",
+        f"- Records: `{parent_count}` parent, `{subagent_count}` subagent evidence",
+        "- Subagent text contributes evidence only; citations identify the parent record.",
+        "- Transcript paths, credentials, contacts, and raw chat excerpts are omitted or redacted.",
+        "",
+        "## Preference profile",
+        "",
+    ]
+    if not atoms:
+        lines.append("No preference atom met the extraction markers in the selected window.")
+    else:
+        for atom in atoms:
+            text = str(atom["text"]).replace("`", "'").replace("[", "(").replace("]", ")")
+            lines.append(
+                f"- **{atom['confidence']}** {text} "
+                f"(parent evidence: {atom['parent_evidence']}; subagent evidence: {atom['subagent_evidence']})"
+            )
+    lines += [
+        "",
+        "## Proposed artifact",
+        "",
+        "Draft one project-local skill, rule, or workflow document only after the operator reviews the profile.",
+        "The proposal is traceable to the parent record above; no automatic writeback is performed.",
+        "",
+        "## Current gaps",
+        "",
+        "- Native scoped task-history acquisition is unavailable in this session; the export was supplied explicitly.",
+        "- Automatic skill selection, durable artifact approval, and global writeback remain unproven.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def extract_workflow_from_chats(
+    project_root: str | Path,
+    transcript_source: str | Path | None,
+    *,
+    parent_thread_id: str,
+    output: str | Path = ".artifacts/cursor-workflow-from-chats",
+    window_days: int = 7,
+    now: datetime | None = None,
+    explicit: bool = True,
+) -> dict[str, object]:
+    """Extract redacted preference atoms from one explicitly scoped JSONL export.
+
+    The native Codex history reader is not assumed. A supplied local export is
+    accepted only inside the selected project root; the result is a proposal
+    artifact and never a durable skill or global preference write.
+    """
+
+    if not explicit:
+        return _blocked_result("this held workflow is explicit-only")
+    parent_thread_id = _validate_thread_identifier(parent_thread_id, "parent_thread_id")
+    if transcript_source is None:
+        return {
+            "status": "PARTIAL",
+            "reason": "native scoped task-history reader is unavailable; supply one exact local export",
+            "history_capability": "UNAVAILABLE",
+            "writes_performed": False,
+            "external_writes": False,
+        }
+    if isinstance(transcript_source, str) and re.match(r"^https?://", transcript_source):
+        return {
+            "status": "PARTIAL",
+            "reason": "remote transcript acquisition is unavailable; supply a project-local export",
+            "history_capability": "UNAVAILABLE",
+            "writes_performed": False,
+            "external_writes": False,
+        }
+    root = _project_root(project_root)
+    records, dates = _load_scoped_transcript(
+        root,
+        transcript_source,
+        parent_thread_id,
+        window_days=window_days,
+        now=(now or datetime.now(timezone.utc)).astimezone(timezone.utc),
+    )
+    if not records:
+        return {
+            "status": "PARTIAL",
+            "reason": "no matching parent or child records in the bounded window",
+            "history_capability": "SUPPLIED_EXPORT_ONLY",
+            "writes_performed": False,
+            "external_writes": False,
+        }
+    atoms = _preference_atoms(records)
+    output_dir = _safe_output(root, output)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_components(root, output_dir.relative_to(root))
+    proposal_path = output_dir / "proposal.md"
+    receipt_path = output_dir / "receipt.json"
+    for path in (proposal_path, receipt_path):
+        _reject_symlink_components(root, path.relative_to(root))
+        if path.exists() and not path.is_file():
+            raise AdapterError("workflow proposal target must be a regular file")
+    proposal_path.write_text(
+        _workflow_markdown(parent_thread_id, records, dates, atoms, window_days),
+        encoding="utf-8",
+    )
+    receipt_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "parent_thread_id": parent_thread_id,
+                "window_days": window_days,
+                "observed_dates": list(dates),
+                "parent_records": sum(1 for record in records if record["scope"] == "parent"),
+                "subagent_records": sum(1 for record in records if record["scope"] == "subagent"),
+                "atoms": list(atoms),
+                "history_capability": "SUPPLIED_EXPORT_ONLY",
+                "writes_performed": False,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "status": "FIXTURE_ONLY",
+        "history_capability": "SUPPLIED_EXPORT_ONLY",
+        "parent_thread_id": parent_thread_id,
+        "records": len(records),
+        "preference_atoms": len(atoms),
+        "artifacts": {"proposal": str(proposal_path), "receipt": str(receipt_path)},
+        "writes_performed": False,
+        "external_writes": False,
+        "policy": "explicit-only; redacted proposal; no durable writeback",
+    }
+
+
 # Names that make the fallback easy to discover without coupling callers to
 # the word "Canvas" as an implementation claim.
 render_docs_artifact = render_docs_canvas
 render_pr_review_artifact = render_pr_review_canvas
+workflow_from_chats = extract_workflow_from_chats
 
 
 __all__ = [
@@ -689,4 +998,6 @@ __all__ = [
     "render_docs_artifact",
     "render_pr_review_canvas",
     "render_pr_review_artifact",
+    "extract_workflow_from_chats",
+    "workflow_from_chats",
 ]

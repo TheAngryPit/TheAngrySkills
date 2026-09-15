@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "work-cloud-gated",
+    "adapter_mode": "codex-cloud-cli-coordinator",
     "name_mapping": {
       "upstream_skill": "orchestrate",
       "published_name": "cursor-orchestrate",
@@ -10,37 +10,39 @@
     "preserved_semantics": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
     "native_mapping": {
       "capabilities": [
-        "explicit ChatGPT Work cloud task creation when a new task is requested",
-        "native task list and readback",
-        "bounded local plan and handoff validation"
+        "bounded coordinator-owned dependency graph",
+        "documented Codex Cloud task creation with codex cloud exec",
+        "read-only task discovery, status and diff readback",
+        "separately authorized cloud diff application"
       ],
       "required_tools": [
-        "documented Work cloud task creation",
-        "Work-compatible terminal status and handoff readback",
-        "observed child dispatch, cancellation, recovery and artifact identity for full tree parity"
+        "Codex CLI cloud commands",
+        "one configured Codex Cloud environment ID"
       ],
-      "fallback": "When Work cloud dispatch or readback is unavailable, return a labeled unavailability and a reviewable plan; never present local delegates or Cursor SDK execution as Work cloud orchestration.",
-      "availability": "work_cloud_creation_request_accepted_with_client_id_only; definitive_task_identity_result_tree_handoff_artifact_cancel_recover_unproven"
+      "optional_tools": [
+        "codex cloud apply after separate authorization"
+      ],
+      "fallback": "Without a concrete environment ID, return ENVIRONMENT_REQUIRED and the validated plan; dispatch no tasks and do not retry the historical ChatGPT Work request.",
+      "availability": "Codex CLI 0.154.0 exposes exec/list/status/diff/apply; local list returned zero tasks and the environment selector exposed no concrete ENV_ID, so live dispatch remains environment-blocked"
     },
     "external_dependencies": [
-      "Native ChatGPT Work cloud task API and explicit new-task request for the selected destination",
-      "Work-compatible child, status, handoff, artifact and recovery surface not yet observed",
-      "Cursor SDK/API and CURSOR_API_KEY remain upstream-only dependencies, not the selected Work route",
-      "Slack and Git/PR publication remain separate upstream side effects"
+      "a configured Codex Cloud environment selected by exact environment ID",
+      "same-account Codex CLI authentication already present on the host",
+      "repository and branch available to the selected cloud environment"
     ],
     "permission_gates": [
-      "Preserve explicit-only invocation and verbatim user goal; create a user-owned Work cloud task only when the operator explicitly requests that new task and destination.",
-      "Do not execute bundled Cursor scripts, request CURSOR_API_KEY, or substitute local subagents for selected Work cloud workers.",
-      "A plan-only result is labeled as unavailable Work execution, not a completed orchestration.",
-      "Contact Slack, push, merge, or publish only when separately authorized and proven.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "Invoke only for an explicit `/orchestrate <goal>` request and preserve the user goal.",
+      "Cloud task creation requires out-of-band authorization plus an exact environment ID and branch.",
+      "Apply requires separate authorization after the task diff is inspected.",
+      "Do not execute the upstream Cursor runtime, install Bun dependencies, read credentials, contact Slack, or publish Git changes through this adapter.",
+      "Stop means dispatch no further tasks; the documented CLI exposes no cancellation command."
     ],
     "behavioral_proof": {
-      "positive": "The authorized projectless Work creation request returned a provisional clientThreadId; definitive thread identity, result, and all orchestration behavior remain unobserved.",
-      "missing_tool_or_input": "A provisional clientThreadId without a definitive threadId or working discovery/readback surface pauses proof without retry, local substitution, or a completion claim.",
-      "error": "Blocked discovery preserves the provisional client ID and unknown execution state; duplicate creation, guessed wait, cancellation, archive substitution, and merge remain prohibited."
+      "positive": "Focused tests prove bounded DAG validation, dependency-ready batching, exact shell-free Codex Cloud argv construction, documented list JSON parsing, structured handoff reconciliation, and separate apply authorization.",
+      "missing_tool_or_input": "Local Codex CLI readback returned zero cloud tasks and the environment selector showed only All Environments, with no concrete ENV_ID; live task dispatch and runtime handoff behavior remain unproved.",
+      "error": "Private-data markers, unsafe CLI identifiers, malformed task readback, graph cycles, unknown dependencies, excess children, unauthorized dispatch, and unauthorized apply fail closed before execution."
     },
-    "promotion_status": "held_after_provisional_work_acceptance_discovery_unavailable",
+    "promotion_status": "promoted_conditional_native_codex_cloud_adapter_environment_required",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "orchestrate/README.md",
@@ -49,8 +51,8 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained_contextual_hold",
-      "decision": "Hold. Keep the bundled runtime external and require a separate code/security review before admission. Hold with the bundled runtime; do not install dependencies from this mirror. Hold until the command boundary, environment allowlist, timeout, and cleanup receive separate review. Retain the finding as contextual/defensive, but hold the bundled runtime until the policy test and implementation are reviewed together. Retain the scanner finding and hold the bundled Slack adapter pending external-egress and side-effect review.",
+      "status": "retained_upstream_findings_excluded_from_published_bundle",
+      "decision": "Retain every pinned upstream finding as provenance. Publish only source frontmatter, the rewritten Codex-native body, and the reviewed Python adapter; exclude all upstream prompts, references, schemas, TypeScript/Bun scripts, dependencies, measurement shell execution, Slack code, and credential paths.",
       "findings": [
         {
           "rule_id": "bundled-script-review",
@@ -113,12 +115,28 @@
       ]
     }
   },
-  "codex_note": "## Codex Work cloud mapping and security hold\n\nThe operator selected ChatGPT Work cloud and explicitly authorized one projectless synthetic proof with two records and at most one child. Native creation was called exactly once and returned provisional client ID `local-chatgpt:a146a047-7138-4d84-ba2b-6e7d6824e555`, but no definitive `threadId`, host, result, child, handoff, artifact, cancellation or recovery became observable. Task listing first found no match and then blocked; pending calls were cancelled and creation was not retried. Work execution state remains unknown after provisional acceptance. Read reports/cursor-orchestrate-local-proof-20260915.md before any future reconciliation. Preserve the client ID and do not create another task unless the existing request is first proved to have failed without creating one. Local subagents and Cursor SDK scripts are not Work cloud parity. Keep the bundled upstream runtime external and retain all scanner findings.\n",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_orchestrate_adapters.py",
+      "target_path": "scripts/cursor_orchestrate_adapters.py"
+    }
+  ],
+  "codex_native_body": "# Native Codex Cloud orchestration\n\nUse this mirror only when the user explicitly invokes `/orchestrate <goal>`. Preserve the goal, decompose it into a bounded coordinator-owned dependency graph, and use native Codex Cloud tasks when an exact environment is configured and creation is authorized.\n\n## Workflow\n\n1. Validate the goal and task graph with `prepare_local_plan`. Keep exactly one planner, no cycles or unknown dependencies, and at most eight children.\n2. Ask the native CLI for available tasks and environments using read-only `codex cloud list --json` or the interactive environment selector. An `All Environments` selector is not a usable environment ID.\n3. When the operator has authorized cloud task creation and selected the exact environment and branch, call `build_codex_cloud_dispatch_batch`. It returns shell-free argument tuples for `codex cloud exec --env ENV_ID --attempts 1 --branch BRANCH QUERY`; the adapter never executes them.\n4. Submit only dependency-ready tasks. Drain them with documented `codex cloud list --json`, `codex cloud status TASK_ID`, and `codex cloud diff TASK_ID`, then validate structured handoffs and artifact identities before marking dependencies complete.\n5. Applying a cloud diff is a separate mutation. Build `codex cloud apply TASK_ID --attempt ATTEMPT` only after separate authorization.\n6. The native CLI documents no cancellation command. To stop a run, dispatch no further tasks, preserve the last confirmed task identities and status, and report cancellation as unavailable.\n\n## Boundaries\n\nCodex Cloud coordination preserves the requested planner/worker/verifier intent without reproducing Cursor's private internal agent tree. Keep the pinned upstream `blocked_malicious` findings as provenance. Do not publish or execute the upstream TypeScript/Bun runtime, dependency manifest, measurement shell boundary, Slack adapter, or credential paths. Do not treat the earlier provisional ChatGPT Work client ID as a Codex Cloud task or create a duplicate Work task. If there is no concrete `ENV_ID`, return `ENVIRONMENT_REQUIRED` with the validated plan and do not dispatch.\n",
+  "codex_note": "## Codex Cloud mapping and retained historical Work state\n\nThe native path uses the documented `codex cloud` CLI with a coordinator-owned dependency graph. Local readback on 2026-09-15 returned zero tasks and no concrete environment ID, so live dispatch was not attempted. The earlier ChatGPT Work request remains a separate historical provisional client ID with unknown state; do not retry it or treat it as Codex Cloud proof. See `reports/cursor-orchestrate-codex-cloud-closure-20260915.md`.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
-  "proof": "Pinned source hash and deterministic build are static provenance. Root-local fan-out/drain and the local plan/handoff validator are separate evidence. The one authorized Work creation request returned only a provisional clientThreadId; discovery then became unavailable, so Work execution, tree, handoff, artifact, cancellation and recovery remain unproven.",
-  "reason": "Keep local native orchestration evidence separate from the selected Work path. Record provisional Work request acceptance without treating it as definitive task creation or runtime parity.",
-  "replacements": [],
+  "proof": "Pinned source hash and deterministic generation prove provenance. Focused tests prove the bounded native Codex Cloud planning, dispatch-command, readback-parser, handoff, and apply-authorization contracts. Local CLI discovery proves the command surface exists and that no usable environment ID is currently configured; live cloud execution remains unproved.",
+  "reason": "Preserve explicit-only orchestration semantics through documented Codex Cloud commands while excluding the unsafe upstream runtime and removing literal Cursor internal-tree parity as an admission requirement.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "description: Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
+      "after": "description: \"Use only when the user explicitly types `/orchestrate <goal>` to coordinate a bounded dependency graph through native Codex Cloud tasks; requires an exact configured environment and authorization for task creation.\""
+    }
+  ],
   "source_path": "orchestrate/skills/orchestrate/SKILL.md",
-  "source_sha256": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22"
+  "source_sha256": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22",
+  "retained_source_files": [
+    "SKILL.md"
+  ]
 }

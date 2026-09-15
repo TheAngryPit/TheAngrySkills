@@ -31,6 +31,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_plugin_scaffold_fixture.py",
             "scripts/cursor_plugin_scanner_adapters.py",
             "scripts/cursor_sdk_native_adapter.py",
+            "scripts/cursor_orchestrate_adapters.py",
             "scripts/cursor_bot_ui_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
@@ -119,7 +120,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
-        self.assertEqual(state["candidate_not_published"], 1)
+        self.assertEqual(state["candidate_not_published"], 0)
         self.assertEqual(state["operator_excluded_skills"], 8)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))

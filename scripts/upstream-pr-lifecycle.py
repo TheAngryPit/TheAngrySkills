@@ -27,7 +27,7 @@ def codex_request_marker(family: str, batch: str, source_head: str) -> str:
     return f"<!-- {CODEX_HANDOFF_PREFIX}:family={family}:batch={batch}:head={source_head} -->"
 
 
-def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str) -> list[dict[str, Any]]:
+def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> list[dict[str, Any]]:
     """Return PRs with the exact family/batch marker and refs.
 
     A marker in a similarly named PR or a PR on another base/head is not a
@@ -40,12 +40,17 @@ def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, 
         if needle in (pr.get("body") or "")
         and pr.get("baseRefName") == base
         and pr.get("headRefName") == head
+        and pr.get("headRepoFullName") == head_repo
     ]
 
 
-def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str) -> dict[str, Any]:
+def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> dict[str, Any]:
     needle = family_batch_marker(family, batch)
-    marked = [pr for pr in prs if needle in (pr.get("body") or "")]
+    marked = [
+        pr for pr in prs
+        if needle in (pr.get("body") or "")
+        and pr.get("headRepoFullName") == head_repo
+    ]
     if len(marked) > 1:
         numbers = [str(pr.get("number", "?")) for pr in marked]
         raise ValueError(f"multiple open PRs match {family}:{batch} ({', '.join(numbers)}); aborting")
@@ -81,8 +86,10 @@ def normalize_prs(payload: Any) -> list[dict[str, Any]]:
             raise ValueError("open PR response contains a non-object")
         base_object = pr.get("base") if isinstance(pr.get("base"), dict) else {}
         head_object = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+        head_repo_object = head_object.get("repo") if isinstance(head_object.get("repo"), dict) else {}
         base = pr.get("baseRefName") or base_object.get("ref")
         head = pr.get("headRefName") or head_object.get("ref")
+        head_repo = pr.get("headRepoFullName") or head_repo_object.get("full_name")
         if not isinstance(base, str) or not isinstance(head, str):
             raise ValueError("open PR response is missing base/head refs")
         normalized.append({
@@ -90,6 +97,7 @@ def normalize_prs(payload: Any) -> list[dict[str, Any]]:
             "body": pr.get("body") or "",
             "baseRefName": base,
             "headRefName": head,
+            "headRepoFullName": head_repo if isinstance(head_repo, str) else "",
         })
     return normalized
 
@@ -202,6 +210,7 @@ def main() -> int:
     select.add_argument("--batch", required=True)
     select.add_argument("--base", required=True)
     select.add_argument("--head", required=True)
+    select.add_argument("--head-repo", required=True)
     select.add_argument("--prs-json", help="JSON array of open PRs; stdin when omitted")
     codex = subparsers.add_parser("request-present")
     codex.add_argument("--report-json", required=True)
@@ -223,7 +232,7 @@ def main() -> int:
     if args.command == "select":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
         try:
-            result = select_pr(json.loads(raw or "[]"), args.family, args.batch, args.base, args.head)
+            result = select_pr(json.loads(raw or "[]"), args.family, args.batch, args.base, args.head, args.head_repo)
         except (ValueError, json.JSONDecodeError) as error:
             print(str(error), file=sys.stderr)
             return 2

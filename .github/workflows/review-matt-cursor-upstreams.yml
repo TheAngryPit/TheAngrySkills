@@ -46,6 +46,23 @@ jobs:
             echo "upstream detector failed with status $status" >&2
             exit "$status"
           fi
+          python - "$RUNNER_TEMP/upstream-detection.json" "$status" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          document = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if document.get("schema_version") != 1 or not isinstance(document.get("reports"), list):
+              raise SystemExit("detector output has an invalid schema")
+          required = {"family", "batch", "changed", "latest"}
+          if not all(isinstance(report, dict) and required <= report.keys() for report in document["reports"]):
+              raise SystemExit("detector output contains an invalid report")
+          expected_status = 1 if document.get("changed") is True else 0
+          if int(sys.argv[2]) != expected_status:
+              raise SystemExit(
+                  f"detector status/output mismatch: status={sys.argv[2]} changed={document.get('changed')!r}"
+              )
+          PY
 
       - name: Create or update one review PR per family and batch
         env:
@@ -91,7 +108,8 @@ jobs:
               --family "$family" \
               --batch "$batch" \
               --base main \
-              --head "$branch" < "$RUNNER_TEMP/open-prs.json")"
+              --head "$branch" \
+              --head-repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/open-prs.json")"
             action="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["action"])' "$selection")"
 
             # Resolve the PR identity before switching branches or making any

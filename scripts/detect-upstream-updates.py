@@ -600,6 +600,6 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (ValueError, OSError, subprocess.CalledProcessError) as error:
+    except (ValueError, RuntimeError, OSError, subprocess.CalledProcessError) as error:
         print(f"upstream detector: {error}", file=sys.stderr)
         raise SystemExit(2)

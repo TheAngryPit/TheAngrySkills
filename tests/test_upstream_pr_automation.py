@@ -2,6 +2,7 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -307,23 +308,25 @@ def test_cursor_symlink_requires_manual_inspection(tmp_path):
 
 def test_lifecycle_fails_closed_for_duplicates_and_ref_mismatch():
     prs = [
-        {"number": 10, "body": lifecycle.family_batch_marker("matt", "adapted"), "baseRefName": "main", "headRefName": "automation/upstream-matt-adapted"},
+        {"number": 10, "body": lifecycle.family_batch_marker("matt", "adapted"), "baseRefName": "main", "headRefName": "automation/upstream-matt-adapted", "headRepoFullName": "owner/repo"},
     ]
-    assert lifecycle.select_pr(prs, "matt", "adapted", "main", "automation/upstream-matt-adapted") == {"action": "update", "number": 10}
+    assert lifecycle.select_pr(prs, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo") == {"action": "update", "number": 10}
     duplicate = prs + [{**prs[0], "number": 11}]
     try:
-        lifecycle.select_pr(duplicate, "matt", "adapted", "main", "automation/upstream-matt-adapted")
+        lifecycle.select_pr(duplicate, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo")
     except ValueError as error:
         assert "multiple open PRs" in str(error)
     else:
         raise AssertionError("duplicate PR marker was accepted")
     mismatched = [{**prs[0], "headRefName": "someone-else"}]
     try:
-        lifecycle.select_pr(mismatched, "matt", "adapted", "main", "automation/upstream-matt-adapted")
+        lifecycle.select_pr(mismatched, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo")
     except ValueError as error:
         assert "unexpected refs" in str(error)
     else:
         raise AssertionError("mismatched PR refs were accepted")
+    fork_spoof = [{**prs[0], "headRepoFullName": "attacker/fork"}]
+    assert lifecycle.select_pr(fork_spoof, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo") == {"action": "create", "number": None}
 
 
 def test_pr_body_keeps_bounded_codex_request_and_no_promotion():
@@ -360,12 +363,12 @@ def test_codex_request_marker_dedup_and_rendered_comment():
 
 def test_normalize_paginated_pr_refs_before_selection():
     payload = [
-        [{"number": 10, "body": "a", "base": {"ref": "main"}, "head": {"ref": "automation/a"}}],
-        [{"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b"}],
+        [{"number": 10, "body": "a", "base": {"ref": "main"}, "head": {"ref": "automation/a", "repo": {"full_name": "owner/repo"}}}],
+        [{"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b", "headRepoFullName": "owner/repo"}],
     ]
     assert lifecycle.normalize_prs(payload) == [
-        {"number": 10, "body": "a", "baseRefName": "main", "headRefName": "automation/a"},
-        {"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b"},
+        {"number": 10, "body": "a", "baseRefName": "main", "headRefName": "automation/a", "headRepoFullName": "owner/repo"},
+        {"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b", "headRepoFullName": "owner/repo"},
     ]
     assert lifecycle.normalize_comments([[{"id": 1, "user": {"login": "a"}, "body": "old"}], [{"id": 2, "user": {"login": "b"}, "body": "new"}]]) == [
         {"id": 1, "author": "a", "body": "old"},
@@ -382,6 +385,23 @@ def test_upstream_paths_are_inert_in_report_markdown():
     assert "name`" not in rendered
     assert "\\u0060" in rendered
     assert "&lt;script&gt;" in rendered
+
+
+def test_detector_operational_runtime_error_exits_above_drift_status(tmp_path):
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/detect-upstream-updates.py"),
+            "--family", "matt",
+            "--upstream", f"matt={tmp_path / 'missing-checkout'}",
+            "--report-dir", str(tmp_path / "reports"),
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 2
+    assert "upstream detector:" in result.stderr
 
 
 def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
@@ -413,6 +433,8 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert workflow.count("gh api --paginate --slurp") == 3
     assert workflow.count("normalize-comments") == 2
     assert workflow.rfind("normalize-comments") > first_comment
+    assert "detector status/output mismatch" in workflow
+    assert '--head-repo "$GITHUB_REPOSITORY"' in workflow
     legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()
     assert "workflow_dispatch:" in legacy_matt
     assert "schedule:" not in legacy_matt

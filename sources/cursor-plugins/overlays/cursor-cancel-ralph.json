@@ -47,7 +47,7 @@
   "codex_note": "## Native Codex boundary\n\nThe bundled [adapter](scripts/cursor_native_hook_adapters.py) cancels only matching project/session state; its synthetic fixture proves the file boundary but not a live hook state. A wrong or unknown session is a no-op. Never use the upstream recursive delete command. This candidate remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Cancel an active Ralph Loop. Use when the user wants to stop, cancel, or abort a running ralph loop.",
-  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, and wrong-session behavior. No project hook was installed or trusted; no live automatic continuation was observed.",
+  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, wrong-session behavior, and symlinked project rejection. No project hook was installed or trusted; no live automatic continuation was observed.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [
     {

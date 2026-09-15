@@ -22,7 +22,53 @@ class HookInputError(ValueError):
     pass
 
 
+_OS_SYMLINK_ALIASES = {Path("/var"), Path("/tmp")}
+
+
+def _validated_project(project: Path) -> Path:
+    """Reject a project path that can redirect state writes through a link."""
+
+    lexical = project if project.is_absolute() else Path.cwd() / project
+    current = Path(lexical.anchor)
+    for component in lexical.parts[1:]:
+        current /= component
+        if current.is_symlink() and current not in _OS_SYMLINK_ALIASES:
+            raise HookInputError("project path must not contain a symlink")
+    if not lexical.is_dir():
+        raise HookInputError("project directory is missing")
+    return lexical.resolve()
+
+
+def _validated_transcript_root(value: object) -> Path:
+    """Validate an explicitly supplied transcript root before scope checks."""
+
+    if not isinstance(value, str) or not value:
+        raise HookInputError("continual-learning needs an absolute transcript root")
+    root = Path(value)
+    if not root.is_absolute():
+        raise HookInputError("continual-learning needs an absolute transcript root")
+    current = Path(root.anchor)
+    for component in root.parts[1:]:
+        current /= component
+        if current.is_symlink() and current not in _OS_SYMLINK_ALIASES:
+            raise HookInputError("transcript root path must not contain a symlink")
+    if not root.is_dir():
+        raise HookInputError("transcript root directory is missing")
+    return root.resolve()
+
+
+def _reject_transcript_links(path: Path) -> None:
+    """Reject symlink components in a transcript path before reading metadata."""
+
+    current = Path(path.anchor)
+    for component in path.parts[1:]:
+        current /= component
+        if current.is_symlink() and current not in _OS_SYMLINK_ALIASES:
+            raise HookInputError("transcript path must not contain a symlink")
+
+
 def _state_path(project: Path, family: str) -> Path:
+    project = _validated_project(project)
     for parent in (project / ".codex", project / ".codex" / "cursor-mirror-state",
                    project / ".codex" / "cursor-mirror-state" / family):
         if parent.is_symlink():
@@ -55,6 +101,7 @@ def _save(path: Path, value: dict) -> None:
 
 
 def _bound_event(event: dict, project: Path, expected: str) -> bool:
+    project = _validated_project(project)
     if event.get("hook_event_name") != expected:
         raise HookInputError(f"expected {expected} event")
     cwd = event.get("cwd")
@@ -92,7 +139,8 @@ def _true_env(primary: str, legacy: str) -> bool:
 def ralph_start(project: Path, session_id: str, prompt: str,
                 maximum: int, promise: str | None) -> dict:
     """Arm a task-bound local loop; native project hook trust is still required."""
-    if not project.is_dir() or not session_id or not prompt.strip() or maximum < 0:
+    project = _validated_project(project)
+    if not session_id or not prompt.strip() or maximum < 0:
         raise HookInputError("project, session, prompt, and nonnegative max are required")
     path = _state_path(project, "ralph")
     existing = _load(path)
@@ -123,8 +171,7 @@ def ralph_cancel(project: Path, session_id: str) -> dict:
 
 def ralph_config(project: Path) -> dict:
     """Return an inactive project-hook fragment for review and exact-hash trust."""
-    if not project.is_dir():
-        raise HookInputError("project directory is missing")
+    project = _validated_project(project)
     script = Path(__file__).resolve()
     command = (f"python3 {shlex.quote(str(script))} ralph-stop "
                f"--project {shlex.quote(str(project.resolve()))}")
@@ -134,7 +181,8 @@ def ralph_config(project: Path) -> dict:
 def advisor_enable(project: Path, session_id: str, model: str | None,
                    nudge: bool | None = None) -> dict:
     """Bind an explicitly requested advisor mode to one native task session."""
-    if not project.is_dir() or not session_id:
+    project = _validated_project(project)
+    if not session_id:
         raise HookInputError("advisor needs a project and session")
     path = _state_path(project, "advisor")
     existing = _load(path) or {}
@@ -156,6 +204,7 @@ def advisor_enable(project: Path, session_id: str, model: str | None,
 
 
 def advisor_status(project: Path, session_id: str) -> dict:
+    project = _validated_project(project)
     state = _load(_state_path(project, "advisor"))
     if state is None:
         return {"status": "INACTIVE"}
@@ -170,6 +219,7 @@ def advisor_expect(project: Path, session_id: str, agent_id: str) -> dict:
     """Register the id returned by a bounded native delegate before its result."""
     if not agent_id or any(character.isspace() for character in agent_id):
         raise HookInputError("advisor needs one returned native agent id")
+    project = _validated_project(project)
     path = _state_path(project, "advisor")
     state = _load(path)
     if state is None or state.get("session_id") != session_id or not state.get("enabled"):
@@ -183,6 +233,7 @@ def advisor_expect(project: Path, session_id: str, agent_id: str) -> dict:
 
 
 def advisor_disable(project: Path, session_id: str) -> dict:
+    project = _validated_project(project)
     path = _state_path(project, "advisor")
     state = _load(path)
     if state is None:
@@ -333,12 +384,12 @@ def continual_learning_stop(event: dict, project: Path) -> dict:
         return {}
     root_value = state.get("transcript_root")
     transcript_value = event.get("transcript_path")
-    if not isinstance(root_value, str) or not Path(root_value).is_absolute():
-        raise HookInputError("continual-learning needs an absolute transcript root")
-    root = Path(root_value).resolve()
+    root = _validated_transcript_root(root_value)
     transcript_mtime = None
     if isinstance(transcript_value, str) and transcript_value:
         transcript = Path(transcript_value)
+        if transcript.is_absolute():
+            _reject_transcript_links(transcript)
         if (transcript.is_absolute() and not transcript.is_symlink()
                 and transcript.resolve().is_relative_to(root) and transcript.is_file()):
             transcript_mtime = transcript.stat().st_mtime_ns // 1_000_000

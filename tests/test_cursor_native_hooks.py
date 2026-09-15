@@ -352,6 +352,32 @@ class CursorNativeHookTests(unittest.TestCase):
         self.assertIn("must not be a symlink", warning["systemMessage"])
         self.assertEqual(list(outside.iterdir()), [])
 
+    def test_project_symlink_cannot_redirect_cli_state_writes(self):
+        project_alias = self.root / "project-alias"
+        project_alias.symlink_to(self.project, target_is_directory=True)
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "advisor-enable", "--project", str(project_alias),
+             "--session-id", "task-1", "--advisor-model", "gpt-5.6-sol"],
+            text=True, capture_output=True, check=True,
+        )
+        payload = json.loads(result.stdout)
+        self.assertIn("symlink", payload["systemMessage"])
+        self.assertFalse((self.project / ".codex").exists())
+
+    def test_transcript_root_symlink_cannot_expand_continual_learning_scope(self):
+        outside = self.root / "outside-transcripts"
+        outside.mkdir()
+        transcript_alias = self.project / "transcripts"
+        transcript_alias.symlink_to(outside, target_is_directory=True)
+        self.state("continual-learning", {
+            "session_id": "task-1", "enabled": True,
+            "transcript_root": str(transcript_alias), "turns_since_last_run": 0,
+            "last_run_at_ms": 0, "last_transcript_mtime_ms": None,
+        })
+        warning = self.call("continual-learning-stop", self.stop_event())
+        self.assertIn("symlink", warning["systemMessage"])
+        self.assertEqual(list(outside.iterdir()), [])
+
 
 if __name__ == "__main__":
     unittest.main()

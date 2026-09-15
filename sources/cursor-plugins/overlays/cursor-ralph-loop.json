@@ -49,7 +49,7 @@
   "codex_note": "## Native Codex boundary\n\nThe bundled [adapter](scripts/cursor_native_hook_adapters.py) supports task-bound start, cancel, config render, and Stop handling in synthetic fixtures. It never installs or trusts a hook. The source loop depends on a project-local Codex Stop hook that has passed exact-hash trust review; until a live host continuation is observed, report the loop as not active. Preserve the user-selected model, effort, scope, and explicit iteration limit.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
-  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, and wrong-session behavior. No project hook was installed or trusted; no live automatic continuation was observed.",
+  "proof": "Pinned source and deterministic render plus synthetic CLI tests for task-bound state, continuation, promise, max, cancellation, wrong-session behavior, and symlinked project rejection. No project hook was installed or trusted; no live automatic continuation was observed.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [
     {

@@ -60,5 +60,11 @@
   },
   "replacements": [],
   "source_path": "cursor-team-kit/skills/workflow-from-chats/SKILL.md",
-  "source_sha256": "b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16"
+  "source_sha256": "b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_canvas_adapters.py",
+      "target_path": "scripts/cursor_canvas_adapters.py"
+    }
+  ]
 }

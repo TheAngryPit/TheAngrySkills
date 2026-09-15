@@ -541,12 +541,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded explicit local export proposal proven; native task-history acquisition unavailable",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Requires one explicit project-local JSONL export and exact parent thread id; outputs only a redacted proposal and receipt; automatic history acquisition and durable writeback remain unavailable.",
       "family": "cursor-team-kit",
       "files": {
         "SKILL.md": "b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16"
@@ -555,20 +555,20 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "cursor-team-kit/skills/workflow-from-chats/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded supplied-export behavior proves scoped parent/child selection, time-window filtering, corroboration, redaction and reviewable proposal output without durable writeback",
+      "publish": true,
       "published_name": "cursor-workflow-from-chats",
       "upstream_purpose": "Extract durable working preferences from recent Cursor chats and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.",
       "upstream_skill": "workflow-from-chats",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and relative references; explicit trigger; scoped-export positive, missing-capability and malformed-input tests; bundled adapter integrity"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded project-local Markdown and HTML docs artifact proven; Cursor Canvas unavailable",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Uses the bundled local adapter with explicit project-local Markdown input; Cursor Canvas SDK and primitive parity remain unavailable.",
       "family": "docs-canvas",
       "files": {
         "SKILL.md": "6b38908f9ab810c72f1d85b7f104520c91ee04f3b4fb84a4352c83be15a60b1d"
@@ -577,12 +577,12 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "docs-canvas/skills/docs-canvas/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded local docs artifact proves navigation, anchors, safe cross-references and visual fallback behavior while preserving the Canvas capability gap",
+      "publish": true,
       "published_name": "cursor-docs-canvas",
       "upstream_purpose": "Render a documentation-style Cursor Canvas that organizes architecture notes, API references, walkthroughs, and how-tos into a navigable layout with sections, tables of contents, and cross-references. Use when the user asks for a docs canvas, documentation overview, architecture walkthrough, API reference page, or wants to render structured documentation as an interactive canvas.",
       "upstream_skill": "docs-canvas",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and relative references; explicit trigger; local docs artifact, path-boundary and visual inspection proof; bundled adapter integrity"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -781,12 +781,12 @@
       "validation_requirement": "frontmatter e referências relativas; pedido explícito de task Work; prova nativa de goal/dispatch/filhos/drain/handoffs/artefactos/cancel/recovery; security findings Cursor mantidos, sem execução dos scripts pinados"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded project-local diff review artifact proven; live PR retrieval and Cursor Canvas unavailable",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Uses the bundled local adapter with an explicit project-local unified diff; live PR metadata, gh access and Cursor Canvas SDK remain unavailable.",
       "family": "pr-review-canvas",
       "files": {
         "SKILL.md": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03"
@@ -795,12 +795,12 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded local diff artifact proves reviewer-value grouping, attention callouts and mechanical summaries while preserving live PR and Canvas capability gaps",
+      "publish": true,
       "published_name": "cursor-pr-review-canvas-pr-review-canvas",
       "upstream_purpose": "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview.",
       "upstream_skill": "pr-review-canvas",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and relative references; explicit trigger; local diff positive, live-URL missing-capability and malformed-input tests; visual inspection proof; bundled adapter integrity"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -2441,7 +2441,7 @@
   },
   "native_support_files": {
     "scripts/cursor_native_hook_adapters.py": {
-      "sha256": "1e0b3887e0bbb43faa3a2c1e16282d5058a09679463a05a62facc8ef8c1e1a02",
+      "sha256": "9a0b3a67a5c8d4abc411045afa31b459b7ee8fb37e0ac653658e93d24da152dc",
       "related_skills": [
         "cursor-advisor",
         "cursor-cancel-ralph",
@@ -2465,6 +2465,14 @@
       "sha256": "1748970d4b548a400d2236952107a796fc4d85e0acd6feb639db7f46f237d1ee",
       "related_skills": [
         "cursor-make-bot-ui"
+      ]
+    },
+    "scripts/cursor_canvas_adapters.py": {
+      "sha256": "b9b40959fd78e5ad1d2f037d5c293d92d79318ac1ed5c54e2276d98a6d3cbeaa",
+      "related_skills": [
+        "cursor-workflow-from-chats",
+        "cursor-docs-canvas",
+        "cursor-pr-review-canvas-pr-review-canvas"
       ]
     }
   }

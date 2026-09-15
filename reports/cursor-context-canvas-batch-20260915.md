@@ -30,6 +30,10 @@ metadata and atoms, never raw transcript text or the source path. Missing native
 history, remote input, implicit invocation, missing/out-of-window records, and
 malformed JSON remain write-free `PARTIAL`/`BLOCKED` or explicit errors.
 
+The successful result reports those two local artifact writes explicitly and
+separately reports that no durable skill, rule, memory, or configuration
+writeback occurred.
+
 The docs fallback retains its existing proof for document and section TOCs,
 unique anchors, safe/rebased source links, escaped inline content, symlink and
 root-escape rejection, and no product configuration. The PR fallback retains

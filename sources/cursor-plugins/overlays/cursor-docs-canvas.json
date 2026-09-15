@@ -61,5 +61,11 @@
   },
   "replacements": [],
   "source_path": "docs-canvas/skills/docs-canvas/SKILL.md",
-  "source_sha256": "6b38908f9ab810c72f1d85b7f104520c91ee04f3b4fb84a4352c83be15a60b1d"
+  "source_sha256": "6b38908f9ab810c72f1d85b7f104520c91ee04f3b4fb84a4352c83be15a60b1d",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_canvas_adapters.py",
+      "target_path": "scripts/cursor_canvas_adapters.py"
+    }
+  ]
 }

@@ -26,6 +26,7 @@ class CursorMirrorTests(unittest.TestCase):
         for relative in (
             "scripts/sync-cursor-plugin-skills.py",
             "scripts/cursor_native_hook_adapters.py",
+            "scripts/cursor_canvas_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
             "scripts/cursor_bot_ui_adapters.py",
@@ -116,7 +117,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
-        self.assertEqual(state["candidate_not_published"], 12)
+        self.assertEqual(state["candidate_not_published"], 9)
         self.assertEqual(state["operator_excluded_skills"], 8)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
@@ -235,6 +236,18 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotIn("model: grok", advisor_role)
         self.assertNotIn("readonly: true", advisor_role)
         self.assertFalse((preview / "cursor-no-comments/scripts/cursor_native_hook_adapters.py").exists())
+
+        for name in (
+            "cursor-workflow-from-chats",
+            "cursor-docs-canvas",
+            "cursor-pr-review-canvas-pr-review-canvas",
+        ):
+            bundled = preview / name / "scripts/cursor_canvas_adapters.py"
+            self.assertEqual(
+                bundled.read_bytes(),
+                (self.root / "scripts/cursor_canvas_adapters.py").read_bytes(),
+            )
+        self.assertFalse((preview / "cursor-no-comments/scripts/cursor_canvas_adapters.py").exists())
 
         adapter = self.root / "scripts/cursor_native_hook_adapters.py"
         adapter.write_text(adapter.read_text() + "\nUnexpected local edit.\n")

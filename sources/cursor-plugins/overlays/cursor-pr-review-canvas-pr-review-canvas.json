@@ -61,5 +61,11 @@
   },
   "replacements": [],
   "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
-  "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03"
+  "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_canvas_adapters.py",
+      "target_path": "scripts/cursor_canvas_adapters.py"
+    }
+  ]
 }

@@ -176,10 +176,11 @@ class CursorCanvasAdapterTests(unittest.TestCase):
             now=datetime(2026, 9, 14, 12, tzinfo=timezone.utc),
         )
 
-        self.assertEqual(result["status"], "FIXTURE_ONLY")
+        self.assertEqual(result["status"], "ADAPTED_PROPOSAL")
         self.assertEqual(result["history_capability"], "SUPPLIED_EXPORT_ONLY")
         self.assertEqual(result["records"], 3)
-        self.assertFalse(result["writes_performed"])
+        self.assertTrue(result["artifact_writes_performed"])
+        self.assertFalse(result["durable_writeback_performed"])
         proposal = Path(result["artifacts"]["proposal"])
         receipt = Path(result["artifacts"]["receipt"])
         proposal_text = proposal.read_text(encoding="utf-8")

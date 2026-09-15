@@ -19,7 +19,7 @@
         "documentation reader"
       ],
       "fallback": "If native delegates are unavailable, execute the four checks sequentially with separate evidence and the same score contract. If the deterministic scanner cannot run, report it as unavailable and do not invent an Agent Compatibility Score.",
-      "availability": "four pinned reviewer roles bundled in held preview; scanner package, cold startup, and full native workflow not executed",
+      "availability": "bounded disposable four-role evidence inventory observed; scanner package, cold startup, and full native workflow not executed",
       "optional_tools": [
         "native bounded delegation"
       ],
@@ -62,7 +62,7 @@
   "codex_note": "## Codex adaptation boundary\n\nThe pinned source description has an unquoted colon; this preview quotes it for native parsing. The four source reviewers are bundled under `references/` as role instructions with Cursor `model: fast` and `readonly: true` frontmatter removed. Use four separate bounded native delegates when available, or four separate sequential checks, and request read-only behavior through the actual host permission surface. The scanner role names `npx -y agent-compatibility@latest`; review package version, installation effects, and egress before execution. Do not compute a combined score unless the deterministic scanner and all three behavioral checks produced real evidence. This candidate remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Run four separate repository checks: deterministic scanner, cold startup, validation loop, and docs reliability; combine their evidence into one compatibility score and prioritized fixes.",
-  "proof": "Pinned source hashes and renderer verify the corrected preview frontmatter and four bundled role references only. Scanner execution, cold startup, validation, docs follow-through, and combined scoring remain unproven.",
+  "proof": "Pinned source hashes and renderer verify the corrected frontmatter and four bundled role references. A disposable repository fixture produces separate README, validation, and documentation evidence while the scanner result remains unavailable; scanner execution, cold startup, docs follow-through, and combined scoring remain unproven.",
   "reason": "The pinned upstream description contains an unquoted colon and fails YAML parsing. The held Codex preview quotes that scalar and bundles all four named reviewer roles without activating their commands.",
   "replacements": [
     {

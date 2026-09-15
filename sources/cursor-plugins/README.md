@@ -4,10 +4,8 @@ This is a pinned, reviewable native Codex adaptation of the skills in `cursor/pl
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
 and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Separate hash-checked native adapters are bundled only into the held Advisor, Ralph, and continual-learning previews; the make-bot-ui adapter remains historical evidence and is not rendered. They are not registered as hooks. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
-upstream path; it retains the three Benny automation skills outside the ordinary
-slash-skill distribution. Their upstream sources still exist under
-`pstack/automations/benny` and are installed through Benny's project setup,
-not through the plugin's `skills ./skills/` slash catalog.
+upstream path; it retains the three Benny automation sources for historical
+provenance, but Vítor excluded them from this mirror and its previews.
 
 Each `overlays/<published-name>.json` declares the exact source hash, optional
 exact-text changes and a Codex boundary note. The build rewrites the frontmatter
@@ -25,12 +23,12 @@ workflows. This isolated successor branch adds bounded explicit-only
 `cursor-create-verification-skill`, `cursor-maintain-verification-skill`, and
 `cursor-no-comments`, `cursor-automate-me`, `cursor-figure-it-out`,
 `cursor-poteto-mode`, `cursor-recall`, and `cursor-setup-pstack` paths, bringing
-the catalog to 71 published mirrors. Of the other 17 active upstream skills,
-16 remain held and unindexed pending Vítor's scope choice. Vítor explicitly
-excluded `cursor-make-bot-ui` from the Codex mirror on 2026-09-14; it is neither
-published nor rendered in candidate previews. Its pinned upstream source stays
-in the historical snapshot. The three Benny automation sources are retained
-outside this slash catalog. Publication is not proof of full native execution.
+the catalog to 71 published mirrors. Vítor selected the remaining 12 active
+candidates for conversion and excluded eight sources from this mirror: the
+three Benny automations, four Grok Voice skills, and `cursor-make-bot-ui`.
+The excluded sources are neither published nor rendered in candidate previews;
+their pinned upstream files stay in the historical snapshot. Publication is
+not proof of full native execution.
 The cursor-team-kit PR review canvas is published for a read-only local artifact
 path with executable renderer proof. Six instruction-only candidates are
 `guide_only`: the four principles, technical writing, and Ralph help. The
@@ -43,8 +41,8 @@ adaptations stay held with a per-skill Codex contract recording native mapping,
 permission gates, and positive, missing-capability/input, and error scenarios
 still to prove.
 It also holds `cursor-cursor-sdk` and `cursor-review-plugin-submission` for
-contextual security review. The `make-bot-ui` exclusion is recorded in the
-[scope decision](../../reports/cursor-make-bot-ui-exclusion-20260914.md).
+contextual security review. The current eight-source exclusion and twelve-skill
+selection are recorded in the [scope decision](../../reports/cursor-scope-selection-20260914.md).
 The verification pair is published only for the bounded explicit-only local
 CLI/UI paths. Production target parity, reusable host activation, action-time
 Reset cleanup, and changed-outcome PR publication remain separate gaps. The

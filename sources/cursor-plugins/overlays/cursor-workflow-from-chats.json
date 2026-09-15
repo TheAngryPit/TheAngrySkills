@@ -10,15 +10,16 @@
     "preserved_semantics": "Extract durable working preferences from recent Cursor chats and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.",
     "native_mapping": {
       "capabilities": [
-        "scoped task-history reader",
-        "preference extractor"
+        "scoped supplied JSONL reader",
+        "preference extractor",
+        "redacted project-local proposal writer"
       ],
       "required_tools": [
-        "scoped task-history reader",
-        "preference extractor"
+        "explicit local transcript export",
+        "local file reader"
       ],
-      "fallback": "A missing or mismatched transcript yields incomplete evidence and no write.",
-      "availability": "not_proven_in_current_codex_session"
+      "fallback": "Native history acquisition is unavailable; supply one exact project-local JSONL export and receive a redacted proposal without durable writeback.",
+      "availability": "bounded_supplied_export_redacted_preference_proposal_observed; native history acquisition unavailable"
     },
     "external_dependencies": [
       "Cursor chat history or supplied Codex record"
@@ -29,11 +30,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Positive fixture for cursor-workflow-from-chats: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-workflow-from-chats: A missing or mismatched transcript yields incomplete evidence and no write.",
-      "error": "Error fixture for cursor-workflow-from-chats: a malformed input or failed dependency is reported explicitly and does not widen scope."
+      "positive": "A bounded local JSONL export for one parent thread and its child evidence produced corroborated preference atoms, confidence labels, a redacted project-local proposal and a receipt without raw excerpts or durable writeback.",
+      "missing_tool_or_input": "Missing native history or a missing/out-of-window/mismatched export returns PARTIAL and performs no write; remote URLs are rejected without network access.",
+      "error": "Malformed JSON, timestamps, identifiers, control text or an unsafe project path is reported before proposal creation and does not widen scope."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_supplied_export_redacted_proposal_native_history_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "cursor-team-kit/README.md",
@@ -46,12 +47,24 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse only the exact parent record, redact secrets, and propose artifacts for approval. Required native capabilities: scoped task-history reader, preference extractor. External dependencies remain explicit: Cursor chat history or supplied Codex record. A missing or mismatched transcript yields incomplete evidence and no write. This candidate remains unindexed until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py:extract_workflow_from_chats` only with one explicitly supplied project-local JSONL export and the exact parent thread identifier. The adapter limits the time window, includes child evidence only when linked to that parent, redacts credentials/paths/contacts, and writes only a reviewable proposal plus receipt; it never writes a skill, rule, memory or global setting. Native task-history acquisition and automatic selection remain unavailable.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Extract durable working preferences from recent Cursor chats and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
+  "proof": "Pinned source hash and deterministic build establish provenance. The bounded adapter test proves parent/child scope, seven-day filtering, corroboration, redaction, local proposal/receipt output, remote/missing-history partial results, malformed-input rejection, explicit-only refusal and write-free error paths. Native task-history acquisition, automatic selection and durable writeback remain unproven.",
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
+  "local_adapter": {
+    "path": "scripts/cursor_canvas_adapters.py",
+    "entrypoint": "extract_workflow_from_chats",
+    "output": "project-local proposal.md and receipt.json",
+    "parity": "bounded supplied-export adaptation"
+  },
   "replacements": [],
   "source_path": "cursor-team-kit/skills/workflow-from-chats/SKILL.md",
-  "source_sha256": "b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16"
+  "source_sha256": "b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_canvas_adapters.py",
+      "target_path": "scripts/cursor_canvas_adapters.py"
+    }
+  ]
 }

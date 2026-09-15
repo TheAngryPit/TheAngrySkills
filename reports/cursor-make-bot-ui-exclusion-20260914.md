@@ -1,5 +1,10 @@
 # Cursor make-bot-ui scope decision
 
+**Later scope decision:** Vítor also excluded four Grok Voice and three Benny
+sources and selected the other twelve candidates. See
+[`cursor-scope-selection-20260914.md`](cursor-scope-selection-20260914.md)
+for current accounting.
+
 Date: 2026-09-14. Vítor explicitly excluded `cursor-make-bot-ui` from the
 Codex mirror. This supersedes the earlier plan to close its webhook workflow.
 No further bot UI adapter, queue, webhook, secret, Tailnet, or install work is

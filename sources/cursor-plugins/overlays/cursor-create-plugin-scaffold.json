@@ -18,7 +18,7 @@
         "manifest validator"
       ],
       "fallback": "An unsafe destination or invalid component stops before writing.",
-      "availability": "explicit_disposable_destination_static_fixture_checked; source_home_default_and_active_components_unadapted"
+      "availability": "bounded disposable destination static scaffold and submission audit observed; source_home_default_and_active_components_unadapted"
     },
     "external_dependencies": [
       "Cursor plugin layout",
@@ -68,7 +68,7 @@
   "codex_note": "## Codex security hold\n\nThe bundled [static scaffold fixture](scripts/cursor_plugin_scaffold_fixture.py) requires an explicit marked disposable destination and writes only Cursor-format manifest, README, caller-supplied LICENSE, and static component placeholders. Synthetic tests run the held submission auditor on that output. The source below still defaults to `~/.cursor/plugins/local/` and describes immediate Cursor availability; do not follow that default or treat this candidate as a native Codex plugin installer. Hooks, mcpServers, and marketplace wiring return `REVIEW_REQUIRED` before any write. The source `mcp-plugin-hook-install` finding is retained and the skill remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
-  "proof": "Pinned source and deterministic renderer plus isolated fixture prove bounded static file generation and structural audit only. Native Codex plugin format, active hook/MCP components, marketplace wiring, global installation, and publication remain unproven.",
+  "proof": "Pinned source and deterministic renderer plus a real isolated fixture-to-audit run prove bounded static file generation, manifest paths, component frontmatter, and structural audit. Native Codex plugin format, active hook/MCP components, marketplace wiring, global installation, and publication remain unproven.",
   "reason": "The held preview bundles hash-checked static scaffold and source role/rule references while retaining the security finding and refusing active components.",
   "replacements": [],
   "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",

@@ -54,6 +54,7 @@ FUNCTIONAL = {
     "cursor-principle-guard-the-context-window",
     "cursor-principle-laziness-protocol",
     "cursor-principle-prove-it-works",
+    "cursor-pr-review-canvas-pr-review-canvas",
     "cursor-recall",
     "cursor-reflect",
     "cursor-setup-pstack",
@@ -86,6 +87,7 @@ PROMOTED = {
     "cursor-recall",
     "cursor-reflect",
     "cursor-cursor-team-kit-pr-review-canvas",
+    "cursor-docs-canvas",
     "cursor-principle-build-the-lever",
     "cursor-principle-guard-the-context-window",
     "cursor-principle-laziness-protocol",
@@ -98,6 +100,8 @@ PROMOTED = {
     "cursor-swarm",
     "cursor-thermos",
     "cursor-setup-pstack",
+    "cursor-workflow-from-chats",
+    "cursor-pr-review-canvas-pr-review-canvas",
 }
 
 GUIDE_ONLY = PROMOTED - {
@@ -106,6 +110,7 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-automate-me",
     "cursor-interrogate",
     "cursor-reflect",
+    "cursor-pr-review-canvas-pr-review-canvas",
     "cursor-cursor-team-kit-pr-review-canvas",
     "cursor-create-verification-skill",
     "cursor-figure-it-out",
@@ -119,6 +124,8 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-swarm",
     "cursor-thermos",
     "cursor-setup-pstack",
+    "cursor-docs-canvas",
+    "cursor-workflow-from-chats",
 }
 
 

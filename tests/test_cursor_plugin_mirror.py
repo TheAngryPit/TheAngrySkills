@@ -26,6 +26,7 @@ class CursorMirrorTests(unittest.TestCase):
         for relative in (
             "scripts/sync-cursor-plugin-skills.py",
             "scripts/cursor_native_hook_adapters.py",
+            "scripts/cursor_canvas_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
             "scripts/cursor_bot_ui_adapters.py",
@@ -105,19 +106,26 @@ class CursorMirrorTests(unittest.TestCase):
     def test_operator_exclusion_is_not_rendered_or_promotable(self):
         manifest_path = self.root / "sources/cursor-plugins/manifest.json"
         manifest = json.loads(manifest_path.read_text())
-        excluded = next(e for e in manifest["skills"] if e["published_name"] == "cursor-make-bot-ui")
-        self.assertTrue(excluded["excluded_from_mirror"])
-        self.assertFalse(excluded["publish"])
-        self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / excluded["path"]).is_file())
+        excluded_names = {
+            "cursor-make-bot-ui", "cursor-add-dictation", "cursor-add-read-aloud",
+            "cursor-add-voice", "cursor-debug-voice", "cursor-setup-benny",
+            "cursor-triage-issue-reports", "cursor-reproduce-and-fix-issues",
+        }
+        excluded = [e for e in manifest["skills"] if e.get("excluded_from_mirror")]
+        self.assertEqual({e["published_name"] for e in excluded}, excluded_names)
+        for entry in excluded:
+            self.assertFalse(entry["publish"])
+            self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
-        self.assertEqual(state["candidate_not_published"], 16)
-        self.assertEqual(state["operator_excluded_skills"], 1)
+        self.assertEqual(state["candidate_not_published"], 9)
+        self.assertEqual(state["operator_excluded_skills"], 8)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse((preview / "cursor-make-bot-ui").exists())
-        self.assertFalse((self.root / "skills/mirrors-cursor/cursor-make-bot-ui").exists())
-        excluded["publish"] = True
+        for name in excluded_names:
+            self.assertFalse((preview / name).exists())
+            self.assertFalse((self.root / "skills/mirrors-cursor" / name).exists())
+        excluded[0]["publish"] = True
         manifest_path.write_text(json.dumps(manifest))
         rejected = self.run_build("--check")
         self.assertNotEqual(rejected.returncode, 0)
@@ -228,6 +236,18 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotIn("model: grok", advisor_role)
         self.assertNotIn("readonly: true", advisor_role)
         self.assertFalse((preview / "cursor-no-comments/scripts/cursor_native_hook_adapters.py").exists())
+
+        for name in (
+            "cursor-workflow-from-chats",
+            "cursor-docs-canvas",
+            "cursor-pr-review-canvas-pr-review-canvas",
+        ):
+            bundled = preview / name / "scripts/cursor_canvas_adapters.py"
+            self.assertEqual(
+                bundled.read_bytes(),
+                (self.root / "scripts/cursor_canvas_adapters.py").read_bytes(),
+            )
+        self.assertFalse((preview / "cursor-no-comments/scripts/cursor_canvas_adapters.py").exists())
 
         adapter = self.root / "scripts/cursor_native_hook_adapters.py"
         adapter.write_text(adapter.read_text() + "\nUnexpected local edit.\n")
@@ -365,7 +385,7 @@ class CursorMirrorTests(unittest.TestCase):
         preview = self.root / "candidate-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 87)
+        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 83)
         self.assertFalse((preview / "cursor-setup-benny").exists())
         self.assertFalse((preview / "cursor-make-bot-ui").exists())
         self.assertEqual(marketplace.read_bytes(), before)
@@ -378,7 +398,7 @@ class CursorMirrorTests(unittest.TestCase):
         )
         self.assertEqual(audit.returncode, 0, audit.stderr)
         results = json.loads(audit.stdout)["results"]
-        self.assertEqual(len(results), 87)
+        self.assertEqual(len(results), 83)
         self.assertTrue(all(item["counts"]["error"] == 0 for item in results))
         missing = []
         for file in preview.rglob("*.md"):

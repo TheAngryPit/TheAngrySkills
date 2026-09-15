@@ -35,7 +35,7 @@
       "missing_tool_or_input": "A GitHub URL returns an explicit missing-capability result because gh/live PR metadata is not invoked; a local fixture returns FALLBACK with canvas_parity UNAVAILABLE.",
       "error": "Malformed or empty diff input, unsafe paths, and oversized fixtures are reported explicitly before artifact writes; the adapter does not widen to network or publication."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "promoted_bounded_explicit_only_local_diff_artifact_live_pr_parity_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pr-review-canvas/README.md",
@@ -48,7 +48,7 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py` for an explicit, bounded project-local Markdown/HTML review artifact when Canvas is unavailable. The adapter reads only a local diff fixture, groups files by reviewer value, and reports that live PR metadata/gh access is unavailable; it never claims Canvas SDK parity or publishes a review. External dependency remains explicit: Cursor Canvas surface. This candidate remains held and conditional until the stated behavior and permission proof exists.\n",
+  "codex_note": "## Codex adaptation\n\nUse `scripts/cursor_canvas_adapters.py:render_pr_review_canvas` for an explicit, bounded project-local Markdown/HTML review artifact when Canvas is unavailable. The adapter reads only a local diff fixture, groups files by reviewer value, and reports that live PR metadata/gh access is unavailable; it never claims Canvas SDK parity or publishes a review. External dependency remains explicit: Cursor Canvas surface.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview.",
   "proof": "Pinned source hash and deterministic build establish provenance. The isolated adapter tests exercise a bounded local unified diff, reviewer-value grouping, changed-line evidence callouts, mechanical summarization, explicit-only refusal, and live-URL capability rejection. No Canvas primitive, live PR metadata, or gh parity is claimed.",
@@ -61,5 +61,11 @@
   },
   "replacements": [],
   "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
-  "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03"
+  "source_sha256": "f494f30a2d423953b4976d41353702fa32d347edf27519dbf936db5717865f03",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_canvas_adapters.py",
+      "target_path": "scripts/cursor_canvas_adapters.py"
+    }
+  ]
 }

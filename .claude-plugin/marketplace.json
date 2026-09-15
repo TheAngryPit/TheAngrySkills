@@ -260,6 +260,7 @@
         "./skills/mirrors-cursor/cursor-cursor-team-kit-pr-review-canvas",
         "./skills/mirrors-cursor/cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
         "./skills/mirrors-cursor/cursor-deslop",
+        "./skills/mirrors-cursor/cursor-docs-canvas",
         "./skills/mirrors-cursor/cursor-figure-it-out",
         "./skills/mirrors-cursor/cursor-fix-ci",
         "./skills/mirrors-cursor/cursor-fix-merge-conflicts",
@@ -272,6 +273,7 @@
         "./skills/mirrors-cursor/cursor-new-branch-and-pr",
         "./skills/mirrors-cursor/cursor-no-comments",
         "./skills/mirrors-cursor/cursor-poteto-mode",
+        "./skills/mirrors-cursor/cursor-pr-review-canvas-pr-review-canvas",
         "./skills/mirrors-cursor/cursor-principle-attack-the-premise",
         "./skills/mirrors-cursor/cursor-principle-boundary-discipline",
         "./skills/mirrors-cursor/cursor-principle-build-the-lever",
@@ -316,6 +318,7 @@
         "./skills/mirrors-cursor/cursor-weekly-review",
         "./skills/mirrors-cursor/cursor-what-did-i-get-done",
         "./skills/mirrors-cursor/cursor-why",
+        "./skills/mirrors-cursor/cursor-workflow-from-chats",
         "./skills/mirrors-cursor/cursor-x-mcp-guide"
       ]
     }

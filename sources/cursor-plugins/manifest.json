@@ -681,12 +681,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "documented Codex Cloud CLI and bounded coordinator adapter proven; live dispatch blocked because no concrete ENV_ID is configured",
+      "availability": "documented Codex Cloud CLI, bounded coordinator adapter, and a single read-only fixed-commit cloud audit are proven; multi-task drain, apply, and cancellation remain unproved",
       "baseline_classification": "não demonstrada (equivalente nativo não provado)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: prompts/andon-block.md, prompts/empty-error-handoff.md, prompts/failure-handoff.md, prompts/finished-no-handoff.md, prompts/loop-hygiene.md, prompts/root.md, prompts/slack-block.md, prompts/subplanner.md, prompts/verifier.md, prompts/worker.md (+68); bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
+      "dependencies_or_limitations": "requires an exact Codex Cloud environment plus separate authorization for task creation, prompt-content transmission, and apply; the adapter validates supplied records but does not authenticate their external provenance; unsafe upstream Cursor/Bun/Slack runtime files remain excluded",
       "family": "orchestrate",
       "files": {
         "SKILL.md": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22",
@@ -772,13 +772,13 @@
       "license_path": "orchestrate/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "orchestrate/skills/orchestrate/SKILL.md",
-      "planned_adaptation": "Map explicit-only orchestration to a bounded coordinator-owned DAG over documented Codex Cloud exec/list/status/diff commands; require exact environment and branch plus separate apply authorization.",
-      "promotion_reason": "native Codex Cloud command and safety contracts are test-proven; runtime dispatch remains honestly environment-blocked",
+      "planned_adaptation": "Map explicit-only orchestration to a bounded coordinator-owned DAG over documented Codex Cloud exec/list/status/diff commands; require exact environment plus separate task, content, and apply authorization; support one-to-four attempts and optional branch.",
+      "promotion_reason": "native Codex Cloud contracts are test-proven and one fixed-commit read-only cloud audit reached READY with zero changed lines",
       "publish": true,
       "published_name": "cursor-orchestrate",
       "upstream_purpose": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
       "upstream_skill": "orchestrate",
-      "validation_requirement": "frontmatter and rewritten native body; bounded DAG/argv/list/handoff/apply tests; exact ENV_ID required for live dispatch; retain all upstream blocked_malicious findings while excluding the Cursor runtime"
+      "validation_requirement": "frontmatter and rewritten native body; bounded DAG/argv/list/handoff/apply tests; real null-environment-id/cursor payload regression; validated PASS completion evidence; retain all upstream blocked_malicious findings while excluding the Cursor runtime"
     },
     {
       "availability": "bounded project-local diff review artifact proven; live PR retrieval and Cursor Canvas unavailable",
@@ -2480,7 +2480,7 @@
       ]
     },
     "scripts/cursor_orchestrate_adapters.py": {
-      "sha256": "3a2262692ddcef4f1a3244b2db458e3139a5752e7c87291ed62ee57eb12f108f",
+      "sha256": "ed5530e39aff1ff1c453dc93ee06b727664d05e8ce295f69324245db2be3b495",
       "related_skills": [
         "cursor-orchestrate"
       ]

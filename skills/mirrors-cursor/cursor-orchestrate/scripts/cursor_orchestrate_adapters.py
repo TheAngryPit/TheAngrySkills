@@ -8,6 +8,7 @@ creates tasks, applies diffs, or runs the bundled Cursor runtime.
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
+import re
 from typing import Any
 
 
@@ -20,16 +21,21 @@ _HANDOFF_STATUSES = frozenset({"PASS", "ISSUES", "BLOCKED"})
 _SAFE_IDENTIFIER_CHARS = frozenset(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.:/"
 )
-_FORBIDDEN_TEXT_MARKERS = (
+_PRIVATE_PATH_MARKERS = (
     "/.git",
     "/.ssh",
-    "api_key",
-    "authorization:",
-    "bearer ",
-    "password",
-    "secret",
-    "slack_bot_token",
-    "cursor_api_key",
+)
+_CREDENTIAL_PATTERNS = (
+    re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+    re.compile(
+        r"(?i)\b(?:[a-z][a-z0-9_-]*[_-])?"
+        r"(?:api[_-]?key|access[_-]?key|secret(?:[_-]?access[_-]?key)?|"
+        r"token|password|authorization)\s*[:=]\s*[^\s,]+"
+    ),
+    re.compile(r"\b(?:sk|rk)-[A-Za-z0-9_-]{16,}\b"),
+    re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"\bxox[baprs]-[0-9A-Za-z-]{10,}\b"),
 )
 
 
@@ -40,8 +46,10 @@ def _text(value: Any, label: str) -> str:
         raise OrchestrateAdapterError(f"{label} contains a control character")
     text = value.strip()
     folded = text.casefold()
-    if any(marker in folded for marker in _FORBIDDEN_TEXT_MARKERS):
-        raise OrchestrateAdapterError(f"{label} contains a forbidden private-data marker")
+    if any(marker in folded for marker in _PRIVATE_PATH_MARKERS):
+        raise OrchestrateAdapterError(f"{label} contains a forbidden private path marker")
+    if any(pattern.search(text) for pattern in _CREDENTIAL_PATTERNS):
+        raise OrchestrateAdapterError(f"{label} contains credential-shaped content")
     return text
 
 
@@ -148,8 +156,10 @@ def prepare_local_plan(
     }
 
 
-def ready_task_ids(plan: Mapping[str, Any], completed: Iterable[str] = ()) -> tuple[str, ...]:
-    """Return dependency-ready task IDs in stable plan order."""
+def ready_task_ids(
+    plan: Mapping[str, Any], handoffs: Iterable[Mapping[str, Any]] = ()
+) -> tuple[str, ...]:
+    """Return ready IDs using only validated PASS handoffs as completion proof."""
 
     tasks = plan.get("tasks")
     if plan.get("status") != "PLAN_READY" or not isinstance(tasks, (tuple, list)):
@@ -158,15 +168,17 @@ def ready_task_ids(plan: Mapping[str, Any], completed: Iterable[str] = ()) -> tu
         plan.get("goal"), tasks, max_children=plan.get("max_children", 4)
     )
     tasks = plan["tasks"]
-    expected = {task["task_id"] for task in tasks}
-    completed_ids = {_task_id(item) for item in completed}
-    unknown = completed_ids - expected
-    if unknown:
-        raise OrchestrateAdapterError(f"completed task is outside the plan: {sorted(unknown)}")
+    reconciliation = reconcile_local_handoffs(plan, handoffs)
+    completed_ids = {
+        item["task_id"]
+        for item in reconciliation["handoffs"]
+        if item["status"] == "PASS" and item["completion_proof_validated"]
+    }
+    received_ids = {item["task_id"] for item in reconciliation["handoffs"]}
     return tuple(
         task["task_id"]
         for task in tasks
-        if task["task_id"] not in completed_ids
+        if task["task_id"] not in received_ids
         and set(task["depends_on"]).issubset(completed_ids)
     )
 
@@ -175,21 +187,28 @@ def build_codex_cloud_dispatch_batch(
     plan: Mapping[str, Any],
     *,
     environment_id: str,
-    branch: str,
-    completed: Iterable[str] = (),
+    branch: str | None = None,
+    attempts: int = 1,
+    handoffs: Iterable[Mapping[str, Any]] = (),
     authorization_granted: bool = False,
+    content_authorization_granted: bool = False,
 ) -> dict[str, Any]:
     """Build shell-free ``codex cloud exec`` argv for dependency-ready tasks."""
 
     if authorization_granted is not True:
         raise OrchestrateAdapterError("cloud task creation requires out-of-band authorization")
+    if content_authorization_granted is not True:
+        raise OrchestrateAdapterError("cloud content requires explicit authorization")
     environment_id = _cli_identifier(environment_id, "environment_id")
-    branch = _cli_identifier(branch, "branch")
+    if not isinstance(attempts, int) or isinstance(attempts, bool) or not 1 <= attempts <= 4:
+        raise OrchestrateAdapterError("attempts must be an integer from 1 through 4")
+    if branch is not None:
+        branch = _cli_identifier(branch, "branch")
     validated_plan = prepare_local_plan(
         plan.get("goal"), plan.get("tasks", ()), max_children=plan.get("max_children", 4)
     )
     tasks = {task["task_id"]: task for task in validated_plan["tasks"]}
-    ready = ready_task_ids(validated_plan, completed)
+    ready = ready_task_ids(validated_plan, handoffs)
     commands: list[tuple[str, ...]] = []
     for task_id in ready:
         task = tasks[task_id]
@@ -200,24 +219,20 @@ def build_codex_cloud_dispatch_batch(
             f"Acceptance: {task['acceptance']}\n"
             "Return a concise structured handoff with status, evidence, and artifact identity."
         )
-        commands.append(
-            (
-                "codex",
-                "cloud",
-                "exec",
-                "--env",
-                environment_id,
-                "--attempts",
-                "1",
-                "--branch",
-                branch,
-                prompt,
-            )
-        )
+        command = [
+            "codex", "cloud", "exec", "--env", environment_id,
+            "--attempts", str(attempts),
+        ]
+        if branch is not None:
+            command.extend(("--branch", branch))
+        command.append(prompt)
+        commands.append(tuple(command))
     return {
         "status": "DISPATCH_REVIEW_READY",
         "environment_id": environment_id,
         "branch": branch,
+        "attempts": attempts,
+        "content_authorization_granted": True,
         "ready_task_ids": ready,
         "commands": tuple(commands),
         "dispatch_performed": False,
@@ -241,24 +256,44 @@ def parse_codex_cloud_list(payload: Mapping[str, Any]) -> dict[str, Any]:
         attempt_total = raw.get("attempt_total")
         if not isinstance(attempt_total, int) or isinstance(attempt_total, bool) or attempt_total < 0:
             raise OrchestrateAdapterError("attempt_total must be a non-negative integer")
+        raw_environment_id = raw.get("environment_id")
+        environment_id = (
+            None
+            if raw_environment_id is None
+            else _cli_identifier(raw_environment_id, f"environment_id for {task_id}")
+        )
+        raw_environment_label = raw.get("environment_label")
+        environment_label = (
+            None
+            if raw_environment_label is None
+            else _text(raw_environment_label, f"environment_label for {task_id}")
+        )
+        if environment_id is None and environment_label is None:
+            raise OrchestrateAdapterError(
+                f"cloud task needs environment identity: {task_id}"
+            )
         normalized.append(
             {
                 "id": task_id,
                 "url": _text(raw.get("url"), f"url for {task_id}"),
                 "title": _text(raw.get("title"), f"title for {task_id}"),
                 "status": _text(raw.get("status"), f"status for {task_id}"),
-                "environment_id": _cli_identifier(
-                    raw.get("environment_id"), f"environment_id for {task_id}"
-                ),
+                "environment_id": environment_id,
+                "environment_label": environment_label,
                 "attempt_total": attempt_total,
                 "status_command": ("codex", "cloud", "status", task_id),
                 "diff_command": ("codex", "cloud", "diff", task_id),
             }
         )
-    next_cursor = payload.get("next_cursor")
-    if next_cursor is not None:
-        next_cursor = _text(next_cursor, "next_cursor")
-    return {"tasks": tuple(normalized), "next_cursor": next_cursor, "read_only": True}
+    cursor = payload.get("cursor", payload.get("next_cursor"))
+    if cursor is not None:
+        cursor = _text(cursor, "cursor")
+    return {
+        "tasks": tuple(normalized),
+        "cursor": cursor,
+        "next_cursor": cursor,
+        "read_only": True,
+    }
 
 
 def build_apply_command(
@@ -306,23 +341,69 @@ def reconcile_local_handoffs(
             raise OrchestrateAdapterError(f"unsupported handoff status for {task_id}: {status}")
         evidence = _text(raw.get("evidence"), f"evidence for {task_id}")
         artifact = raw.get("artifact")
-        if status == "PASS" and not isinstance(artifact, str):
-            raise OrchestrateAdapterError(f"PASS handoff needs artifact identity: {task_id}")
-        if isinstance(artifact, str):
-            artifact = _text(artifact, f"artifact for {task_id}")
+        cloud_task_id = raw.get("cloud_task_id")
+        attempt = raw.get("attempt")
+        status_checked = raw.get("status_checked")
+        diff_checked = raw.get("diff_checked")
+        completion_proof_validated = False
+        if status == "PASS":
+            if not isinstance(artifact, Mapping):
+                raise OrchestrateAdapterError(
+                    f"PASS handoff needs structured artifact identity: {task_id}"
+                )
+            artifact_uri = _text(artifact.get("uri"), f"artifact uri for {task_id}")
+            artifact_sha256 = _text(
+                artifact.get("sha256"), f"artifact sha256 for {task_id}"
+            )
+            if re.fullmatch(r"[0-9a-f]{64}", artifact_sha256) is None:
+                raise OrchestrateAdapterError(
+                    f"artifact sha256 for {task_id} must be 64 lowercase hex characters"
+                )
+            artifact = {"uri": artifact_uri, "sha256": artifact_sha256}
+            cloud_task_id = _cli_identifier(
+                cloud_task_id, f"cloud_task_id for {task_id}"
+            )
+            if (
+                not isinstance(attempt, int)
+                or isinstance(attempt, bool)
+                or not 1 <= attempt <= 4
+            ):
+                raise OrchestrateAdapterError(
+                    f"attempt for {task_id} must be an integer from 1 through 4"
+                )
+            if status_checked is not True or diff_checked is not True:
+                raise OrchestrateAdapterError(
+                    f"PASS handoff needs status and diff inspection: {task_id}"
+                )
+            completion_proof_validated = True
+        elif artifact is not None:
+            raise OrchestrateAdapterError(
+                f"non-PASS handoff cannot assert artifact identity: {task_id}"
+            )
         received[task_id] = {
             "task_id": task_id,
             "status": status,
             "evidence": evidence,
             "artifact": artifact,
+            "cloud_task_id": cloud_task_id,
+            "attempt": attempt,
+            "status_checked": status_checked,
+            "diff_checked": diff_checked,
+            "completion_proof_validated": completion_proof_validated,
         }
 
     missing = tuple(task_id for task_id in expected if task_id not in received)
     blocked = tuple(task_id for task_id, item in received.items() if item["status"] == "BLOCKED")
     issues = tuple(task_id for task_id, item in received.items() if item["status"] == "ISSUES")
     aggregate = "BLOCKED" if missing or blocked else ("ISSUES" if issues else "PASS")
+    ready_for_follow_on = aggregate == "PASS" and all(
+        item["status"] == "PASS" and item["completion_proof_validated"]
+        for item in received.values()
+    ) and len(received) == len(expected)
     return {
         "status": aggregate,
+        "readiness": "READY" if ready_for_follow_on else "NOT_READY",
+        "ready_for_follow_on": ready_for_follow_on,
         "handoffs": tuple(received[task_id] for task_id in expected if task_id in received),
         "missing": missing,
         "blocked": blocked,

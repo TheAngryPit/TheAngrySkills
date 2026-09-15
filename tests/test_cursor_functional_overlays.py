@@ -198,8 +198,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                 self.assertIn("automatic skill selection", entry["availability"])
             if name == "cursor-orchestrate":
                 self.assertIn("Codex CLI 0.154.0", contract["native_mapping"]["availability"])
-                self.assertIn("environment-blocked", contract["native_mapping"]["availability"])
-                self.assertIn("no concrete ENV_ID", entry["availability"])
+                self.assertIn("ran to READY", contract["native_mapping"]["availability"])
+                self.assertIn("zero changed lines", contract["native_mapping"]["availability"])
+                self.assertIn("single read-only", entry["availability"])
+                self.assertIn("multi-task drain", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())
             self.assertTrue(contract["permission_gates"])
             self.assertEqual(

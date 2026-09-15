@@ -1,58 +1,68 @@
 # Cursor orchestrate: native Codex Cloud closure
 
 Date: 2026-09-15  
-Scope: read-only capability discovery, bounded adapter implementation, deterministic mirror generation, and local verification.
+Scope: bounded adapter implementation, one authorized read-only Codex Cloud audit, runtime defect correction, deterministic generation, and verification.
 
-## Documented native surface
+## Native surface
 
-Official OpenAI developer-command documentation defines these Codex Cloud CLI operations:
-
-- `codex cloud exec --env ENV_ID [QUERY]`, with one to four attempts and an optional branch;
-- `codex cloud list --json`, including task identity, URL, status, environment identity, summary, and attempt count;
-- `codex cloud status TASK_ID`;
-- `codex cloud diff TASK_ID`;
-- `codex cloud apply TASK_ID --attempt N`.
+Official OpenAI documentation describes `codex cloud exec --env ENV_ID [QUERY]` with one to four attempts and an optional branch, plus `list --json`, `status`, `diff`, and separately mutating `apply`. The CLI documentation does not expose cancellation. The native task UI did expose a cancellation button during this proof; it was not used.
 
 Sources:
 
 - <https://learn.chatgpt.com/docs/developer-commands?surface=cli>
 - <https://learn.chatgpt.com/docs/codex/cli>
 
-The documented CLI surface has no cancellation command. A bounded stop therefore means dispatching no further dependency-ready tasks while retaining confirmed task identities and readback. Applying a diff remains a separate mutation after inspection.
+## Authorized runtime proof
 
-## Local readback
+The existing GitHub installation already covered all repositories. Direct search in the Codex environment form found `TheAngryPit/TheAngrySkills`, so no repository-access mutation was performed.
 
-The installed binary reported `codex-cli 0.154.0`. Its `codex cloud --help` output exposed `exec`, `status`, `list`, `diff`, and `apply`.
+Exactly one environment was created:
 
-Read-only command:
+- name: `TheAngrySkills orchestrate proof`
+- ID: `6aa9136795d0819186c67d8b812e7a70`
+- repository: `TheAngryPit/TheAngrySkills`
+- image: universal
+- setup: automatic
+- environment variables and secrets: none
+- agent internet: off
 
-```text
-codex cloud list --json --limit 20
-```
+Exactly one task was executed with one attempt:
 
-Observed result: exit code 0 and zero tasks. The interactive environment selector showed only `All Environments (Global)` and no concrete environment. That selector is not an executable `ENV_ID`, so no cloud task was created.
+- task: `task_e_6aa91395baf483268a13e1a5cd9db403`
+- URL: <https://chatgpt.com/codex/tasks/task_e_6aa91395baf483268a13e1a5cd9db403>
+- branch: `main`
+- required and observed commit: `124c985348e79cec1a17cfc4ccd73e461e1efdc6`
+- final status: `READY`
+- task result: read-only audit `FAIL` with three adapter findings
+- diff summary: zero files and zero lines changed
+- apply: not used
+- cancellation: not used
 
-## Native adaptation
+`codex cloud diff` reported that no diff was available, consistent with the zero-change audit. No additional attempt or task was created.
 
-The published mirror keeps explicit `/orchestrate <goal>` invocation and replaces the Cursor runtime with a coordinator-owned dependency graph:
+## Runtime payload corrections
 
-1. validate one planner, bounded children, dependency existence, and acyclicity;
-2. compute only dependency-ready task IDs;
-3. build shell-free `codex cloud exec` argument tuples after out-of-band creation authorization and exact environment/branch selection;
-4. normalize documented list readback and derive status/diff commands;
-5. reconcile structured handoffs with artifact identity for passing work;
-6. build an apply command only after separate authorization.
+The actual `list --json` payload differed from the initial fixture in two ways:
 
-This preserves planner, worker, verifier, dependency, drain, and handoff intent. It does not claim access to Cursor's private internal agent tree.
+- `environment_id` was `null` while `environment_label` identified the environment;
+- pagination was returned as `cursor`, not `next_cursor`.
 
-## Security boundary
+The parser now accepts an environment ID, label, or both; requires at least one identity; reads `cursor`; and keeps a normalized `next_cursor` compatibility alias. The exact real task shape is a regression fixture.
 
-All pinned upstream `blocked_malicious` findings remain recorded in the overlay. The rendered bundle excludes upstream prompts, references, schemas, TypeScript/Bun scripts, dependency manifests, measurement shell execution, Slack adapters, and credential paths. It contains only the rewritten native skill, the reviewed Python adapter, provenance, and license.
+## Audit findings and fixes
 
-The earlier provisional ChatGPT Work client ID belongs to a separate experiment with unknown final state. This Codex Cloud adaptation neither retries nor resolves that request.
+The cloud audit found that bare caller-supplied completed IDs could unlock descendants. Readiness now comes only from validated `PASS` handoffs. Each passing completion must carry the associated cloud task and attempt, proof that status and diff were inspected, and a structured artifact URI with a SHA-256 digest. Bare IDs, `BLOCKED` or `ISSUES` handoffs, uninspected results, textual artifact references, and malformed digests do not unlock descendants.
 
-## Proof and residual gap
+The adapter now represents the native command range with attempts from one through four and an optional branch. This does not change the completed proof: that task intentionally used one attempt and a fixed branch/commit for reproducibility.
 
-Focused tests cover graph validation, ready batches, authorization gates, exact argv construction, unsafe identifier and private-marker rejection, list parsing, apply separation, handoff aggregation, cycles, missing dependencies, and child bounds.
+Goal and acceptance text are copied into the cloud prompt. Task creation authorization and prompt-content transmission authorization are therefore separate explicit gates. Private-path and high-confidence credential-pattern checks remain limited defensive detection; they are not described as proof that arbitrary text contains no private data.
 
-Live Codex Cloud dispatch, cloud runtime handoffs, and diff readback remain unproved because this host currently exposes no concrete `ENV_ID`. Publication is conditional on that explicit runtime prerequisite and does not claim live execution.
+## Security and publication boundary
+
+All pinned upstream `blocked_malicious` findings remain recorded. The rendered bundle excludes upstream prompts, references, schemas, TypeScript/Bun scripts, dependency manifests, measurement shell execution, Slack adapters, and credential paths. Only the rewritten native skill, reviewed Python adapter, provenance, agent metadata, and license are published.
+
+The historical provisional ChatGPT Work client ID remains separate with unknown state. It was not retried or treated as Codex Cloud evidence.
+
+## Proof boundary
+
+The runtime proves environment discovery, a single fixed-commit read-only task, one attempt, result readback, the real list payload shape, and zero repository changes. It does not prove a multi-task dependency drain, diff application, or cancellation. The adapter prepares reviewable argv and validates supplied records; it does not execute commands or authenticate the provenance of arbitrary caller-created mappings.

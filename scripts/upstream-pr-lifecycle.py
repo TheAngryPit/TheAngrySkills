@@ -94,7 +94,7 @@ def normalize_prs(payload: Any) -> list[dict[str, Any]]:
     return normalized
 
 
-def normalize_comments(payload: Any) -> list[dict[str, str]]:
+def normalize_comments(payload: Any) -> list[dict[str, Any]]:
     """Flatten every paginated issue-comment page for exact-marker checks."""
 
     values = _flatten_pages(payload, "comment")
@@ -107,13 +107,36 @@ def normalize_comments(payload: Any) -> list[dict[str, str]]:
             body = ""
         if not isinstance(body, str):
             raise ValueError("comment response contains a non-text body")
-        normalized.append({"body": body})
+        user = comment.get("user") if isinstance(comment.get("user"), dict) else {}
+        normalized.append({
+            "id": comment.get("id"),
+            "author": user.get("login") if isinstance(user.get("login"), str) else "",
+            "body": body,
+        })
     return normalized
 
 
-def has_codex_request(comments: list[dict[str, Any]], family: str, batch: str, source_head: str) -> bool:
-    needle = codex_request_marker(family, batch, source_head)
-    return any(needle in (comment.get("body") or "") for comment in comments)
+def has_codex_request(
+    comments: list[dict[str, Any]],
+    report: dict[str, Any],
+    author: str,
+    comment_id: int | None = None,
+) -> bool:
+    """Require the complete request from the expected GitHub identity.
+
+    A family/head marker by itself is public and spoofable.  Matching the
+    canonical body and bot identity prevents another commenter from suppressing
+    the real request.  After posting, callers may additionally bind the readback
+    to the exact REST comment id.
+    """
+
+    expected = codex_request(report).rstrip("\r\n")
+    return any(
+        (comment.get("body") or "").rstrip("\r\n") == expected
+        and comment.get("author") == author
+        and (comment_id is None or comment.get("id") == comment_id)
+        for comment in comments
+    )
 
 
 def validate_report(report: dict[str, Any]) -> None:
@@ -181,15 +204,17 @@ def main() -> int:
     select.add_argument("--head", required=True)
     select.add_argument("--prs-json", help="JSON array of open PRs; stdin when omitted")
     codex = subparsers.add_parser("request-present")
-    codex.add_argument("--family", required=True)
-    codex.add_argument("--batch", required=True)
-    codex.add_argument("--source-head", required=True)
+    codex.add_argument("--report-json", required=True)
+    codex.add_argument("--author", required=True)
+    codex.add_argument("--comment-id", type=int)
     codex.add_argument("--comments-json", help="JSON array of comments; stdin when omitted")
     render = subparsers.add_parser("render-pr")
     render.add_argument("--report-json", required=True)
     render.add_argument("--report-file", required=True)
     request = subparsers.add_parser("render-codex-request")
     request.add_argument("--report-json", required=True)
+    request_json = subparsers.add_parser("render-codex-request-json")
+    request_json.add_argument("--report-json", required=True)
     normalize = subparsers.add_parser("normalize-prs")
     normalize.add_argument("--prs-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
     comments = subparsers.add_parser("normalize-comments")
@@ -211,6 +236,9 @@ def main() -> int:
     if args.command == "render-codex-request":
         print(codex_request(json.loads(args.report_json)), end="")
         return 0
+    if args.command == "render-codex-request-json":
+        print(json.dumps({"body": codex_request(json.loads(args.report_json))}, sort_keys=True))
+        return 0
     if args.command == "normalize-prs":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
         try:
@@ -228,7 +256,8 @@ def main() -> int:
             return 2
         return 0
     raw = args.comments_json if args.comments_json is not None else sys.stdin.read()
-    print("true" if has_codex_request(json.loads(raw or "[]"), args.family, args.batch, args.source_head) else "false")
+    report = json.loads(args.report_json)
+    print("true" if has_codex_request(json.loads(raw or "[]"), report, args.author, args.comment_id) else "false")
     return 0
 
 

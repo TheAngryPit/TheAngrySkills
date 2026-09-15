@@ -244,7 +244,26 @@ def snapshot(checkout: Path, source_path: str) -> dict[str, str]:
 
 def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     items = matt_items(root)
-    baseline = next((json.loads((root / item["destination"] / "UPSTREAM.json").read_text()).get("commit") for item in items if (root / item["destination"] / "UPSTREAM.json").exists()), "")
+    missing_metadata = [
+        str(Path(item["destination"]) / "UPSTREAM.json")
+        for item in items
+        if not (root / item["destination"] / "UPSTREAM.json").is_file()
+    ]
+    if missing_metadata:
+        raise ValueError(f"missing Matt adaptation metadata: {', '.join(sorted(missing_metadata))}")
+    metadata = [
+        json.loads((root / item["destination"] / "UPSTREAM.json").read_text())
+        for item in items
+    ]
+    for item, record in zip(items, metadata):
+        if record.get("source_path") != item["source_path"]:
+            raise ValueError(f"Matt adaptation metadata source mismatch: {item['destination']}")
+        if not isinstance(record.get("upstream_sha256"), dict):
+            raise ValueError(f"Matt adaptation metadata lacks hashes: {item['destination']}")
+    baselines = {record.get("commit") for record in metadata}
+    if len(baselines) != 1 or not next(iter(baselines), None):
+        raise ValueError("Matt adaptation metadata has missing or mixed baseline commits")
+    baseline = next(iter(baselines))
     latest = head(checkout)
     result = blank_result("matt", "adapted", MATT_REPOSITORY, baseline, latest)
     current = source_skill_paths(checkout, "skills")
@@ -270,8 +289,6 @@ def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     changed_paths: set[str] = set()
     for item in items:
         upstream_file = root / item["destination"] / "UPSTREAM.json"
-        if not upstream_file.exists():
-            continue
         source_path = item["source_path"]
         expected = json.loads(upstream_file.read_text()).get("upstream_sha256", {})
         actual = snapshot(checkout, source_path)

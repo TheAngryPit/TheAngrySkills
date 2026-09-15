@@ -153,15 +153,19 @@ jobs:
               < "$RUNNER_TEMP/pr-comment-pages.json" \
               > "$RUNNER_TEMP/pr-comments.json"
             request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
-              --family "$family" \
-              --batch "$batch" \
-              --source-head "$(python -c 'import json,sys; print(json.loads(sys.argv[1])["latest"])' "$report_json")" \
+              --report-json "$report_json" \
+              --author "github-actions[bot]" \
               < "$RUNNER_TEMP/pr-comments.json")"
+            posted_comment_id=""
             if [ "$request_present" = false ]; then
-              python scripts/upstream-pr-lifecycle.py render-codex-request \
+              python scripts/upstream-pr-lifecycle.py render-codex-request-json \
                 --report-json "$report_json" \
-                > "$RUNNER_TEMP/codex-request.md"
-              gh pr comment "$number" --body-file "$RUNNER_TEMP/codex-request.md"
+                > "$RUNNER_TEMP/codex-request.json"
+              gh api --method POST \
+                "repos/${GITHUB_REPOSITORY}/issues/$number/comments" \
+                --input "$RUNNER_TEMP/codex-request.json" \
+                > "$RUNNER_TEMP/posted-comment.json"
+              posted_comment_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$RUNNER_TEMP/posted-comment.json")"
             fi
             gh api --paginate --slurp \
               "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
@@ -169,11 +173,15 @@ jobs:
             python scripts/upstream-pr-lifecycle.py normalize-comments \
               < "$RUNNER_TEMP/pr-comment-pages-after.json" \
               > "$RUNNER_TEMP/pr-comments-after.json"
+            request_args=(
+              --report-json "$report_json"
+              --author "github-actions[bot]"
+            )
+            if [ -n "$posted_comment_id" ]; then
+              request_args+=(--comment-id "$posted_comment_id")
+            fi
             request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
-              --family "$family" \
-              --batch "$batch" \
-              --source-head "$(python -c 'import json,sys; print(json.loads(sys.argv[1])["latest"])' "$report_json")" \
-              < "$RUNNER_TEMP/pr-comments-after.json")"
+              "${request_args[@]}" < "$RUNNER_TEMP/pr-comments-after.json")"
             if [ "$request_present" != true ]; then
               echo "Codex request marker was not visible after comment attempt" >&2
               exit 1

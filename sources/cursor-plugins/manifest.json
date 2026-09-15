@@ -681,7 +681,7 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "ChatGPT Work cloud task creation documented but live dispatch rejected by auto-review; tree, handoff, artifact, cancel and recovery unproven",
+      "availability": "authorized Work cloud request accepted with provisional clientThreadId only; definitive task identity, result, tree, handoff, artifact, cancel and recovery unproven after discovery blocked",
       "baseline_classification": "não demonstrada (equivalente nativo não provado)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -772,13 +772,13 @@
       "license_path": "orchestrate/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "orchestrate/skills/orchestrate/SKILL.md",
-      "planned_adaptation": "Mapear a orquestração explicit-only para ChatGPT Work cloud escolhido pelo operador; manter scripts/credenciais Cursor apenas como referência, sem publicar até provar criação, filhos, drain, handoffs, artefactos e recuperação nativos.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
+      "planned_adaptation": "Mapear a orquestração explicit-only para ChatGPT Work cloud; preservar o clientThreadId do único pedido sintético autorizado e manter held até existir identidade definitiva, readback, filhos, handoffs, artefactos e recuperação observáveis.",
+      "promotion_reason": "one authorized Work request reached provisional acceptance, but task discovery and all orchestration behavior remain unproven",
       "publish": false,
       "published_name": "cursor-orchestrate",
       "upstream_purpose": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
       "upstream_skill": "orchestrate",
-      "validation_requirement": "frontmatter e referências relativas; pedido explícito de task Work; prova nativa de goal/dispatch/filhos/drain/handoffs/artefactos/cancel/recovery; security findings Cursor mantidos, sem execução dos scripts pinados"
+      "validation_requirement": "frontmatter e referências relativas; pedido Work único já autorizado e não repetível sem reconciliação; resolver clientThreadId para threadId; provar result/filhos/drain/handoffs/artefactos/cancel/recovery; manter findings Cursor sem executar scripts pinados"
     },
     {
       "availability": "bounded project-local diff review artifact proven; live PR retrieval and Cursor Canvas unavailable",

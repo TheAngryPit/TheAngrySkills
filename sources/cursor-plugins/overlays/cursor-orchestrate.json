@@ -20,7 +20,7 @@
         "observed child dispatch, cancellation, recovery and artifact identity for full tree parity"
       ],
       "fallback": "When Work cloud dispatch or readback is unavailable, return a labeled unavailability and a reviewable plan; never present local delegates or Cursor SDK execution as Work cloud orchestration.",
-      "availability": "work_cloud_create_contract_documented; tree_dispatch_drain_artifact_cancel_recover_unproven"
+      "availability": "work_cloud_creation_request_accepted_with_client_id_only; definitive_task_identity_result_tree_handoff_artifact_cancel_recover_unproven"
     },
     "external_dependencies": [
       "Native ChatGPT Work cloud task API and explicit new-task request for the selected destination",
@@ -36,11 +36,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "An explicitly requested Work cloud root receives the verbatim goal, returns a ready task ID/URL, and a Work-compatible readback yields structured child handoffs and artifact identity before a combined report.",
-      "missing_tool_or_input": "Absent goal, new-task authorization, Work-compatible drain, or child capability yields a labeled gap and reviewable plan without dispatch or local substitution.",
-      "error": "Queued clientThreadId, failed child, missing artifact or recovery surface is reported with last confirmed state; no guessed wait, cancellation or merge."
+      "positive": "The authorized projectless Work creation request returned a provisional clientThreadId; definitive thread identity, result, and all orchestration behavior remain unobserved.",
+      "missing_tool_or_input": "A provisional clientThreadId without a definitive threadId or working discovery/readback surface pauses proof without retry, local substitution, or a completion claim.",
+      "error": "Blocked discovery preserves the provisional client ID and unknown execution state; duplicate creation, guessed wait, cancellation, archive substitution, and merge remain prohibited."
     },
-    "promotion_status": "held_until_behavior_proof_and_permission_gate",
+    "promotion_status": "held_after_provisional_work_acceptance_discovery_unavailable",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "orchestrate/README.md",
@@ -113,11 +113,11 @@
       ]
     }
   },
-  "codex_note": "## Codex Work cloud mapping and security hold\n\nThe operator selected ChatGPT Work cloud as the Codex destination. This candidate remains unindexed. The documented native API can create a user-owned Work task on an explicit new-task request; it does not yet prove the pinned source's tree dispatch, drain, structured handoffs, Git artifacts, cancellation or recovery. Read reports/cursor-orchestrate-work-cloud-contract-20260914.md before any admission. A plan-only response must label Work execution unavailable; local subagents and Cursor SDK scripts are not substitutes. Finding review: bundled-script-review at scripts/**:n/a (bundled_executable_surface); dependency-manifest-surface at scripts/package.json:n/a (active_dependency_surface); persistence-mutation at scripts/measurements.ts:302 (active_executable_code_with_security_boundary); policy-bypass-instruction at scripts/__tests__/operator-boundary.test.ts:38 (defensive_test_reference); persistence-mutation at scripts/adapters/slack/index.ts:51 (read_only_false_positive_context_with_external_adapter). Keep the bundled runtime external and do not install dependencies from this mirror. Retain the scanner findings for the upstream Cursor runtime; any Work-native implementation needs its own behavior and permission proof.\n",
+  "codex_note": "## Codex Work cloud mapping and security hold\n\nThe operator selected ChatGPT Work cloud and explicitly authorized one projectless synthetic proof with two records and at most one child. Native creation was called exactly once and returned provisional client ID `local-chatgpt:a146a047-7138-4d84-ba2b-6e7d6824e555`, but no definitive `threadId`, host, result, child, handoff, artifact, cancellation or recovery became observable. Task listing first found no match and then blocked; pending calls were cancelled and creation was not retried. Work execution state remains unknown after provisional acceptance. Read reports/cursor-orchestrate-local-proof-20260915.md before any future reconciliation. Preserve the client ID and do not create another task unless the existing request is first proved to have failed without creating one. Local subagents and Cursor SDK scripts are not Work cloud parity. Keep the bundled upstream runtime external and retain all scanner findings.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use only when the user explicitly types `/orchestrate <goal>` to decompose a large task, spawn a tree of parallel cloud-agent workers/subplanners/verifiers via the Cursor SDK, and collect structured handoffs; do not invoke autonomously.",
-  "proof": "Pinned source hash and deterministic build are static provenance. The native Work cloud API contract and exact missing operations are mapped in reports/cursor-orchestrate-work-cloud-contract-20260914.md. Local plan and handoff validation plus one approval-gated synthetic/public-data payload are recorded in reports/cursor-orchestrate-local-proof-20260915.md; no Work tree ran. Contextual upstream security findings and hold decisions remain recorded.",
-  "reason": "Map the operator-selected ChatGPT Work cloud destination without silently running Cursor SDK scripts or relabeling local delegation as cloud parity. Preserve the source/security provenance and keep this skill unindexed until Work behavior is proved.",
+  "proof": "Pinned source hash and deterministic build are static provenance. Root-local fan-out/drain and the local plan/handoff validator are separate evidence. The one authorized Work creation request returned only a provisional clientThreadId; discovery then became unavailable, so Work execution, tree, handoff, artifact, cancellation and recovery remain unproven.",
+  "reason": "Keep local native orchestration evidence separate from the selected Work path. Record provisional Work request acceptance without treating it as definitive task creation or runtime parity.",
   "replacements": [],
   "source_path": "orchestrate/skills/orchestrate/SKILL.md",
   "source_sha256": "a56718f3acf4bbc13e44ca7b8e00d499e818fb16ee293bbe3d58621968c28e22"

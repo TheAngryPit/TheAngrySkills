@@ -76,3 +76,27 @@ status/readback surface must be observed. Child fan-out, structured handoff,
 artifact identity, cancellation and recovery remain separate proof points; an
 unavailable operation stays a reported gap. No Cursor runtime or local worker
 is a substitute for those Work cloud observations.
+
+## Authorized live attempt
+
+Vítor subsequently approved the exact payload above. The native creation
+surface was called exactly once with `target.type: chatgptWorkCloud`, no
+project, the two-record synthetic fixture, and `max_children: 1` in the
+prompt. It returned:
+
+```json
+{"kind":"chatgpt","clientThreadId":"local-chatgpt:a146a047-7138-4d84-ba2b-6e7d6824e555"}
+```
+
+This proves only that the creation request was accepted into an asynchronous
+client-side setup path. It did not return a definitive `threadId` or host.
+Repeated `list_threads` calls first returned no matching task and then blocked;
+all pending calls were cancelled, no duplicate creation was attempted, and the
+provisional identifier was never passed to a tool that requires `threadId`.
+
+No root result, child, structured handoff, artifact identity, cancellation or
+recovery result became observable. The Work execution state is therefore
+unknown after provisional acceptance. The proof is paused on task discovery,
+and `cursor-orchestrate` remains held. A future reconciliation must start from
+the preserved `clientThreadId`; it must not create another task unless the
+existing request is first shown to have failed without creating one.

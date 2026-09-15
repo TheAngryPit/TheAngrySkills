@@ -38,6 +38,7 @@ MAX_TURN_LIMIT = 20
 MAX_OUTPUT_CHARS = 4_000
 _OPERATIONS = frozenset({"prompt", "create", "resume", "send", "wait", "stream"})
 _MUTATING_OPERATIONS = frozenset({"prompt", "create", "resume", "send"})
+_MUTATING_TOOLS = frozenset({"create_thread", "send_message_to_thread"})
 _TARGET_TYPES = frozenset({"projectless", "project"})
 _SENSITIVE_KEY_PARTS = frozenset(
     {
@@ -338,8 +339,10 @@ def run_native_migration(
         )
 
     observed: list[dict[str, Any]] = []
+    mutation_attempted = False
     for operation in plan["operations"]:
         tool = operation["tool"]
+        mutation_attempted = mutation_attempted or tool in _MUTATING_TOOLS
         try:
             value = _safe_native_result(native_surface[tool](**operation["arguments"]))
         except PermissionDenied as exc:
@@ -349,7 +352,7 @@ def run_native_migration(
                 observed=observed,
                 reason=str(exc),
                 native_execution_attempted=True,
-                external_writes=False,
+                external_writes="unknown" if mutation_attempted else False,
             )
         except Exception:
             # Do not return exception messages: an external bridge may include
@@ -361,7 +364,7 @@ def run_native_migration(
                 failed_tool=tool,
                 reason="caller-supplied native bridge raised an error",
                 native_execution_attempted=True,
-                external_writes=False,
+                external_writes="unknown" if mutation_attempted else False,
             )
         observed.append({"tool": tool, "status": value.get("status", "returned")})
         if _result_failed(value):
@@ -372,10 +375,9 @@ def run_native_migration(
                 failed_tool=tool,
                 reason="caller-supplied native bridge returned an error status",
                 native_execution_attempted=True,
-                external_writes=False,
+                external_writes="unknown" if mutation_attempted else False,
             )
 
-    mutation_attempted = bool(plan["authorization_required"])
     return _common_result(
         status="NATIVE_DELEGATION_OBSERVED",
         plan=plan,
@@ -383,7 +385,7 @@ def run_native_migration(
         native_execution_attempted=True,
         native_execution_attested=False,
         delegated_bridge_result=True,
-        external_writes=False,
+        external_writes=mutation_attempted,
         native_external_mutation_attempted=mutation_attempted,
         reason=(
             "caller-supplied bridge returned bounded results; this does not attest "

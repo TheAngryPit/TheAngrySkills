@@ -2474,7 +2474,7 @@
       ]
     },
     "scripts/cursor_sdk_native_adapter.py": {
-      "sha256": "a99d389f1678b022b9e21dfc4f66a98a7e9594c881cb7448fd3a3b988ac542d8",
+      "sha256": "a0aa60def553d9a9873de503e3fe950e4c606ba32fd8e84704c82b3b100c9917",
       "related_skills": [
         "cursor-cursor-sdk"
       ]

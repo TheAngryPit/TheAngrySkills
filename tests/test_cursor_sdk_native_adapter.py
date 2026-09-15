@@ -112,6 +112,18 @@ class CursorSdkNativeAdapterTests(unittest.TestCase):
         )
         self.assertEqual(allowed["status"], "NATIVE_DELEGATION_OBSERVED")
         self.assertEqual(calls, ["create_thread"])
+        self.assertTrue(allowed["external_writes"])
+        self.assertTrue(allowed["native_external_mutation_attempted"])
+
+    def test_mutating_bridge_error_does_not_claim_zero_external_writes(self) -> None:
+        result = run_native_migration(
+            {"operation": "send", "thread_id": "known", "prompt": "bounded"},
+            native_surface={"send_message_to_thread": lambda **_: (_ for _ in ()).throw(RuntimeError("failed"))},
+            execute=True,
+            authorization_granted=True,
+        )
+        self.assertEqual(result["status"], "NATIVE_ERROR")
+        self.assertEqual(result["external_writes"], "unknown")
 
     def test_credentials_and_mcp_fail_closed_before_bridge_call(self) -> None:
         calls: list[str] = []

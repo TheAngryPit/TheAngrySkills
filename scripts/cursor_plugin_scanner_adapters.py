@@ -63,6 +63,56 @@ _CREDENTIAL_KEY_NORMALIZED = frozenset(
     }
 )
 
+LOCAL_SCANNER_ID = "codex-local-plugin-compatibility-v1"
+LOCAL_SCANNER_ROLES = (
+    "deterministic-scanner",
+    "startup-review",
+    "validation-review",
+    "docs-reliability-review",
+)
+CODEX_NATIVE_SDK_MAPPING = {
+    "Agent.create": {
+        "native_capability": "create_thread",
+        "equivalence": "conceptual_only",
+        "operation": "creates a separate Codex task only when explicitly requested",
+    },
+    "Agent.prompt": {
+        "native_capability": "create_thread or send_message_to_thread",
+        "equivalence": "conceptual_only",
+        "operation": "sends a user-visible prompt through the native task surface",
+    },
+    "Agent.resume": {
+        "native_capability": "send_message_to_thread",
+        "equivalence": "conceptual_only",
+        "operation": "continues an existing task after its ID and host are verified",
+    },
+    "agent.send": {
+        "native_capability": "send_message_to_thread",
+        "equivalence": "conceptual_only",
+        "operation": "sends a follow-up to an existing task",
+    },
+    "run.stream": {
+        "native_capability": "wait_threads plus read_thread",
+        "equivalence": "no_streaming_equivalent_claimed",
+        "operation": "waits for task progress and reads bounded turn output",
+    },
+    "run.wait": {
+        "native_capability": "wait_threads",
+        "equivalence": "conceptual_only",
+        "operation": "waits for completion or attention on a native task",
+    },
+    "CursorAgentError": {
+        "native_capability": "native tool result and task status",
+        "equivalence": "conceptual_only",
+        "operation": "reports native failure status without importing Cursor errors",
+    },
+    "mcpServers": {
+        "native_capability": "installed connector or MCP surface when advertised",
+        "equivalence": "no_configuration_equivalent_claimed",
+        "operation": "requires separately verified native capability and permission",
+    },
+}
+
 
 def _root(path: str | Path) -> Path:
     candidate = Path(path)
@@ -121,10 +171,132 @@ def inspect_compatibility_fixture(
     return result
 
 
+def _local_role(score: int, *, evidence: tuple[str, ...], issues: tuple[str, ...] = ()) -> dict[str, Any]:
+    return {
+        "score": score,
+        "evidence": evidence,
+        "issues": issues,
+        "executed_runtime": False,
+        "external_writes": False,
+    }
+
+
+def local_plugin_compatibility_scan(plugin_root: str | Path) -> dict[str, Any]:
+    """Run a deterministic, local Codex scanner against one plugin directory.
+
+    This is a safe substitute for the unavailable upstream npm scanner. It
+    scores four independent, observable static contracts and deliberately
+    never labels the result as an Agent Compatibility Score. It does not run
+    plugin components, hooks, MCP servers, startup commands, or tests.
+    """
+
+    root = _root(plugin_root)
+    try:
+        from cursor_plugin_submission_audit import audit_plugin_fixture
+    except ImportError as exc:  # pragma: no cover - import path is repo-local
+        raise AdapterError("local structural auditor is unavailable") from exc
+
+    audit = audit_plugin_fixture(root)
+    manifest_path = root / ".cursor-plugin" / "plugin.json"
+    readme_path = root / "README.md"
+    manifest_exists = manifest_path.is_file()
+    readme_exists = readme_path.is_file()
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_exists else {}
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        manifest = {}
+    if not isinstance(manifest, dict):
+        manifest = {}
+
+    deterministic_issues = tuple(str(item) for item in audit.get("issues", ()))
+    deterministic_score = 100 if audit.get("status") == "STRUCTURAL_PASS" else max(
+        0, 100 - 20 * len(deterministic_issues)
+    )
+    startup_evidence = []
+    startup_issues = []
+    if manifest_exists:
+        startup_evidence.append("bounded manifest exists")
+    else:
+        startup_issues.append("bounded manifest is missing")
+    if readme_exists:
+        startup_evidence.append("README exists")
+    else:
+        startup_issues.append("README is missing")
+    if not startup_issues:
+        startup_score = 100
+    else:
+        startup_score = max(0, 100 - 50 * len(startup_issues))
+
+    validation_evidence = []
+    validation_issues = []
+    checked = audit.get("checked_component_files", 0)
+    if isinstance(checked, int) and checked > 0:
+        validation_evidence.append(f"{checked} component files have required metadata")
+    else:
+        validation_issues.append("no component metadata was validated")
+    if audit.get("status") == "ERROR":
+        validation_issues.extend(deterministic_issues)
+    validation_score = 100 if not validation_issues else max(0, 100 - 20 * len(validation_issues))
+
+    docs_evidence = []
+    docs_issues = []
+    readme = ""
+    if readme_exists:
+        try:
+            readme = readme_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            docs_issues.append("README cannot be read as UTF-8")
+        if isinstance(manifest.get("name"), str) and manifest["name"] in readme:
+            docs_evidence.append("README names the plugin")
+        else:
+            docs_issues.append("README does not name the plugin")
+        if "Components:" in readme or "component" in readme.lower():
+            docs_evidence.append("README describes component coverage")
+        else:
+            docs_issues.append("README does not describe component coverage")
+    else:
+        docs_issues.append("README is missing")
+    docs_score = 100 if not docs_issues else max(0, 100 - 25 * len(docs_issues))
+
+    roles = {
+        "deterministic-scanner": _local_role(
+            deterministic_score,
+            evidence=("read-only structural auditor",),
+            issues=deterministic_issues,
+        ),
+        "startup-review": _local_role(
+            startup_score, evidence=tuple(startup_evidence), issues=tuple(startup_issues)
+        ),
+        "validation-review": _local_role(
+            validation_score, evidence=tuple(validation_evidence), issues=tuple(validation_issues)
+        ),
+        "docs-reliability-review": _local_role(
+            docs_score, evidence=tuple(docs_evidence), issues=tuple(docs_issues)
+        ),
+    }
+    score = round(sum(item["score"] for item in roles.values()) / len(roles))
+    return {
+        "status": "LOCAL_SCANNER_PASS" if score == 100 else "LOCAL_SCANNER_REVIEW",
+        "scanner": LOCAL_SCANNER_ID,
+        "roles": roles,
+        "local_codex_compatibility_score": score,
+        "agent_compatibility_score": None,
+        "score_provenance": "DETERMINISTIC_LOCAL_CODEX_SCAN_NOT_UPSTREAM_AGENT_COMPATIBILITY",
+        "upstream_scanner": "UNAVAILABLE",
+        "runtime_executed": False,
+        "components_executed": False,
+        "network_used": False,
+        "external_writes": False,
+        "credentials_read": False,
+        "reason": "local static Codex contract only; no upstream scanner or plugin runtime was executed",
+    }
+
+
 def compatibility_report(
     fixture_root: str | Path,
     *,
     scanner_result: Mapping[str, Any] | None = None,
+    local_scan: bool = False,
 ) -> dict[str, Any]:
     """Combine a supplied real scanner result with local evidence.
 
@@ -134,6 +306,12 @@ def compatibility_report(
     """
 
     result = inspect_compatibility_fixture(fixture_root)
+    if not isinstance(local_scan, bool):
+        raise AdapterError("local_scan must be boolean")
+    if local_scan:
+        result.update(local_plugin_compatibility_scan(fixture_root))
+        result["status"] = "LOCAL_SCANNER_RESULT"
+        return result
     if scanner_result is None:
         result["status"] = "SCANNER_UNAVAILABLE"
         return result
@@ -224,19 +402,42 @@ def sdk_reference_report(
     }
 
 
+def sdk_native_contract_report() -> dict[str, Any]:
+    """Describe safe Codex capability mappings without importing Cursor SDK."""
+
+    return {
+        "status": "CODEX_NATIVE_MAPPING_REFERENCE_ONLY",
+        "mappings": CODEX_NATIVE_SDK_MAPPING,
+        "cursor_sdk_imported": False,
+        "cursor_sdk_executed": False,
+        "credentials_read": False,
+        "authenticated": False,
+        "network_used": False,
+        "external_writes": False,
+        "equivalence": "conceptual_only; native Codex task APIs are a different contract",
+        "permission_boundary": "mapping does not create tasks or invoke tools",
+        "reason": "safe native capability map for external SDK references; no Cursor runtime claim",
+    }
+
+
 def _main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("compatibility", "sdk-reference"))
+    parser.add_argument("mode", choices=("compatibility", "sdk-reference", "sdk-native-contract"))
     parser.add_argument("path", nargs="?", help="explicit local fixture root (compatibility mode only)")
+    parser.add_argument("--local-scan", action="store_true", help="run the deterministic local Codex plugin scan")
     args = parser.parse_args()
     if args.mode == "compatibility":
         if not args.path:
             parser.error("compatibility mode requires an explicit fixture root")
-        result = compatibility_report(args.path)
-    else:
+        result = compatibility_report(args.path, local_scan=args.local_scan)
+    elif args.mode == "sdk-reference":
         if args.path:
             parser.error("sdk-reference accepts source text on stdin; it never reads a path")
         result = sdk_reference_report(sys.stdin.read())
+    else:
+        if args.path or args.local_scan:
+            parser.error("sdk-native-contract accepts no path or scan flag")
+        result = sdk_native_contract_report()
     print(json.dumps(result, sort_keys=True))
     return 0
 

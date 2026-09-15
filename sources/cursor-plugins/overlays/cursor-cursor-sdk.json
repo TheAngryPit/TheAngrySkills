@@ -10,13 +10,14 @@
     "preserved_semantics": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
     "native_mapping": {
       "capabilities": [
-        "reference reader"
+        "reference reader",
+        "native Codex capability mapper"
       ],
       "required_tools": [
         "reference reader"
       ],
       "fallback": "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
-      "availability": "security_hold"
+      "availability": "safe non-executing native capability map observed; Cursor SDK runtime remains unavailable"
     },
     "external_dependencies": [
       "@cursor/sdk",
@@ -47,10 +48,10 @@
       "decision": "The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased."
     }
   },
-  "codex_note": "## Codex security hold\n\nKeep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror. The Cursor SDK and native connector/tool permissions are not proven in Codex. This candidate remains unindexed. The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased.\n",
+  "codex_note": "## Codex security hold\n\nKeep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror. The safe native mapping is conceptual only: `Agent.create`/`Agent.prompt`/`Agent.resume`/`agent.send` correspond to native task creation or follow-up surfaces, while `run.wait` corresponds to bounded task waiting. No streaming, MCP configuration, error-class, or runtime equivalence is claimed; native task creation is not performed by this reference. The Cursor SDK and native connector/tool permissions are not proven in Codex. This candidate remains unindexed. The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. Security hold requires contextual review and behavior proof before promotion.",
+  "proof": "Pinned source hash and deterministic build are static provenance. The non-executing native capability map supplies a safe conceptual route without importing Cursor; security hold and external-runtime behavior remain unproven.",
   "reason": "Keep the full upstream contract in the body and codex_contract while shortening only discovery metadata to the 1024-character Codex limit.",
   "replacements": [
     {

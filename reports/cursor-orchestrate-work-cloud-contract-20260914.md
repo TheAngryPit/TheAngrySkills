@@ -1,5 +1,7 @@
 # `cursor-orchestrate` → ChatGPT Work cloud contract
 
+> Historical lane: this ChatGPT Work experiment is separate from the documented Codex Cloud CLI adaptation and is no longer an admission gate for `cursor-orchestrate`. Preserve its provisional identity and do not retry it blindly. See `cursor-orchestrate-codex-cloud-closure-20260915.md` for the current native path.
+
 Date: 2026-09-14. Source pin: `cursor/plugins` commit
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. PR #64 review base:
 `f0d54a94baa6b2f9074fe90e066d5bb3f55ca2db`.

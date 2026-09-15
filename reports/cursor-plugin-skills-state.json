@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 1,
+  "candidate_not_published": 0,
   "generated_files": {
     "cursor-advisor/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-advisor/MIRROR.md": "145748e9821171f955dcd8542e7d42f6f365253a328c61a10541d937d386a0f4",
@@ -135,6 +135,11 @@
     "cursor-no-comments/MIRROR.md": "b52a2b45cb33a037da8d3cd305611bf65ab5dca09373da8255191a257d395431",
     "cursor-no-comments/SKILL.md": "1e7df356c4d7779b9e2fb5db678776b747ebb2374412f850b433ebbdfd5189c6",
     "cursor-no-comments/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-orchestrate/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+    "cursor-orchestrate/MIRROR.md": "d061f202b4e68c7e9d9bdae30ce6d761faa2283e580e4e6ed0ea3fd7caf183f6",
+    "cursor-orchestrate/SKILL.md": "0698aa4a36858537643896d1c76fb4bc226e93243c11d72318d2f790a5bd6b4a",
+    "cursor-orchestrate/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+    "cursor-orchestrate/scripts/cursor_orchestrate_adapters.py": "3a2262692ddcef4f1a3244b2db458e3139a5752e7c87291ed62ee57eb12f108f",
     "cursor-poteto-mode/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-poteto-mode/MIRROR.md": "700544d34de3fc97aad24c1ec031abc4739eb886edb830f12d0a4080aa0f896f",
     "cursor-poteto-mode/SKILL.md": "8390c05b5742da175f0e6019ff4666918339a956250f1e9dd591c99b164d52cf",
@@ -395,7 +400,7 @@
   },
   "operator_excluded_skills": 8,
   "physical_skills": 91,
-  "published_skills": 82,
+  "published_skills": 83,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

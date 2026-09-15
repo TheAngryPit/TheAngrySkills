@@ -108,6 +108,7 @@ PROMOTED = {
     "cursor-ralph-loop",
     "cursor-cancel-ralph",
     "cursor-cursor-sdk",
+    "cursor-orchestrate",
 }
 
 GUIDE_ONLY = PROMOTED - {
@@ -139,6 +140,7 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-review-plugin-submission",
     "cursor-ralph-loop",
     "cursor-cancel-ralph",
+    "cursor-orchestrate",
 }
 
 
@@ -194,6 +196,10 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
                 self.assertIn("bounded_native_local_four_phase_fanout_observed", contract["native_mapping"]["availability"])
                 self.assertIn("trigger_unobserved", contract["promotion_status"])
                 self.assertIn("automatic skill selection", entry["availability"])
+            if name == "cursor-orchestrate":
+                self.assertIn("Codex CLI 0.154.0", contract["native_mapping"]["availability"])
+                self.assertIn("environment-blocked", contract["native_mapping"]["availability"])
+                self.assertIn("no concrete ENV_ID", entry["availability"])
             self.assertTrue(contract["native_mapping"]["fallback"].strip())
             self.assertTrue(contract["permission_gates"])
             self.assertEqual(

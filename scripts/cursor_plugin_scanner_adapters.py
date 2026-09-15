@@ -57,6 +57,7 @@ _CREDENTIAL_KEY_NORMALIZED = frozenset(
     {
         "clientid",
         "clientsecret",
+        "credentials",
         "token",
         "secret",
     }

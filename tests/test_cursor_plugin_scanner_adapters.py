@@ -78,6 +78,44 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
                 "Agent.create({});",
                 request={"options": {"credentials": {"apiKey": "redacted"}}},
             )
+        with self.assertRaises(PermissionDenied):
+            sdk_reference_report(
+                "Agent.create({});",
+                request={"options": {"credentials": "provided by caller"}},
+            )
+
+    def test_sdk_reference_reports_full_symbol_inventory_without_runtime_claim(self) -> None:
+        source = " ".join(
+            (
+                "@cursor/sdk",
+                "Agent.create",
+                "Agent.prompt",
+                "Agent.resume",
+                "agent.send",
+                "run.stream",
+                "run.wait",
+                "CursorAgentError",
+                "mcpServers",
+            )
+        )
+        result = sdk_reference_report(source)
+        self.assertEqual(
+            result["symbols"],
+            (
+                "@cursor/sdk",
+                "Agent.create",
+                "Agent.prompt",
+                "Agent.resume",
+                "agent.send",
+                "run.stream",
+                "CursorAgentError",
+                "run.wait",
+                "mcpServers",
+            ),
+        )
+        self.assertEqual(result["runtime"], "UNAVAILABLE")
+        self.assertFalse(result["credentials_read"])
+        self.assertFalse(result["authenticated"])
 
     def test_cli_is_json_and_read_only(self) -> None:
         completed = subprocess.run(

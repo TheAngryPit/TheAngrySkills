@@ -18,28 +18,23 @@
         "AGENTS.md diff"
       ],
       "fallback": "A missing transcript/updater returns a proposed-only result with no write.",
-      "availability": "role_reference_bundled; synthetic_updater_fixture_passed; live_host_and_real_transcript_scope_not_proven",
-      "upstream_agent_dependency": {
-        "path": "continual-learning/agents/agents-memory-updater.md",
-        "status": "bundled_as_native_role_reference",
-        "gap": "No live native delegation, transcript merge, or AGENTS.md write has been exercised."
-      }
+      "availability": "bounded_native_adaptation_observed_with_documented_limits"
     },
     "external_dependencies": [
       "scoped transcript source"
     ],
     "permission_gates": [
-      "Run the memory-updater only on an explicit user trigger or an operator-enabled, trusted project hook.",
-      "Limit transcript mining to verified paths for the current workspace and task; exclude secrets and transient details.",
-      "Keep the parent orchestration-only; the bounded native delegate owns the local AGENTS.md diff and index within the authorized workspace.",
+      "Run only on an explicit user trigger or an operator-enabled trusted project workflow.",
+      "Limit review to verified transcripts for the current workspace and task; exclude secrets and unrelated private conversations.",
+      "The delegate is proposal-only and may not edit AGENTS.md, memory, repository instructions, indexes, hooks, or runtime state without separate authorization.",
       "No native delegate or verified transcript source means report not-run with no write."
     ],
     "behavioral_proof": {
-      "positive": "The renderer bundles the pinned updater role, synthetic Stop tests exercise threshold decisions, and one bounded native delegate updated AGENTS.md plus index on a synthetic single-transcript fixture and left both files byte-identical on an unchanged-mtime second pass. No real transcript or live hook was used.",
+      "positive": "A bounded native memory curator reviewed one explicitly authorized transcript, returned a hashed proposal, and performed no AGENTS.md, memory, repository, hook, runtime, or global-state write.",
       "missing_tool_or_input": "Missing scoped transcript or delegate must return not-run with no write; native fallback is not runtime exercised.",
       "error": "Malformed hook state and wrong transcript root fail closed in the synthetic hook fixture; updater errors are not yet exercised."
     },
-    "promotion_status": "held_until_native_updater_and_trusted_hook_proof",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "continual-learning/README.md",
@@ -55,7 +50,7 @@
   "codex_note": "## Codex adaptation and boundary\n\nUse this only for an explicit request to mine prior chats or for an operator-enabled, trusted project hook. The pinned `agents-memory-updater` is bundled as [a native role reference](references/agents-memory-updater.md). Delegate the full transcript/index/AGENTS.md flow to that bounded role, using the operator-selected model and reasoning effort. Give it only verified transcripts from the current workspace and task. The parent returns the result and does not mine or edit. If no native delegate or verified transcript source is available, report not-run and make no write. The isolated adapter in `scripts/cursor_native_hook_adapters.py` proves only threshold decisions on synthetic Codex Stop payloads; no hook is registered or trusted, and one bounded updater run on a synthetic transcript updated a fixture AGENTS.md and index, but real transcript scope and live host invocation remain unproven. This candidate remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.",
-  "proof": "Pinned source hash, support-file hash, and deterministic renderer prove provenance. Synthetic Stop tests exercise default/trial turn, time, mtime, duplicate and scope decisions; direct CLI boundary tests reject a symlinked transcript root before metadata inspection; one bounded native role fixture mined a synthetic transcript and updated only fixture AGENTS.md and index, then returned no updates on an unchanged-mtime second pass; no live host event or real transcript mining is proven.",
+  "proof": "Pinned source hash and deterministic renderer preserve provenance. A bounded native memory curator reviewed one explicitly authorized transcript and produced a hashed proposal with no durable write; the mutating upstream role is not distributed.",
   "reason": "Bundle the upstream updater as a bounded native role and describe the actual synthetic hook proof without enabling the held workflow.",
   "replacements": [
     {
@@ -71,34 +66,5 @@
   ],
   "source_path": "continual-learning/skills/continual-learning/SKILL.md",
   "source_sha256": "f627f733a33879b63523da7e92c8b33e6086df42a49a8139a87d1c21e7bd9b16",
-  "bundled_support_files": [
-    {
-      "source_path": "continual-learning/agents/agents-memory-updater.md",
-      "target_path": "references/agents-memory-updater.md",
-      "replacements": [
-        {
-          "before": "model: inherit\n",
-          "after": ""
-        },
-        {
-          "before": "Inspect only transcript files under `~/.cursor/projects/<workspace-slug>/agent-transcripts/` that are new or have newer mtimes than the index.",
-          "after": "Inspect only explicitly supplied, verified transcript files for the current Codex workspace and task that are new or have newer mtimes than the index; do not search unrelated task transcript roots."
-        },
-        {
-          "before": "`.cursor/hooks/state/continual-learning-index.json`",
-          "after": "`.codex/cursor-mirror-state/continual-learning/index.json`"
-        },
-        {
-          "before": "Load the incremental index if present.",
-          "after": "Load the incremental index if present as a JSON object mapping each authorized absolute transcript path to its last processed `mtimeMs` number; an absent index is `{}`. Reject malformed entries rather than processing transcripts outside the verified current-workspace scope."
-        }
-      ]
-    }
-  ],
-  "bundled_native_files": [
-    {
-      "source_path": "scripts/cursor_native_hook_adapters.py",
-      "target_path": "scripts/cursor_native_hook_adapters.py"
-    }
-  ]
+  "codex_native_body": "# Continual learning proposal for Codex\n\nUse this only when the user explicitly asks to mine supplied task history or when an operator-enabled trusted project workflow invokes it.\n\n## Workflow\n\n1. Verify the transcript is explicitly authorized, belongs to the current workspace/task scope, and excludes secrets and unrelated private conversations.\n2. Delegate the transcript review to one bounded native memory curator with an explicit proposal-only briefing. The coordinator supplies the exact input path and requests a proposal-only result.\n3. Ask the curator to identify durable candidate rules, cite their source lines or hashes, deduplicate them against current instructions, and distinguish user authority from temporary task wording.\n4. Return a reviewable proposal and receipt. Do not edit `AGENTS.md`, global memory, repository instructions, hooks, or runtime state unless the user separately authorizes that exact write.\n5. If the transcript or native delegate is unavailable, return `not-run` and leave all outputs unchanged.\n\nAutomatic Stop-hook triggering remains unavailable. The observed native proof reviewed one explicitly authorized local transcript, produced a hashed proposal, and performed no repository, instruction, memory, hook, or global-state write."
 }

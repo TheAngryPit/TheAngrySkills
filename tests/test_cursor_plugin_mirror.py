@@ -29,6 +29,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_canvas_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
+            "scripts/cursor_plugin_scanner_adapters.py",
             "scripts/cursor_bot_ui_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
@@ -117,7 +118,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
-        self.assertEqual(state["candidate_not_published"], 9)
+        self.assertEqual(state["candidate_not_published"], 2)
         self.assertEqual(state["operator_excluded_skills"], 8)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
@@ -170,37 +171,32 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("plugin-level support inventory or hash drift", result.stderr)
 
-    def test_compatibility_preview_repairs_frontmatter_and_bundles_four_roles(self):
-        preview = self.root / "native-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        candidate = preview / "cursor-check-agent-compatibility"
+    def test_compatibility_adapter_repairs_frontmatter_without_unsafe_upstream_roles(self):
+        candidate = self.root / "skills/mirrors-cursor/cursor-check-agent-compatibility"
         skill = (candidate / "SKILL.md").read_text()
         self.assertIn('description: "Run the full repository compatibility pass:', skill)
-        self.assertIn("package version, installation effects, and egress", skill)
+        self.assertIn("local_codex_compatibility_score", skill)
+        self.assertEqual(
+            (candidate / "scripts/cursor_plugin_scanner_adapters.py").read_bytes(),
+            (self.root / "scripts/cursor_plugin_scanner_adapters.py").read_bytes(),
+        )
+        self.assertEqual(
+            (candidate / "scripts/cursor_plugin_submission_audit.py").read_bytes(),
+            (self.root / "scripts/cursor_plugin_submission_audit.py").read_bytes(),
+        )
         for name in ("compatibility-scan-review", "startup-review",
                      "validation-review", "docs-reliability-review"):
-            role = (candidate / "references" / f"{name}.md").read_text()
-            self.assertIn(f"name: {name}", role)
-            self.assertNotIn("model: fast", role)
-            self.assertNotIn("readonly: true", role)
+            self.assertFalse((candidate / "references" / f"{name}.md").exists())
 
-    def test_submission_auditor_is_pinned_only_in_held_preview(self):
-        preview = self.root / "native-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
+    def test_submission_auditor_is_pinned_in_published_adapter(self):
         source = self.root / "scripts/cursor_plugin_submission_audit.py"
-        bundled = preview / "cursor-review-plugin-submission/scripts/cursor_plugin_submission_audit.py"
+        bundled = self.root / "skills/mirrors-cursor/cursor-review-plugin-submission/scripts/cursor_plugin_submission_audit.py"
         self.assertEqual(bundled.read_bytes(), source.read_bytes())
-        self.assertFalse(
-            (self.root / "skills/mirrors-cursor/cursor-review-plugin-submission").exists()
-        )
+        skill = bundled.parent.parent / "SKILL.md"
+        self.assertIn("STRUCTURAL_PASS", skill.read_text())
 
-    def test_scaffold_fixture_and_role_references_remain_held(self):
-        preview = self.root / "native-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        candidate = preview / "cursor-create-plugin-scaffold"
+    def test_scaffold_fixture_and_role_references_are_bounded(self):
+        candidate = self.root / "skills/mirrors-cursor/cursor-create-plugin-scaffold"
         source = self.root / "scripts/cursor_plugin_scaffold_fixture.py"
         bundled = candidate / "scripts/cursor_plugin_scaffold_fixture.py"
         self.assertEqual(bundled.read_bytes(), source.read_bytes())
@@ -211,26 +207,21 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotIn("alwaysApply: true", rule)
         self.assertIn("explicit disposable project-local destination", role)
         self.assertIn("explicit disposable project-local destination", rule)
-        self.assertFalse((self.root / "skills/mirrors-cursor/cursor-create-plugin-scaffold").exists())
+        self.assertNotIn("~/.cursor/plugins/local", (candidate / "SKILL.md").read_text())
 
-    def test_native_adapter_is_pinned_and_bundled_only_for_related_skills(self):
-        preview = self.root / "native-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
+    def test_native_collaboration_adaptations_do_not_bundle_obsolete_hook_runtime(self):
+        preview = self.root / "skills/mirrors-cursor"
         for name in ("cursor-ralph-loop", "cursor-cancel-ralph", "cursor-advisor",
                      "cursor-continual-learning"):
             bundled = preview / name / "scripts/cursor_native_hook_adapters.py"
-            self.assertEqual(
-                bundled.read_bytes(),
-                (self.root / "scripts/cursor_native_hook_adapters.py").read_bytes(),
-            )
+            self.assertFalse(bundled.exists(), name)
         ralph = (preview / "cursor-ralph-loop/SKILL.md").read_text()
         cancel = (preview / "cursor-cancel-ralph/SKILL.md").read_text()
-        self.assertIn("ARMED_HOOK_TRUST_UNVERIFIED", ralph)
-        self.assertIn("live Stop event", ralph)
+        self.assertIn("native follow-up", ralph)
+        self.assertIn("does not install or claim an automatic Stop hook", ralph)
         self.assertNotIn(".cursor/ralph/", ralph)
         self.assertNotIn("rm -rf", cancel)
-        self.assertIn("`iteration` returned", cancel)
+        self.assertIn("previous status", cancel)
         advisor_role = (preview / "cursor-advisor/references/advisor-subagent.md").read_text()
         self.assertIn("authorized current-task transcript", advisor_role)
         self.assertNotIn("model: grok", advisor_role)
@@ -249,7 +240,7 @@ class CursorMirrorTests(unittest.TestCase):
             )
         self.assertFalse((preview / "cursor-no-comments/scripts/cursor_canvas_adapters.py").exists())
 
-        adapter = self.root / "scripts/cursor_native_hook_adapters.py"
+        adapter = self.root / "scripts/cursor_plugin_scanner_adapters.py"
         adapter.write_text(adapter.read_text() + "\nUnexpected local edit.\n")
         drift = self.run_build("--check")
         self.assertNotEqual(drift.returncode, 0)
@@ -419,6 +410,28 @@ class CursorMirrorTests(unittest.TestCase):
         root = self.root / "skills/mirrors-cursor"
         for skill in root.glob("*/SKILL.md"):
             self.assertNotIn("scripts/cursor_functional_adapters.py", skill.read_text(), skill)
+
+    def test_codex_native_bodies_replace_incompatible_upstream_workflows(self):
+        names = {
+            "cursor-advisor", "cursor-check-agent-compatibility",
+            "cursor-continual-learning", "cursor-create-plugin-scaffold",
+            "cursor-review-plugin-submission", "cursor-ralph-loop",
+            "cursor-cancel-ralph",
+        }
+        for name in names:
+            overlay = json.loads(
+                (self.root / "sources/cursor-plugins/overlays" / f"{name}.json").read_text()
+            )
+            rendered = (
+                self.root / "skills/mirrors-cursor" / name / "SKILL.md"
+            ).read_text()
+            match = re.match(r"\A---\n[\s\S]*?\n---\n([\s\S]*)\Z", rendered)
+            self.assertIsNotNone(match, name)
+            self.assertEqual(match.group(1).strip(), overlay["codex_native_body"].strip(), name)
+        scaffold = (
+            self.root / "skills/mirrors-cursor/cursor-create-plugin-scaffold/SKILL.md"
+        ).read_text()
+        self.assertNotIn("~/.cursor/plugins/local", scaffold)
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

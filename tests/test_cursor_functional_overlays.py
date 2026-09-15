@@ -71,7 +71,6 @@ FUNCTIONAL = {
 SECURITY_HOLDS = {
     "cursor-cursor-sdk": "blocked_malicious",
     "cursor-make-bot-ui": "quarantine",
-    "cursor-review-plugin-submission": "needs_human_review",
 }
 
 PROMOTED = {
@@ -102,6 +101,13 @@ PROMOTED = {
     "cursor-setup-pstack",
     "cursor-workflow-from-chats",
     "cursor-pr-review-canvas-pr-review-canvas",
+    "cursor-advisor",
+    "cursor-check-agent-compatibility",
+    "cursor-continual-learning",
+    "cursor-create-plugin-scaffold",
+    "cursor-review-plugin-submission",
+    "cursor-ralph-loop",
+    "cursor-cancel-ralph",
 }
 
 GUIDE_ONLY = PROMOTED - {
@@ -126,6 +132,13 @@ GUIDE_ONLY = PROMOTED - {
     "cursor-setup-pstack",
     "cursor-docs-canvas",
     "cursor-workflow-from-chats",
+    "cursor-advisor",
+    "cursor-check-agent-compatibility",
+    "cursor-continual-learning",
+    "cursor-create-plugin-scaffold",
+    "cursor-review-plugin-submission",
+    "cursor-ralph-loop",
+    "cursor-cancel-ralph",
 }
 
 

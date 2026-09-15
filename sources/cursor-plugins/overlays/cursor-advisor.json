@@ -16,7 +16,7 @@
         "native bounded delegation"
       ],
       "fallback": "No delegate means briefing plus an explicit not-run result.",
-      "availability": "bundled_native_hook_adapter_fixture_only; explicit task-bound lifecycle fixture checked; source_Cursor_invocation_unadapted",
+      "availability": "bounded_native_adaptation_observed_with_documented_limits",
       "upstream_agent_dependency": {
         "path": "advisor/agents/advisor-subagent.md",
         "status": "bundled_as_native_role_reference",
@@ -32,11 +32,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Synthetic PostToolUse/SubagentStop/Stop payloads cover a known patch marker, expected advisor identity and verdict, and a one-time nudge. No live advisor consult is proven.",
+      "positive": "A bounded native reviewer consult returned a no-write verdict under the requested gpt-6-astra low selection; the coordinator consumed the verdict. No automatic hook was used.",
       "missing_tool_or_input": "Missing selected model prevents enablement; wrong-session status, expected-agent registration and disable do not alter another task's state. Missing delegate or trusted project hook remains not-run.",
       "error": "Wrong agent ID/type, malformed verdict, wrong session, and question-ending turn preserve pending state in synthetic tests."
     },
-    "promotion_status": "held_until_native_mode_and_role_behavior_proof",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "advisor/README.md",
@@ -57,12 +57,6 @@
   "replacements": [],
   "source_path": "advisor/skills/advisor/SKILL.md",
   "source_sha256": "e34d52a0f9948057ac754151b2e116db47205674418de0548cd9df4477f52bf8",
-  "bundled_native_files": [
-    {
-      "source_path": "scripts/cursor_native_hook_adapters.py",
-      "target_path": "scripts/cursor_native_hook_adapters.py"
-    }
-  ],
   "bundled_support_files": [
     {
       "source_path": "advisor/agents/advisor-subagent.md",
@@ -82,5 +76,6 @@
         }
       ]
     }
-  ]
+  ],
+  "codex_native_body": "# Advisor for Codex\n\nUse this skill only when the user explicitly asks for an advisor, a second opinion, or names `/advisor`. Never enable it automatically.\n\n## Workflow\n\n1. Confirm the decision, failure, or completion claim that needs review and prepare a bounded briefing with the user's request, relevant evidence, current state, options, and specific questions. Remove secrets and unrelated private context.\n2. Spawn one bounded native reviewer or advisor through the current Codex collaboration surface. Use the operator-selected model and reasoning effort. Request read-only behavior and prohibit edits, external actions, and further delegation unless the user authorized them.\n3. Record the returned native child identity and consume its verdict. Separate the advisor's recommendation from the coordinator's decision; the coordinator remains responsible for the result.\n4. If the user asks another advisor question and the existing child remains suitable, use a native follow-up. Otherwise start a fresh bounded consult.\n5. If native delegation is unavailable, return the completed briefing and say the consult was not run.\n\nA project hook is optional automation. Do not create advisor state, register hooks, or claim automatic checkpoint reminders from this skill. The observed proof used `/root/advisor_native_proof` as a requested `reviewer` on `gpt-6-astra` at low effort and returned a no-write verdict; it does not attest backend enforcement beyond that requested selection."
 }

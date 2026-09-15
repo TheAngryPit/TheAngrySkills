@@ -276,7 +276,13 @@ def render_skill(entry: dict, staging: Path, commit: str,
     marker = SKILL_PATTERN.match(text)
     normalized = codex_invocation_policy(normalize_description(marker.group(1)), target)
     text = text[:marker.start(1)] + normalized + text[marker.end(1):]
-    if overlay.get("codex_note"):
+    native_body = overlay.get("codex_native_body")
+    if native_body is not None:
+        if not isinstance(native_body, str) or not native_body.strip():
+            raise ValueError(f"invalid Codex-native body: {name}")
+        marker = SKILL_PATTERN.match(text)
+        text = text[:marker.end()] + "\n" + native_body.strip() + "\n"
+    elif overlay.get("codex_note"):
         marker = SKILL_PATTERN.match(text)
         text = text[:marker.end()] + "\n" + overlay["codex_note"].rstrip() + "\n" + text[marker.end():]
     skill_file.write_text(text)

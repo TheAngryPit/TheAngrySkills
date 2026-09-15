@@ -2,12 +2,12 @@
   "schema_version": 1,
   "skills": [
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: references/briefing-template.md; delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "advisor",
       "files": {
         "SKILL.md": "e34d52a0f9948057ac754151b2e116db47205674418de0548cd9df4477f52bf8",
@@ -17,20 +17,20 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "advisor/skills/advisor/SKILL.md",
       "planned_adaptation": "Preservar o papel de delegação e a forma do resultado; mapear nomes/runtime para delegação nativa e manter ownership no agente coordenador.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-advisor",
       "upstream_purpose": "Advisor mode. Consult a stronger (or different) model at key checkpoints: before major decisions, when stuck on an error, and before declaring a task done. Use when the user types /advisor, asks to turn the advisor on or off, picks an advisor model, or explicitly asks for a second opinion from a stronger or different model. Never enable it on your own.",
       "upstream_skill": "advisor",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "agent-compatibility",
       "files": {
         "SKILL.md": "2391a06aec1bfb475690a9c386207e009090e35c624b5ca6cace3ea4c6705970"
@@ -39,12 +39,12 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-check-agent-compatibility",
       "upstream_purpose": "Frontmatter inválido; description bruto não parseável: Run the full repository compatibility pass: scanner score, startup path, validation loop, and docs reliability.",
       "upstream_skill": "check-agent-compatibility",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -69,12 +69,12 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "continual-learning",
       "files": {
         "SKILL.md": "f627f733a33879b63523da7e92c8b33e6086df42a49a8139a87d1c21e7bd9b16"
@@ -83,20 +83,20 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "continual-learning/skills/continual-learning/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-continual-learning",
       "upstream_purpose": "Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.",
       "upstream_skill": "continual-learning",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "create-plugin",
       "files": {
         "SKILL.md": "b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46"
@@ -105,20 +105,20 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-create-plugin-scaffold",
       "upstream_purpose": "Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.",
       "upstream_skill": "create-plugin-scaffold",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "create-plugin",
       "files": {
         "SKILL.md": "ff7411fc0426934871ac18f8ed55edcfc49f19443701dbe9109a3395ccded61d"
@@ -127,12 +127,12 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "create-plugin/skills/review-plugin-submission/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
-      "promotion_reason": "security scan: plugin submission flow review required",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-review-plugin-submission",
       "upstream_purpose": "Audit a Cursor plugin for marketplace readiness. Use when validating manifests, component metadata, discovery paths, and submission quality before publishing.",
       "upstream_skill": "review-plugin-submission",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -2008,12 +2008,12 @@
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "ralph-loop",
       "files": {
         "SKILL.md": "5824c5344af837c1cc56659d362124f75bdc1460ae66bf616e592fb2d8e8ea43"
@@ -2022,20 +2022,20 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "ralph-loop/skills/cancel-ralph/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-cancel-ralph",
       "upstream_purpose": "Cancel an active Ralph Loop. Use when the user wants to stop, cancel, or abort a running ralph loop.",
       "upstream_skill": "cancel-ralph",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "Codex workflow not demonstrated",
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
       "family": "ralph-loop",
       "files": {
         "SKILL.md": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09"
@@ -2044,12 +2044,12 @@
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "ralph-loop/skills/ralph-loop/SKILL.md",
       "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "native Codex workflow adaptation and behavior proof pending",
-      "publish": false,
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
       "published_name": "cursor-ralph-loop",
       "upstream_purpose": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
       "upstream_skill": "ralph-loop",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
       "availability": "guide-only; native Ralph loop execution remains unproven",
@@ -2440,23 +2440,15 @@
     }
   },
   "native_support_files": {
-    "scripts/cursor_native_hook_adapters.py": {
-      "sha256": "9a0b3a67a5c8d4abc411045afa31b459b7ee8fb37e0ac653658e93d24da152dc",
-      "related_skills": [
-        "cursor-advisor",
-        "cursor-cancel-ralph",
-        "cursor-continual-learning",
-        "cursor-ralph-loop"
-      ]
-    },
     "scripts/cursor_plugin_submission_audit.py": {
       "sha256": "664fb03dcc98385c7b8e91635cd4682597e196532c7e32664d45fae66d8794df",
       "related_skills": [
+        "cursor-check-agent-compatibility",
         "cursor-review-plugin-submission"
       ]
     },
     "scripts/cursor_plugin_scaffold_fixture.py": {
-      "sha256": "43fa6e7858157997b4563c32bd012afc386622af432116a8168fecf6120acffe",
+      "sha256": "ddd6994041461f161b8ad10e840817dcc08cc3b247d4ce27a3314c7397f0110e",
       "related_skills": [
         "cursor-create-plugin-scaffold"
       ]
@@ -2473,6 +2465,12 @@
         "cursor-workflow-from-chats",
         "cursor-docs-canvas",
         "cursor-pr-review-canvas-pr-review-canvas"
+      ]
+    },
+    "scripts/cursor_plugin_scanner_adapters.py": {
+      "sha256": "f2637fc7bc2d970c4f4e742fc1ae2f439e172dd745889e58fc2b98f45e53f384",
+      "related_skills": [
+        "cursor-check-agent-compatibility"
       ]
     }
   }

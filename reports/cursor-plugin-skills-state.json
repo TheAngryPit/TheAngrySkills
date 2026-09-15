@@ -1,5 +1,5 @@
 {
-  "candidate_not_published": 2,
+  "candidate_not_published": 1,
   "generated_files": {
     "cursor-advisor/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-advisor/MIRROR.md": "145748e9821171f955dcd8542e7d42f6f365253a328c61a10541d937d386a0f4",
@@ -69,6 +69,10 @@
     "cursor-create-verification-skill/references/feature-map-example/README.md": "59cabd12e9a03737b25e7dc21fe27656b019a8ce33ed94072b3b266df68af074",
     "cursor-create-verification-skill/references/feature-map-example/create-note.md": "dcd93a00463defa6ae92c39c05dfcdf13acc4988419dc48ea7e63f61f23a695a",
     "cursor-create-verification-skill/references/feature-map-example/search.md": "b0fe7069e7e216f33134b51d08e19a131eba0d622f23af6857114ed71b8cb7de",
+    "cursor-cursor-sdk/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+    "cursor-cursor-sdk/MIRROR.md": "f92e42eb38d1d315820b31036b5f6214feb7c68440eff8c701d528c9d21e761a",
+    "cursor-cursor-sdk/SKILL.md": "1450c4f0fd75e2958176caef10c280f70cd46966475e71bacd014cd54b34c3e9",
+    "cursor-cursor-sdk/scripts/cursor_sdk_native_adapter.py": "a0aa60def553d9a9873de503e3fe950e4c606ba32fd8e84704c82b3b100c9917",
     "cursor-cursor-team-kit-pr-review-canvas/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-cursor-team-kit-pr-review-canvas/MIRROR.md": "994d5f0efc56c67925ad977406b6c20d63828972cf6097a280e7c1ff977e8593",
     "cursor-cursor-team-kit-pr-review-canvas/SKILL.md": "605728fd1a4860b321b3a14f3f4bcdd0fc5a8951c5ad6fb2dc4e443b210785dd",
@@ -391,7 +395,7 @@
   },
   "operator_excluded_skills": 8,
   "physical_skills": 91,
-  "published_skills": 81,
+  "published_skills": 82,
   "schema_version": 1,
   "source_dormant_skills": 3,
   "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3"

@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "external-sdk-security-hold",
+    "adapter_mode": "bounded-native-codex-migration-adapter",
     "name_mapping": {
       "upstream_skill": "cursor-sdk",
       "published_name": "cursor-cursor-sdk",
@@ -10,14 +10,18 @@
     "preserved_semantics": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
     "native_mapping": {
       "capabilities": [
-        "reference reader",
-        "native Codex capability mapper"
+        "bounded Cursor SDK request reader",
+        "native Codex migration planner",
+        "caller-supplied native Codex bridge"
       ],
       "required_tools": [
-        "reference reader"
+        "local Python adapter"
       ],
-      "fallback": "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
-      "availability": "safe non-executing native capability map observed; Cursor SDK runtime remains unavailable"
+      "optional_tools": [
+        "native Codex bridge for an explicitly authorized read-only operation"
+      ],
+      "fallback": "Without a native bridge, return the bounded operation plan and UNAVAILABLE; never substitute Cursor SDK execution or configure MCP.",
+      "availability": "bounded native migration adapter test-proven; actual native task execution and Cursor SDK runtime unproven"
     },
     "external_dependencies": [
       "@cursor/sdk",
@@ -26,16 +30,17 @@
       "MCP configuration"
     ],
     "permission_gates": [
-      "Keep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror.",
+      "Keep Cursor SDK runtime and references/auth.md plus references/mcp.md external; do not install, execute, authenticate, or expose SDK credentials from the mirror.",
+      "Use only the bounded adapter and a caller-supplied native Codex bridge after the coordinator establishes authorization outside the request payload; native task creation remains an explicit operator action.",
       "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
       "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
     ],
     "behavioral_proof": {
-      "positive": "A documentation-only fixture identifies the external API symbols and returns a reference-only report.",
-      "missing_tool_or_input": "Missing SDK/MCP surface keeps the result reference-only and write-free.",
-      "error": "Credential or MCP configuration input is rejected and the source finding remains visible."
+      "positive": "The bounded adapter translates prompt, resume, wait, and stream requests into native Codex tool operations; a read-only caller-supplied bridge returns ordered wait/readback evidence without importing Cursor or writing externally.",
+      "missing_tool_or_input": "Missing native bridge returns UNAVAILABLE; missing bridge methods return MISSING_CAPABILITY; missing thread or bounded input returns a validation error without dispatch.",
+      "error": "Credential or MCP-shaped request/result data returns FAIL_CLOSED before dispatch; bridge exceptions and error statuses return NATIVE_ERROR without echoing provider messages or secrets."
     },
-    "promotion_status": "security_hold_blocked_malicious",
+    "promotion_status": "promoted_bounded_native_migration_adapter_task_execution_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "cursor-sdk/README.md",
@@ -44,15 +49,47 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained",
-      "decision": "The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased."
+      "status": "retained_upstream_findings_excluded_from_published_bundle",
+      "decision": "The pinned upstream blocked_malicious verdict remains source provenance. Publish only the rewritten Codex-native body, source frontmatter, and reviewed adapter; exclude every upstream reference file from the rendered bundle.",
+      "findings": [
+        {
+          "rule_id": "credential-path",
+          "severity": "critical",
+          "path": "references/auth.md",
+          "line": 100,
+          "classification": "contextual_documentation_text",
+          "effect": "The upstream auth guide describes CURSOR_API_KEY handling for the external SDK.",
+          "credentials": [
+            "CURSOR_API_KEY"
+          ],
+          "decision": "Retain the finding; the native adapter never reads, accepts, or publishes the key."
+        },
+        {
+          "rule_id": "mcp-plugin-hook-install",
+          "severity": "critical",
+          "path": "references/mcp.md",
+          "line": null,
+          "classification": "active_configuration_reference",
+          "effect": "The upstream MCP guide describes configuring MCP servers and auth injection for the external SDK.",
+          "credentials": [
+            "MCP authentication"
+          ],
+          "decision": "Retain the finding; MCP-shaped request, bridge, or result data fails closed and no MCP server is configured."
+        }
+      ]
     }
   },
-  "codex_note": "## Codex security hold\n\nKeep this as external Cursor SDK reference only. Do not install, execute, authenticate, or expose SDK credentials from the mirror. The safe native mapping is conceptual only: `Agent.create`/`Agent.prompt`/`Agent.resume`/`agent.send` correspond to native task creation or follow-up surfaces, while `run.wait` corresponds to bounded task waiting. No streaming, MCP configuration, error-class, or runtime equivalence is claimed; native task creation is not performed by this reference. The Cursor SDK and native connector/tool permissions are not proven in Codex. This candidate remains unindexed. The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased.\n",
+  "bundled_native_files": [
+    {
+      "source_path": "scripts/cursor_sdk_native_adapter.py",
+      "target_path": "scripts/cursor_sdk_native_adapter.py"
+    }
+  ],
+  "codex_native_body": "# Bounded Cursor SDK migration for Codex\n\nUse this mirror when the request concerns `@cursor/sdk`, `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `run.wait`, `CursorAgentError`, local/cloud selection, or MCP configuration. Preserve the upstream SDK guidance as external reference while using the local migration adapter for the Codex path.\n\n## Workflow\n\n1. Convert the requested operation to a JSON object with `operation` (`prompt`, `create`, `resume`, `send`, `wait`, or `stream`) and only the required safe fields. Do not include `CURSOR_API_KEY`, `apiKey`, headers, environment credentials, MCP servers, or auth material.\n2. Run `python3 scripts/cursor_sdk_native_adapter.py plan` with the JSON request on stdin. The adapter emits the closest native Codex operations (`create_thread`, `send_message_to_thread`, `wait_threads`, and bounded `read_thread`) and keeps `run.stream` as a no-streaming-equivalent wait/readback pair.\n3. For a read-only native operation, the coordinator may supply an already-authorized native Codex bridge to `run_native_migration(..., execute=True)`. The bridge is external to this script; its result is validated and never treated as Cursor SDK parity.\n4. A missing bridge is `UNAVAILABLE`, and a missing bridge method is `MISSING_CAPABILITY`. A mutating native task operation requires explicit authorization and is never created by the CLI or this mirror.\n5. Report native bridge errors as `NATIVE_ERROR` without copying provider messages, paths, credentials, or MCP configuration. A credential/MCP-shaped request or result is `FAIL_CLOSED`.\n\n## Security and provenance\n\nThe pinned upstream scanner verdict `blocked_malicious` remains retained. Keep the concrete `references/auth.md:100` credential-path finding and MCP hook/configuration findings visible in review records. Do not publish or copy those reference files into a native mirror, read `CURSOR_API_KEY`, install `@cursor/sdk`, import or execute the Cursor runtime, activate MCP, or infer cloud/local equivalence. The native adapter proves only its bounded translation and caller-supplied bridge contract; actual Cursor SDK behavior and native Codex task execution require a separate authorized runtime pass.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
-  "proof": "Pinned source hash and deterministic build are static provenance. The non-executing native capability map supplies a safe conceptual route without importing Cursor; security hold and external-runtime behavior remain unproven.",
-  "reason": "Keep the full upstream contract in the body and codex_contract while shortening only discovery metadata to the 1024-character Codex limit.",
+  "proof": "Pinned source hash and deterministic build are static provenance. Focused SDK adapter tests prove bounded prompt/stream translation, ordered wait/readback through a caller-supplied read-only bridge, unavailable and missing-capability results, explicit mutation authorization, credential/MCP fail-closed behavior, and redacted bridge errors. Cursor SDK import/auth/streaming/runtime parity and native Codex task execution remain unproven.",
+  "reason": "Preserve the upstream SDK trigger and blocked_malicious findings while replacing unsafe operational instructions with a functional, bounded Codex migration bridge.",
   "replacements": [
     {
       "file": "SKILL.md",
@@ -61,5 +98,8 @@
     }
   ],
   "source_path": "cursor-sdk/skills/cursor-sdk/SKILL.md",
-  "source_sha256": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979"
+  "source_sha256": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979",
+  "retained_source_files": [
+    "SKILL.md"
+  ]
 }

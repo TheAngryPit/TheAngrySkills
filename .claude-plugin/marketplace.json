@@ -262,6 +262,7 @@
         "./skills/mirrors-cursor/cursor-create-learning-path",
         "./skills/mirrors-cursor/cursor-create-plugin-scaffold",
         "./skills/mirrors-cursor/cursor-create-verification-skill",
+        "./skills/mirrors-cursor/cursor-cursor-sdk",
         "./skills/mirrors-cursor/cursor-cursor-team-kit-pr-review-canvas",
         "./skills/mirrors-cursor/cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
         "./skills/mirrors-cursor/cursor-deslop",

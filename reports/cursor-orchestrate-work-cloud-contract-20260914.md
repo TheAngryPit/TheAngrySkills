@@ -31,16 +31,16 @@ Current native Codex app tool contracts expose the following partial mapping:
 | Cancel/recover/Andon | `send_message_to_thread` can send a follow-up; `set_thread_archived` is an archive operation for Codex tasks. | Neither is documented as Work-cloud cancellation. Restart attachment, descendant cancellation and Andon state are unproved. |
 | Optional Slack visibility | Slack connector exists separately. | No operator request to message Slack in this lot; no Slack write, channel mirror or reaction polling occurred. |
 
-An attempted `create_thread` call for a read-only PR #64 Work cloud proof was
-rejected by automatic approval review before task creation. Its stated reason
-was that the trusted user messages in this task authorize PR work and
-coordinator/Luna communication, but do not authorize this specific external
-Work cloud task. No task ID was returned and no Work task was created. The
-call will not be retried or routed indirectly without explicit approval. The
-proposed proof task would read public PR #64 at exact head `f0d54a94`, return
-one structured handoff, and, only if available, use at most one read-only
-child worker and one verifier. It would not edit repositories, PRs, comments,
-CI, Slack, credentials or configuration.
+An earlier `create_thread` attempt was rejected before task creation because
+the specific Work task was not yet authorized. Vítor later explicitly approved
+one narrower projectless proof using only two synthetic records (`alpha` and
+`beta`) and at most one child. The authorized creation call was made exactly
+once and returned provisional client ID
+`local-chatgpt:a146a047-7138-4d84-ba2b-6e7d6824e555`, but no definitive
+`threadId` or host. Task listing first found no matching task and then blocked.
+Pending list calls were cancelled and creation was not retried. No result,
+child, handoff, artifact, cancellation or recovery became observable, so the
+post-acceptance Work execution state remains unknown.
 
 ## Adapter admission gates
 
@@ -62,13 +62,11 @@ CI, Slack, credentials or configuration.
    Archive is not cancellation. Merge, publish and Slack writes remain
    separate actions with their own authorization.
 
-The current API surface documents creation and proves existing task read/list
-behavior. The rejected attempt is not a Work cloud behavior proof. This does
-not meet the source's tree,
+The current API surface documents creation and the authorized attempt proves
+only provisional request acceptance. It does not prove definitive task
+creation or Work read/list behavior. This does not meet the source's tree,
 handoff, artifact, cancellation and recovery bar. `cursor-orchestrate` remains
-held. The next executable proof requires explicit user approval for the
-bounded Work cloud task above,
-with a real goal, followed by readback of its task ID, result and native
-artifact/status semantics. Additional worker and recovery proof must then be
-separate; no Cursor credentials or bundled scripts are needed for the Work
-lane.
+held. The next safe action is reconciliation from the preserved client ID when
+the native surface can resolve it. Do not create another task unless the
+existing request is first proved to have failed without creating one. No
+Cursor credentials or bundled scripts are needed for the Work lane.

@@ -69,7 +69,6 @@ FUNCTIONAL = {
 }
 
 SECURITY_HOLDS = {
-    "cursor-cursor-sdk": "blocked_malicious",
     "cursor-make-bot-ui": "quarantine",
 }
 
@@ -108,6 +107,7 @@ PROMOTED = {
     "cursor-review-plugin-submission",
     "cursor-ralph-loop",
     "cursor-cancel-ralph",
+    "cursor-cursor-sdk",
 }
 
 GUIDE_ONLY = PROMOTED - {

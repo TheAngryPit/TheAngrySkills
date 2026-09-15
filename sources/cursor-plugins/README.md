@@ -37,12 +37,14 @@ path with executable renderer proof. Six instruction-only candidates are
 supports bounded read-only publication while automatic skill selection remains
 unobserved. The `show-me-your-work` [audit](../../reports/cursor-show-work-review-20260914.md)
 supports a bounded local decision writer and independent review with explicit
-redaction limits. Seven of the final nine candidates now publish bounded native adaptations:
+redaction limits. Eight of the final nine candidates now publish bounded native adaptations:
 advisor, compatibility scanning, continual-learning proposals, static plugin
 scaffolding and review, Ralph continuation, and exact-child cancellation. Their
-incompatible Cursor operational bodies are not emitted. `cursor-cursor-sdk` and
-`cursor-orchestrate` remain held for external-runtime and security proof, leaving
-81 published skills, two active held candidates, and eight operator exclusions. The current eight-source exclusion and twelve-skill
+incompatible Cursor operational bodies are not emitted. `cursor-cursor-sdk` now
+publishes a bounded native migration guide and read-only adapter while excluding
+all seven upstream credential/MCP reference files from its rendered bundle.
+`cursor-orchestrate` remains held for Work-cloud behavior and permission proof, leaving
+82 published skills, one active held candidate, and eight operator exclusions. The current eight-source exclusion and twelve-skill
 selection are recorded in the [scope decision](../../reports/cursor-scope-selection-20260914.md).
 The verification pair is published only for the bounded explicit-only local
 CLI/UI paths. Production target parity, reusable host activation, action-time

@@ -154,6 +154,31 @@ def test_matt_symlink_requires_manual_inspection(tmp_path):
         raise AssertionError("Matt symlink was ignored")
 
 
+def test_matt_inventory_symlink_outside_configured_sources_fails_closed(tmp_path):
+    upstream = tmp_path / "matt"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "LICENSE", "MIT\n")
+    root = matt_root(tmp_path, upstream)
+    baseline = commit(upstream, "baseline")
+    for record in (
+        root / "skills/mirrors-mattpocock/code-review/UPSTREAM.json",
+        root / "skills/engineering/writing-for-astra/UPSTREAM.json",
+    ):
+        data = json.loads(record.read_text())
+        data["commit"] = baseline
+        record.write_text(json.dumps(data))
+    link = upstream / "skills/new-candidate/SKILL.md"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to("../engineering/code-review/SKILL.md")
+    try:
+        detector.detect_matt(upstream, root)
+    except ValueError as error:
+        assert "Matt skills symlink requires manual inspection" in str(error)
+    else:
+        raise AssertionError("Matt inventory symlink was omitted")
+
+
 def cursor_root(tmp_path, upstream, baseline):
     root = tmp_path / "repo"
     setup = upstream / "pstack/skills/setup-pstack/SKILL.md"

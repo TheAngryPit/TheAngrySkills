@@ -260,6 +260,9 @@ def snapshot(checkout: Path, source_path: str) -> dict[str, str]:
 
 def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     items = matt_items(root)
+    # Inventory discovery covers the whole upstream skills tree, so reject
+    # symlinks across that same boundary before source_skill_paths filters them.
+    reject_symlinks(checkout / "skills", "Matt skills")
     missing_metadata = [
         str(Path(item["destination"]) / "UPSTREAM.json")
         for item in items

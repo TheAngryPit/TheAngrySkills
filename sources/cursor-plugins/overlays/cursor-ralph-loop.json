@@ -18,7 +18,7 @@
         "bounded iteration control"
       ],
       "fallback": "Missing scheduler or invalid state leaves the loop inactive.",
-      "availability": "bundled_adapter_and_synthetic_stop_fixture; live_hook_trust_and_continuation_unproven"
+      "availability": "bounded_native_adaptation_observed_with_documented_limits"
     },
     "external_dependencies": [
       "verified project-local Codex Stop hook and exact-hash trust"
@@ -29,11 +29,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Synthetic CLI fixture arms task-bound state and returns a Codex continuation after a Stop payload.",
+      "positive": "The root coordinator resumed the same native child through two finite follow-ups, recorded iteration state and hashes, and stopped at the exact promise and maximum.",
       "missing_tool_or_input": "Missing hook trust or session ID leaves the loop not active; no live registration is performed by the fixture.",
       "error": "Synthetic fixture covers corrupt state, wrong session, max iterations, exact promise, and cancellation."
     },
-    "promotion_status": "held_until_live_trusted_hook_continuation",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
@@ -70,10 +70,5 @@
   ],
   "source_path": "ralph-loop/skills/ralph-loop/SKILL.md",
   "source_sha256": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09",
-  "bundled_native_files": [
-    {
-      "source_path": "scripts/cursor_native_hook_adapters.py",
-      "target_path": "scripts/cursor_native_hook_adapters.py"
-    }
-  ]
+  "codex_native_body": "# Ralph Loop with native Codex continuation\n\nUse only when the user explicitly asks for a Ralph loop or repeated autonomous iteration.\n\n## Workflow\n\n1. Record the exact task, project scope, completion promise, and a finite `max_iterations`. An unbounded loop requires a separate explicit user request.\n2. Start one bounded native worker and retain its returned child identity. The root coordinator owns iteration state and review.\n3. After each completed iteration, verify the result and update a small project-local or task-local state record with child identity, iteration count, maximum, promise, status, and evidence.\n4. If the promise is not yet true and the maximum is not reached, continue the same child with the native follow-up surface. Stop when the promise is proved, the maximum is reached, the user cancels, the child needs attention, or verification fails.\n5. Report the final stop reason and evidence. Never emit a completion promise that is not true.\n\nThis adaptation uses explicit coordinator-driven follow-ups. It does not install or claim an automatic Stop hook. The observed proof resumed the same child twice, preserved its identity, reached iteration 2 of 2 with `PROOF_DONE`, and recorded both state hashes."
 }

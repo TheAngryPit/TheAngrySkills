@@ -3,7 +3,7 @@
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
-and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Separate hash-checked native adapters are bundled only into the held Advisor, Ralph, and continual-learning previews; the make-bot-ui adapter remains historical evidence and is not rendered. They are not registered as hooks. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
+and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Reviewed native adapters are bundled only into the published skills that use them; the old hook adapter and make-bot-ui adapter remain repository evidence and are not rendered. No adapter is registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three Benny automation sources for historical
 provenance, but Vítor excluded them from this mirror and its previews.
 
@@ -11,8 +11,9 @@ Each `overlays/<published-name>.json` declares the exact source hash, optional
 exact-text changes and a Codex boundary note. The build rewrites the frontmatter
 name, fixes sibling Markdown links to a published sibling or to the pinned
 upstream source when that sibling is held, and writes provenance and license
-evidence beside each published skill. The upstream skill text otherwise stays
-in place. The decision class is editorial; it does not establish live tool,
+evidence beside each published skill. A reviewed `codex_native_body` may replace
+an incompatible operational body while the pinned source and hashes remain as
+provenance. Without that field, the upstream body stays in place. The decision class is editorial; it does not establish live tool,
 connector, model, hook or cloud availability.
 
 PR #64 merged 59 emitted mirrors under `skills/mirrors-cursor/`, including
@@ -36,12 +37,12 @@ path with executable renderer proof. Six instruction-only candidates are
 supports bounded read-only publication while automatic skill selection remains
 unobserved. The `show-me-your-work` [audit](../../reports/cursor-show-work-review-20260914.md)
 supports a bounded local decision writer and independent review with explicit
-redaction limits. The remaining held functional
-adaptations stay held with a per-skill Codex contract recording native mapping,
-permission gates, and positive, missing-capability/input, and error scenarios
-still to prove.
-It also holds `cursor-cursor-sdk` and `cursor-review-plugin-submission` for
-contextual security review. The current eight-source exclusion and twelve-skill
+redaction limits. Seven of the final nine candidates now publish bounded native adaptations:
+advisor, compatibility scanning, continual-learning proposals, static plugin
+scaffolding and review, Ralph continuation, and exact-child cancellation. Their
+incompatible Cursor operational bodies are not emitted. `cursor-cursor-sdk` and
+`cursor-orchestrate` remain held for external-runtime and security proof, leaving
+81 published skills, two active held candidates, and eight operator exclusions. The current eight-source exclusion and twelve-skill
 selection are recorded in the [scope decision](../../reports/cursor-scope-selection-20260914.md).
 The verification pair is published only for the bounded explicit-only local
 CLI/UI paths. Production target parity, reusable host activation, action-time
@@ -52,7 +53,7 @@ skills remain traceable in the manifest and snapshot. The `cursor-poteto-mode`
 candidate renders all 23 playbooks and bundles its role reference, but its
 bundled script security review, cloud task parity, and full live playbook
 behavior remain unproven.
-No held skill is indexed for installation by this batch. The generator keeps
+No held skill is indexed for installation. The generator keeps
 the repository's `.claude-plugin/marketplace.json` catalog entry
 `mirrors-cursor` aligned with the emitted paths. This is catalog registration;
 it does not import or activate an independent Cursor plugin.

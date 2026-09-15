@@ -18,7 +18,7 @@
         "manifest validator"
       ],
       "fallback": "An unsafe destination or invalid component stops before writing.",
-      "availability": "bounded disposable destination static scaffold and submission audit observed; source_home_default_and_active_components_unadapted"
+      "availability": "bounded_native_adaptation_observed_with_documented_limits"
     },
     "external_dependencies": [
       "Cursor plugin layout",
@@ -37,7 +37,7 @@
       "missing_tool_or_input": "Missing disposable marker, nonempty fixture root, or invalid plugin name blocks before writing and preserves existing files.",
       "error": "Requests for hooks, mcpServers, or marketplace wiring return REVIEW_REQUIRED before writing."
     },
-    "promotion_status": "security_hold_until_native_destination_and_active_component_review",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "create-plugin/README.md",
@@ -112,5 +112,6 @@
         }
       ]
     }
-  ]
+  ],
+  "codex_native_body": "# Create a bounded Cursor plugin scaffold\n\nCreate a static Cursor-format scaffold only inside an explicitly supplied project-local disposable root.\n\n## Workflow\n\n1. Require a lowercase kebab-case plugin name, purpose, target users, component set, license text, and destination.\n2. Require the destination root to exist, be empty except for the adapter's marker, and remain inside the explicit project boundary.\n3. Run the bundled `scripts/cursor_plugin_scaffold_fixture.py` adapter. It may create a manifest, README, supplied LICENSE, and static placeholders for rules, skills, agents, or commands.\n4. Pass the generated plugin directly to `cursor-review-plugin-submission` or `scripts/cursor_plugin_submission_audit.py` and report the structural result.\n5. Treat hook, MCP server, marketplace wiring, global plugin-home, installation, activation, and publication requests as `REVIEW_REQUIRED` before any write.\n\nNever default to `~/.cursor`, install the plugin, enable active components, or claim that the scaffold is ready for marketplace submission. The source security finding remains retained for those active surfaces."
 }

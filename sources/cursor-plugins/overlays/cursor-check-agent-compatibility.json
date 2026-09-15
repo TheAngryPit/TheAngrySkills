@@ -20,15 +20,9 @@
         "documentation reader"
       ],
       "fallback": "If native delegates are unavailable, execute the four checks sequentially with separate evidence and the same score contract. If the deterministic scanner cannot run, report it as unavailable and do not invent an Agent Compatibility Score.",
-      "availability": "deterministic local Codex scanner observed at 100/100 on a generated disposable plugin; upstream scanner package and target runtime not executed",
+      "availability": "bounded_native_adaptation_observed_with_documented_limits",
       "optional_tools": [
         "native bounded delegation"
-      ],
-      "upstream_agent_dependencies": [
-        "agent-compatibility/agents/compatibility-scan-review.md",
-        "agent-compatibility/agents/startup-review.md",
-        "agent-compatibility/agents/validation-review.md",
-        "agent-compatibility/agents/docs-reliability-review.md"
       ]
     },
     "external_dependencies": [
@@ -38,7 +32,7 @@
     ],
     "permission_gates": [
       "Keep scanner, startup, validation, and docs checks separate; each needs its own evidence and score.",
-      "Do not run `npx -y agent-compatibility@latest` without reviewing the package/version, install side effects, and egress in this target environment.",
+      "Use only the bundled deterministic local scanner. Do not execute the upstream npx latest-package command from the pinned source roles.",
       "If the deterministic scanner is unavailable, identify the environment gap and do not invent a combined score.",
       "Preserve native model/effort and request read-only reviewer behavior on the actual delegate surface; frontmatter alone does not enforce permissions."
     ],
@@ -47,7 +41,7 @@
       "missing_tool_or_input": "Scanner unavailable or missing startup prerequisites must be reported as environment gaps; the four-check score is withheld until real evidence exists.",
       "error": "A failed scanner or startup command must retain raw failure evidence and cannot be converted into a fabricated low repository score."
     },
-    "promotion_status": "held_until_scanner_review_and_four_real_checks",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "agent-compatibility/README.md",
@@ -63,7 +57,7 @@
   "codex_note": "## Codex adaptation boundary\n\nThe pinned source description has an unquoted colon; this preview quotes it for native parsing. The four source reviewers are bundled under `references/` as role instructions with Cursor `model: fast` and `readonly: true` frontmatter removed. Use four separate bounded native delegates when available, or four separate sequential checks, and request read-only behavior through the actual host permission surface. The scanner role names `npx -y agent-compatibility@latest`; review package version, installation effects, and egress before execution. Do not compute a combined score unless the deterministic scanner and all three behavioral checks produced real evidence. This candidate remains unindexed.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Run four separate repository checks: deterministic scanner, cold startup, validation loop, and docs reliability; combine their evidence into one compatibility score and prioritized fixes.",
-  "proof": "Pinned source hashes and renderer verify the corrected frontmatter and four bundled role references. The local Codex scanner runs four independent static checks on a generated disposable plugin and returns 100/100 with separate role evidence; the upstream scanner score, target cold startup, and runtime checks remain unproven.",
+  "proof": "Pinned source hashes and renderer verify the corrected frontmatter without distributing the unsafe upstream role commands. The local Codex scanner runs four independent static checks on a generated disposable plugin and returns 100/100 with separate role evidence; the upstream scanner score, target cold startup, and runtime checks remain unproven.",
   "reason": "The pinned upstream description contains an unquoted colon and fails YAML parsing. The held Codex preview quotes that scalar and bundles all four named reviewer roles without activating their commands.",
   "replacements": [
     {
@@ -74,62 +68,15 @@
   ],
   "source_path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md",
   "source_sha256": "2391a06aec1bfb475690a9c386207e009090e35c624b5ca6cace3ea4c6705970",
-  "bundled_support_files": [
+  "codex_native_body": "# Check agent compatibility in Codex\n\nRun a bounded, evidence-based compatibility review of an explicitly supplied local plugin directory.\n\n## Workflow\n\n1. Run `python3 scripts/cursor_plugin_scanner_adapters.py compatibility <plugin-root> --local-scan`.\n2. Preserve the four separate results: deterministic structural scan, startup-contract review, validation-contract review, and documentation reliability review.\n3. Report `local_codex_compatibility_score` as the local static Codex score. Never label it as the upstream Agent Compatibility Score; `agent_compatibility_score` remains unavailable unless the upstream scanner was separately reviewed and executed.\n4. Treat `runtime_executed: false` and `components_executed: false` as material limits. Verify actual startup and validation behavior separately when the user requests runtime proof and the repository provides safe commands.\n5. Prioritize fixes from observed issues. Do not penalize the target for unavailable external tooling.\n\nThe local scanner never executes plugin components, hooks, MCP servers, startup commands, or tests. It performs no network access, credential reads, or external writes.",
+  "bundled_native_files": [
     {
-      "source_path": "agent-compatibility/agents/compatibility-scan-review.md",
-      "target_path": "references/compatibility-scan-review.md",
-      "replacements": [
-        {
-          "before": "model: fast\n",
-          "after": ""
-        },
-        {
-          "before": "readonly: true\n",
-          "after": ""
-        }
-      ]
+      "source_path": "scripts/cursor_plugin_scanner_adapters.py",
+      "target_path": "scripts/cursor_plugin_scanner_adapters.py"
     },
     {
-      "source_path": "agent-compatibility/agents/startup-review.md",
-      "target_path": "references/startup-review.md",
-      "replacements": [
-        {
-          "before": "model: fast\n",
-          "after": ""
-        },
-        {
-          "before": "readonly: true\n",
-          "after": ""
-        }
-      ]
-    },
-    {
-      "source_path": "agent-compatibility/agents/validation-review.md",
-      "target_path": "references/validation-review.md",
-      "replacements": [
-        {
-          "before": "model: fast\n",
-          "after": ""
-        },
-        {
-          "before": "readonly: true\n",
-          "after": ""
-        }
-      ]
-    },
-    {
-      "source_path": "agent-compatibility/agents/docs-reliability-review.md",
-      "target_path": "references/docs-reliability-review.md",
-      "replacements": [
-        {
-          "before": "model: fast\n",
-          "after": ""
-        },
-        {
-          "before": "readonly: true\n",
-          "after": ""
-        }
-      ]
+      "source_path": "scripts/cursor_plugin_submission_audit.py",
+      "target_path": "scripts/cursor_plugin_submission_audit.py"
     }
   ]
 }

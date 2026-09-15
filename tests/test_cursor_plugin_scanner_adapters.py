@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -51,6 +52,7 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
         created = scaffold_cursor_plugin_fixture(
             fixture_root,
             "example-plugin",
+            project_root=self.root,
             description="Example: static local plugin",
             author="Fixture Author",
             license_id="MIT",
@@ -202,6 +204,7 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
         created = scaffold_cursor_plugin_fixture(
             fixture_root,
             "cli-plugin",
+            project_root=self.root,
             description="CLI scanner fixture",
             author="Fixture Author",
             license_id="MIT",
@@ -227,6 +230,32 @@ class CursorPluginScannerAdapterTests(unittest.TestCase):
         self.assertEqual(result["status"], "LOCAL_SCANNER_RESULT")
         self.assertEqual(result["local_codex_compatibility_score"], 100)
         self.assertIsNone(result["agent_compatibility_score"])
+
+    def test_published_bundle_runs_with_its_local_auditor(self) -> None:
+        fixture_root = self.root / "published-bundle"
+        fixture_root.mkdir()
+        (fixture_root / MARKER).write_text(MARKER_CONTENT)
+        scaffold_cursor_plugin_fixture(
+            fixture_root, "published-plugin", project_root=self.root,
+            description="Published bundle fixture", author="Fixture Author",
+            license_id="MIT", license_text="Fixture license\n",
+            components=("skills", "rules"),
+        )
+        script = (
+            Path(__file__).resolve().parent.parent
+            / "skills/mirrors-cursor/cursor-check-agent-compatibility/scripts"
+            / "cursor_plugin_scanner_adapters.py"
+        )
+        completed = subprocess.run(
+            [sys.executable, str(script), "compatibility",
+             str(fixture_root / "published-plugin"), "--local-scan"],
+            text=True, capture_output=True, check=False,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "LOCAL_SCANNER_RESULT")
+        self.assertEqual(result["local_codex_compatibility_score"], 100)
 
     def test_cli_rejects_sdk_file_path(self) -> None:
         completed = subprocess.run(

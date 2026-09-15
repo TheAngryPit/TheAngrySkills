@@ -16,7 +16,7 @@
         "project-local loop state reader"
       ],
       "fallback": "No state or ambiguous path is a no-op that preserves the workspace.",
-      "availability": "bundled_adapter_and_synthetic_cancel_fixture; live_hook_state_unproven"
+      "availability": "bounded_native_adaptation_observed_with_documented_limits"
     },
     "external_dependencies": [
       "project-local .cursor/ralph state"
@@ -27,11 +27,11 @@
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
     "behavioral_proof": {
-      "positive": "Synthetic CLI fixture cancels only a matching task-bound Ralph state file.",
+      "positive": "The native interrupt operation returned previous_status running for the exact child, and a follow-up recovered the same verified identity.",
       "missing_tool_or_input": "No active state returns INACTIVE; another session returns OTHER_SESSION and preserves state.",
       "error": "Symlinked state directories are rejected and no recursive deletion is used."
     },
-    "promotion_status": "held_until_live_task_bound_cancel_proof",
+    "promotion_status": "promoted_bounded_native_adaptation",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
@@ -58,10 +58,5 @@
   ],
   "source_path": "ralph-loop/skills/cancel-ralph/SKILL.md",
   "source_sha256": "5824c5344af837c1cc56659d362124f75bdc1460ae66bf616e592fb2d8e8ea43",
-  "bundled_native_files": [
-    {
-      "source_path": "scripts/cursor_native_hook_adapters.py",
-      "target_path": "scripts/cursor_native_hook_adapters.py"
-    }
-  ]
+  "codex_native_body": "# Cancel a native Codex Ralph Loop\n\nCancel only the exact active loop identified by its retained native child identity.\n\n## Workflow\n\n1. Read the bounded loop state and verify the project/task scope, child identity, current iteration, and active status.\n2. Call the native interrupt operation for that exact child. Do not terminate by process name or broad repository scope.\n3. Record the returned previous status and mark the loop cancelled. If the child was already complete or inactive, report that state without widening the action.\n4. Preserve unrelated state. Remove a local loop state file only when it belongs to the matching task and the removal is within the authorized cleanup scope.\n5. To recover after an accidental interruption, use a native follow-up on the same verified child identity and record the resumed state.\n\nThe observed proof interrupted `/root/cancel_native_probe` while running and then resumed that same identity through two bounded follow-ups. No recursive deletion, process-name kill, or automatic hook was used."
 }

@@ -31,7 +31,8 @@ class CursorPluginScaffoldFixtureTests(unittest.TestCase):
 
     def call(self, **overrides):
         return scaffold_cursor_plugin_fixture(
-            self.root, "example-plugin", **(self.args | overrides)
+            self.root, "example-plugin", project_root=self.root.parent,
+            **(self.args | overrides)
         )
 
     def test_static_scaffold_is_explicit_local_and_auditable(self):
@@ -65,12 +66,31 @@ class CursorPluginScaffoldFixtureTests(unittest.TestCase):
         (self.root / MARKER).unlink()
         self.assertEqual(self.call()["status"], "BLOCKED")
         (self.root / MARKER).write_text(MARKER_CONTENT)
-        bad = scaffold_cursor_plugin_fixture(self.root, "../bad", **self.args)
+        bad = scaffold_cursor_plugin_fixture(
+            self.root, "../bad", project_root=self.root.parent, **self.args
+        )
         self.assertEqual(bad["status"], "ERROR")
         self.assertFalse(bad["created"])
         (self.root / "existing.txt").write_text("preserve me")
         self.assertEqual(self.call()["status"], "BLOCKED")
         self.assertEqual((self.root / "existing.txt").read_text(), "preserve me")
+
+    def test_symlinked_ancestor_cannot_escape_project_boundary(self):
+        with tempfile.TemporaryDirectory(prefix="cursor-scaffold-project-") as project_dir, \
+                tempfile.TemporaryDirectory(prefix="cursor-scaffold-outside-") as outside_dir:
+            project = Path(project_dir)
+            outside = Path(outside_dir)
+            fixture = outside / "fixture"
+            fixture.mkdir()
+            (fixture / MARKER).write_text(MARKER_CONTENT)
+            (project / "escape").symlink_to(outside, target_is_directory=True)
+            result = scaffold_cursor_plugin_fixture(
+                project / "escape/fixture", "example-plugin",
+                project_root=project, **self.args,
+            )
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertFalse(result["created"])
+            self.assertFalse((fixture / "example-plugin").exists())
 
 
 if __name__ == "__main__":

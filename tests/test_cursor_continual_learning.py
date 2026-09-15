@@ -1,4 +1,4 @@
-"""Renderer boundary for the held continual-learning native role."""
+"""Renderer boundary for the proposal-only continual-learning adaptation."""
 
 import importlib.util
 import json
@@ -17,11 +17,11 @@ spec.loader.exec_module(sync)
 
 
 class CursorContinualLearningTests(unittest.TestCase):
-    def test_held_skill_bundles_bounded_updater_role(self):
+    def test_published_skill_excludes_mutating_upstream_role(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
         entries = {item["published_name"]: item for item in manifest["skills"]}
         entry = entries["cursor-continual-learning"]
-        self.assertFalse(entry["publish"])
+        self.assertTrue(entry["publish"])
         source_to_entry = {
             (sync.SOURCE / item["path"]).resolve(): item for item in entries.values()
         }
@@ -30,14 +30,10 @@ class CursorContinualLearningTests(unittest.TestCase):
             sync.render_skill(entry, root, manifest["upstream_commit"], source_to_entry)
             target = root / "cursor-continual-learning"
             skill = (target / "SKILL.md").read_text()
-            role = (target / "references/agents-memory-updater.md").read_text()
-            self.assertIn("native `agents-memory-updater` role reference", skill)
-            self.assertIn("report not-run without writing", skill)
-            self.assertIn("current Codex workspace and task", role)
-            self.assertIn(".codex/cursor-mirror-state/continual-learning/index.json", role)
-            self.assertIn("last processed `mtimeMs` number", role)
-            self.assertNotIn("~/.cursor/projects", role)
-            self.assertNotIn("model: inherit", role)
+            self.assertFalse((target / "references/agents-memory-updater.md").exists())
+            self.assertIn("proposal-only briefing", skill)
+            self.assertIn("return `not-run`", skill)
+            self.assertIn("Do not edit `AGENTS.md`", skill)
 
 
 if __name__ == "__main__":

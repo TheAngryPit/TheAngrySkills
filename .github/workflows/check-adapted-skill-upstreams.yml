@@ -1,8 +1,6 @@
-name: Review adapted skill upstreams
+name: Manual fallback for adapted Matt upstreams
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 6 * * *'
 permissions:
   contents: read
   issues: write

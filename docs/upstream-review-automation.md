@@ -14,6 +14,10 @@ new or removed skills, and plugin-level support inventory drift. It scopes the
 Cursor lane to `pstack`; the existing Emil/OpenClaw adapted-upstream workflow
 continues to own those families.
 
+The earlier Matt issue watcher remains available through manual dispatch as a
+fallback. Its schedule is disabled so one Matt delta does not open both legacy
+issues and the new family PR.
+
 The pull request contains a stable family/batch marker and the observed source
 commit. Its only repository artifact is the detector evidence under
 `reports/upstream-updates/`. The workflow never rewrites snapshots, overlays,

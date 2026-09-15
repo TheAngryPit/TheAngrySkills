@@ -129,6 +129,31 @@ def test_matt_missing_or_mismatched_adaptation_metadata_fails_closed(tmp_path):
         raise AssertionError("mismatched Matt metadata was accepted")
 
 
+def test_matt_symlink_requires_manual_inspection(tmp_path):
+    upstream = tmp_path / "matt"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "LICENSE", "MIT\n")
+    root = matt_root(tmp_path, upstream)
+    baseline = commit(upstream, "baseline")
+    for record in (
+        root / "skills/mirrors-mattpocock/code-review/UPSTREAM.json",
+        root / "skills/engineering/writing-for-astra/UPSTREAM.json",
+    ):
+        data = json.loads(record.read_text())
+        data["commit"] = baseline
+        record.write_text(json.dumps(data))
+    link = upstream / "skills/engineering/code-review/references/link.md"
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to("../SKILL.md")
+    try:
+        detector.detect_matt(upstream, root)
+    except ValueError as error:
+        assert "symlink requires manual inspection" in str(error)
+    else:
+        raise AssertionError("Matt symlink was ignored")
+
+
 def cursor_root(tmp_path, upstream, baseline):
     root = tmp_path / "repo"
     setup = upstream / "pstack/skills/setup-pstack/SKILL.md"
@@ -217,6 +242,42 @@ def test_cursor_unchanged_when_only_another_plugin_moves(tmp_path):
     assert report["changed"] is False
     assert report["changed_skills"] == []
     assert report["changed_support_files"] == []
+
+
+def test_cursor_compares_support_hashes_without_baseline_object(tmp_path):
+    upstream = tmp_path / "cursor"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "pstack/LICENSE", "MIT\n")
+    write(upstream / "pstack/README.md", "pstack\n")
+    write(upstream / "pstack/agents/pstack-subagent.md", "agent\n")
+    write(upstream / "pstack/skills/setup-pstack/SKILL.md", "budget: 1\n")
+    write(upstream / "pstack/skills/make-bot-ui/SKILL.md", "held\n")
+    commit(upstream, "current")
+    root = cursor_root(tmp_path, upstream, "0" * 40)
+    write(upstream / "pstack/agents/pstack-subagent.md", "changed agent\n")
+    report = detector.detect_cursor(upstream, root)
+    assert "pstack/agents/pstack-subagent.md" in report["changed_support_files"]
+
+
+def test_cursor_symlink_requires_manual_inspection(tmp_path):
+    upstream = tmp_path / "cursor"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "pstack/LICENSE", "MIT\n")
+    write(upstream / "pstack/README.md", "pstack\n")
+    write(upstream / "pstack/agents/pstack-subagent.md", "agent\n")
+    write(upstream / "pstack/skills/setup-pstack/SKILL.md", "budget: 1\n")
+    write(upstream / "pstack/skills/make-bot-ui/SKILL.md", "held\n")
+    baseline = commit(upstream, "baseline")
+    root = cursor_root(tmp_path, upstream, baseline)
+    (upstream / "pstack/docs-link").symlink_to("README.md")
+    try:
+        detector.detect_cursor(upstream, root)
+    except ValueError as error:
+        assert "symlink requires manual inspection" in str(error)
+    else:
+        raise AssertionError("Cursor symlink was ignored")
 
 
 def test_lifecycle_fails_closed_for_duplicates_and_ref_mismatch():
@@ -327,3 +388,6 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert workflow.count("gh api --paginate --slurp") == 3
     assert workflow.count("normalize-comments") == 2
     assert workflow.rfind("normalize-comments") > first_comment
+    legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()
+    assert "workflow_dispatch:" in legacy_matt
+    assert "schedule:" not in legacy_matt

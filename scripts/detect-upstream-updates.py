@@ -115,6 +115,19 @@ def current_files(root: Path) -> set[str]:
     return {path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file() and not path.is_symlink()}
 
 
+def reject_symlinks(root: Path, label: str) -> None:
+    """Fail closed when a monitored upstream tree contains a symlink."""
+
+    if root.is_symlink():
+        raise ValueError(f"{label} symlink requires manual inspection: {root.name}")
+    if not root.exists():
+        return
+    for path in root.rglob("*"):
+        if path.is_symlink():
+            relative = path.relative_to(root).as_posix()
+            raise ValueError(f"{label} symlink requires manual inspection: {relative}")
+
+
 def source_skill_paths(checkout: Path, source_root: str = "") -> set[str]:
     base = checkout / source_root
     if not base.exists():
@@ -235,8 +248,11 @@ def matt_items(root: Path = ROOT) -> list[dict[str, Any]]:
 
 def snapshot(checkout: Path, source_path: str) -> dict[str, str]:
     source = checkout / source_path
+    reject_symlinks(source, source_path or "upstream root")
     values = {path.relative_to(source).as_posix(): sha(path) for path in source.rglob("*") if path.is_file() and not path.is_symlink()}
     license_path = checkout / "LICENSE"
+    if license_path.is_symlink():
+        raise ValueError("upstream LICENSE symlink requires manual inspection")
     if license_path.is_file():
         values["LICENSE"] = sha(license_path)
     return values
@@ -304,7 +320,10 @@ def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
         for item in items
         if (root / item["destination"] / "UPSTREAM.json").exists()
     }
-    actual_license = snapshot(checkout, "").get("LICENSE")
+    license_path = checkout / "LICENSE"
+    if license_path.is_symlink():
+        raise ValueError("upstream LICENSE symlink requires manual inspection")
+    actual_license = sha(license_path) if license_path.is_file() else None
     if expected_licenses and actual_license not in expected_licenses:
         changed_paths.add("LICENSE")
     for path in sorted(changed_paths):
@@ -330,6 +349,7 @@ def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     baseline = manifest["upstream_commit"]
     latest = head(checkout)
     result = blank_result("cursor", "pstack", CURSOR_REPOSITORY, baseline, latest)
+    reject_symlinks(checkout / "pstack", "Cursor pstack")
     # This scheduled lane is deliberately scoped to the pstack plugin.  The
     # repository contains other Cursor plugin families with their own review
     # ownership and release cadence.
@@ -369,6 +389,30 @@ def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
         # are evidence too, while unrelated plugins stay outside this lane.
         changed.update(path for path in diff_paths(checkout, baseline, latest)
                        if cursor_plugin(path) == "pstack")
+    # Manifest hashes remain authoritative when the pinned Git object is not
+    # available in an offline or shallow checkout. Compare them on every run
+    # so changes to an existing support file cannot hide behind equal path sets.
+    for path, support in manifest.get("support_files", {}).items():
+        if cursor_plugin(path) != "pstack":
+            continue
+        expected = support.get("sha256")
+        current = checkout / path
+        actual = sha(current) if current.is_file() else None
+        if not isinstance(expected, str) or actual != expected:
+            changed.add(path)
+    license_hashes: dict[str, set[str]] = {}
+    for entry in entries.values():
+        path = entry.get("license_path")
+        expected = entry.get("license_sha256")
+        if path and cursor_plugin(path) == "pstack" and isinstance(expected, str):
+            license_hashes.setdefault(path, set()).add(expected)
+    for path, expected_values in license_hashes.items():
+        if len(expected_values) != 1:
+            raise ValueError(f"Cursor manifest has mixed license hashes: {path}")
+        current = checkout / path
+        actual = sha(current) if current.is_file() else None
+        if actual != next(iter(expected_values)):
+            changed.add(path)
     for path in sorted(changed):
         normalized = path.replace("\\", "/")
         owner = next((directory for directory in known_dirs if normalized == directory or normalized.startswith(directory + "/")), None)

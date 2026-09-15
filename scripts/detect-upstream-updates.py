@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import subprocess
@@ -437,8 +438,15 @@ def parse_overrides(values: list[str]) -> dict[str, Path]:
 
 
 def render_report(report: dict[str, Any]) -> str:
+    def inert_code(value: str) -> str:
+        # New skill/support paths come from upstream.  JSON escaping makes
+        # control characters visible; HTML escaping keeps Markdown/HTML
+        # delimiters inert inside a code element.
+        encoded = json.dumps(str(value), ensure_ascii=False).replace("`", "\\u0060")
+        return f"<code>{html.escape(encoded, quote=True)}</code>"
+
     def bullets(values: list[str]) -> str:
-        return "\n".join(f"- `{value}`" for value in values) or "- None"
+        return "\n".join(f"- {inert_code(value)}" for value in values) or "- None"
 
     head_value = report["latest"]
     return f"""{report['marker']}
@@ -487,7 +495,7 @@ manifest, overlay, generated skill, catalog, installation, or baseline from this
 ## Bounded Codex handoff
 
 {report['codex_request_marker']}
-After the PR comment is visibly present, a maintainer may post this non-review request:
+The workflow attempts to publish this bounded request automatically as a separate comment. If no Codex reaction or task is observed, an authenticated maintainer posts the same request manually as a new comment:
 
 ```text
 @codex update Review only the reported {report['family']} / {report['batch']} upstream delta at {head_value}. Preserve the repository's pins, exclusions, provenance, patches, hashes, global installs and homes. Propose or implement only bounded adaptation changes supported by the PR evidence. Do not publish new skills, accept a baseline, install anything, merge, force-push, or broaden scope. Leave the branch reviewable and report changed files and checks.

@@ -210,6 +210,7 @@ def test_pr_body_keeps_bounded_codex_request_and_no_promotion():
     assert body.count(report["marker"]) == 1
     assert "@codex update" in body
     assert "Do not publish new skills" in body
+    assert "posts the same request manually as a new comment" in body
     report["candidate_content_promoted"] = True
     try:
         lifecycle.pr_body(report, evidence, "@codex update")
@@ -219,12 +220,64 @@ def test_pr_body_keeps_bounded_codex_request_and_no_promotion():
         raise AssertionError("promotion was accepted")
 
 
+def test_codex_request_marker_dedup_and_rendered_comment():
+    report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", "new")
+    comment = lifecycle.codex_request(report)
+    assert comment.startswith(report["codex_request_marker"])
+    assert "@codex update" in comment
+    assert lifecycle.has_codex_request([{"body": comment}], "cursor", "pstack", "new") is True
+    assert lifecycle.has_codex_request([{"body": comment}], "cursor", "pstack", "different-head") is False
+
+
+def test_normalize_paginated_pr_refs_before_selection():
+    payload = [
+        [{"number": 10, "body": "a", "base": {"ref": "main"}, "head": {"ref": "automation/a"}}],
+        [{"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b"}],
+    ]
+    assert lifecycle.normalize_prs(payload) == [
+        {"number": 10, "body": "a", "baseRefName": "main", "headRefName": "automation/a"},
+        {"number": 11, "body": "b", "baseRefName": "main", "headRefName": "automation/b"},
+    ]
+    assert lifecycle.normalize_comments([[{"body": "old"}], [{"body": "new"}]]) == [
+        {"body": "old"},
+        {"body": "new"},
+    ]
+
+
+def test_upstream_paths_are_inert_in_report_markdown():
+    report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", "new")
+    hostile = "name`\n<script>alert(1)</script>"
+    report["changed_skills"] = [hostile]
+    rendered = detector.render_report(report)
+    assert "<script>" not in rendered
+    assert "name`" not in rendered
+    assert "\\u0060" in rendered
+    assert "&lt;script&gt;" in rendered
+
+
 def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
     assert "--family matt" in workflow
     assert "--family cursor" in workflow
     assert "gh pr create" in workflow
     assert "gh pr edit" in workflow
+    assert "gh api --paginate --slurp" in workflow
+    assert "gh pr list" not in workflow
+    assert "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7" in workflow
+    assert "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7" in workflow
     assert "gh pr merge" not in workflow
     assert "--force" not in workflow
     assert "reports/upstream-updates" in workflow
+    selection = workflow.index("upstream-pr-lifecycle.py select")
+    first_switch = workflow.index("git switch")
+    first_push = workflow.index("git push")
+    assert selection < first_switch < first_push
+    assert workflow.index("git ls-remote") > selection
+    assert selection < workflow.index("branch_exists=false") < first_switch
+    first_pr_write = min(workflow.index("gh pr edit"), workflow.index("gh pr create"))
+    first_comment = workflow.index("gh pr comment")
+    assert first_push < first_pr_write < first_comment
+    assert workflow.index("render-codex-request") < first_comment
+    assert workflow.count("gh api --paginate --slurp") == 3
+    assert workflow.count("normalize-comments") == 2
+    assert workflow.rfind("normalize-comments") > first_comment

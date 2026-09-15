@@ -57,7 +57,58 @@ def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, hea
             f"open PR {existing.get('number', '?')} has marker {family}:{batch} "
             f"but unexpected refs {existing.get('baseRefName')}...{existing.get('headRefName')}; aborting"
         )
-    return {"action": "update", "number": existing.get("number")}
+    number = existing.get("number")
+    if not isinstance(number, int) or isinstance(number, bool) or number < 1:
+        raise ValueError(f"open PR marker {family}:{batch} has an invalid number; aborting")
+    return {"action": "update", "number": number}
+
+
+def _flatten_pages(payload: Any, label: str) -> list[Any]:
+    if not isinstance(payload, list):
+        raise ValueError(f"{label} response must be a JSON array")
+    if payload and all(isinstance(page, list) for page in payload):
+        return [value for page in payload for value in page]
+    return payload
+
+
+def normalize_prs(payload: Any) -> list[dict[str, Any]]:
+    """Flatten gh api --paginate --slurp output and normalize refs."""
+
+    values = _flatten_pages(payload, "open PR")
+    normalized = []
+    for pr in values:
+        if not isinstance(pr, dict):
+            raise ValueError("open PR response contains a non-object")
+        base_object = pr.get("base") if isinstance(pr.get("base"), dict) else {}
+        head_object = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+        base = pr.get("baseRefName") or base_object.get("ref")
+        head = pr.get("headRefName") or head_object.get("ref")
+        if not isinstance(base, str) or not isinstance(head, str):
+            raise ValueError("open PR response is missing base/head refs")
+        normalized.append({
+            "number": pr.get("number"),
+            "body": pr.get("body") or "",
+            "baseRefName": base,
+            "headRefName": head,
+        })
+    return normalized
+
+
+def normalize_comments(payload: Any) -> list[dict[str, str]]:
+    """Flatten every paginated issue-comment page for exact-marker checks."""
+
+    values = _flatten_pages(payload, "comment")
+    normalized = []
+    for comment in values:
+        if not isinstance(comment, dict):
+            raise ValueError("comment response contains a non-object")
+        body = comment.get("body")
+        if body is None:
+            body = ""
+        if not isinstance(body, str):
+            raise ValueError("comment response contains a non-text body")
+        normalized.append({"body": body})
+    return normalized
 
 
 def has_codex_request(comments: list[dict[str, Any]], family: str, batch: str, source_head: str) -> bool:
@@ -92,7 +143,8 @@ def pr_body(report: dict[str, Any], report_markdown: str, codex_prompt: str) -> 
         f"{evidence}\n\n"
         "## Codex handoff\n\n"
         f"{report['codex_request_marker']}\n"
-        "Post the bounded non-review request below only after confirming this comment is visible:\n\n"
+        "The workflow attempts to publish the bounded request below as a separate comment. "
+        "If no Codex reaction or task is observed, an authenticated maintainer posts the same request manually as a new comment:\n\n"
         f"```text\n{codex_prompt.rstrip()}\n```\n\n"
         "Record visible comment, Codex reaction/task, delivery commit, branch SHA/files, and passing checks. "
         "A human must approve any content or baseline change. No automatic merge or force-push.\n"
@@ -108,6 +160,13 @@ def bounded_prompt(report: dict[str, Any]) -> str:
         "PR evidence. Do not publish new skills, accept a baseline, install anything, merge, force-push, or "
         "broaden scope. Leave the branch reviewable and report changed files and checks."
     )
+
+
+def codex_request(report: dict[str, Any]) -> str:
+    """Return the exact, marker-first comment for the human review handoff."""
+
+    validate_report(report)
+    return f"{report['codex_request_marker']}\n\n{bounded_prompt(report)}\n"
 
 
 def main() -> int:
@@ -127,6 +186,12 @@ def main() -> int:
     render = subparsers.add_parser("render-pr")
     render.add_argument("--report-json", required=True)
     render.add_argument("--report-file", required=True)
+    request = subparsers.add_parser("render-codex-request")
+    request.add_argument("--report-json", required=True)
+    normalize = subparsers.add_parser("normalize-prs")
+    normalize.add_argument("--prs-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
+    comments = subparsers.add_parser("normalize-comments")
+    comments.add_argument("--comments-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
     args = parser.parse_args()
     if args.command == "select":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
@@ -140,6 +205,25 @@ def main() -> int:
     if args.command == "render-pr":
         report = json.loads(args.report_json)
         print(pr_body(report, Path(args.report_file).read_text(), bounded_prompt(report)))
+        return 0
+    if args.command == "render-codex-request":
+        print(codex_request(json.loads(args.report_json)), end="")
+        return 0
+    if args.command == "normalize-prs":
+        raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
+        try:
+            print(json.dumps(normalize_prs(json.loads(raw or "[]")), sort_keys=True))
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        return 0
+    if args.command == "normalize-comments":
+        raw = args.comments_json if args.comments_json is not None else sys.stdin.read()
+        try:
+            print(json.dumps(normalize_comments(json.loads(raw or "[]")), sort_keys=True))
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
         return 0
     raw = args.comments_json if args.comments_json is not None else sys.stdin.read()
     print("true" if has_codex_request(json.loads(raw or "[]"), args.family, args.batch, args.source_head) else "false")

@@ -27,9 +27,21 @@ The bounded handoff included in each report and PR is:
 @codex update Review only the reported <family> / <batch> upstream delta at <source-head>. Preserve the repository's pins, exclusions, provenance, patches, hashes, global installs and homes. Propose or implement only bounded adaptation changes supported by the PR evidence. Do not publish new skills, accept a baseline, install anything, merge, force-push, or broaden scope. Leave the branch reviewable and report changed files and checks.
 ```
 
-Posting this prompt is a human review action after the PR comment is visibly
-available. The resulting task, changed files, branch SHA and checks must be
-recorded before a human accepts any adaptation or advances a baseline.
+After creating or editing a PR, the workflow reads its comments, posts the
+bounded request only when the exact source-head marker is absent, then reads
+the comments again and requires that marker to be visible. This proves the
+GitHub HTTP/comment path only. A visible comment does not prove a Codex
+reaction, task creation, task completion, delivered commit, or passing checks.
+
+The human review path remains required when the Codex reaction or task is not
+observed: an authenticated maintainer must publish the same bounded
+`@codex update` shown in the PR as a new comment, then save that comment link
+and its result alongside the source review. Merely deciding to proceed does
+not replace this handoff record. Bot acceptance is demonstrated only by a real
+execution of the workflow and its visible records; offline fixtures prove
+detector and deduplication logic, not GitHub or Codex operation. The resulting
+task, changed files, branch SHA and checks must be recorded before a human
+accepts any adaptation or advances a baseline.
 
 For deterministic offline checks, point the detector at local git fixtures:
 

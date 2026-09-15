@@ -20,12 +20,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
 
@@ -62,7 +62,55 @@ jobs:
             [ -f "$report_file" ] || { echo "missing report: $report_file" >&2; exit 1; }
 
             branch="automation/upstream-${family}-${batch}"
+            python - "$detection" "$family" "$batch" > "$RUNNER_TEMP/report.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          reports = json.loads(pathlib.Path(sys.argv[1]).read_text())["reports"]
+          selected = [r for r in reports if r["family"] == sys.argv[2] and r["batch"] == sys.argv[3]]
+          if len(selected) != 1:
+              raise SystemExit(f"expected one report for {sys.argv[2]}/{sys.argv[3]}, found {len(selected)}")
+          print(json.dumps(selected[0], sort_keys=True))
+          PY
+            report_json="$(cat "$RUNNER_TEMP/report.json")"
+            python scripts/upstream-pr-lifecycle.py render-pr \
+              --report-json "$report_json" \
+              --report-file "$report_file" \
+              > "$RUNNER_TEMP/pr-body.md"
+
+            # Query every open PR so pagination cannot hide a duplicate or a
+            # marker on an unexpected base. Normalize API refs before select.
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" \
+              > "$RUNNER_TEMP/open-pr-pages.json"
+            python scripts/upstream-pr-lifecycle.py normalize-prs \
+              < "$RUNNER_TEMP/open-pr-pages.json" \
+              > "$RUNNER_TEMP/open-prs.json"
+            selection="$(python scripts/upstream-pr-lifecycle.py select \
+              --family "$family" \
+              --batch "$batch" \
+              --base main \
+              --head "$branch" < "$RUNNER_TEMP/open-prs.json")"
+            action="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["action"])' "$selection")"
+
+            # Resolve the PR identity before switching branches or making any
+            # local/remote mutation.  A static branch without an open marked
+            # PR is treated as closed/abandoned work and fails closed.
+            branch_exists=false
             if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+              branch_exists=true
+            fi
+            if [ "$action" = create ] && [ "$branch_exists" = true ]; then
+              echo "branch $branch exists without an open marked PR; refusing to reuse it" >&2
+              exit 1
+            fi
+            if [ "$action" = update ] && [ "$branch_exists" = false ]; then
+              echo "marked PR has no expected branch $branch; refusing to recreate it" >&2
+              exit 1
+            fi
+
+            if [ "$branch_exists" = true ]; then
               git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch"
               git switch --detach "origin/$branch"
               git switch -C "$branch"
@@ -81,47 +129,54 @@ jobs:
             # A normal push is intentional: a diverged review branch fails
             # closed instead of being force-updated over reviewer work.
             git push origin "HEAD:$branch"
-
-            python - "$detection" "$family" "$batch" > "$RUNNER_TEMP/report.json" <<'PY'
-          import json
-          import pathlib
-          import sys
-
-          reports = json.loads(pathlib.Path(sys.argv[1]).read_text())["reports"]
-          selected = [r for r in reports if r["family"] == sys.argv[2] and r["batch"] == sys.argv[3]]
-          if len(selected) != 1:
-              raise SystemExit(f"expected one report for {sys.argv[2]}/{sys.argv[3]}, found {len(selected)}")
-          print(json.dumps(selected[0], sort_keys=True))
-          PY
-            report_json="$(cat "$RUNNER_TEMP/report.json")"
-            python scripts/upstream-pr-lifecycle.py render-pr \
-              --report-json "$report_json" \
-              --report-file "reports/upstream-updates/$report_name" \
-              > "$RUNNER_TEMP/pr-body.md"
-
-            # Query all open PRs so a marker on an unexpected base also fails
-            # closed instead of creating a second proposal for the same lot.
-            gh pr list --state open --limit 100 \
-              --json number,body,baseRefName,headRefName \
-              > "$RUNNER_TEMP/open-prs.json"
-            selection="$(python scripts/upstream-pr-lifecycle.py select \
-              --family "$family" \
-              --batch "$batch" \
-              --base main \
-              --head "$branch" \
-              --prs-json "$(cat "$RUNNER_TEMP/open-prs.json")")"
-            action="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["action"])' "$selection")"
             if [ "$action" = update ]; then
               number="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["number"])' "$selection")"
               gh pr edit "$number" \
                 --title "Review ${family}/${batch} upstream drift" \
                 --body-file "$RUNNER_TEMP/pr-body.md"
             else
-              gh pr create \
+              pr_url="$(gh pr create \
                 --base main \
                 --head "$branch" \
                 --title "Review ${family}/${batch} upstream drift" \
-                --body-file "$RUNNER_TEMP/pr-body.md"
+                --body-file "$RUNNER_TEMP/pr-body.md")"
+              number="${pr_url##*/}"
+            fi
+
+            # The PR body documents the handoff; the exact marker below is a
+            # separate, de-duplicated request comment.  Read it back after
+            # posting so HTTP success is not mistaken for visible delivery.
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
+              > "$RUNNER_TEMP/pr-comment-pages.json"
+            python scripts/upstream-pr-lifecycle.py normalize-comments \
+              < "$RUNNER_TEMP/pr-comment-pages.json" \
+              > "$RUNNER_TEMP/pr-comments.json"
+            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
+              --family "$family" \
+              --batch "$batch" \
+              --source-head "$(python -c 'import json,sys; print(json.loads(sys.argv[1])["latest"])' "$report_json")" \
+              < "$RUNNER_TEMP/pr-comments.json")"
+            if [ "$request_present" = false ]; then
+              python scripts/upstream-pr-lifecycle.py render-codex-request \
+                --report-json "$report_json" \
+                > "$RUNNER_TEMP/codex-request.md"
+              gh pr comment "$number" --body-file "$RUNNER_TEMP/codex-request.md"
+            fi
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
+              > "$RUNNER_TEMP/pr-comment-pages-after.json"
+            python scripts/upstream-pr-lifecycle.py normalize-comments \
+              < "$RUNNER_TEMP/pr-comment-pages-after.json" \
+              > "$RUNNER_TEMP/pr-comments-after.json"
+            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
+              --family "$family" \
+              --batch "$batch" \
+              --source-head "$(python -c 'import json,sys; print(json.loads(sys.argv[1])["latest"])' "$report_json")" \
+              < "$RUNNER_TEMP/pr-comments-after.json")"
+            if [ "$request_present" != true ]; then
+              echo "Codex request marker was not visible after comment attempt" >&2
+              exit 1
             fi
 
             git switch --detach origin/main

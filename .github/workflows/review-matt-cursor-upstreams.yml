@@ -55,9 +55,21 @@ jobs:
           if document.get("schema_version") != 1 or not isinstance(document.get("reports"), list):
               raise SystemExit("detector output has an invalid schema")
           required = {"family", "batch", "changed", "latest"}
-          if not all(isinstance(report, dict) and required <= report.keys() for report in document["reports"]):
+          if not all(
+              isinstance(report, dict)
+              and required <= report.keys()
+              and type(report["changed"]) is bool
+              and isinstance(report["latest"], str)
+              for report in document["reports"]
+          ):
               raise SystemExit("detector output contains an invalid report")
-          expected_status = 1 if document.get("changed") is True else 0
+          identities = [(report["family"], report["batch"]) for report in document["reports"]]
+          if sorted(identities) != [("cursor", "pstack"), ("matt", "adapted")]:
+              raise SystemExit(f"detector output has unexpected report identities: {identities!r}")
+          detected_change = any(report["changed"] for report in document["reports"])
+          if type(document.get("changed")) is not bool or document["changed"] != detected_change:
+              raise SystemExit("detector output has inconsistent aggregate change state")
+          expected_status = 1 if detected_change else 0
           if int(sys.argv[2]) != expected_status:
               raise SystemExit(
                   f"detector status/output mismatch: status={sys.argv[2]} changed={document.get('changed')!r}"

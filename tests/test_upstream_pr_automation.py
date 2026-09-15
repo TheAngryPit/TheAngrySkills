@@ -326,7 +326,13 @@ def test_lifecycle_fails_closed_for_duplicates_and_ref_mismatch():
     else:
         raise AssertionError("mismatched PR refs were accepted")
     fork_spoof = [{**prs[0], "headRepoFullName": "attacker/fork"}]
-    assert lifecycle.select_pr(fork_spoof, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo") == {"action": "create", "number": None}
+    try:
+        lifecycle.select_pr(fork_spoof, "matt", "adapted", "main", "automation/upstream-matt-adapted", "owner/repo")
+    except ValueError as error:
+        assert "unexpected refs" in str(error)
+        assert "attacker/fork" in str(error)
+    else:
+        raise AssertionError("fork marker spoof was ignored")
 
 
 def test_pr_body_keeps_bounded_codex_request_and_no_promotion():

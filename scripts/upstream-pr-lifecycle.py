@@ -46,21 +46,22 @@ def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, 
 
 def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> dict[str, Any]:
     needle = family_batch_marker(family, batch)
-    marked = [
-        pr for pr in prs
-        if needle in (pr.get("body") or "")
-        and pr.get("headRepoFullName") == head_repo
-    ]
+    marked = [pr for pr in prs if needle in (pr.get("body") or "")]
     if len(marked) > 1:
         numbers = [str(pr.get("number", "?")) for pr in marked]
         raise ValueError(f"multiple open PRs match {family}:{batch} ({', '.join(numbers)}); aborting")
     if not marked:
         return {"action": "create", "number": None}
     existing = marked[0]
-    if existing.get("baseRefName") != base or existing.get("headRefName") != head:
+    if (
+        existing.get("baseRefName") != base
+        or existing.get("headRefName") != head
+        or existing.get("headRepoFullName") != head_repo
+    ):
         raise ValueError(
             f"open PR {existing.get('number', '?')} has marker {family}:{batch} "
-            f"but unexpected refs {existing.get('baseRefName')}...{existing.get('headRefName')}; aborting"
+            f"but unexpected refs {existing.get('baseRefName')}..."
+            f"{existing.get('headRepoFullName')}:{existing.get('headRefName')}; aborting"
         )
     number = existing.get("number")
     if not isinstance(number, int) or isinstance(number, bool) or number < 1:

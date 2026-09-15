@@ -30,6 +30,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_plugin_submission_audit.py",
             "scripts/cursor_plugin_scaffold_fixture.py",
             "scripts/cursor_plugin_scanner_adapters.py",
+            "scripts/cursor_sdk_native_adapter.py",
             "scripts/cursor_bot_ui_adapters.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
@@ -118,7 +119,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertFalse(entry["publish"])
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
-        self.assertEqual(state["candidate_not_published"], 2)
+        self.assertEqual(state["candidate_not_published"], 1)
         self.assertEqual(state["operator_excluded_skills"], 8)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
@@ -416,7 +417,7 @@ class CursorMirrorTests(unittest.TestCase):
             "cursor-advisor", "cursor-check-agent-compatibility",
             "cursor-continual-learning", "cursor-create-plugin-scaffold",
             "cursor-review-plugin-submission", "cursor-ralph-loop",
-            "cursor-cancel-ralph",
+            "cursor-cancel-ralph", "cursor-cursor-sdk",
         }
         for name in names:
             overlay = json.loads(
@@ -432,6 +433,19 @@ class CursorMirrorTests(unittest.TestCase):
             self.root / "skills/mirrors-cursor/cursor-create-plugin-scaffold/SKILL.md"
         ).read_text()
         self.assertNotIn("~/.cursor/plugins/local", scaffold)
+
+        sdk = self.root / "skills/mirrors-cursor/cursor-cursor-sdk"
+        self.assertFalse((sdk / "references").exists())
+        self.assertTrue((sdk / "scripts/cursor_sdk_native_adapter.py").is_file())
+
+    def test_retained_source_files_reject_uninventoried_paths(self):
+        overlay_path = self.root / "sources/cursor-plugins/overlays/cursor-cursor-sdk.json"
+        overlay = json.loads(overlay_path.read_text())
+        overlay["retained_source_files"].append("references/not-in-source.md")
+        overlay_path.write_text(json.dumps(overlay))
+        result = self.run_build("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("retained source file is not inventoried", result.stderr)
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

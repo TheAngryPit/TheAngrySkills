@@ -18,7 +18,7 @@ shape into the closest native Codex operations:
 
 | Cursor SDK intent | Native Codex operation | Boundary |
 | --- | --- | --- |
-| `Agent.prompt` / `Agent.create` | `create_thread` | Plan only by default; explicit authorization is required before a caller-supplied bridge can attempt a task mutation. |
+| `Agent.prompt` / `Agent.create` | `create_thread` | Plan only by default; out-of-band explicit authorization is required before a caller-supplied bridge can attempt a task mutation. |
 | `Agent.resume` / `agent.send` | `send_message_to_thread` | Exact thread ID is required; no ambient task lookup. |
 | `run.wait` | `wait_threads` | Bounded timeout, exact thread target. |
 | `run.stream` | `wait_threads` then `read_thread` | Bounded readback pair; no streaming-equivalence claim. |
@@ -38,8 +38,8 @@ upstream commit `889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`, and scanner verdict
 
 The concrete `references/auth.md:100` credential-path finding and MCP
 configuration finding are retained in the overlay security ledger. The
-reference files are not present in the skills-only snapshot and are not copied
-into the native artifact. The adapter rejects credential-shaped keys at any
+reference files remain only in the pinned raw snapshot and are not copied
+into the rendered native artifact. The adapter rejects credential-shaped keys at any
 depth, including `CURSOR_API_KEY`, `apiKey`, headers, environment credentials,
 tokens, and `mcpServers`, before dispatch. It also rejects unsafe native
 results and does not echo external exception text.

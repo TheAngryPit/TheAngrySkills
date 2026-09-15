@@ -25,7 +25,6 @@ class CursorSdkNativeAdapterTests(unittest.TestCase):
                 "operation": "prompt",
                 "prompt": "Inspect the local fixture and report findings.",
                 "target": {"type": "projectless", "directoryName": "sdk-proof"},
-                "authorized": True,
             }
         )
         self.assertEqual(result["status"], "READY")
@@ -35,7 +34,7 @@ class CursorSdkNativeAdapterTests(unittest.TestCase):
             {"type": "projectless", "directoryName": "sdk-proof"},
         )
         self.assertTrue(result["authorization_required"])
-        self.assertTrue(result["authorized"])
+        self.assertNotIn("authorized", result)
         self.assertFalse(result["cursor_sdk_imported"])
         self.assertFalse(result["cursor_sdk_executed"])
         self.assertFalse(result["mcp_configured"])
@@ -104,6 +103,15 @@ class CursorSdkNativeAdapterTests(unittest.TestCase):
         self.assertEqual(result["status"], "PERMISSION_REQUIRED")
         self.assertEqual(calls, [])
         self.assertFalse(result["native_execution_attempted"])
+
+        allowed = run_native_migration(
+            {"operation": "create", "prompt": "bounded fixture"},
+            native_surface={"create_thread": create_thread},
+            execute=True,
+            authorization_granted=True,
+        )
+        self.assertEqual(allowed["status"], "NATIVE_DELEGATION_OBSERVED")
+        self.assertEqual(calls, ["create_thread"])
 
     def test_credentials_and_mcp_fail_closed_before_bridge_call(self) -> None:
         calls: list[str] = []

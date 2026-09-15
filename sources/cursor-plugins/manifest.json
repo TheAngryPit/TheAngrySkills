@@ -135,12 +135,12 @@
       "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "content available; live selection not demonstrated",
-      "baseline_classification": "não demonstrada (equivalente nativo não provado)",
+      "availability": "bounded native task capability mapping and fail-closed request inspection proven; external Cursor SDK runtime unavailable",
+      "baseline_classification": "não demonstrada (runtime Cursor externo não provado; equivalente Codex conceptual e limitado)",
       "baseline_security_verdict": "blocked_malicious",
-      "decision_classification": "intacta",
+      "decision_classification": "adaptação funcional",
       "declared_for_distribution": true,
-      "dependencies_or_limitations": "supporting files in this skill: references/advanced.md, references/auth.md, references/error-handling.md, references/mcp.md, references/patterns.md, references/runtime-choice.md, references/streaming.md; this skill's workflow assumes MCP/tool discovery; native connector availability and permissions must be explicit; this skill directly depends on the Cursor SDK/API surface; no intact Codex equivalent is demonstrated",
+      "dependencies_or_limitations": "published adaptation retains only SKILL.md plus the reviewed read-only native adapter; seven upstream references containing credential and MCP examples remain pinned provenance and are excluded from the rendered skill; native Codex task APIs are a different contract and are available only when advertised",
       "family": "cursor-sdk",
       "files": {
         "SKILL.md": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979",
@@ -155,13 +155,13 @@
       "license_path": "cursor-sdk/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
       "path": "cursor-sdk/skills/cursor-sdk/SKILL.md",
-      "planned_adaptation": "Manter apenas como referência upstream; não disponibilizar no Codex até existir equivalente nativo, revisão de segurança e prova de comportamento.",
-      "promotion_reason": "security scan: contextual credential and MCP review required",
-      "publish": false,
+      "planned_adaptation": "Publicar um guia Codex nativo seguro para mapear pedidos do Cursor SDK para capacidades de task disponíveis, sem importar/executar @cursor/sdk, ler credenciais, configurar MCP ou alegar paridade de runtime.",
+      "promotion_reason": "reviewed Codex-native body and fail-closed adapter exclude the upstream credential/MCP reference surface while retaining its blocked_malicious provenance",
+      "publish": true,
       "published_name": "cursor-cursor-sdk",
       "upstream_purpose": "Guide users building apps, scripts, CI pipelines, or automations on top of the Cursor TypeScript SDK (`@cursor/sdk`). Use this skill whenever the user mentions integrating, installing, or writing code against the Cursor SDK; whenever they say `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `CursorAgentError`, or `@cursor/sdk`; whenever they ask to run Cursor agents programmatically from a script, CI/CD pipeline, GitHub Action, backend service, or any other code that isn't the Cursor IDE itself; and whenever they want to pick between local and cloud runtime, configure MCP servers for an SDK agent, or handle streaming, cancellation, or errors from an SDK agent. Also trigger when a user is wiring Cursor into an automation, writing a bot that runs Cursor, or porting REST `/v1/agents` calls to the SDK, even if they don't explicitly name the package. Use this eagerly rather than answering from memory; the SDK surface evolves and this skill plus its references are the source of truth for the external package.",
       "upstream_skill": "cursor-sdk",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter; corpo nativo sem links relativos; allowlist de fonte; adapter bundle hash-checked; provas positive/missing/error; scanner da skill renderizada; nenhuma referência de credenciais/MCP emitida"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -2471,6 +2471,12 @@
       "sha256": "f2637fc7bc2d970c4f4e742fc1ae2f439e172dd745889e58fc2b98f45e53f384",
       "related_skills": [
         "cursor-check-agent-compatibility"
+      ]
+    },
+    "scripts/cursor_sdk_native_adapter.py": {
+      "sha256": "a99d389f1678b022b9e21dfc4f66a98a7e9594c881cb7448fd3a3b988ac542d8",
+      "related_skills": [
+        "cursor-cursor-sdk"
       ]
     }
   }

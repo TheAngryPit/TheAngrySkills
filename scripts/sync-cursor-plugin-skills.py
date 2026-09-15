@@ -218,11 +218,31 @@ def render_skill(entry: dict, staging: Path, commit: str,
     name = entry["published_name"]
     source_dir = SOURCE / Path(entry["path"]).parent
     target = staging / name
-    shutil.copytree(source_dir, target)
     overlay_path = OVERLAYS / f"{name}.json"
     overlay = load(overlay_path)
     if overlay.get("source_path") != entry["path"] or overlay.get("source_sha256") != entry["files"]["SKILL.md"]:
         raise ValueError(f"overlay source mismatch: {name}")
+    retained = overlay.get("retained_source_files")
+    if retained is None:
+        shutil.copytree(source_dir, target)
+    else:
+        if (not isinstance(retained, list) or not retained
+                or any(not isinstance(path, str) for path in retained)):
+            raise ValueError(f"invalid retained source files: {name}")
+        retained_paths = [safe_relative(path) for path in retained]
+        retained_names = [path.as_posix() for path in retained_paths]
+        if len(set(retained_names)) != len(retained_names) or "SKILL.md" not in retained_names:
+            raise ValueError(f"retained source files must uniquely include SKILL.md: {name}")
+        if any(path not in entry["files"] for path in retained_names):
+            raise ValueError(f"retained source file is not inventoried: {name}")
+        target.mkdir()
+        for relative in retained_paths:
+            source_file = source_dir / relative
+            if not source_file.is_file() or source_file.is_symlink():
+                raise ValueError(f"retained source file is unsafe: {name}/{relative}")
+            output = target / relative
+            output.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_file, output)
     skill_file = target / "SKILL.md"
     text = skill_file.read_text()
     match = SKILL_PATTERN.match(text)

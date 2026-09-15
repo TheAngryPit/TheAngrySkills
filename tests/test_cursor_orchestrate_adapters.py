@@ -122,6 +122,15 @@ def test_plan_rejects_unknown_dependencies_and_unbounded_children():
             ],
             max_children=1,
         )
+    with pytest.raises(OrchestrateAdapterError, match="cyclic dependency"):
+        prepare_local_plan(
+            "goal",
+            [
+                {"task_id": "root", "role": "planner", "acceptance": "root"},
+                {"task_id": "one", "role": "worker", "depends_on": ("two",), "acceptance": "one"},
+                {"task_id": "two", "role": "verifier", "depends_on": ("one",), "acceptance": "two"},
+            ],
+        )
 
 
 def test_work_cloud_payload_is_exactly_one_approval_gated_synthetic_request():

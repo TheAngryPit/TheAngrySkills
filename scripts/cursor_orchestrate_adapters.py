@@ -105,6 +105,23 @@ def prepare_local_plan(
             raise OrchestrateAdapterError(
                 f"unknown dependency for {task['task_id']}: {sorted(missing)}"
             )
+    dependencies = {task["task_id"]: task["depends_on"] for task in normalized}
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(task_id: str) -> None:
+        if task_id in visiting:
+            raise OrchestrateAdapterError(f"cyclic dependency involving {task_id}")
+        if task_id in visited:
+            return
+        visiting.add(task_id)
+        for dependency in dependencies[task_id]:
+            visit(dependency)
+        visiting.remove(task_id)
+        visited.add(task_id)
+
+    for task_id in dependencies:
+        visit(task_id)
     if sum(task["role"] in {"worker", "subplanner", "verifier"} for task in normalized) > max_children:
         raise OrchestrateAdapterError("plan exceeds max_children")
 

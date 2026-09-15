@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "native-codex-migration-bridge-security-hold",
+    "adapter_mode": "bounded-native-codex-migration-adapter",
     "name_mapping": {
       "upstream_skill": "cursor-sdk",
       "published_name": "cursor-cursor-sdk",
@@ -21,7 +21,7 @@
         "native Codex bridge for an explicitly authorized read-only operation"
       ],
       "fallback": "Without a native bridge, return the bounded operation plan and UNAVAILABLE; never substitute Cursor SDK execution or configure MCP.",
-      "availability": "bounded native migration planner and read-only bridge contract test-proven; Cursor SDK runtime and native task execution remain unavailable"
+      "availability": "bounded native migration adapter test-proven; actual native task execution and Cursor SDK runtime unproven"
     },
     "external_dependencies": [
       "@cursor/sdk",
@@ -31,7 +31,7 @@
     ],
     "permission_gates": [
       "Keep Cursor SDK runtime and references/auth.md plus references/mcp.md external; do not install, execute, authenticate, or expose SDK credentials from the mirror.",
-      "Use only the bounded adapter and an already-authorized caller-supplied native Codex bridge; native task creation remains an explicit operator action outside this mirror.",
+      "Use only the bounded adapter and a caller-supplied native Codex bridge after the coordinator establishes authorization outside the request payload; native task creation remains an explicit operator action.",
       "The Cursor SDK and native connector/tool permissions are not proven in Codex.",
       "Do not suppress or rewrite the upstream scanner findings to make the flow appear safe."
     ],
@@ -40,7 +40,7 @@
       "missing_tool_or_input": "Missing native bridge returns UNAVAILABLE; missing bridge methods return MISSING_CAPABILITY; missing thread or bounded input returns a validation error without dispatch.",
       "error": "Credential or MCP-shaped request/result data returns FAIL_CLOSED before dispatch; bridge exceptions and error statuses return NATIVE_ERROR without echoing provider messages or secrets."
     },
-    "promotion_status": "security_hold_blocked_malicious",
+    "promotion_status": "promoted_bounded_native_migration_adapter_task_execution_unproven",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "cursor-sdk/README.md",
@@ -49,8 +49,8 @@
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",
-      "status": "retained",
-      "decision": "The scanner verdict blocked_malicious is retained. The credential-path finding at references/auth.md:100 is contextual documentation text, while MCP hook/install warnings remain findings; neither is dismissed or erased.",
+      "status": "retained_upstream_findings_excluded_from_published_bundle",
+      "decision": "The pinned upstream blocked_malicious verdict remains source provenance. Publish only the rewritten Codex-native body, source frontmatter, and reviewed adapter; exclude every upstream reference file from the rendered bundle.",
       "findings": [
         {
           "rule_id": "credential-path",
@@ -59,7 +59,9 @@
           "line": 100,
           "classification": "contextual_documentation_text",
           "effect": "The upstream auth guide describes CURSOR_API_KEY handling for the external SDK.",
-          "credentials": ["CURSOR_API_KEY"],
+          "credentials": [
+            "CURSOR_API_KEY"
+          ],
           "decision": "Retain the finding; the native adapter never reads, accepts, or publishes the key."
         },
         {
@@ -69,7 +71,9 @@
           "line": null,
           "classification": "active_configuration_reference",
           "effect": "The upstream MCP guide describes configuring MCP servers and auth injection for the external SDK.",
-          "credentials": ["MCP authentication"],
+          "credentials": [
+            "MCP authentication"
+          ],
           "decision": "Retain the finding; MCP-shaped request, bridge, or result data fails closed and no MCP server is configured."
         }
       ]
@@ -94,5 +98,8 @@
     }
   ],
   "source_path": "cursor-sdk/skills/cursor-sdk/SKILL.md",
-  "source_sha256": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979"
+  "source_sha256": "3fbe439f366ea94e0a756fc7288d2d8bd3f871bed4b97219dc1aee2f8c8ab979",
+  "retained_source_files": [
+    "SKILL.md"
+  ]
 }

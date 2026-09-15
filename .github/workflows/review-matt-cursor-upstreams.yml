@@ -1,0 +1,231 @@
+name: Review Matt and Cursor pstack upstreams
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "47 6 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: review-matt-cursor-upstreams
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    name: Detect and stage review proposals
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Detect Matt and Cursor pstack drift
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          report_dir="$RUNNER_TEMP/upstream-reports"
+          mkdir -p "$report_dir"
+          status=0
+          python scripts/detect-upstream-updates.py \
+            --family matt \
+            --family cursor \
+            --report-dir "$report_dir" \
+            > "$RUNNER_TEMP/upstream-detection.json" || status=$?
+          if [ "$status" -gt 1 ]; then
+            echo "upstream detector failed with status $status" >&2
+            exit "$status"
+          fi
+          python - "$RUNNER_TEMP/upstream-detection.json" "$status" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          document = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if document.get("schema_version") != 1 or not isinstance(document.get("reports"), list):
+              raise SystemExit("detector output has an invalid schema")
+          required = {"family", "batch", "changed", "latest"}
+          if not all(
+              isinstance(report, dict)
+              and required <= report.keys()
+              and type(report["changed"]) is bool
+              and isinstance(report["latest"], str)
+              for report in document["reports"]
+          ):
+              raise SystemExit("detector output contains an invalid report")
+          identities = [(report["family"], report["batch"]) for report in document["reports"]]
+          if sorted(identities) != [("cursor", "pstack"), ("matt", "adapted")]:
+              raise SystemExit(f"detector output has unexpected report identities: {identities!r}")
+          detected_change = any(report["changed"] for report in document["reports"])
+          if type(document.get("changed")) is not bool or document["changed"] != detected_change:
+              raise SystemExit("detector output has inconsistent aggregate change state")
+          expected_status = 1 if detected_change else 0
+          if int(sys.argv[2]) != expected_status:
+              raise SystemExit(
+                  f"detector status/output mismatch: status={sys.argv[2]} changed={document.get('changed')!r}"
+              )
+          PY
+
+      - name: Create or update one review PR per family and batch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          detection="$RUNNER_TEMP/upstream-detection.json"
+          report_dir="$RUNNER_TEMP/upstream-reports"
+          while IFS=$'\t' read -r family batch; do
+            [ -n "$family" ] || continue
+            report_name="${family}-${batch}.md"
+            report_file="$report_dir/$report_name"
+            [ -f "$report_file" ] || { echo "missing report: $report_file" >&2; exit 1; }
+
+            branch="automation/upstream-${family}-${batch}"
+            python - "$detection" "$family" "$batch" > "$RUNNER_TEMP/report.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          reports = json.loads(pathlib.Path(sys.argv[1]).read_text())["reports"]
+          selected = [r for r in reports if r["family"] == sys.argv[2] and r["batch"] == sys.argv[3]]
+          if len(selected) != 1:
+              raise SystemExit(f"expected one report for {sys.argv[2]}/{sys.argv[3]}, found {len(selected)}")
+          print(json.dumps(selected[0], sort_keys=True))
+          PY
+            report_json="$(cat "$RUNNER_TEMP/report.json")"
+            python scripts/upstream-pr-lifecycle.py render-pr \
+              --report-json "$report_json" \
+              --report-file "$report_file" \
+              > "$RUNNER_TEMP/pr-body.md"
+
+            # Query every open PR so pagination cannot hide a duplicate or a
+            # marker on an unexpected base. Normalize API refs before select.
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" \
+              > "$RUNNER_TEMP/open-pr-pages.json"
+            python scripts/upstream-pr-lifecycle.py normalize-prs \
+              < "$RUNNER_TEMP/open-pr-pages.json" \
+              > "$RUNNER_TEMP/open-prs.json"
+            selection="$(python scripts/upstream-pr-lifecycle.py select \
+              --family "$family" \
+              --batch "$batch" \
+              --base main \
+              --head "$branch" \
+              --head-repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/open-prs.json")"
+            action="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["action"])' "$selection")"
+
+            # Resolve the PR identity before switching branches or making any
+            # local/remote mutation.  A static branch without an open marked
+            # PR is treated as closed/abandoned work and fails closed.
+            branch_exists=false
+            if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+              branch_exists=true
+            fi
+            if [ "$action" = create ] && [ "$branch_exists" = true ]; then
+              echo "branch $branch exists without an open marked PR; refusing to reuse it" >&2
+              exit 1
+            fi
+            if [ "$action" = update ] && [ "$branch_exists" = false ]; then
+              echo "marked PR has no expected branch $branch; refusing to recreate it" >&2
+              exit 1
+            fi
+
+            if [ "$branch_exists" = true ]; then
+              git fetch origin "refs/heads/$branch:refs/remotes/origin/$branch"
+              git switch --detach "origin/$branch"
+              git switch -C "$branch"
+            else
+              git switch -c "$branch" origin/main
+            fi
+
+            mkdir -p reports/upstream-updates
+            cp "$report_file" "reports/upstream-updates/$report_name"
+            git add -- "reports/upstream-updates/$report_name"
+            if ! git diff --cached --quiet; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit -m "Record ${family}/${batch} upstream review evidence"
+            fi
+            # A normal push is intentional: a diverged review branch fails
+            # closed instead of being force-updated over reviewer work.
+            git push origin "HEAD:$branch"
+            if [ "$action" = update ]; then
+              number="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["number"])' "$selection")"
+              gh pr edit "$number" \
+                --title "Review ${family}/${batch} upstream drift" \
+                --body-file "$RUNNER_TEMP/pr-body.md"
+            else
+              pr_url="$(gh pr create \
+                --base main \
+                --head "$branch" \
+                --title "Review ${family}/${batch} upstream drift" \
+                --body-file "$RUNNER_TEMP/pr-body.md")"
+              number="${pr_url##*/}"
+            fi
+
+            # The PR body documents the handoff; the exact marker below is a
+            # separate, de-duplicated request comment.  Read it back after
+            # posting so HTTP success is not mistaken for visible delivery.
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
+              > "$RUNNER_TEMP/pr-comment-pages.json"
+            python scripts/upstream-pr-lifecycle.py normalize-comments \
+              < "$RUNNER_TEMP/pr-comment-pages.json" \
+              > "$RUNNER_TEMP/pr-comments.json"
+            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
+              --report-json "$report_json" \
+              --author "github-actions[bot]" \
+              < "$RUNNER_TEMP/pr-comments.json")"
+            posted_comment_id=""
+            if [ "$request_present" = false ]; then
+              python scripts/upstream-pr-lifecycle.py render-codex-request-json \
+                --report-json "$report_json" \
+                > "$RUNNER_TEMP/codex-request.json"
+              gh api --method POST \
+                "repos/${GITHUB_REPOSITORY}/issues/$number/comments" \
+                --input "$RUNNER_TEMP/codex-request.json" \
+                > "$RUNNER_TEMP/posted-comment.json"
+              posted_comment_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$RUNNER_TEMP/posted-comment.json")"
+            fi
+            gh api --paginate --slurp \
+              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
+              > "$RUNNER_TEMP/pr-comment-pages-after.json"
+            python scripts/upstream-pr-lifecycle.py normalize-comments \
+              < "$RUNNER_TEMP/pr-comment-pages-after.json" \
+              > "$RUNNER_TEMP/pr-comments-after.json"
+            request_args=(
+              --report-json "$report_json"
+              --author "github-actions[bot]"
+            )
+            if [ -n "$posted_comment_id" ]; then
+              request_args+=(--comment-id "$posted_comment_id")
+            fi
+            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
+              "${request_args[@]}" < "$RUNNER_TEMP/pr-comments-after.json")"
+            if [ "$request_present" != true ]; then
+              echo "Codex request marker was not visible after comment attempt" >&2
+              exit 1
+            fi
+
+            git switch --detach origin/main
+          done < <(
+            python - "$detection" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          for report in json.loads(pathlib.Path(sys.argv[1]).read_text())["reports"]:
+              if report["changed"]:
+                  print(f"{report['family']}\t{report['batch']}")
+          PY
+          )

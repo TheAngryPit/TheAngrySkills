@@ -173,49 +173,14 @@ jobs:
               number="${pr_url##*/}"
             fi
 
-            # The PR body documents the handoff; the exact marker below is a
-            # separate, de-duplicated request comment.  Read it back after
-            # posting so HTTP success is not mistaken for visible delivery.
-            gh api --paginate --slurp \
-              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
-              > "$RUNNER_TEMP/pr-comment-pages.json"
-            python scripts/upstream-pr-lifecycle.py normalize-comments \
-              < "$RUNNER_TEMP/pr-comment-pages.json" \
-              > "$RUNNER_TEMP/pr-comments.json"
-            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
-              --report-json "$report_json" \
-              --author "github-actions[bot]" \
-              < "$RUNNER_TEMP/pr-comments.json")"
-            posted_comment_id=""
-            if [ "$request_present" = false ]; then
-              python scripts/upstream-pr-lifecycle.py render-codex-request-json \
-                --report-json "$report_json" \
-                > "$RUNNER_TEMP/codex-request.json"
-              gh api --method POST \
-                "repos/${GITHUB_REPOSITORY}/issues/$number/comments" \
-                --input "$RUNNER_TEMP/codex-request.json" \
-                > "$RUNNER_TEMP/posted-comment.json"
-              posted_comment_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["id"])' "$RUNNER_TEMP/posted-comment.json")"
-            fi
-            gh api --paginate --slurp \
-              "repos/${GITHUB_REPOSITORY}/issues/$number/comments?per_page=100" \
-              > "$RUNNER_TEMP/pr-comment-pages-after.json"
-            python scripts/upstream-pr-lifecycle.py normalize-comments \
-              < "$RUNNER_TEMP/pr-comment-pages-after.json" \
-              > "$RUNNER_TEMP/pr-comments-after.json"
-            request_args=(
-              --report-json "$report_json"
-              --author "github-actions[bot]"
-            )
-            if [ -n "$posted_comment_id" ]; then
-              request_args+=(--comment-id "$posted_comment_id")
-            fi
-            request_present="$(python scripts/upstream-pr-lifecycle.py request-present \
-              "${request_args[@]}" < "$RUNNER_TEMP/pr-comments-after.json")"
-            if [ "$request_present" != true ]; then
-              echo "Codex request marker was not visible after comment attempt" >&2
-              exit 1
-            fi
+            # The PR body is the durable handoff.  Do not post @codex from
+            # github-actions[bot]: this identity is not authenticated as a
+            # Codex account in this repository.  The local bridge using the
+            # existing gh login observes candidates by default; only an
+            # explicitly scoped --execute --family/--batch invocation may post
+            # one versioned @codex address that feedback candidate after live
+            # validation.  A maintainer records receipt/task/delivery proof
+            # separately.
 
             git switch --detach origin/main
           done < <(

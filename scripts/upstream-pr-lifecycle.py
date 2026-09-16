@@ -592,6 +592,26 @@ def bridge_upstream_handoffs(
                 changed_files=delivery["changed_files"],
                 checks=delivery["checks"],
             )
+            connector_reactions: list[dict[str, Any]] = []
+            if request_id is not None:
+                reaction_payload = _gh_json(
+                    "--paginate",
+                    "--slurp",
+                    f"repos/{repo}/issues/comments/{request_id}/reactions?per_page=100",
+                )
+                for reaction in _api_objects(reaction_payload, "comment reaction"):
+                    user = reaction.get("user") if isinstance(reaction.get("user"), dict) else {}
+                    login = user.get("login")
+                    if login in {"chatgpt-codex-connector[bot]", "codex[bot]"}:
+                        connector_reactions.append({
+                            "id": reaction.get("id"),
+                            "content": reaction.get("content"),
+                            "author": login,
+                        })
+            execution_status["codex_receipt"]["reactions"] = connector_reactions
+            execution_status["codex_receipt"]["observed"] = bool(
+                execution_status["codex_receipt"]["comment_ids"] or connector_reactions
+            )
             evidence_status["request"]["action"] = "observed" if evidence_status["request"]["visible"] else "absent"
             evidence_status["request"]["authenticated_author"] = author
             evidence_status["request"]["author_matches_authenticated"] = evidence_status["request"]["author"] == author

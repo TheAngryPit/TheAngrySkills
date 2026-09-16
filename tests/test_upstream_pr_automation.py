@@ -448,6 +448,12 @@ def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
                 "body": expected_request,
                 "user": {"login": "vitorcepedalopes"},
             }]] if posted else [[]]
+        elif endpoint == "repos/owner/repo/issues/comments/42/reactions?per_page=100":
+            payload = [[{
+                "id": 99,
+                "content": "eyes",
+                "user": {"login": "chatgpt-codex-connector[bot]"},
+            }]]
         elif endpoint == "repos/owner/repo/pulls?state=open&per_page=100":
             payload = [[{
                 "number": 17,
@@ -478,6 +484,15 @@ def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
     assert third["results"][0]["execution_request"]["action"] == "reuse"
     assert third["results"][0]["execution_request"]["comment_id"] == 42
     assert third["results"][0]["execution_request"]["author_matches_authenticated"] is True
+    assert third["results"][0]["codex_receipt"] == {
+        "observed": True,
+        "comment_ids": [],
+        "reactions": [{
+            "id": 99,
+            "content": "eyes",
+            "author": "chatgpt-codex-connector[bot]",
+        }],
+    }
     assert third["results"][0]["task_execution"]["status"] == "unproven"
     assert third["results"][0]["delivery"]["status"] == "unproven"
     assert sum("--method" in command and "POST" in command for command in calls) == 1

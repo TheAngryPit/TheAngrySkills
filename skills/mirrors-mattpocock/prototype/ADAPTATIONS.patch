@@ -9,3 +9,20 @@
  - **Don't wire it to the real database.** Use in-memory state unless the question is specifically about persistence.
  - **Don't generalise.** No "what if we wanted to support X later." The prototype answers one question.
  - **Don't blur the logic and the page together.** If the pure module references the DOM, `document`, or button handlers, it's no longer liftable. Keep the page as a thin shell over a pure module.
+
+--- a/prototype/SKILL.md
++++ b/prototype/SKILL.md
+@@ -21,3 +21,3 @@
+ 3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE, wipe me" name.
+-4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast.
++4. **Skip the polish.** No production test suite, no error handling beyond what makes the prototype _runnable_, and no abstractions. A focused assertion is allowed when it is the cheapest proof of the question; keep it separate from production code. The point is to learn something fast.
+ 5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
+
+--- a/prototype/UI.md
++++ b/prototype/UI.md
+@@ -109,4 +109,4 @@
+ - **Variants that differ only in colour or copy.** That's a tweak, not a prototype. Real variants disagree about structure.
+ - **Sharing too much code between variants.** A shared `<Header>` is fine; a shared `<Layout>` defeats the point. Each variant should be free to throw out the layout.
+ - **Wiring variants to real mutations.** Read-only prototypes are fine. If a variant needs to mutate, point it at a stub: the question is "what should this look like", not "does the backend work".
+-- **Promoting the prototype directly to production.** The variant code was written under prototype constraints (no tests, minimal error handling). Rewrite it properly when you fold it in.
++- **Promoting the prototype directly to production.** The variant code was written under prototype constraints (no production test suite, minimal error handling). Rewrite it properly when you fold it in.

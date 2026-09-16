@@ -2,7 +2,7 @@
   "name": "prototype",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/prototype",
-  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "commit": "959a8e9f1edc3adbe2f7e3054bb6fbefa6696260",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,12 +13,12 @@
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "c2cf02ad1122e996d566cbd461eb0ae6574e45a736199fec2491d2df1fe887c9",
+    "ADAPTATIONS.patch": "e90bc00192c58bcae9763d06b9c0deb88e881c96bcda8bf3ddcff616f7aa351f",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
     "LOGIC.md": "f930cb33bda5c981744bad50f63d33a88bb9e05dd81777a71fc0873d97f5be3f",
     "PROVENANCE.md": "8375dcdb35624e65f3ffbc28aff2803b3225fed94c6eade9680be4fe0f91efe1",
-    "SKILL.md": "714de632d116bb73f65cdb5a882db15b9369a6713b9a47c0fad827848f0bfbe3",
-    "UI.md": "723211e878acbc7b6ff09755263f3295cde724ba902ff0064da41eed51d45ad3",
+    "SKILL.md": "ac5eb25a32d691aa8db7b7a1f63acb1aab08bda71cf715cbdcc2ec66f011d4a6",
+    "UI.md": "481710196f0797ef47e48b2a54f0cdfdf774021b3143b68c42a466b8ef0c20a7",
     "agents/openai.yaml": "5af65e43ab41a350436697b81e27b7f848d36782043b73c322bb2c9fa9cc55dc"
   }
 }

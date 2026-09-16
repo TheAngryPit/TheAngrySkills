@@ -29,7 +29,7 @@ Invest in a useful feedback loop in proportion to the difficulty and available a
 4. **Headless browser script** (Playwright / Puppeteer) that drives the UI and asserts on DOM/console/network.
 5. **Replay a captured trace.** Save a real network request / payload / event log to disk; replay it through the code path in isolation.
 6. **Throwaway harness.** Spin up a minimal subset of the system (one service, mocked deps) that exercises the bug code path with a single function call.
-7. **Property / fuzz loop.** If the bug is "sometimes wrong output", run 1000 random inputs and look for the failure mode.
+7. **Property / fuzz loop.** If the bug is "sometimes wrong output", generate enough varied inputs to look for the failure mode within the available time and resources.
 8. **Bisection harness.** If the bug appeared between two known states (commit, dataset, version), automate "boot at state X, check, repeat" so you can `git bisect run` it.
 9. **Differential loop.** Run the same input through old-version vs new-version (or two configs) and diff outputs.
 10. **HITL bash script.** Last resort. If a human must click, drive _them_ with `scripts/hitl-loop.template.sh` so the loop is still structured. Captured output feeds back to you.
@@ -48,7 +48,7 @@ A 30-second flaky loop is barely better than no loop; a 2-second deterministic o
 
 ### Non-deterministic bugs
 
-The goal is not a clean repro but a **higher reproduction rate**. Loop the trigger 100×, parallelise, add stress, narrow timing windows, inject sleeps. Choose enough repetitions to distinguish the suspected failure from noise, within the available time and resources. Report uncertainty when the failure remains rare.
+The goal is not a clean repro but a **higher reproduction rate**. Repeat the trigger, parallelise when the environment supports it, add stress, narrow timing windows, or inject sleeps. Choose enough repetitions to distinguish the suspected failure from noise, within the available time and resources. Report uncertainty when the failure remains rare.
 
 ### When you genuinely cannot build a loop
 

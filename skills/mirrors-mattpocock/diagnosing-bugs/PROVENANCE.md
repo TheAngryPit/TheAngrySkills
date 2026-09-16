@@ -6,7 +6,7 @@ Operator approved batch 01 on 2026-09-12. MIT attribution is retained in LICENSE
 
 ## What changed and why
 
-Allow explicitly provisional hypotheses to help build a reproduction, without claiming an unverified cause or fix. Remove fixed hypothesis counts and rhetorical guarantees; preserve evidence, diagnostic phases, regression validation and cleanup.
+Allow explicitly provisional hypotheses to help build a reproduction, without claiming an unverified cause or fix. Remove fixed hypothesis and reproduction counts and rhetorical guarantees; preserve evidence, diagnostic phases, regression validation and cleanup.
 
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch).
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).

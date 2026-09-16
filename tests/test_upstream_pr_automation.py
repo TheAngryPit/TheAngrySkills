@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -342,7 +343,13 @@ def test_pr_body_keeps_bounded_codex_request_and_no_promotion():
     assert body.count(report["marker"]) == 1
     assert "@codex update" in body
     assert "Do not publish new skills" in body
-    assert "posts the same request manually as a new comment" in body
+    assert body.count(report["codex_request_marker"]) == 1
+    assert lifecycle.codex_request(report) in body
+    assert "deliberately does not post" in body
+    assert "github-actions[bot]" in body
+    assert "supported skill edits and their pins, hashes, or baseline metadata" in body
+    assert "PENDING_CODEX_REACTION_OR_TASK" in body
+    assert "No automatic acceptance" in body
     report["candidate_content_promoted"] = True
     try:
         lifecycle.pr_body(report, evidence, "@codex update")
@@ -365,6 +372,96 @@ def test_codex_request_marker_dedup_and_rendered_comment():
     assert lifecycle.has_codex_request([exact], report, "github-actions[bot]", 43) is False
     assert lifecycle.has_codex_request([{**exact, "author": "contributor"}], report, "github-actions[bot]") is False
     assert lifecycle.has_codex_request([{**exact, "body": report["codex_request_marker"]}], report, "github-actions[bot]") is False
+
+
+def test_local_bridge_deduplicates_and_separates_receipt_from_delivery():
+    source_head = "a" * 40
+    report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", source_head)
+    body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
+    parsed = lifecycle.report_from_pr_body(body)
+    assert parsed["latest"] == source_head
+    try:
+        lifecycle.report_from_pr_body(body + report["marker"])
+    except ValueError as error:
+        assert "exactly one" in str(error)
+    else:
+        raise AssertionError("duplicate PR source marker was accepted")
+    assert lifecycle.codex_request_state([], parsed) == {"action": "post", "comment_id": None, "author": None}
+
+    request = {"id": 42, "author": "vitorcepedalopes", "body": lifecycle.codex_request(parsed)}
+    state = lifecycle.codex_request_state([request], parsed)
+    assert state == {"action": "reuse", "comment_id": 42, "author": "vitorcepedalopes"}
+    status = lifecycle.handoff_status(
+        [request, {"id": 43, "author": "chatgpt-codex-connector[bot]", "body": "account required"}],
+        parsed,
+        pr_head_sha="b" * 40,
+        changed_files=["skills/example/SKILL.md"],
+        checks=[{"name": "Validate", "status": "completed", "conclusion": "success", "url": "https://example.invalid/check"}],
+    )
+    assert status["request"] == {"visible": True, "comment_id": 42, "author": "vitorcepedalopes"}
+    assert status["codex_receipt"] == {"observed": True, "comment_ids": [43]}
+    assert status["delivery"]["status"] == "unproven"
+    assert status["delivery"]["head_sha"] == "b" * 40
+    assert status["delivery"]["changed_files"] == ["skills/example/SKILL.md"]
+
+
+def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
+    source_head = "a" * 40
+    report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", source_head)
+    pr_body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
+    expected_request = lifecycle.codex_request(report)
+    posted = False
+    calls = []
+
+    def fake_run(command, **kwargs):
+        nonlocal posted
+        calls.append(command)
+        endpoint = next((value for value in command if value.startswith("repos/owner/repo/")), "")
+        if command[2:] == ["user"]:
+            payload = {"login": "vitorcepedalopes"}
+        elif "--method" in command and "POST" in command:
+            assert endpoint == "repos/owner/repo/issues/17/comments"
+            assert json.loads(kwargs["input"])["body"] == expected_request
+            posted = True
+            payload = {
+                "id": 42,
+                "body": expected_request,
+                "user": {"login": "vitorcepedalopes"},
+            }
+        elif endpoint == "repos/owner/repo/issues/17/comments?per_page=100":
+            payload = [[{
+                "id": 42,
+                "body": expected_request,
+                "user": {"login": "vitorcepedalopes"},
+            }]] if posted else [[]]
+        elif endpoint == "repos/owner/repo/pulls?state=open&per_page=100":
+            payload = [[{
+                "number": 17,
+                "body": pr_body,
+                "base": {"ref": "main"},
+                "head": {"ref": "automation/upstream-cursor-pstack", "repo": {"full_name": "owner/repo"}},
+            }]]
+        elif endpoint == "repos/owner/repo/pulls/17":
+            payload = {"head": {"sha": "b" * 40}}
+        elif endpoint == "repos/owner/repo/pulls/17/files?per_page=100":
+            payload = [[{"filename": "skills/example/SKILL.md"}]]
+        elif endpoint == "repos/owner/repo/pulls/17/commits?per_page=100":
+            payload = [[{"sha": "c" * 40}]]
+        elif endpoint == "repos/owner/repo/commits/" + ("b" * 40) + "/check-runs?per_page=100":
+            payload = [[{"check_runs": [{"name": "Validate", "status": "completed", "conclusion": "success", "html_url": "https://example.invalid/check"}]}]]
+        else:
+            raise AssertionError(f"unexpected gh command: {command}")
+        return SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(lifecycle.subprocess, "run", fake_run)
+    first = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),))
+    second = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),))
+    assert first["results"][0]["request"]["action"] == "post"
+    assert second["results"][0]["request"]["action"] == "reuse"
+    assert second["results"][0]["request"]["comment_id"] == 42
+    assert second["results"][0]["request"]["author_matches_authenticated"] is True
+    assert second["results"][0]["delivery"]["status"] == "unproven"
+    assert sum("--method" in command and "POST" in command for command in calls) == 1
 
 
 def test_normalize_paginated_pr_refs_before_selection():
@@ -391,6 +488,19 @@ def test_upstream_paths_are_inert_in_report_markdown():
     assert "name`" not in rendered
     assert "\\u0060" in rendered
     assert "&lt;script&gt;" in rendered
+
+
+def test_detector_report_exposes_maintainer_handoff_without_bot_delivery_claim():
+    report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", "new")
+    rendered = detector.render_report(report)
+    assert "deliberately does not post" in rendered
+    assert "github-actions[bot]" in rendered
+    assert "authorized local bridge" in rendered
+    assert "workflow attempts to publish" not in rendered
+    assert "supported skill edits and their pins, hashes, or baseline metadata" in rendered
+    assert "PENDING_MAINTAINER_COMMENT" in rendered
+    assert "PENDING_DELIVERY_COMMIT" in rendered
+    assert "No automatic" in rendered
 
 
 def test_detector_operational_runtime_error_exits_above_drift_status(tmp_path):
@@ -430,15 +540,16 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert workflow.index("git ls-remote") > selection
     assert selection < workflow.index("branch_exists=false") < first_switch
     first_pr_write = min(workflow.index("gh pr edit"), workflow.index("gh pr create"))
-    first_comment = workflow.index("--method POST")
-    assert first_push < first_pr_write < first_comment
-    assert workflow.index("render-codex-request-json") < first_comment
-    assert 'author "github-actions[bot]"' in workflow
-    assert "--comment-id" in workflow
-    assert "gh pr comment" not in workflow
-    assert workflow.count("gh api --paginate --slurp") == 3
-    assert workflow.count("normalize-comments") == 2
-    assert workflow.rfind("normalize-comments") > first_comment
+    assert first_push < first_pr_write
+    assert "--method POST" not in workflow
+    assert "issues/$number/comments" not in workflow
+    assert "normalize-comments" not in workflow
+    assert "render-codex-request-json" not in workflow
+    assert "maintainer" in workflow
+    assert "local bridge" in workflow
+    assert "existing gh login" in workflow
+    assert "delivery proof" in workflow
+    assert workflow.count("gh api --paginate --slurp") == 1
     assert "detector status/output mismatch" in workflow
     assert '--head-repo "$GITHUB_REPOSITORY"' in workflow
     legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()

@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: cursor-team-kit/skills/pr-review-canvas/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
 Source SHA-256: 88a07a2459197acba3c5e06b7d695e35ad618a998442b72d05cdba4efc117ac6
 Published name: cursor-cursor-team-kit-pr-review-canvas
 Decision class: adaptação funcional

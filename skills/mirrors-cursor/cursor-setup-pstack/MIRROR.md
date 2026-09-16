@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: pstack/skills/setup-pstack/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md
-Source SHA-256: bebc9a5891f82fe84f36669bc5a25878939ccca2379e41ff8dc30789073a726a
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
+Source SHA-256: 2399a5670c6408e92a996299c9de9f22736997cb7e835c694309e7c6fc8c39bf
 Published name: cursor-setup-pstack
 Decision class: adaptação funcional
-Availability: bounded dry-run and native inventory observed; persistent role dispatch remains unproven
+Availability: bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

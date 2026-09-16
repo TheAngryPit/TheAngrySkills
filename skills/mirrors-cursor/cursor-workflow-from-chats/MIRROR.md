@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: cursor-team-kit/skills/workflow-from-chats/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
 Source SHA-256: b568176390165921c5e351cc73b553e3e997f92c9f85dfb1c5a220c943fbaa16
 Published name: cursor-workflow-from-chats
 Decision class: adaptação funcional

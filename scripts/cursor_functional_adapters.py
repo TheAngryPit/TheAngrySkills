@@ -98,6 +98,13 @@ PSTACK_MODEL_PANEL_ROLES = frozenset(
         "interrogate reviewers",
     }
 )
+PSTACK_BUDGETS = {
+    "unlimited": {"label": "unlimited — keep max", "target_effort": "max"},
+    "large": {"label": "large — xhigh reasoning", "target_effort": "xhigh"},
+    "medium": {"label": "medium — high reasoning", "target_effort": "high"},
+    "small": {"label": "small — medium reasoning", "target_effort": "medium"},
+}
+PSTACK_EFFORT_LADDER = ("low", "medium", "high", "xhigh", "max")
 
 
 def read_pstack_playbook_fixture(
@@ -1705,13 +1712,18 @@ def resolve_capabilities(
 def run_pstack_model_mapping_fixture(
     inventory: Mapping[str, Iterable[str]],
     choices: Mapping[str, object],
+    *,
+    budget: str | None = None,
 ) -> dict[str, object]:
     """Dry-run the pstack role mapping against a supplied channel inventory.
 
     This is deliberately a fixture-only boundary.  ``inventory`` is the
     caller's already-observed ``model -> supported efforts`` mapping; this
-    helper does not discover models, call a provider, or persist config.  The
-    two pstack aliases are valid without appearing in that inventory.
+    helper does not discover models, call a provider, or persist config.  When
+    ``budget`` is supplied, it applies the upstream budget ladder to each real
+    model and picks the highest supported effort at or below the target.  The
+    two pstack aliases are valid without appearing in that inventory and are
+    preserved by budget selection.
     """
 
     def fail(reason: str, details: Iterable[str] = ()) -> dict[str, object]:
@@ -1721,6 +1733,7 @@ def run_pstack_model_mapping_fixture(
             "fixture_only": True,
             "writes_performed": False,
             "configuration_changed": False,
+            "budget": budget,
             "reason": reason,
             "details": detail_lines,
             "dry_run": "DRY-RUN cursor-setup-pstack (fixture-only; no config write)\n"
@@ -1733,6 +1746,10 @@ def run_pstack_model_mapping_fixture(
         return fail("model inventory must be a mapping of model to efforts")
     if not isinstance(choices, Mapping):
         return fail("pstack choices must be a mapping of role to selection")
+    if budget is not None and budget not in PSTACK_BUDGETS:
+        return fail(
+            "budget must be one of: " + ", ".join(PSTACK_BUDGETS),
+        )
 
     try:
         normalized_inventory: dict[str, tuple[str, ...]] = {}
@@ -1815,6 +1832,80 @@ def run_pstack_model_mapping_fixture(
     except (AdapterError, TypeError, ValueError) as exc:
         return fail(str(exc))
 
+    budget_spec = PSTACK_BUDGETS.get(budget) if budget else None
+    requested_choices = normalized_choices
+    budget_issues: dict[tuple[str, int], str] = {}
+
+    def model_family(model: str) -> str:
+        parts = model.split("-")
+        # Upstream model slugs put the effort token at the end, or immediately
+        # before a trailing ``fast`` token.  Strip only that position so a
+        # genuine family token such as ``medium`` is not discarded.
+        if parts and parts[-1] in PSTACK_EFFORT_LADDER:
+            parts.pop()
+        elif (
+            len(parts) >= 2
+            and parts[-2] in PSTACK_EFFORT_LADDER
+            and parts[-1] == "fast"
+        ):
+            parts.pop(-2)
+        family = "-".join(parts)
+        return family.removeprefix("cursor-")
+
+    if budget_spec and budget != "unlimited":
+        target_index = PSTACK_EFFORT_LADDER.index(budget_spec["target_effort"])
+        effective_choices: dict[str, tuple[dict[str, object], ...]] = {}
+        for role in PSTACK_MODEL_ROLES:
+            effective: list[dict[str, object]] = []
+            for index, selection in enumerate(normalized_choices[role]):
+                model = selection["model"]
+                if model in PSTACK_MODEL_ALIASES:
+                    effective.append(dict(selection))
+                    continue
+                family = model_family(model)
+                candidates = [
+                    candidate
+                    for candidate in normalized_inventory
+                    if model_family(candidate) == family
+                ]
+                if model in normalized_inventory and model not in candidates:
+                    candidates.insert(0, model)
+                ranked: list[tuple[int, int, str, str]] = []
+                for candidate in candidates:
+                    supported = [
+                        effort
+                        for effort in normalized_inventory[candidate]
+                        if effort in PSTACK_EFFORT_LADDER
+                        and PSTACK_EFFORT_LADDER.index(effort) <= target_index
+                    ]
+                    if not supported:
+                        continue
+                    selected_effort = max(
+                        supported, key=PSTACK_EFFORT_LADDER.index
+                    )
+                    ranked.append(
+                        (
+                            PSTACK_EFFORT_LADDER.index(selected_effort),
+                            int(candidate == model),
+                            candidate,
+                            selected_effort,
+                        )
+                    )
+                if not ranked:
+                    budget_issues[(role, index)] = (
+                        f"{role}[{index}]: no detected model in family {family!r} "
+                        f"supports budget {budget!r} at or below "
+                        f"{budget_spec['target_effort']!r}"
+                    )
+                    effective.append(dict(selection))
+                    continue
+                _, _, selected_model, selected_effort = max(ranked)
+                effective.append(
+                    {"model": selected_model, "effort": selected_effort}
+                )
+            effective_choices[role] = tuple(effective)
+        normalized_choices = effective_choices
+
     unavailable: list[str] = []
     mapping: dict[str, dict[str, object]] = {}
     for role in PSTACK_MODEL_ROLES:
@@ -1824,7 +1915,10 @@ def run_pstack_model_mapping_fixture(
             model = selection["model"]
             effort = selection.get("effort")
             label = f"{role}[{index}]" if role in PSTACK_MODEL_PANEL_ROLES else role
-            if model in PSTACK_MODEL_ALIASES:
+            if (role, index) in budget_issues:
+                unavailable.append(budget_issues[(role, index)])
+                availability = "needs-choice"
+            elif model in PSTACK_MODEL_ALIASES:
                 availability = "alias-preserved"
             elif model not in normalized_inventory:
                 unavailable.append(f"{label}: unavailable model {model!r}")
@@ -1839,6 +1933,9 @@ def run_pstack_model_mapping_fixture(
             selection_report.append(
                 {
                     "selection": dict(selection),
+                    "requested_selection": dict(
+                        requested_choices[role][index]
+                    ),
                     "availability": availability,
                 }
             )
@@ -1852,6 +1949,10 @@ def run_pstack_model_mapping_fixture(
         "DRY-RUN cursor-setup-pstack (fixture-only; no config write)",
         f"inventory: {len(normalized_inventory)} model(s); roles: {len(mapping)}",
     ]
+    if budget_spec:
+        lines.append(
+            f"budget: {budget_spec['label']} ({budget_spec['target_effort']})"
+        )
     for role in PSTACK_MODEL_ROLES:
         entries = mapping[role]["selections"]
         rendered = ", ".join(
@@ -1880,6 +1981,9 @@ def run_pstack_model_mapping_fixture(
             "fixture_only": True,
             "writes_performed": False,
             "configuration_changed": False,
+            "budget": budget,
+            "budget_label": budget_spec["label"] if budget_spec else None,
+            "target_effort": budget_spec["target_effort"] if budget_spec else None,
             "unavailable": tuple(unavailable),
             "mapping": mapping,
             "dry_run": "\n".join(lines),
@@ -1891,6 +1995,9 @@ def run_pstack_model_mapping_fixture(
         "fixture_only": True,
         "writes_performed": False,
         "configuration_changed": False,
+        "budget": budget,
+        "budget_label": budget_spec["label"] if budget_spec else None,
+        "target_effort": budget_spec["target_effort"] if budget_spec else None,
         "mapping": mapping,
         "dry_run": "\n".join(lines),
     }

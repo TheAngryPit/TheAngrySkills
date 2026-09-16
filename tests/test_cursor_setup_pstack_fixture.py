@@ -9,6 +9,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 from cursor_functional_adapters import (  # noqa: E402
+    PSTACK_BUDGETS,
     PSTACK_MODEL_PANEL_ROLES,
     PSTACK_MODEL_ROLES,
     run_pstack_model_mapping_fixture,
@@ -19,6 +20,13 @@ INVENTORY = {
     "gpt-5.6-sol": ("medium", "high"),
     "gpt-5.6-luna": ("high", "xhigh"),
     "gpt-6-astra": ("low", "medium"),
+}
+
+BUDGET_INVENTORY = {
+    "gpt-5.6-sol": ("medium", "high", "xhigh"),
+    "gpt-5.6-luna": ("medium", "high", "xhigh"),
+    "gpt-6-astra": ("low", "medium", "high"),
+    "cursor-grok-4.6-medium-fast": ("medium",),
 }
 
 
@@ -130,6 +138,76 @@ class CursorSetupPstackFixtureTests(unittest.TestCase):
         self.assertEqual(result["status"], "ERROR")
         self.assertFalse(result["writes_performed"])
         self.assertIn("without the parent model", result["reason"])
+
+    def test_budget_maps_efforts_and_same_family_model_variants_without_write(self):
+        choices = choices_for_all_roles()
+        choices["bug-fix"] = "grok-4.6-fast-xhigh"
+        result = run_pstack_model_mapping_fixture(
+            BUDGET_INVENTORY, choices, budget="small"
+        )
+        self.assertEqual(result["status"], "DRY_RUN")
+        self.assertEqual(result["budget"], "small")
+        self.assertEqual(result["budget_label"], PSTACK_BUDGETS["small"]["label"])
+        self.assertEqual(result["target_effort"], "medium")
+        self.assertFalse(result["writes_performed"])
+        bug_fix = result["mapping"]["bug-fix"]["selections"][0]
+        self.assertEqual(
+            bug_fix["selection"],
+            {"model": "cursor-grok-4.6-medium-fast", "effort": "medium"},
+        )
+        self.assertEqual(
+            bug_fix["requested_selection"], {"model": "grok-4.6-fast-xhigh"}
+        )
+        self.assertEqual(
+            result["mapping"]["feature, refactoring"]["selections"][0]["selection"],
+            {"model": "gpt-5.6-sol", "effort": "medium"},
+        )
+        self.assertEqual(
+            result["mapping"]["judgment and prose"]["selections"][0]["selection"],
+            {"model": "inherit-parent"},
+        )
+        self.assertIn("budget: small — medium reasoning (medium)", result["dry_run"])
+
+        for budget, specification in PSTACK_BUDGETS.items():
+            budget_choices = choices_for_all_roles()
+            if budget != "unlimited":
+                budget_choices["bug-fix"] = "grok-4.6-fast-xhigh"
+            budget_result = run_pstack_model_mapping_fixture(
+                BUDGET_INVENTORY, budget_choices, budget=budget
+            )
+            self.assertEqual(budget_result["status"], "DRY_RUN", budget)
+            self.assertEqual(budget_result["budget_label"], specification["label"])
+            self.assertEqual(
+                budget_result["target_effort"], specification["target_effort"]
+            )
+
+    def test_budget_without_supported_effort_marks_roles_needing_choice(self):
+        choices = choices_for_all_roles()
+        unavailable_inventory = dict(BUDGET_INVENTORY)
+        unavailable_inventory["gpt-5.6-luna"] = ("max",)
+        result = run_pstack_model_mapping_fixture(
+            unavailable_inventory, choices, budget="small"
+        )
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertFalse(result["writes_performed"])
+        self.assertTrue(
+            any("no detected model in family 'gpt-5.6-luna'" in item for item in result["unavailable"])
+        )
+        self.assertTrue(
+            any(
+                item["availability"] == "needs-choice"
+                for item in result["mapping"]["how explorer"]["selections"]
+            )
+        )
+
+    def test_unknown_budget_is_an_explicit_error_without_write(self):
+        result = run_pstack_model_mapping_fixture(
+            INVENTORY, choices_for_all_roles(), budget="tiny"
+        )
+        self.assertEqual(result["status"], "ERROR")
+        self.assertFalse(result["writes_performed"])
+        self.assertFalse(result["configuration_changed"])
+        self.assertIn("budget must be one of", result["reason"])
 
 
 if __name__ == "__main__":

@@ -1,38 +1,38 @@
 ---
 name: cursor-setup-pstack
-description: Configure which models pstack uses per role. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", or changing pstack's model choices.
+description: Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, "configure pstack models", "pstack budget", or changing pstack's model choices.
 ---
-
-## Codex runtime mapping
-
-The standing `model-capability-router` is the single policy owner. Read reports/cursor-setup-pstack-native-inventory-20260914.md for the current subagent-channel inventory and 17-role/four-panel candidate map. Current-task, subagent, user-owned task and Work cloud channels differ. This route is explicit-only because persistent model configuration requires a deliberate request. This setup skill maps roles only to models/efforts advertised by the target channel and verifies persistent source changes when requested. The current inventory and dry-run fixture do not prove a write, new-session selection, or full pstack execution.
 
 # Setup pstack for Codex
 
-Configure effective pstack model choices using native Codex selection and the standing `model-capability-router`. Do not write `~/.cursor/rules/pstack-models.mdc` or invent Cursor slugs. This skill responds to an explicit model-setup request; it does not switch the model of an active task.
+Configure effective pstack model and reasoning-budget choices using native Codex selection and the standing `model-capability-router`. Do not write `~/.cursor/rules/pstack-models.mdc`, invent Cursor slugs, or switch the active task model. This skill responds to an explicit model-setup request.
 
 ## Steps
 
 ### 1. Detect native capability
 
-Read the models and efforts advertised for the exact Codex channel being configured. Current task, subagent and user-owned task may differ. Record availability only when that channel accepts it.
+Read the models and efforts advertised for the exact Codex channel being configured. Current task, subagent, user-owned task, and Work cloud channels may differ. Record availability only when that channel accepts it.
 
 ### 2. Read canonical policy
 
-Read the installed `model-capability-router` and its canonical TheAngrySkills source when a persistent change is requested. Respect the operator's current model/effort and explicit selections. The router owns routing and total-cost policy; this skill supplies pstack role questions, not a second default table.
+Read the installed `model-capability-router` and its canonical TheAngrySkills source when a persistent change is requested. Respect the operator's current model/effort and explicit selections. The router owns routing and total-cost policy; this skill supplies pstack role and budget questions, not a second default table.
 
-### 3. Map roles
+### 3. Choose a budget and map roles
 
-Cover every upstream role: feature/refactoring, bug-fix, perf-issue, hillclimb, judgment/prose, hardest tasks, how explorer/explainer, why investigators/synthesizer, reflect tooling/judgment/divergent/synthesizer, arena runners/cross-judge pool, swarm workers, architect runners and interrogate reviewers. Panel list length still controls fan-out. Resolve each to an available native model and effort under the standing router. `inherit-parent`/`auto` mean omit a model override, subject to native support. Show the effective mapping and unsupported roles. Ask Vítor only for an unresolved preference that changes policy.
+Offer these exact labels: `unlimited — keep max`, `large — xhigh reasoning`, `medium — high reasoning`, and `small — medium reasoning`. On a re-run, preserve role families, panel lists, and aliases (`inherit-parent`, `auto`). Apply the selected target effort (`max`, `xhigh`, `high`, or `medium`) to each real model, choosing the highest supported effort at or below the target. If the detected inventory uses a different slug for the same family, select that detected variant; if no supported variant exists, mark the role as needing a choice. Aliases remain unchanged. Cover every upstream role: feature/refactoring, bug-fix, perf-issue, hillclimb, judgment/prose, hardest tasks, how explorer/explainer, why investigators/synthesizer, reflect tooling/judgment/divergent/synthesizer, arena runners/cross-judge pool, swarm workers, architect runners, and interrogate reviewers. Panel list length still controls fan-out.
 
-### 4. Validate and persist when requested
+### 4. Validate
 
-Validate each selected model/effort against the native channel. For a persistent change, update the canonical `model-capability-router` source or its conditional pstack role reference in TheAngrySkills, with a diff and affected routing fixtures. A task-local selection stays in the task brief and handoffs. If source checkout or write authority is unavailable, return the mapping and exact blocked write; never claim persistence.
+Validate every real model and effort against the exact channel inventory. A missing model, effort, or budget target is a bounded block; keep configuration unchanged and report the role needing a choice. `inherit-parent` and `auto` omit the model override only when the native channel supports inheritance.
 
-### 5. Read back
+### 5. Persist when requested
 
-After an authorized persistent update, run router checks and verify the source diff. If installation was separately authorized and performed, read back the installed skill and effective native config in the target home. Report configured/dynamic roles and unsupported model/channel. A source edit alone does not prove runtime selection.
+For an authorized persistent change, update the canonical `model-capability-router` source or its conditional pstack role reference with a reviewed diff and affected routing fixtures. A task-local selection stays in the task brief and handoffs. If source checkout or write authority is unavailable, return the mapping and exact blocked write; never claim persistence.
 
-### 7. Offer a verification skill (optional)
+### 6. Read back
 
-Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke the installed `cursor-create-verification-skill` by exact name; if unavailable, report that dependency rather than claiming it ran. On no, move on without pushing.
+After an authorized persistent update, run router checks and verify the source diff. If installation is separately authorized and performed, read back the installed skill and effective native config. A source edit or fixture-only mapping does not prove runtime selection, new-session behavior, parent alias resolution, or full pstack execution.
+
+### 7. Offer verification
+
+If the project has no way to drive the real app for proof, offer once to create a project-local verification skill. Invoke the installed `cursor-create-verification-skill` by exact name only when available and explicitly requested; otherwise report that dependency rather than claiming it ran.

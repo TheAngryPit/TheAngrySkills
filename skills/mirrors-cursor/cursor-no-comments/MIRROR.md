@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: pstack/skills/no-comments/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
 Source SHA-256: 5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05
 Published name: cursor-no-comments
 Decision class: adaptação funcional

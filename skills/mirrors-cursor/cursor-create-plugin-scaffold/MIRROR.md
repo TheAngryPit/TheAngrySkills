@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: create-plugin/skills/create-plugin-scaffold/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/create-plugin/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/create-plugin/README.md
 Source SHA-256: b1ca0ef8398d957c59c1ab8c34527fd53120de51318af33ef61acab7961c9b46
 Published name: cursor-create-plugin-scaffold
 Decision class: adaptação funcional

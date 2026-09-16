@@ -1795,7 +1795,7 @@
       "validation_requirement": "frontmatter/relative refs, explicit-only policy, three distinct lenses plus synthesis on one scoped transcript, adversarial prompt-isolation proof, source findings retained, no auto-edit, generated security scan"
     },
     {
-      "availability": "bounded dry-run and native inventory observed; persistent role dispatch remains unproven",
+      "availability": "bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1803,18 +1803,18 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "bebc9a5891f82fe84f36669bc5a25878939ccca2379e41ff8dc30789073a726a"
+        "SKILL.md": "2399a5670c6408e92a996299c9de9f22736997cb7e835c694309e7c6fc8c39bf"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/skills/setup-pstack/SKILL.md",
-      "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "bounded explicit-only role mapping; persistent write and dispatch remain unproven",
+      "planned_adaptation": "Preservar comportamento pretendido e orçamento de raciocínio; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
+      "promotion_reason": "bounded explicit-only role and budget mapping; persistent write and dispatch remain unproven",
       "publish": true,
       "published_name": "cursor-setup-pstack",
-      "upstream_purpose": "Configure which models pstack uses per role. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", or changing pstack's model choices.",
+      "upstream_purpose": "Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", \"pstack budget\", or changing pstack's model choices.",
       "upstream_skill": "setup-pstack",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger, budget e fallback de família; teste de comportamento no host Codex"
     },
     {
       "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved",
@@ -2208,7 +2208,7 @@
     }
   ],
   "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
-  "upstream_commit": "889ec4b68fa5aab0e867dad71ec3fdf386ae48f3",
+  "upstream_commit": "c1c0a32802223f4be824112dd83d33ad29a8b26c",
   "upstream_repository": "https://github.com/cursor/plugins.git",
   "support_files": {
     "advisor/agents/advisor-subagent.md": {

@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: continual-learning/skills/continual-learning/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/continual-learning/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/continual-learning/README.md
 Source SHA-256: f627f733a33879b63523da7e92c8b33e6086df42a49a8139a87d1c21e7bd9b16
 Published name: cursor-continual-learning
 Decision class: adaptação funcional

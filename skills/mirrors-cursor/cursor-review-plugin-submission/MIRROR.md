@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 889ec4b68fa5aab0e867dad71ec3fdf386ae48f3
+Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
 Physical source path: create-plugin/skills/review-plugin-submission/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/889ec4b68fa5aab0e867dad71ec3fdf386ae48f3/create-plugin/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/create-plugin/README.md
 Source SHA-256: ff7411fc0426934871ac18f8ed55edcfc49f19443701dbe9109a3395ccded61d
 Published name: cursor-review-plugin-submission
 Decision class: adaptação nominal

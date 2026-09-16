@@ -239,7 +239,7 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
             "cursor-no-comments": "promoted_bounded_native_explicit_only_complex_branches_unproven",
             "cursor-poteto-mode": "promoted_bounded_explicit_only_script_execution_gated",
             "cursor-recall": "promoted_bounded_explicit_only_native_history_selection_unproven",
-            "cursor-setup-pstack": "promoted_bounded_explicit_only_persistent_write_and_dispatch_unproven",
+            "cursor-setup-pstack": "promoted_bounded_explicit_only_budget_mapping_persistent_write_and_dispatch_unproven",
         }
         for name, status in expected.items():
             entry = skills[name]

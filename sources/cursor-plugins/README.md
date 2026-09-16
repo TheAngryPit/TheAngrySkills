@@ -1,7 +1,7 @@
 # Cursor plugin skills mirror
 
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
-`889ec4b68fa5aab0e867dad71ec3fdf386ae48f3`. The pinned `snapshot/`
+`c1c0a32802223f4be824112dd83d33ad29a8b26c`. The pinned `snapshot/`
 contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
 and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Reviewed native adapters are bundled only into the published skills that use them; the old hook adapter and make-bot-ui adapter remain repository evidence and are not rendered. No adapter is registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three Benny automation sources for historical
@@ -24,7 +24,9 @@ workflows. This isolated successor branch adds bounded explicit-only
 `cursor-create-verification-skill`, `cursor-maintain-verification-skill`, and
 `cursor-no-comments`, `cursor-automate-me`, `cursor-figure-it-out`,
 `cursor-poteto-mode`, `cursor-recall`, and `cursor-setup-pstack` paths, bringing
-the catalog to 71 published mirrors. Vítor selected the remaining 12 active
+the catalog to 71 published mirrors. The `cursor-setup-pstack` adaptation also
+maps the reviewed pstack reasoning-budget labels to native model/effort choices
+in a fixture-only dry run. Vítor selected the remaining 12 active
 candidates for conversion and excluded eight sources from this mirror: the
 three Benny automations, four Grok Voice skills, and `cursor-make-bot-ui`.
 The excluded sources are neither published nor rendered in candidate previews;

@@ -66,6 +66,7 @@ Reviewed on 2026-09-16 against the actual upstream delta from
 - `skills/in-progress/retro/SKILL.md` adds deterministic-check guidance: inspect the repository's own check path first, treat an absent guardrail as a finding, and route mechanical coding-standard violations to deterministic checks while reserving judgement calls for prose guidance.
 - The adapted `retro/SKILL.md` carries that guidance verbatim and preserves the approved local `writing-for-astra`, active-harness, and evidence-aware review overlays.
 - `ADAPTATIONS.patch` was rebased against the observed upstream head and remains limited to the approved local overlay. `PROVENANCE.md` and `UPSTREAM.json` record this reviewed head and the generated hashes.
+- Follow-up review restored the explicit `where a review stage exists` condition around reviewer-agent guidance, so sessions without a distinct reviewer do not inherit a false role assumption.
 - The upstream `.changeset/retro-deterministic-checks.md` is outside the tracked skill package and remains held; no new skill, support file, license, install, or baseline outside `retro` was accepted.
 
 The `retro` baseline can safely advance to the observed head with human review of this PR as the acceptance gate. No merge, install, publication, or propagation is implied by this report.

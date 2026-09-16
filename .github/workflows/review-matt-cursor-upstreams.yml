@@ -175,10 +175,12 @@ jobs:
 
             # The PR body is the durable handoff.  Do not post @codex from
             # github-actions[bot]: this identity is not authenticated as a
-            # Codex account in this repository.  An authorized local bridge
-            # using the existing gh login (or an authenticated maintainer)
-            # must post the canonical request and record reaction/task and
-            # delivery proof in a follow-up comment or linked review record.
+            # Codex account in this repository.  The local bridge using the
+            # existing gh login observes candidates by default; only an
+            # explicitly scoped --execute --family/--batch invocation may post
+            # one versioned @codex address that feedback candidate after live
+            # validation.  A maintainer records receipt/task/delivery proof
+            # separately.
 
             git switch --detach origin/main
           done < <(

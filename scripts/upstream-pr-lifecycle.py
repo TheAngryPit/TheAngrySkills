@@ -19,12 +19,16 @@ from typing import Any
 
 MARKER_PREFIX = "upstream-update"
 CODEX_HANDOFF_PREFIX = "codex-handoff"
+CODEX_EXECUTION_PREFIX = "codex-execution"
 EXPECTED_BATCHES = (("matt", "adapted"), ("cursor", "pstack"))
 _REPORT_MARKER = re.compile(
     rf"<!-- {re.escape(MARKER_PREFIX)}:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+) -->"
 )
 _CODEX_MARKER = re.compile(
     rf"<!-- {re.escape(CODEX_HANDOFF_PREFIX)}:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+):head=(?P<head>[0-9a-f]{{7,64}}) -->"
+)
+_CODEX_EXECUTION_MARKER = re.compile(
+    rf"<!-- {re.escape(CODEX_EXECUTION_PREFIX)}:v1:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+):head=(?P<head>[0-9a-f]{{7,64}}) -->"
 )
 _REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 
@@ -35,6 +39,10 @@ def family_batch_marker(family: str, batch: str) -> str:
 
 def codex_request_marker(family: str, batch: str, source_head: str) -> str:
     return f"<!-- {CODEX_HANDOFF_PREFIX}:family={family}:batch={batch}:head={source_head} -->"
+
+
+def codex_execution_marker(family: str, batch: str, source_head: str) -> str:
+    return f"<!-- {CODEX_EXECUTION_PREFIX}:v1:family={family}:batch={batch}:head={source_head} -->"
 
 
 def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> list[dict[str, Any]]:
@@ -194,6 +202,57 @@ def codex_request_state(comments: list[dict[str, Any]], report: dict[str, Any]) 
     return {"action": "reuse", "comment_id": comment_id, "author": author}
 
 
+def exact_execution_requests(comments: list[dict[str, Any]], report: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return comments whose complete body is the versioned execution candidate."""
+
+    expected = codex_execution_request(report).rstrip("\r\n")
+    return [
+        comment for comment in comments
+        if (comment.get("body") or "").rstrip("\r\n") == expected
+    ]
+
+
+def has_codex_execution_request(
+    comments: list[dict[str, Any]],
+    report: dict[str, Any],
+    author: str,
+    comment_id: int | None = None,
+) -> bool:
+    expected = codex_execution_request(report).rstrip("\r\n")
+    return any(
+        (comment.get("body") or "").rstrip("\r\n") == expected
+        and comment.get("author") == author
+        and (comment_id is None or comment.get("id") == comment_id)
+        for comment in comments
+    )
+
+
+def execution_request_state(comments: list[dict[str, Any]], report: dict[str, Any]) -> dict[str, Any]:
+    """Choose an execution post/reuse action without treating evidence as execution."""
+
+    matches = exact_execution_requests(comments, report)
+    if len(matches) > 1:
+        ids = [str(comment.get("id", "?")) for comment in matches]
+        raise ValueError(
+            f"multiple versioned Codex execution comments for {report['family']}:{report['batch']} "
+            f"({', '.join(ids)}); aborting"
+        )
+    if not matches:
+        return {"action": "candidate", "comment_id": None, "author": None}
+    existing = matches[0]
+    comment_id = existing.get("id")
+    if not isinstance(comment_id, int) or isinstance(comment_id, bool) or comment_id < 1:
+        raise ValueError(
+            f"versioned Codex execution comment for {report['family']}:{report['batch']} has an invalid comment ID; aborting"
+        )
+    author = existing.get("author")
+    if not isinstance(author, str) or not author:
+        raise ValueError(
+            f"versioned Codex execution comment for {report['family']}:{report['batch']} has no author; aborting"
+        )
+    return {"action": "reuse", "comment_id": comment_id, "author": author}
+
+
 def report_from_pr_body(body: str) -> dict[str, str]:
     """Extract and validate the source identity carried by a generated PR body."""
 
@@ -201,7 +260,8 @@ def report_from_pr_body(body: str) -> dict[str, str]:
         raise ValueError("PR body must be text")
     report_matches = list(_REPORT_MARKER.finditer(body))
     codex_matches = list(_CODEX_MARKER.finditer(body))
-    if len(report_matches) != 1 or len(codex_matches) != 1:
+    execution_matches = list(_CODEX_EXECUTION_MARKER.finditer(body))
+    if len(report_matches) != 1 or len(codex_matches) != 1 or len(execution_matches) > 1:
         raise ValueError("PR body must contain exactly one upstream and one Codex handoff marker")
     report_match = report_matches[0]
     codex_match = codex_matches[0]
@@ -209,12 +269,23 @@ def report_from_pr_body(body: str) -> dict[str, str]:
     codex_identity = codex_match.groupdict()
     if report_identity["family"] != codex_identity["family"] or report_identity["batch"] != codex_identity["batch"]:
         raise ValueError("PR body upstream and Codex handoff markers disagree")
+    if execution_matches:
+        execution_identity = execution_matches[0].groupdict()
+        if (
+            execution_identity["family"] != codex_identity["family"]
+            or execution_identity["batch"] != codex_identity["batch"]
+            or execution_identity["head"] != codex_identity["head"]
+        ):
+            raise ValueError("PR body source and execution markers disagree")
     report = {
         "family": report_identity["family"],
         "batch": report_identity["batch"],
         "latest": codex_identity["head"],
         "marker": family_batch_marker(report_identity["family"], report_identity["batch"]),
         "codex_request_marker": codex_request_marker(
+            report_identity["family"], report_identity["batch"], codex_identity["head"]
+        ),
+        "codex_execution_marker": codex_execution_marker(
             report_identity["family"], report_identity["batch"], codex_identity["head"]
         ),
     }
@@ -226,6 +297,7 @@ def handoff_status(
     comments: list[dict[str, Any]],
     report: dict[str, Any],
     *,
+    request_kind: str = "evidence",
     pr_head_sha: str | None = None,
     changed_files: list[str] | None = None,
     checks: list[dict[str, Any]] | None = None,
@@ -237,24 +309,38 @@ def handoff_status(
     task record, so delivery remains explicitly unproven here.
     """
 
-    matches = exact_codex_requests(comments, report)
+    if request_kind == "evidence":
+        matches = exact_codex_requests(comments, report)
+    elif request_kind == "execution":
+        matches = exact_execution_requests(comments, report)
+    else:
+        raise ValueError(f"unsupported handoff request kind: {request_kind}")
     if len(matches) > 1:
         raise ValueError(
-            f"multiple canonical Codex handoff comments for {report['family']}:{report['batch']}; aborting"
+            f"multiple {request_kind} Codex handoff comments for {report['family']}:{report['batch']}; aborting"
         )
     request = matches[0] if matches else None
     request_id = request.get("id") if request else None
+    if request is not None and (
+        not isinstance(request_id, int) or isinstance(request_id, bool) or request_id < 1
+    ):
+        raise ValueError(f"{request_kind} Codex handoff has an invalid comment ID; aborting")
     receipt_authors = {"chatgpt-codex-connector[bot]", "codex[bot]"}
-    receipt_comments = [
-        comment for comment in comments
-        if comment is not request
-        and comment.get("author") in receipt_authors
-        and (request_id is None or isinstance(comment.get("id"), int) and comment.get("id") > request_id)
-    ]
+    receipt_comments = []
+    if request is not None:
+        receipt_comments = [
+            comment for comment in comments
+            if comment is not request
+            and comment.get("author") in receipt_authors
+            and isinstance(comment.get("id"), int)
+            and not isinstance(comment.get("id"), bool)
+            and comment.get("id") > request_id
+        ]
     observed_files = sorted(set(changed_files or []))
     observed_checks = checks or []
     return {
         "request": {
+            "kind": request_kind,
             "visible": request is not None,
             "comment_id": request_id,
             "author": request.get("author") if request else None,
@@ -262,6 +348,11 @@ def handoff_status(
         "codex_receipt": {
             "observed": bool(receipt_comments),
             "comment_ids": [comment.get("id") for comment in receipt_comments],
+        },
+        "task_execution": {
+            "status": "unproven",
+            "task_link": None,
+            "reason": "a connector reply or review result is not proof of a Codex task execution",
         },
         "delivery": {
             "status": "unproven",
@@ -272,6 +363,21 @@ def handoff_status(
             "reason": "link a Codex task and its delivered commit/files/checks before claiming delivery",
         },
     }
+
+
+def _bridge_families(
+    families: tuple[tuple[str, str], ...],
+    *,
+    execute: bool,
+) -> tuple[tuple[str, str], ...]:
+    """Validate the bridge scope before any GitHub write can be attempted."""
+
+    selected = tuple(families)
+    if not selected or any(pair not in EXPECTED_BATCHES for pair in selected):
+        raise ValueError("bridge scope must contain configured family/batch pairs")
+    if execute and (len(selected) != 1 or selected[0] not in EXPECTED_BATCHES):
+        raise ValueError("--execute requires exactly one configured --family and --batch")
+    return selected
 
 
 def _gh_json(*arguments: str, input_payload: dict[str, Any] | None = None) -> Any:
@@ -355,17 +461,23 @@ def _pr_delivery_snapshot(repo: str, number: int) -> dict[str, Any]:
 def bridge_upstream_handoffs(
     repo: str,
     families: tuple[tuple[str, str], ...] = EXPECTED_BATCHES,
+    *,
+    execute: bool = False,
 ) -> dict[str, Any]:
-    """Post one canonical request per existing PR through local gh auth.
+    """Observe candidates, or explicitly post one candidate through local gh auth.
 
     The GitHub workflow never calls this function.  A local operator invokes
-    it with the existing `gh` login; the returned record separates request
-    visibility, Codex receipt, and observable PR state, and never claims that
-    a task delivered a commit without a linked task record.
+    it with the existing `gh` login.  Observation is the default and performs
+    no writes.  ``execute=True`` is a one-shot, exact family/batch operation:
+    it revalidates the live PR and comments, posts the versioned candidate only
+    when absent, and reads that exact comment back.  The returned record keeps
+    evidence, execution trigger, connector receipt, task execution, and
+    delivery separate.
     """
 
     if not _REPOSITORY.fullmatch(repo):
         raise ValueError("repository must be OWNER/REPOSITORY")
+    families = _bridge_families(families, execute=execute)
     identity = _gh_json("user")
     if not isinstance(identity, dict) or not isinstance(identity.get("login"), str) or not identity["login"]:
         raise ValueError("gh user response has no authenticated login")
@@ -387,7 +499,11 @@ def bridge_upstream_handoffs(
                 "family": family,
                 "batch": batch,
                 "status": "missing_canonical_pr",
-                "request": {"action": "not_posted"},
+                "evidence_request": {"kind": "evidence", "action": "not_posted"},
+                "execution_request": {"kind": "execution", "action": "not_posted"},
+                "codex_receipt": {"observed": False, "comment_ids": []},
+                "task_execution": {"status": "unproven", "task_link": None},
+                "delivery": {"status": "unproven", "task_link": None},
             })
             continue
         number = selection["number"]
@@ -400,55 +516,114 @@ def bridge_upstream_handoffs(
                 "--paginate", "--slurp", f"repos/{repo}/issues/{number}/comments?per_page=100"
             )
             comments = normalize_comments(comments_payload)
-            state = codex_request_state(comments, report)
-            request_id = state["comment_id"]
-            request_action = state["action"]
-            if request_action == "post":
-                posted = _gh_json(
-                    "--method", "POST",
-                    f"repos/{repo}/issues/{number}/comments",
-                    "--input", "-",
-                    input_payload={"body": codex_request(report)},
-                )
-                if not isinstance(posted, dict):
-                    raise RuntimeError("gh comment response must be an object")
-                request_id = posted.get("id")
-                posted_user = posted.get("user") if isinstance(posted.get("user"), dict) else {}
-                posted_body = posted.get("body")
-                if (
-                    not isinstance(request_id, int)
-                    or isinstance(request_id, bool)
-                    or request_id < 1
-                    or not isinstance(posted_body, str)
-                    or posted_body.rstrip("\r\n") != codex_request(report).rstrip("\r\n")
-                    or posted_user.get("login") != author
-                ):
-                    raise RuntimeError("posted Codex request did not match local author, body, or ID")
+            evidence_state = codex_request_state(comments, report)
+            execution_state = execution_request_state(comments, report)
+            request_id = execution_state["comment_id"]
+            request_action = "observe_only" if not execute and execution_state["action"] == "candidate" else execution_state["action"]
+            if execute and execution_state["action"] == "candidate":
+                # Re-read the open PR list and comments immediately before a
+                # write.  This proves the exact branch/body/head is still the
+                # selected canonical PR and that no concurrent candidate was
+                # visible in the latest page read.
+                live_prs = normalize_prs(_gh_json(
+                    "--paginate", "--slurp", f"repos/{repo}/pulls?state=open&per_page=100"
+                ))
+                live_selection = select_pr(live_prs, family, batch, "main", branch, repo)
+                if live_selection.get("action") != "update" or live_selection.get("number") != number:
+                    raise RuntimeError("canonical PR changed before Codex candidate post; aborting")
+                live_pr = next(pr for pr in live_prs if pr.get("number") == number)
+                live_report = report_from_pr_body(live_pr["body"])
+                if live_report != report:
+                    raise RuntimeError("canonical PR report changed before Codex candidate post; aborting")
                 comments = normalize_comments(_gh_json(
                     "--paginate", "--slurp", f"repos/{repo}/issues/{number}/comments?per_page=100"
                 ))
-                readback = [comment for comment in comments if comment.get("id") == request_id]
-                if len(readback) != 1 or not has_codex_request(comments, report, author, request_id):
-                    raise RuntimeError("posted Codex request was not visible with the expected author/body/ID")
+                execution_state = execution_request_state(comments, report)
+                if execution_state["action"] == "reuse":
+                    request_id = execution_state["comment_id"]
+                    request_action = "reuse"
+                else:
+                    candidate_body = codex_execution_request(report)
+                    posted = _gh_json(
+                        "--method", "POST",
+                        f"repos/{repo}/issues/{number}/comments",
+                        "--input", "-",
+                        input_payload={"body": candidate_body},
+                    )
+                    if not isinstance(posted, dict):
+                        raise RuntimeError("gh comment response must be an object")
+                    request_id = posted.get("id")
+                    posted_user = posted.get("user") if isinstance(posted.get("user"), dict) else {}
+                    posted_body = posted.get("body")
+                    if (
+                        not isinstance(request_id, int)
+                        or isinstance(request_id, bool)
+                        or request_id < 1
+                        or not isinstance(posted_body, str)
+                        or posted_body.rstrip("\r\n") != candidate_body.rstrip("\r\n")
+                        or posted_user.get("login") != author
+                    ):
+                        raise RuntimeError("posted Codex execution candidate did not match local author, body, or ID")
+                    comments = normalize_comments(_gh_json(
+                        "--paginate", "--slurp", f"repos/{repo}/issues/{number}/comments?per_page=100"
+                    ))
+                    readback = [comment for comment in comments if comment.get("id") == request_id]
+                    if len(readback) != 1 or not has_codex_execution_request(comments, report, author, request_id):
+                        raise RuntimeError("posted Codex execution candidate was not visible with the expected author/body/ID")
+                    request_action = "post"
+            elif execute and execution_state["action"] == "reuse":
+                request_action = "reuse"
+            # In observation mode, old @codex update evidence is never used as
+            # an execution request and never suppresses the candidate status.
             delivery = _pr_delivery_snapshot(repo, number)
-            status = handoff_status(
+            evidence_status = handoff_status(
                 comments,
                 report,
+                request_kind="evidence",
                 pr_head_sha=delivery["head_sha"],
                 changed_files=delivery["changed_files"],
                 checks=delivery["checks"],
             )
-            status["request"]["action"] = request_action
-            status["request"]["authenticated_author"] = author
-            status["request"]["author_matches_authenticated"] = status["request"]["author"] == author
-            status["request"]["comment_url"] = (
+            execution_status = handoff_status(
+                comments,
+                report,
+                request_kind="execution",
+                pr_head_sha=delivery["head_sha"],
+                changed_files=delivery["changed_files"],
+                checks=delivery["checks"],
+            )
+            evidence_status["request"]["action"] = "observed" if evidence_status["request"]["visible"] else "absent"
+            evidence_status["request"]["authenticated_author"] = author
+            evidence_status["request"]["author_matches_authenticated"] = evidence_status["request"]["author"] == author
+            evidence_id = evidence_status["request"]["comment_id"]
+            evidence_status["request"]["comment_url"] = (
+                f"https://github.com/{repo}/pull/{number}#issuecomment-{evidence_id}"
+                if evidence_id is not None else None
+            )
+            execution_status["request"]["action"] = request_action
+            execution_status["request"]["candidate_marker"] = report["codex_execution_marker"]
+            execution_status["request"]["authenticated_author"] = author
+            execution_status["request"]["author_matches_authenticated"] = execution_status["request"]["author"] == author
+            execution_status["request"]["comment_url"] = (
                 f"https://github.com/{repo}/pull/{number}#issuecomment-{request_id}"
                 if request_id is not None else None
             )
-            status["source_head"] = report["latest"]
-            status["pr_url"] = f"https://github.com/{repo}/pull/{number}"
-            status["delivery"]["commit_shas"] = delivery["commit_shas"]
-            results.append({"family": family, "batch": batch, "pr": number, "status": "observed", **status})
+            execution_status["source_head"] = report["latest"]
+            execution_status["pr_url"] = f"https://github.com/{repo}/pull/{number}"
+            execution_status["delivery"]["commit_shas"] = delivery["commit_shas"]
+            results.append({
+                "family": family,
+                "batch": batch,
+                "pr": number,
+                "status": "observed",
+                "evidence_request": evidence_status["request"],
+                "execution_request": execution_status["request"],
+                "codex_receipt": execution_status["codex_receipt"],
+                "task_execution": execution_status["task_execution"],
+                "delivery": execution_status["delivery"],
+                "source_head": execution_status["source_head"],
+                "pr_url": execution_status["pr_url"],
+            })
         except (ValueError, RuntimeError) as error:
             results.append({"family": family, "batch": batch, "pr": number, "status": "blocked", "error": str(error)})
     return {"schema_version": 1, "repository": repo, "authenticated_author": author, "results": results}
@@ -478,33 +653,48 @@ def pr_body(report: dict[str, Any], report_markdown: str, codex_prompt: str) -> 
     # use.  The PR body renders the canonical semiautomatic handoff below, so
     # remove the report copy instead of presenting two potentially divergent
     # requests or status records.
-    evidence, separator, _ = evidence.partition("\n## Bounded Codex handoff\n")
-    if separator:
-        evidence = evidence.rstrip()
+    for handoff_heading in (
+        "\n## Bounded Codex handoff\n",
+        "\n## Evidence/request comment (not execution)\n",
+    ):
+        evidence, separator, _ = evidence.partition(handoff_heading)
+        if separator:
+            evidence = evidence.rstrip()
+            break
     return (
         f"{report['marker']}\n"
         f"## Review-only upstream update: {report['family']} / {report['batch']}\n\n"
         "This PR carries detector evidence and the review handoff. It does not publish upstream content or promote a new baseline into main.\n\n"
         f"{evidence}\n\n"
-        "## Codex handoff\n\n"
+        "## Evidence/request comment (not execution)\n\n"
         "The workflow deliberately does not post an `@codex` comment from "
         "`github-actions[bot]`: that identity is not authenticated as a Codex "
-        "account in this repository. An authorized local bridge using the existing "
-        "`gh` login may post the canonical request below exactly once after validating "
-        "this PR; an authenticated maintainer may also post it manually. Record the "
-        "resulting Codex reaction or task and delivery evidence.\n\n"
-        "Canonical request for the local bridge or maintainer (copy exactly; do not edit):\n\n"
+        "account in this repository. Existing `@codex update` comments are evidence "
+        "only and never trigger or suppress the execution candidate below.\n\n"
+        "Evidence comment retained in the report (copy exactly only when recording evidence):\n\n"
         f"```text\n{codex_request(report).rstrip()}\n```\n\n"
-        "## Maintainer proof record\n\n"
+        "## Codex execution candidate (not live-proven)\n\n"
+        "The local bridge observes this candidate by default and performs no POST. "
+        "An explicit, exact `--execute --family "
+        f"{report['family']} --batch {report['batch']}` invocation may post one copy "
+        "after revalidating the canonical PR and comments. The footer below is a "
+        "candidate syntax until a live Codex task and delivery are proven; no heartbeat "
+        "or unattended automation may execute it automatically.\n\n"
+        f"```text\n{codex_execution_request(report).rstrip()}\n```\n\n"
+        "## Proof fields\n\n"
         "Keep this proof in a follow-up maintainer comment or linked review record; "
         "the workflow may refresh this PR body on a later upstream run.\n\n"
-        "- Handoff comment URL and comment ID: `PENDING_MAINTAINER_COMMENT`\n"
-        "- Codex reaction and task URL or ID: `PENDING_CODEX_REACTION_OR_TASK`\n"
+        "- Evidence/request comment URL and ID: `PENDING_EVIDENCE_COMMENT`\n"
+        "- Execution trigger comment URL and ID: `PENDING_EXECUTION_COMMENT`\n"
+        "- Connector receipt comment URL and ID: `PENDING_CONNECTOR_RECEIPT`\n"
+        "- Codex task URL or ID: `PENDING_CODEX_TASK`\n"
         "- Delivery commit SHA: `PENDING_DELIVERY_COMMIT`\n"
         "- Delivered changed files: `PENDING_DELIVERED_FILES`\n"
         "- Passing check URLs and results: `PENDING_CHECKS`\n"
         "- Human disposition for skill, pin, hash, or baseline metadata changes: `PENDING_HUMAN_REVIEW`\n\n"
-        "A human must approve any content or baseline change. No automatic acceptance, "
+        "A visible comment, HTTP success, connector receipt, or completed review alone "
+        "is not proof of task execution or delivery. A human must approve any content "
+        "or baseline change. No automatic acceptance, "
         "promotion into main, merge, force-push, installation, or publication is permitted.\n"
     )
 
@@ -525,10 +715,33 @@ def bounded_prompt(report: dict[str, Any]) -> str:
 
 
 def codex_request(report: dict[str, Any]) -> str:
-    """Return the exact, marker-first request for the local bridge or maintainer."""
+    """Return the old marker-first evidence comment.
+
+    This wording is retained for report provenance and for comments already
+    present on existing PRs.  It is deliberately never used as the execution
+    trigger by the local bridge.
+    """
 
     validate_report(report)
     return f"{report['codex_request_marker']}\n\n{bounded_prompt(report)}\n"
+
+
+def codex_execution_request(report: dict[str, Any]) -> str:
+    """Return the versioned candidate whose footer is the supported trigger.
+
+    The footer remains a candidate until a live Codex task and delivery are
+    observed.  Keeping the marker and bounded text stable makes deduplication
+    fail closed and prevents an old ``@codex update`` comment from triggering
+    or suppressing this candidate.
+    """
+
+    validate_report(report)
+    task = bounded_prompt(report).removeprefix("@codex update ")
+    return (
+        f"{report['codex_execution_marker']}\n\n"
+        f"{task}\n\n"
+        "@codex address that feedback\n"
+    )
 
 
 def main() -> int:
@@ -559,14 +772,24 @@ def main() -> int:
     comments.add_argument("--comments-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
     bridge = subparsers.add_parser(
         "bridge",
-        help="post one canonical @codex handoff per existing PR through local gh auth",
+        help="observe Codex candidates; post one only with explicit --execute",
     )
     bridge.add_argument("--repo", required=True, help="GitHub OWNER/REPOSITORY")
+    bridge.add_argument(
+        "--execute",
+        action="store_true",
+        help="explicitly post one candidate after exact family/batch and live-state checks",
+    )
     bridge.add_argument(
         "--family",
         choices=sorted({family for family, _ in EXPECTED_BATCHES}),
         action="append",
-        help="limit the bridge to one or more configured families",
+        help="limit observation to one or more configured families; exactly one with --execute",
+    )
+    bridge.add_argument(
+        "--batch",
+        choices=sorted({batch for _, batch in EXPECTED_BATCHES}),
+        help="limit observation to one configured batch; required with --execute",
     )
     args = parser.parse_args()
     if args.command == "select":
@@ -605,11 +828,20 @@ def main() -> int:
             return 2
         return 0
     if args.command == "bridge":
-        selected = EXPECTED_BATCHES
-        if args.family:
-            selected = tuple(pair for pair in EXPECTED_BATCHES if pair[0] in set(args.family))
         try:
-            print(json.dumps(bridge_upstream_handoffs(args.repo, selected), sort_keys=True))
+            if args.execute and (len(args.family or []) != 1 or args.batch is None):
+                raise ValueError("--execute requires exactly one configured --family and --batch")
+            if args.family is None and args.batch is None:
+                selected = EXPECTED_BATCHES
+            else:
+                selected = tuple(
+                    pair for pair in EXPECTED_BATCHES
+                    if (not args.family or pair[0] in set(args.family))
+                    and (args.batch is None or pair[1] == args.batch)
+                )
+            if not selected:
+                raise ValueError("bridge scope does not match a configured family/batch pair")
+            print(json.dumps(bridge_upstream_handoffs(args.repo, selected, execute=args.execute), sort_keys=True))
         except (ValueError, RuntimeError) as error:
             print(str(error), file=sys.stderr)
             return 2

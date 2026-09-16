@@ -342,13 +342,17 @@ def test_pr_body_keeps_bounded_codex_request_and_no_promotion():
     body = lifecycle.pr_body(report, evidence, lifecycle.bounded_prompt(report))
     assert body.count(report["marker"]) == 1
     assert "@codex update" in body
+    assert "@codex address that feedback" in body
     assert "Do not publish new skills" in body
     assert body.count(report["codex_request_marker"]) == 1
+    assert body.count(report["codex_execution_marker"]) == 1
     assert lifecycle.codex_request(report) in body
+    assert lifecycle.codex_execution_request(report) in body
     assert "deliberately does not post" in body
     assert "github-actions[bot]" in body
     assert "supported skill edits and their pins, hashes, or baseline metadata" in body
-    assert "PENDING_CODEX_REACTION_OR_TASK" in body
+    assert "PENDING_CONNECTOR_RECEIPT" in body
+    assert "PENDING_CODEX_TASK" in body
     assert "No automatic acceptance" in body
     report["candidate_content_promoted"] = True
     try:
@@ -372,6 +376,13 @@ def test_codex_request_marker_dedup_and_rendered_comment():
     assert lifecycle.has_codex_request([exact], report, "github-actions[bot]", 43) is False
     assert lifecycle.has_codex_request([{**exact, "author": "contributor"}], report, "github-actions[bot]") is False
     assert lifecycle.has_codex_request([{**exact, "body": report["codex_request_marker"]}], report, "github-actions[bot]") is False
+    candidate = lifecycle.codex_execution_request(report)
+    assert candidate.startswith(report["codex_execution_marker"])
+    assert candidate.rstrip().endswith("@codex address that feedback")
+    assert "@codex update" not in candidate
+    candidate_comment = {"id": 43, "author": "vitorcepedalopes", "body": candidate}
+    assert lifecycle.execution_request_state([exact], report) == {"action": "candidate", "comment_id": None, "author": None}
+    assert lifecycle.execution_request_state([candidate_comment], report) == {"action": "reuse", "comment_id": 43, "author": "vitorcepedalopes"}
 
 
 def test_local_bridge_deduplicates_and_separates_receipt_from_delivery():
@@ -387,6 +398,9 @@ def test_local_bridge_deduplicates_and_separates_receipt_from_delivery():
     else:
         raise AssertionError("duplicate PR source marker was accepted")
     assert lifecycle.codex_request_state([], parsed) == {"action": "post", "comment_id": None, "author": None}
+    assert lifecycle.execution_request_state(
+        [{"id": 41, "author": "github-actions[bot]", "body": lifecycle.codex_request(parsed)}], parsed
+    ) == {"action": "candidate", "comment_id": None, "author": None}
 
     request = {"id": 42, "author": "vitorcepedalopes", "body": lifecycle.codex_request(parsed)}
     state = lifecycle.codex_request_state([request], parsed)
@@ -398,7 +412,7 @@ def test_local_bridge_deduplicates_and_separates_receipt_from_delivery():
         changed_files=["skills/example/SKILL.md"],
         checks=[{"name": "Validate", "status": "completed", "conclusion": "success", "url": "https://example.invalid/check"}],
     )
-    assert status["request"] == {"visible": True, "comment_id": 42, "author": "vitorcepedalopes"}
+    assert status["request"] == {"kind": "evidence", "visible": True, "comment_id": 42, "author": "vitorcepedalopes"}
     assert status["codex_receipt"] == {"observed": True, "comment_ids": [43]}
     assert status["delivery"]["status"] == "unproven"
     assert status["delivery"]["head_sha"] == "b" * 40
@@ -409,7 +423,7 @@ def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
     source_head = "a" * 40
     report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", source_head)
     pr_body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
-    expected_request = lifecycle.codex_request(report)
+    expected_request = lifecycle.codex_execution_request(report)
     posted = False
     calls = []
 
@@ -455,12 +469,17 @@ def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
 
     monkeypatch.setattr(lifecycle.subprocess, "run", fake_run)
     first = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),))
-    second = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),))
-    assert first["results"][0]["request"]["action"] == "post"
-    assert second["results"][0]["request"]["action"] == "reuse"
-    assert second["results"][0]["request"]["comment_id"] == 42
-    assert second["results"][0]["request"]["author_matches_authenticated"] is True
-    assert second["results"][0]["delivery"]["status"] == "unproven"
+    assert first["results"][0]["execution_request"]["action"] == "observe_only"
+    assert first["results"][0]["execution_request"]["visible"] is False
+    assert sum("--method" in command and "POST" in command for command in calls) == 0
+    second = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),), execute=True)
+    third = lifecycle.bridge_upstream_handoffs("owner/repo", (("cursor", "pstack"),), execute=True)
+    assert second["results"][0]["execution_request"]["action"] == "post"
+    assert third["results"][0]["execution_request"]["action"] == "reuse"
+    assert third["results"][0]["execution_request"]["comment_id"] == 42
+    assert third["results"][0]["execution_request"]["author_matches_authenticated"] is True
+    assert third["results"][0]["task_execution"]["status"] == "unproven"
+    assert third["results"][0]["delivery"]["status"] == "unproven"
     assert sum("--method" in command and "POST" in command for command in calls) == 1
 
 
@@ -498,7 +517,8 @@ def test_detector_report_exposes_maintainer_handoff_without_bot_delivery_claim()
     assert "authorized local bridge" in rendered
     assert "workflow attempts to publish" not in rendered
     assert "supported skill edits and their pins, hashes, or baseline metadata" in rendered
-    assert "PENDING_MAINTAINER_COMMENT" in rendered
+    assert "PENDING_EXECUTION_COMMENT" in rendered
+    assert "PENDING_CODEX_TASK" in rendered
     assert "PENDING_DELIVERY_COMMIT" in rendered
     assert "No automatic" in rendered
 

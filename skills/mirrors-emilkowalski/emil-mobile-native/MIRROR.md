@@ -1,9 +1,9 @@
 # emilkowalski/skills Skill Mirror
 
-Mirrored skill: animate
-Published skill: emil-animate
+Mirrored skill: mobile-native
+Published skill: emil-mobile-native
 Source: https://github.com/emilkowalski/skills.git
-Source path: skills/animate
+Source path: skills/mobile-native
 Branch: main
 Commit: 85e8e2363b713506e1d5b6e07a0eb2da66be1bc3
 

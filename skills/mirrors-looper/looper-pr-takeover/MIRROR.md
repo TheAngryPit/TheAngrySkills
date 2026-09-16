@@ -5,6 +5,6 @@ Published skill: looper-pr-takeover
 Source: https://github.com/nexu-io/looper.git
 Source path: skills/pr-takeover
 Branch: main
-Commit: 3f43075a6945d5d4a3f5371385f68f5c207580db
+Commit: ef14149f3b3f68ff643bce98f02398c531fae866
 
 This skill is vendored from upstream with a `looper-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

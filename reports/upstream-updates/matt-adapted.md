@@ -3,6 +3,9 @@
 
 This is a detector report for a reviewable proposal. It does not promote upstream content.
 
+The detector state below is historical: the bounded review section records the later
+human-authorized adaptation decision and resulting reviewable branch contents.
+
 - Repository: `https://github.com/mattpocock/skills.git`
 - Reviewed baseline: `3cca18b368ae95cdbdebbff572ccafa662551015`
 - Observed upstream HEAD: `959a8e9f1edc3adbe2f7e3054bb6fbefa6696260`
@@ -53,3 +56,16 @@ The workflow attempts to publish this bounded request automatically as a separat
 `@codex review` is a separate review-only action. Record the visible request comment,
 Codex reaction/task, delivered commit, branch SHA/files, and passing checks before human approval.
 HTTP success alone is not delivery proof. No automatic merge is permitted.
+
+## Bounded adaptation review
+
+Reviewed on 2026-09-16 against the actual upstream delta from
+`3cca18b368ae95cdbdebbff572ccafa662551015` to
+`959a8e9f1edc3adbe2f7e3054bb6fbefa6696260`.
+
+- `skills/in-progress/retro/SKILL.md` adds deterministic-check guidance: inspect the repository's own check path first, treat an absent guardrail as a finding, and route mechanical coding-standard violations to deterministic checks while reserving judgement calls for prose guidance.
+- The adapted `retro/SKILL.md` carries that guidance verbatim and preserves the approved local `writing-for-astra`, active-harness, and evidence-aware review overlays.
+- `ADAPTATIONS.patch` was rebased against the observed upstream head and remains limited to the approved local overlay. `PROVENANCE.md` and `UPSTREAM.json` record this reviewed head and the generated hashes.
+- The upstream `.changeset/retro-deterministic-checks.md` is outside the tracked skill package and remains held; no new skill, support file, license, install, or baseline outside `retro` was accepted.
+
+The `retro` baseline can safely advance to the observed head with human review of this PR as the acceptance gate. No merge, install, publication, or propagation is implied by this report.

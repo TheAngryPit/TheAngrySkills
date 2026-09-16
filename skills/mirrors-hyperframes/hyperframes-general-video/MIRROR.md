@@ -5,6 +5,6 @@ Published skill: hyperframes-general-video
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/general-video
 Branch: main
-Commit: e2d60cf27c80849cb6c0fa5c22be34c85b8f6e05
+Commit: 08d48ab7539e3a21facbe005c0610f2dbc8bf5a5
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

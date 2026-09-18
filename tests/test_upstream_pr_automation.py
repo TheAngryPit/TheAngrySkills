@@ -1316,8 +1316,8 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
     assert "pull_request_target:" in gate
     assert "types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]" in gate
-    assert "pull_request_review_thread:" in gate
-    assert "types: [resolved, unresolved]" in gate
+    assert "pull_request_review_thread:" not in gate
+    assert "workflow_dispatch:" in gate
     assert "types: [created, edited, deleted]" in gate
     assert "continue-on-error: true" in gate
     assert "Review evidence collection or assessment failed closed" in gate

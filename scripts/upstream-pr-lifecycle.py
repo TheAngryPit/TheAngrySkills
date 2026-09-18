@@ -417,6 +417,7 @@ def adaptation_readiness(
     files_payload: Any,
     commits_payload: Any,
     *,
+    report_text: str,
     family: str,
     batch: str,
     expected_head: str,
@@ -458,6 +459,13 @@ def adaptation_readiness(
     report = report_from_pr_body(pr.get("body") or "")
     if (report["family"], report["batch"]) != (family, batch):
         raise ValueError("pull request marker does not match requested family/batch")
+    committed_report = report_from_pr_body(report_text)
+    if (
+        committed_report["family"] != report["family"]
+        or committed_report["batch"] != report["batch"]
+        or committed_report["latest"] != report["latest"]
+    ):
+        raise ValueError("PR body source marker does not match the committed detector report")
 
     files = _flatten_pages(files_payload, "pull request files")
     if not all(isinstance(item, dict) and isinstance(item.get("filename"), str) for item in files):
@@ -554,6 +562,7 @@ def finalization_admission(
     current_commit: dict[str, Any],
     existing_readiness: dict[str, Any] | None,
     *,
+    report_text: str,
     family: str,
     batch: str,
     expected_adaptation_head: str,
@@ -574,6 +583,7 @@ def finalization_admission(
             pr,
             files_payload,
             commits_payload,
+            report_text=report_text,
             family=family,
             batch=batch,
             expected_head=expected_adaptation_head,
@@ -617,6 +627,7 @@ def finalization_admission(
         parent_pr,
         filtered_files,
         commits_payload,
+        report_text=report_text,
         family=family,
         batch=batch,
         expected_head=expected_adaptation_head,
@@ -1338,6 +1349,7 @@ def main() -> int:
     readiness.add_argument("--pr-json", required=True)
     readiness.add_argument("--files-json", required=True)
     readiness.add_argument("--commits-json", required=True)
+    readiness.add_argument("--report-file", required=True)
     finalization = subparsers.add_parser(
         "assess-finalization",
         help="admit a fresh finalization or a verified readiness-only resume",
@@ -1353,6 +1365,7 @@ def main() -> int:
     finalization.add_argument("--commits-json", required=True)
     finalization.add_argument("--current-commit-json", required=True)
     finalization.add_argument("--existing-readiness-json")
+    finalization.add_argument("--report-file", required=True)
     attestation = subparsers.add_parser(
         "render-readiness-attestation",
         help="render the material finalizer record after validations pass",
@@ -1435,6 +1448,7 @@ def main() -> int:
                 json.loads(Path(args.pr_json).read_text()),
                 json.loads(Path(args.files_json).read_text()),
                 json.loads(Path(args.commits_json).read_text()),
+                report_text=Path(args.report_file).read_text(),
                 family=args.family,
                 batch=args.batch,
                 expected_head=args.expected_head,
@@ -1470,6 +1484,7 @@ def main() -> int:
                     json.loads(Path(args.existing_readiness_json).read_text())
                     if args.existing_readiness_json else None
                 ),
+                report_text=Path(args.report_file).read_text(),
                 family=args.family,
                 batch=args.batch,
                 expected_adaptation_head=args.expected_adaptation_head,

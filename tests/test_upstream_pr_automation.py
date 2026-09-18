@@ -653,6 +653,17 @@ def readiness_pr(family, batch, head):
     }
 
 
+def readiness_report_text(family, batch, latest="a" * 40):
+    report = detector.blank_result(
+        family,
+        batch,
+        f"https://example.invalid/{family}",
+        "0" * 40,
+        latest,
+    )
+    return detector.render_report(report)
+
+
 def readiness_commits(human_last=True):
     bot = {
         "sha": "1" * 40,
@@ -667,12 +678,13 @@ def readiness_commits(human_last=True):
     return [bot, human] if human_last else [human, bot]
 
 
-def assess_ready(family, batch, files, commits=None):
+def assess_ready(family, batch, files, commits=None, report_text=None):
     head = "b" * 40
     return lifecycle.adaptation_readiness(
         readiness_pr(family, batch, head),
         [[{"filename": path} for path in files]],
         [commits or readiness_commits()],
+        report_text=report_text or readiness_report_text(family, batch),
         family=family,
         batch=batch,
         expected_head=head,
@@ -692,6 +704,24 @@ def test_report_only_candidate_is_not_adapted_ready():
         raise AssertionError("detector-only Matt report was accepted as an adaptation")
 
 
+def test_readiness_binds_body_source_marker_to_committed_report():
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+            ],
+            report_text=readiness_report_text("matt", "adapted", "c" * 40),
+        )
+    except ValueError as error:
+        assert "committed detector report" in str(error)
+    else:
+        raise AssertionError("editable body source marker was accepted without committed evidence")
+
+
 def test_bot_cannot_dispatch_adaptation_finalization():
     head = "b" * 40
     try:
@@ -702,6 +732,7 @@ def test_bot_cannot_dispatch_adaptation_finalization():
                 {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
             ]],
             [readiness_commits()],
+            report_text=readiness_report_text("matt", "adapted"),
             family="matt",
             batch="adapted",
             expected_head=head,
@@ -851,12 +882,17 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "required_approving_review_count" in workflow
     assert "require_last_push_approval" in workflow
     assert '--match-head-commit "$final_head"' in workflow
+    assert "Clear any pre-existing auto-merge request before branch writes" in workflow
+    assert "--disable-auto" in workflow
+    assert "auto-merge was not cleared on the admitted head" in workflow
+    assert "auto-merge was re-enabled before final proof completed" in workflow
     assert "secrets." not in workflow
     push = workflow.index('git push origin "HEAD:$BRANCH"')
+    clear_auto_merge = workflow.index("Clear any pre-existing auto-merge request before branch writes")
     dispatch = workflow.index("actions/workflows/skill-stack-ci.yml/dispatches")
-    merge = workflow.index('gh pr merge "$PR_NUMBER"')
+    merge = workflow.index("--auto --squash")
     protection = workflow.index('branches/main/protection')
-    assert push < dispatch < merge
+    assert clear_auto_merge < push < dispatch < merge
     assert protection < merge
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     assert "workflow_dispatch:" in ci
@@ -1038,6 +1074,7 @@ def finalization_fixture():
         readiness_commits(),
         {"sha": parent, "author": {"login": "TheAngryPit"}, "committer": {"login": "TheAngryPit"}},
         None,
+        report_text=readiness_report_text("matt", "adapted"),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1066,6 +1103,7 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
         readiness_commits() + [bot_commit],
         bot_commit,
         attestation,
+        report_text=readiness_report_text("matt", "adapted"),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1081,7 +1119,8 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
     try:
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
-            spoofed, attestation, family="matt", batch="adapted",
+            spoofed, attestation, report_text=readiness_report_text("matt", "adapted"),
+            family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
         )
@@ -1098,7 +1137,8 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
     try:
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
-            bot_commit, stale, family="matt", batch="adapted",
+            bot_commit, stale, report_text=readiness_report_text("matt", "adapted"),
+            family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
         )
@@ -1114,7 +1154,8 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
     try:
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
-            advanced, attestation, family="matt", batch="adapted",
+            advanced, attestation, report_text=readiness_report_text("matt", "adapted"),
+            family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
         )

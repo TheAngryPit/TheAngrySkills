@@ -87,6 +87,9 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          report_file="reports/upstream-updates/${FAMILY}-${batch}.md"
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
+            --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
           gh api "repos/${GITHUB_REPOSITORY}/commits/${current_head}" > "$RUNNER_TEMP/current-commit.json"
           readiness_file="$(python - "$RUNNER_TEMP/current-commit.json" <<'PY'
           import json
@@ -117,6 +120,7 @@ jobs:
             --pr-json "$RUNNER_TEMP/pr.json" \
             --files-json "$RUNNER_TEMP/files.json" \
             --commits-json "$RUNNER_TEMP/commits.json" \
+            --report-file "$RUNNER_TEMP/committed-report.md" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
@@ -219,6 +223,9 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
           test "$current_head" = "$EXPECTED_CURRENT_HEAD"
+          report_file="reports/upstream-updates/${FAMILY}-${BATCH}.md"
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
+            --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
           gh api "repos/${GITHUB_REPOSITORY}/commits/${current_head}" > "$RUNNER_TEMP/current-commit.json"
           readiness_file="$(python - "$RUNNER_TEMP/current-commit.json" <<'PY'
           import json
@@ -249,6 +256,7 @@ jobs:
             --pr-json "$RUNNER_TEMP/pr.json" \
             --files-json "$RUNNER_TEMP/files.json" \
             --commits-json "$RUNNER_TEMP/commits.json" \
+            --report-file "$RUNNER_TEMP/committed-report.md" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
@@ -278,6 +286,39 @@ jobs:
           attestation_file="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["attestation_file"])' "$RUNNER_TEMP/admission.json")"
           echo "attestation_file=$attestation_file" >> "$GITHUB_ENV"
           echo "final_head=$current_head" >> "$GITHUB_ENV"
+
+      - name: Clear any pre-existing auto-merge request before branch writes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/pre-write-auto-merge.json"
+          python - "$RUNNER_TEMP/pre-write-auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2]:
+              raise SystemExit("PR head changed before auto-merge could be cleared")
+          PY
+          auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-write-auto-merge.json")"
+          if [ "$auto_merge_present" = true ]; then
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+          fi
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/cleared-auto-merge.json"
+          python - "$RUNNER_TEMP/cleared-auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2] or state.get("autoMergeRequest"):
+              raise SystemExit("auto-merge was not cleared on the admitted head")
+          PY
 
       - name: Push a material bot-owned readiness record
         if: needs.validate.outputs.mode == 'initial'
@@ -533,10 +574,12 @@ jobs:
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/pre-auto-merge.json")"
           test "$current_head" = "$final_head"
           auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-auto-merge.json")"
-          if [ "$auto_merge_present" != true ]; then
-            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
-              --match-head-commit "$final_head"
-          fi
+          [ "$auto_merge_present" != true ] || {
+            echo "auto-merge was re-enabled before final proof completed" >&2
+            exit 1
+          }
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
+            --match-head-commit "$final_head"
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json autoMergeRequest,headRefOid,reviewDecision \
             > "$RUNNER_TEMP/auto-merge.json"

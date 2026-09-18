@@ -142,7 +142,7 @@
     "cursor-orchestrate/scripts/cursor_orchestrate_adapters.py": "ed5530e39aff1ff1c453dc93ee06b727664d05e8ce295f69324245db2be3b495",
     "cursor-poteto-mode/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
     "cursor-poteto-mode/MIRROR.md": "cc083c2d093ff7c82d2816cbefae83e1363057b6b161f0da462ddf26d9e4c5b6",
-    "cursor-poteto-mode/SKILL.md": "8390c05b5742da175f0e6019ff4666918339a956250f1e9dd591c99b164d52cf",
+    "cursor-poteto-mode/SKILL.md": "432b68b4479abe0f813b568720e2a70a9c50d6f3b2011f83aae99bc1b99e4030",
     "cursor-poteto-mode/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-poteto-mode/playbooks/authoring-a-skill.md": "9865f562446588231fc7f76730934db09e17fb4964439b5e1781757873515872",
     "cursor-poteto-mode/playbooks/autonomous-run.md": "31ce7c88993be87de48e3ab3dd83ca36426f09c060c06ce6643196ef6c7808b5",

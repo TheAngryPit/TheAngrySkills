@@ -11,11 +11,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/check-native-agent-profiles.py"
+BUNDLED_SCRIPT = ROOT / "skills/core/model-capability-router/scripts/check-native-agent-profiles.py"
 ASSETS = ROOT / "skills/core/model-capability-router/assets/agents"
 PROFILE_NAMES = ("comment-sicko", "poteto-agent")
 
 
 class NativeAgentProfileTests(unittest.TestCase):
+    def test_selected_skill_package_contains_a_self_contained_profile_checker(self):
+        self.assertTrue(BUNDLED_SCRIPT.is_file())
+        checked = subprocess.run(
+            [sys.executable, str(BUNDLED_SCRIPT)],
+            cwd=str(BUNDLED_SCRIPT.parent.parent),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(checked.returncode, 0, checked.stderr)
+        report = json.loads(checked.stdout)
+        self.assertEqual(report["status"], "PASS")
+        self.assertEqual(
+            {item["asset"] for item in report["profiles"]},
+            {
+                "assets/agents/comment-sicko.toml",
+                "assets/agents/poteto-agent.toml",
+            },
+        )
+
     def test_manifest_and_overlays_point_to_the_same_native_profiles(self):
         manifest = json.loads(
             (ROOT / "sources/cursor-plugins/manifest.json").read_text()

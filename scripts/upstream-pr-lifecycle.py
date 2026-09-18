@@ -21,6 +21,8 @@ MARKER_PREFIX = "upstream-update"
 CODEX_HANDOFF_PREFIX = "codex-handoff"
 CODEX_EXECUTION_PREFIX = "codex-execution"
 EXPECTED_BATCHES = (("matt", "adapted"), ("cursor", "pstack"))
+BOT_LOGIN = "github-actions[bot]"
+MAINTAINER_PERMISSIONS = {"admin", "maintain"}
 _REPORT_MARKER = re.compile(
     rf"<!-- {re.escape(MARKER_PREFIX)}:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+) -->"
 )
@@ -141,6 +143,160 @@ def normalize_comments(payload: Any) -> list[dict[str, Any]]:
             "body": body,
         })
     return normalized
+
+
+def adaptation_readiness(
+    pr: dict[str, Any],
+    files_payload: Any,
+    commits_payload: Any,
+    *,
+    family: str,
+    batch: str,
+    expected_head: str,
+    repository: str,
+    dispatcher: str,
+    dispatcher_permission: str,
+) -> dict[str, Any]:
+    """Fail closed unless a review-only candidate contains real adaptation work.
+
+    This is structural admission for the Actions finalizer, not semantic proof
+    that an upstream change is correct.  The dispatching maintainer and the
+    later protected-branch approval remain separate human decisions.
+    """
+
+    if (family, batch) not in EXPECTED_BATCHES:
+        raise ValueError("unsupported family/batch")
+    if not _REPOSITORY.fullmatch(repository):
+        raise ValueError("repository must be OWNER/REPOSITORY")
+    if dispatcher_permission not in MAINTAINER_PERMISSIONS:
+        raise ValueError("dispatcher must have maintain or admin permission")
+    if not isinstance(dispatcher, str) or not dispatcher:
+        raise ValueError("dispatcher login is required")
+    if dispatcher == BOT_LOGIN or dispatcher.endswith("[bot]"):
+        raise ValueError("dispatcher must be a human maintainer, not a bot identity")
+    if not isinstance(pr, dict) or pr.get("state") != "open" or pr.get("draft") is True:
+        raise ValueError("pull request must be open and ready for review")
+
+    base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
+    head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+    head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
+    expected_branch = f"automation/upstream-{family}-{batch}"
+    if base.get("ref") != "main" or head.get("ref") != expected_branch:
+        raise ValueError("pull request refs do not match the canonical family/batch branch")
+    if head_repo.get("full_name") != repository:
+        raise ValueError("pull request head repository is not the canonical repository")
+    if head.get("sha") != expected_head:
+        raise ValueError("pull request head changed after the requested finalization head")
+
+    report = report_from_pr_body(pr.get("body") or "")
+    if (report["family"], report["batch"]) != (family, batch):
+        raise ValueError("pull request marker does not match requested family/batch")
+
+    files = _flatten_pages(files_payload, "pull request files")
+    if not all(isinstance(item, dict) and isinstance(item.get("filename"), str) for item in files):
+        raise ValueError("pull request files response is invalid")
+    changed_files = sorted({item["filename"] for item in files})
+    report_file = f"reports/upstream-updates/{family}-{batch}.md"
+    attestation_file = (
+        f"reports/upstream-updates/readiness/{family}-{batch}-{report['latest']}.json"
+    )
+    if report_file not in changed_files:
+        raise ValueError("candidate_not_ready: canonical detector report is missing")
+    if attestation_file in changed_files:
+        raise ValueError("candidate already contains a readiness attestation")
+
+    if family == "matt":
+        adaptation_roots = (
+            "skills/mirrors-mattpocock/",
+            "skills/core/ask-pit/",
+            "skills/engineering/writing-for-astra/",
+        )
+        adaptation_files = [path for path in changed_files if path.startswith(adaptation_roots)]
+        pins = [path for path in adaptation_files if path.endswith("/UPSTREAM.json")]
+        if not adaptation_files or not pins:
+            raise ValueError("candidate_not_ready: Matt report lacks adapted skill files and reviewed pins")
+        if any(
+            path.startswith(("skills/mirrors-cursor/", "sources/cursor-plugins/"))
+            for path in changed_files
+        ):
+            raise ValueError("candidate_not_ready: Matt candidate crosses into Cursor ownership")
+    else:
+        adaptation_files = [
+            path for path in changed_files
+            if path.startswith("skills/mirrors-cursor/") and not path.endswith("/MIRROR.md")
+        ]
+        if "sources/cursor-plugins/manifest.json" not in changed_files or not adaptation_files:
+            raise ValueError(
+                "candidate_not_ready: Cursor report lacks reviewed manifest and generated adaptation files"
+            )
+        if any(
+            path.startswith((
+                "skills/mirrors-mattpocock/",
+                "skills/core/ask-pit/",
+                "skills/engineering/writing-for-astra/",
+            ))
+            for path in changed_files
+        ):
+            raise ValueError("candidate_not_ready: Cursor candidate crosses into Matt ownership")
+
+    commits = _flatten_pages(commits_payload, "pull request commits")
+    if not commits or not all(isinstance(item, dict) for item in commits):
+        raise ValueError("pull request commits response is invalid")
+    commit_identities = []
+    for item in commits:
+        author = item.get("author") if isinstance(item.get("author"), dict) else {}
+        committer = item.get("committer") if isinstance(item.get("committer"), dict) else {}
+        commit_identities.append({
+            "sha": item.get("sha"),
+            "author": author.get("login") if isinstance(author.get("login"), str) else None,
+            "committer": committer.get("login") if isinstance(committer.get("login"), str) else None,
+        })
+    non_bot_commits = [
+        item for item in commit_identities
+        if item["author"] not in {None, BOT_LOGIN} or item["committer"] not in {None, BOT_LOGIN}
+    ]
+    if not non_bot_commits:
+        raise ValueError("candidate_not_ready: no maintainer-authored adaptation commit is visible")
+    return {
+        "schema_version": 1,
+        "state": "adapted_ready",
+        "family": family,
+        "batch": batch,
+        "source_head": report["latest"],
+        "adaptation_head": expected_head,
+        "branch": expected_branch,
+        "repository": repository,
+        "dispatcher": dispatcher,
+        "dispatcher_permission": dispatcher_permission,
+        "changed_files": changed_files,
+        "adaptation_files": adaptation_files,
+        "non_bot_commits": non_bot_commits,
+        "attestation_file": attestation_file,
+        "semantic_review": "maintainer_dispatch_confirmed; protected human approval still required",
+    }
+
+
+def readiness_attestation(readiness: dict[str, Any], *, run_id: str, run_attempt: str) -> dict[str, Any]:
+    """Render the material bot commit written only after local validations pass."""
+
+    if readiness.get("state") != "adapted_ready":
+        raise ValueError("readiness state is not adapted_ready")
+    return {
+        **readiness,
+        "finalizer": {
+            "actor": BOT_LOGIN,
+            "workflow_run_id": str(run_id),
+            "workflow_run_attempt": str(run_attempt),
+            "validated_commands": [
+                "node scripts/sync-curated-mirrors.mjs --check",
+                "node scripts/sync-hyperframes-mirror.mjs --check",
+                "python scripts/sync-matt-adaptations.py --check",
+                "python -m pytest -q tests",
+                "scripts/theangry-skills.mjs check --root skills --profile shared",
+            ],
+            "final_ci": "explicit workflow_dispatch on the bot-owned final head",
+        },
+    }
 
 
 def has_codex_request(
@@ -713,9 +869,12 @@ def pr_body(report: dict[str, Any], report_markdown: str, codex_prompt: str) -> 
         "- Passing check URLs and results: `PENDING_CHECKS`\n"
         "- Human disposition for skill, pin, hash, or baseline metadata changes: `PENDING_HUMAN_REVIEW`\n\n"
         "A visible comment, HTTP success, connector receipt, or completed review alone "
-        "is not proof of task execution or delivery. A human must approve any content "
-        "or baseline change. No automatic acceptance, "
-        "promotion into main, merge, force-push, installation, or publication is permitted.\n"
+        "is not proof of task execution or delivery. No automatic acceptance of raw "
+        "upstream or fabricated adaptation proof is permitted. A separate maintainer-dispatched "
+        "GitHub Actions finalizer may record a material bot-owned readiness commit, run CI "
+        "explicitly on that final head, and enable auto-merge. It cannot approve the PR, "
+        "and protected human approval remains required. This detector workflow never promotes, "
+        "merges, force-pushes, installs, or publishes content.\n"
     )
 
 
@@ -790,6 +949,26 @@ def main() -> int:
     normalize.add_argument("--prs-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
     comments = subparsers.add_parser("normalize-comments")
     comments.add_argument("--comments-json", help="JSON array/pages from gh api --paginate --slurp; stdin when omitted")
+    readiness = subparsers.add_parser(
+        "assess-ready",
+        help="fail closed unless a canonical review PR contains maintainer adaptation work",
+    )
+    readiness.add_argument("--family", required=True)
+    readiness.add_argument("--batch", required=True)
+    readiness.add_argument("--expected-head", required=True)
+    readiness.add_argument("--repository", required=True)
+    readiness.add_argument("--dispatcher", required=True)
+    readiness.add_argument("--dispatcher-permission", required=True)
+    readiness.add_argument("--pr-json", required=True)
+    readiness.add_argument("--files-json", required=True)
+    readiness.add_argument("--commits-json", required=True)
+    attestation = subparsers.add_parser(
+        "render-readiness-attestation",
+        help="render the material finalizer record after validations pass",
+    )
+    attestation.add_argument("--readiness-json", required=True)
+    attestation.add_argument("--run-id", required=True)
+    attestation.add_argument("--run-attempt", required=True)
     bridge = subparsers.add_parser(
         "bridge",
         help="observe Codex candidates; post one only with explicit --execute",
@@ -846,6 +1025,36 @@ def main() -> int:
         except (ValueError, json.JSONDecodeError) as error:
             print(str(error), file=sys.stderr)
             return 2
+        return 0
+    if args.command == "assess-ready":
+        try:
+            result = adaptation_readiness(
+                json.loads(Path(args.pr_json).read_text()),
+                json.loads(Path(args.files_json).read_text()),
+                json.loads(Path(args.commits_json).read_text()),
+                family=args.family,
+                batch=args.batch,
+                expected_head=args.expected_head,
+                repository=args.repository,
+                dispatcher=args.dispatcher,
+                dispatcher_permission=args.dispatcher_permission,
+            )
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
+    if args.command == "render-readiness-attestation":
+        try:
+            result = readiness_attestation(
+                json.loads(Path(args.readiness_json).read_text()),
+                run_id=args.run_id,
+                run_attempt=args.run_attempt,
+            )
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2, sort_keys=True))
         return 0
     if args.command == "bridge":
         try:

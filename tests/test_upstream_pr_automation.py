@@ -590,3 +590,210 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()
     assert "workflow_dispatch:" in legacy_matt
     assert "schedule:" not in legacy_matt
+
+
+def readiness_pr(family, batch, head):
+    report = detector.blank_result(
+        family,
+        batch,
+        f"https://example.invalid/{family}",
+        "0" * 40,
+        "a" * 40,
+    )
+    body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
+    return {
+        "state": "open",
+        "draft": False,
+        "body": body,
+        "base": {"ref": "main"},
+        "head": {
+            "ref": f"automation/upstream-{family}-{batch}",
+            "sha": head,
+            "repo": {"full_name": "owner/repo"},
+        },
+    }
+
+
+def readiness_commits(human_last=True):
+    bot = {
+        "sha": "1" * 40,
+        "author": {"login": "github-actions[bot]"},
+        "committer": {"login": "github-actions[bot]"},
+    }
+    human = {
+        "sha": "2" * 40,
+        "author": {"login": "TheAngryPit"},
+        "committer": {"login": "TheAngryPit"},
+    }
+    return [bot, human] if human_last else [human, bot]
+
+
+def assess_ready(family, batch, files, commits=None):
+    head = "b" * 40
+    return lifecycle.adaptation_readiness(
+        readiness_pr(family, batch, head),
+        [[{"filename": path} for path in files]],
+        [commits or readiness_commits()],
+        family=family,
+        batch=batch,
+        expected_head=head,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+
+
+def test_report_only_candidate_is_not_adapted_ready():
+    try:
+        assess_ready("matt", "adapted", ["reports/upstream-updates/matt-adapted.md"])
+    except ValueError as error:
+        assert "candidate_not_ready" in str(error)
+        assert "adapted skill files" in str(error)
+    else:
+        raise AssertionError("detector-only Matt report was accepted as an adaptation")
+
+
+def test_bot_cannot_dispatch_adaptation_finalization():
+    head = "b" * 40
+    try:
+        lifecycle.adaptation_readiness(
+            readiness_pr("matt", "adapted", head),
+            [[
+                {"filename": "reports/upstream-updates/matt-adapted.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+            ]],
+            [readiness_commits()],
+            family="matt",
+            batch="adapted",
+            expected_head=head,
+            repository="owner/repo",
+            dispatcher="github-actions[bot]",
+            dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "human maintainer" in str(error)
+    else:
+        raise AssertionError("bot dispatcher was accepted")
+
+
+def test_matt_and_cursor_adaptations_require_family_outputs_and_human_commit():
+    matt = assess_ready(
+        "matt",
+        "adapted",
+        [
+            "reports/upstream-updates/matt-adapted.md",
+            "skills/mirrors-mattpocock/retro/SKILL.md",
+            "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+        ],
+    )
+    assert matt["state"] == "adapted_ready"
+    assert matt["dispatcher"] == "TheAngryPit"
+    assert matt["non_bot_commits"][-1]["author"] == "TheAngryPit"
+
+    cursor = assess_ready(
+        "cursor",
+        "pstack",
+        [
+            "reports/upstream-updates/cursor-pstack.md",
+            "sources/cursor-plugins/manifest.json",
+            "skills/mirrors-cursor/cursor-setup-pstack/SKILL.md",
+        ],
+    )
+    assert cursor["state"] == "adapted_ready"
+    assert cursor["attestation_file"].endswith(
+        "cursor-pstack-" + ("a" * 40) + ".json"
+    )
+
+
+def test_readiness_fails_for_cross_family_or_existing_attestation():
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+                "sources/cursor-plugins/manifest.json",
+            ],
+        )
+    except ValueError as error:
+        assert "crosses into Cursor ownership" in str(error)
+    else:
+        raise AssertionError("cross-family candidate was accepted")
+
+    try:
+        assess_ready(
+            "cursor",
+            "pstack",
+            [
+                "reports/upstream-updates/cursor-pstack.md",
+                "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json",
+                "sources/cursor-plugins/manifest.json",
+                "skills/mirrors-cursor/cursor-how/SKILL.md",
+            ],
+            commits=readiness_commits(human_last=False),
+        )
+    except ValueError as error:
+        assert "already contains a readiness attestation" in str(error)
+    else:
+        raise AssertionError("previously finalized candidate was accepted")
+
+
+def test_bot_report_refresh_after_human_adaptation_remains_finalizable():
+    result = assess_ready(
+        "cursor",
+        "pstack",
+        [
+            "reports/upstream-updates/cursor-pstack.md",
+            "sources/cursor-plugins/manifest.json",
+            "skills/mirrors-cursor/cursor-how/SKILL.md",
+        ],
+        commits=readiness_commits(human_last=False),
+    )
+    assert result["state"] == "adapted_ready"
+    assert result["non_bot_commits"][0]["author"] == "TheAngryPit"
+
+
+def test_readiness_attestation_records_validation_without_claiming_semantic_proof():
+    readiness = assess_ready(
+        "matt",
+        "adapted",
+        [
+            "reports/upstream-updates/matt-adapted.md",
+            "skills/mirrors-mattpocock/retro/SKILL.md",
+            "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+        ],
+    )
+    attestation = lifecycle.readiness_attestation(readiness, run_id="123", run_attempt="2")
+    assert attestation["finalizer"]["actor"] == "github-actions[bot]"
+    assert attestation["finalizer"]["workflow_run_id"] == "123"
+    assert attestation["semantic_review"].startswith("maintainer_dispatch_confirmed")
+    assert "python -m pytest -q tests" in attestation["finalizer"]["validated_commands"]
+
+
+def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_merge():
+    workflow = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
+    assert "workflow_dispatch:" in workflow
+    assert "schedule:" not in workflow
+    assert "confirm_adapted_ready" in workflow
+    assert "contents: read" in workflow
+    assert "contents: write" in workflow
+    assert "candidate_not_ready" not in workflow
+    assert "assess-ready" in workflow
+    assert "render-readiness-attestation" in workflow
+    assert 'git config user.name "github-actions[bot]"' in workflow
+    assert "final commit identity is not github-actions[bot]" in workflow
+    assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
+    assert "--event workflow_dispatch" in workflow
+    assert 'gh pr merge "$PR_NUMBER"' in workflow
+    assert "--auto --squash" in workflow
+    assert "gh pr review" not in workflow
+    assert "branches/main/protection" not in workflow
+    assert "secrets." not in workflow
+    push = workflow.index('git push origin "HEAD:$BRANCH"')
+    dispatch = workflow.index("actions/workflows/skill-stack-ci.yml/dispatches")
+    merge = workflow.index('gh pr merge "$PR_NUMBER"')
+    assert push < dispatch < merge
+    ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
+    assert "workflow_dispatch:" in ci

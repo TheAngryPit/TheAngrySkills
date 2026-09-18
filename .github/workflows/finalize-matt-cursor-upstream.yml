@@ -1,0 +1,304 @@
+name: Finalize reviewed Matt or Cursor adaptation
+
+on:
+  workflow_dispatch:
+    inputs:
+      family:
+        description: Canonical upstream family
+        required: true
+        type: choice
+        options:
+          - matt
+          - cursor
+      pr_number:
+        description: Existing canonical review PR number
+        required: true
+        type: string
+      expected_head_sha:
+        description: Exact maintainer adaptation head to validate
+        required: true
+        type: string
+      confirm_adapted_ready:
+        description: Confirm this is reviewed adaptation work, not detector-only evidence
+        required: true
+        type: boolean
+
+concurrency:
+  group: finalize-upstream-${{ inputs.family }}-${{ inputs.pr_number }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate reviewed adaptation without write credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      family: ${{ steps.identity.outputs.family }}
+      batch: ${{ steps.identity.outputs.batch }}
+      branch: ${{ steps.identity.outputs.branch }}
+      expected_head: ${{ steps.identity.outputs.expected_head }}
+    steps:
+      - name: Require explicit reviewed-adaptation confirmation
+        if: ${{ ! inputs.confirm_adapted_ready }}
+        run: |
+          echo "confirm_adapted_ready must be true" >&2
+          exit 1
+
+      - name: Check out trusted control plane from main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Resolve canonical PR and adaptation readiness
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAMILY: ${{ inputs.family }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          EXPECTED_HEAD: ${{ inputs.expected_head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]] || { echo "invalid PR number" >&2; exit 1; }
+          [[ "$EXPECTED_HEAD" =~ ^[0-9a-f]{40}$ ]] || { echo "expected head must be a full SHA" >&2; exit 1; }
+          case "$FAMILY" in
+            matt) batch=adapted ;;
+            cursor) batch=pstack ;;
+            *) echo "unsupported family" >&2; exit 1 ;;
+          esac
+          branch="automation/upstream-${FAMILY}-${batch}"
+          permission="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" --jq .permission)"
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
+          python scripts/upstream-pr-lifecycle.py assess-ready \
+            --family "$FAMILY" \
+            --batch "$batch" \
+            --expected-head "$EXPECTED_HEAD" \
+            --repository "$GITHUB_REPOSITORY" \
+            --dispatcher "$GITHUB_ACTOR" \
+            --dispatcher-permission "$permission" \
+            --pr-json "$RUNNER_TEMP/pr.json" \
+            --files-json "$RUNNER_TEMP/files.json" \
+            --commits-json "$RUNNER_TEMP/commits.json" \
+            > "$RUNNER_TEMP/readiness.json"
+          cp scripts/upstream-pr-lifecycle.py "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py"
+          echo "family=$FAMILY" >> "$GITHUB_OUTPUT"
+          echo "batch=$batch" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "expected_head=$EXPECTED_HEAD" >> "$GITHUB_OUTPUT"
+
+      - name: Check out exact maintainer adaptation head
+        env:
+          BRANCH: ${{ steps.identity.outputs.branch }}
+          EXPECTED_HEAD: ${{ steps.identity.outputs.expected_head }}
+        run: |
+          set -euo pipefail
+          git fetch origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          test "$(git rev-parse "origin/${BRANCH}")" = "$EXPECTED_HEAD"
+          git switch --detach "$EXPECTED_HEAD"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v7
+        with:
+          node-version: "22"
+
+      - name: Install pinned test runner
+        run: python -m pip install --disable-pip-version-check pytest==9.1.1
+
+      - name: Validate adapted content at the exact head
+        run: |
+          set -euo pipefail
+          node scripts/sync-curated-mirrors.mjs --check
+          node scripts/sync-hyperframes-mirror.mjs --check
+          python scripts/sync-matt-adaptations.py --check
+          python -m pytest -q tests
+          scripts/theangry-skills.mjs check --root skills --profile shared
+
+  finalize:
+    name: Push bot readiness record, prove final CI, enable auto-merge
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out trusted control plane from main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate live PR before any write
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAMILY: ${{ needs.validate.outputs.family }}
+          BATCH: ${{ needs.validate.outputs.batch }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          EXPECTED_HEAD: ${{ needs.validate.outputs.expected_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          permission="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" --jq .permission)"
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
+          python scripts/upstream-pr-lifecycle.py assess-ready \
+            --family "$FAMILY" \
+            --batch "$BATCH" \
+            --expected-head "$EXPECTED_HEAD" \
+            --repository "$GITHUB_REPOSITORY" \
+            --dispatcher "$GITHUB_ACTOR" \
+            --dispatcher-permission "$permission" \
+            --pr-json "$RUNNER_TEMP/pr.json" \
+            --files-json "$RUNNER_TEMP/files.json" \
+            --commits-json "$RUNNER_TEMP/commits.json" \
+            > "$RUNNER_TEMP/readiness.json"
+          python scripts/upstream-pr-lifecycle.py render-readiness-attestation \
+            --readiness-json "$RUNNER_TEMP/readiness.json" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > "$RUNNER_TEMP/readiness-attestation.json"
+          attestation_file="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["attestation_file"])' "$RUNNER_TEMP/readiness.json")"
+          echo "attestation_file=$attestation_file" >> "$GITHUB_ENV"
+
+      - name: Push a material bot-owned readiness record
+        env:
+          BRANCH: ${{ needs.validate.outputs.branch }}
+          EXPECTED_HEAD: ${{ needs.validate.outputs.expected_head }}
+          FAMILY: ${{ needs.validate.outputs.family }}
+          BATCH: ${{ needs.validate.outputs.batch }}
+        run: |
+          set -euo pipefail
+          git fetch origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          test "$(git rev-parse "origin/${BRANCH}")" = "$EXPECTED_HEAD"
+          git switch -C "$BRANCH" "origin/$BRANCH"
+          destination="$attestation_file"
+          test ! -L reports
+          test ! -L reports/upstream-updates
+          if [ -e reports/upstream-updates/readiness ]; then
+            test -d reports/upstream-updates/readiness
+            test ! -L reports/upstream-updates/readiness
+          else
+            mkdir reports/upstream-updates/readiness
+          fi
+          test ! -e "$destination"
+          cp "$RUNNER_TEMP/readiness-attestation.json" "$destination"
+          git add -- "$destination"
+          test "$(git diff --cached --name-only)" = "$destination"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record ${FAMILY}/${BATCH} adaptation readiness"
+          git push origin "HEAD:$BRANCH"
+          echo "final_head=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Verify final commit and push identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}" > "$RUNNER_TEMP/final-commit.json"
+          python - "$RUNNER_TEMP/final-commit.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          commit = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          author = (commit.get("author") or {}).get("login")
+          committer = (commit.get("committer") or {}).get("login")
+          if author != "github-actions[bot]" or committer != "github-actions[bot]":
+              raise SystemExit(f"final commit identity is not github-actions[bot]: {author=}, {committer=}")
+          PY
+
+      - name: Dispatch CI explicitly on the bot-owned final head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ needs.validate.outputs.branch }}
+        run: |
+          set -euo pipefail
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/skill-stack-ci.yml/dispatches" \
+            -f ref="$BRANCH"
+          run_id=""
+          run_url=""
+          for _ in $(seq 1 40); do
+            gh run list \
+              --repo "$GITHUB_REPOSITORY" \
+              --workflow skill-stack-ci.yml \
+              --branch "$BRANCH" \
+              --event workflow_dispatch \
+              --limit 20 \
+              --json databaseId,headSha,status,conclusion,url \
+              > "$RUNNER_TEMP/ci-runs.json"
+            result="$(python - "$RUNNER_TEMP/ci-runs.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          runs = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          matches = [run for run in runs if run.get("headSha") == sys.argv[2]]
+          if matches:
+              run = matches[0]
+              print("\t".join(str(run.get(key) or "") for key in ("databaseId", "status", "conclusion", "url")))
+          PY
+          )"
+            if [ -n "$result" ]; then
+              IFS=$'\t' read -r run_id status conclusion run_url <<< "$result"
+              if [ "$status" = completed ]; then
+                [ "$conclusion" = success ] || { echo "final CI failed: $run_url" >&2; exit 1; }
+                break
+              fi
+            fi
+            sleep 10
+          done
+          [ -n "$run_id" ] && [ "$status" = completed ] && [ "$conclusion" = success ] || {
+            echo "timed out waiting for successful CI on $final_head" >&2
+            exit 1
+          }
+          echo "final_ci_url=$run_url" >> "$GITHUB_ENV"
+
+      - name: Enable auto-merge while preserving human approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          current_head="$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)"
+          test "$current_head" = "$final_head"
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid,reviewDecision \
+            > "$RUNNER_TEMP/auto-merge.json"
+          python - "$RUNNER_TEMP/auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2] or not state.get("autoMergeRequest"):
+              raise SystemExit("auto-merge was not enabled on the bot-owned final head")
+          PY
+          {
+            echo "## Adapted upstream finalizer"
+            echo
+            echo "- Final bot-owned head: \`$final_head\`"
+            echo "- Explicit final CI: $final_ci_url"
+            echo "- Auto-merge: enabled; protected human approval remains required"
+            echo "- Self-approval: not performed"
+          } >> "$GITHUB_STEP_SUMMARY"

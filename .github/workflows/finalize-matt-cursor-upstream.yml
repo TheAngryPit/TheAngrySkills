@@ -666,10 +666,22 @@ jobs:
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/pre-auto-merge.json")"
           test "$current_head" = "$final_head"
           auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-auto-merge.json")"
-          [ "$auto_merge_present" != true ] || {
+          if [ "$auto_merge_present" = true ]; then
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+            gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+              --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/re-enabled-auto-merge.json"
+            python - "$RUNNER_TEMP/re-enabled-auto-merge.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("autoMergeRequest"):
+              raise SystemExit("re-enabled auto-merge request could not be cleared")
+          PY
             echo "auto-merge was re-enabled before final proof completed" >&2
             exit 1
-          }
+          fi
           gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
             --match-head-commit "$final_head"
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \

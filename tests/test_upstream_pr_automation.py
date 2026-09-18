@@ -774,6 +774,33 @@ def test_readiness_rejects_candidate_github_control_plane_changes():
         raise AssertionError("candidate-owned GitHub workflow change was accepted")
 
 
+def test_readiness_rejects_rename_from_github_control_plane():
+    head = "b" * 40
+    pr = readiness_pr("matt", "adapted", head)
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+        {
+            "filename": "docs/retired-review-gate.yml",
+            "previous_filename": ".github/workflows/codex-review-gate.yml",
+            "status": "renamed",
+        },
+    ]
+    pr["changed_files"] = len(files)
+    try:
+        lifecycle.adaptation_readiness(
+            pr, [files], [readiness_commits()],
+            report_text=readiness_report_text("matt", "adapted"),
+            family="matt", batch="adapted", expected_head=head,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "GitHub control plane" in str(error)
+    else:
+        raise AssertionError("rename from the GitHub control plane was accepted")
+
+
 def test_bot_cannot_dispatch_adaptation_finalization():
     head = "b" * 40
     try:
@@ -942,6 +969,8 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "--disable-auto" in workflow
     assert "auto-merge was not cleared on the admitted head" in workflow
     assert "auto-merge was re-enabled before final proof completed" in workflow
+    assert "re-enabled-auto-merge.json" in workflow
+    assert "re-enabled auto-merge request could not be cleared" in workflow
     assert 'if [ "$post_enable_head" != "$final_head" ]; then' in workflow
     assert "advanced-head-auto-merge.json" in workflow
     assert "auto-merge remained enabled after the admitted head changed" in workflow

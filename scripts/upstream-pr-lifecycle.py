@@ -487,7 +487,13 @@ def adaptation_readiness(
 
     files = _complete_pr_files(pr, files_payload)
     changed_files = sorted({item["filename"] for item in files})
-    if any(path.startswith(".github/") for path in changed_files):
+    affected_files = sorted({
+        path
+        for item in files
+        for path in (item.get("filename"), item.get("previous_filename"))
+        if isinstance(path, str)
+    })
+    if any(path.startswith(".github/") for path in affected_files):
         raise ValueError("candidate_not_ready: canonical adaptation candidates cannot change GitHub control plane files")
     report_file = f"reports/upstream-updates/{family}-{batch}.md"
     attestation_file = (
@@ -496,7 +502,7 @@ def adaptation_readiness(
     if report_file not in changed_files:
         raise ValueError("candidate_not_ready: canonical detector report is missing")
     readiness_files = [
-        path for path in changed_files
+        path for path in affected_files
         if path.startswith("reports/upstream-updates/readiness/")
     ]
     if readiness_files:
@@ -514,7 +520,7 @@ def adaptation_readiness(
             raise ValueError("candidate_not_ready: Matt report lacks adapted skill files and reviewed pins")
         if any(
             path.startswith(("skills/mirrors-cursor/", "sources/cursor-plugins/"))
-            for path in changed_files
+            for path in affected_files
         ):
             raise ValueError("candidate_not_ready: Matt candidate crosses into Cursor ownership")
     else:
@@ -532,7 +538,7 @@ def adaptation_readiness(
                 "skills/core/ask-pit/",
                 "skills/engineering/writing-for-astra/",
             ))
-            for path in changed_files
+            for path in affected_files
         ):
             raise ValueError("candidate_not_ready: Cursor candidate crosses into Matt ownership")
 

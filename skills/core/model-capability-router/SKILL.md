@@ -117,13 +117,16 @@ profiles used by the adapted pstack workflows:
   `cursor-poteto-mode` playbooks.
 
 The assets are not loaded merely because this skill is installed. To make the
-profiles selectable by a new Codex session, copy them explicitly to the native
-agent directory with the checked installer:
+profiles selectable by a new Codex session, run the bundled checked installer
+from this skill directory:
 
 ```bash
 python3 scripts/check-native-agent-profiles.py \
   --install --installed-dir ~/.codex/agents
 ```
+
+The bundled script travels with an individual skill installation; it does not
+depend on the repository-level `scripts/` directory.
 
 The command refuses to replace a differing existing profile unless
 `--replace` is supplied explicitly. Run it again with only

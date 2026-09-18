@@ -238,6 +238,15 @@ class CursorPstackCoreTests(unittest.TestCase):
                         "cli": "cursor-control-cli",
                         "ui": "cursor-control-ui",
                         "availability": "Check each skill before use; if absent or not applicable, record the exact capability gap and use the documented fallback.",
+                        "technical_writing": "cursor-technical-writing",
+                        "comment_cleanup": "cursor-no-comments",
+                        "architecture": "cursor-architect",
+                        "design_bakeoff": "cursor-arena",
+                        "adversarial_review": "cursor-interrogate",
+                        "explanation": "cursor-how",
+                        "rationale_research": "cursor-why",
+                        "reflection": "cursor-reflect",
+                        "parallel_coverage": "cursor-swarm",
                     },
                 )
                 self.assertEqual(
@@ -281,6 +290,13 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertIn("collaboration.followup_task", skill_markdown)
             self.assertIn("Cloud-capable task environments", skill_markdown)
             self.assertIn("do not claim parity", skill_markdown)
+            self.assertIn("published and indexed for explicit invocation", skill_markdown)
+            self.assertIn("cursor-technical-writing", skill_markdown)
+            self.assertIn("cursor-no-comments", skill_markdown)
+            self.assertIn("cursor-architect", skill_markdown)
+            self.assertIn("cursor-arena", skill_markdown)
+            self.assertNotIn("candidate remains unindexed", skill_markdown.lower())
+            self.assertNotIn("do not install globally", skill_markdown.lower())
             opening = (target / "playbooks/opening-a-pr.md").read_text()
             self.assertIn("cursor-no-comments", opening)
             self.assertIn("cursor-technical-writing", opening)

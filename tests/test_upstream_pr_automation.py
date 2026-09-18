@@ -94,6 +94,44 @@ def test_matt_ignores_unrelated_commits_and_reports_support_and_new_skills(tmp_p
     assert report["candidate_content_promoted"] is False
 
 
+def test_matt_accepts_ancestral_per_package_pins_and_verifies_each_snapshot(tmp_path):
+    upstream = tmp_path / "matt"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "LICENSE", "MIT\n")
+    root = matt_root(tmp_path, upstream)
+    baseline = commit(upstream, "baseline")
+    code_record = root / "skills/mirrors-mattpocock/code-review/UPSTREAM.json"
+    writing_record = root / "skills/engineering/writing-for-astra/UPSTREAM.json"
+    for record in (code_record, writing_record):
+        data = json.loads(record.read_text())
+        data["commit"] = baseline
+        record.write_text(json.dumps(data))
+
+    code_source = upstream / "skills/engineering/code-review"
+    write(code_source / "SKILL.md", "# reviewed update\n")
+    latest_reviewed = commit(upstream, "review code only")
+    data = json.loads(code_record.read_text())
+    data["commit"] = latest_reviewed
+    data["upstream_sha256"] = detector.snapshot(upstream, data["source_path"])
+    code_record.write_text(json.dumps(data))
+
+    report = detector.detect_matt(upstream, root)
+    assert report["changed"] is False
+    assert report["baseline"] == latest_reviewed
+    assert report["baseline_mode"] == "per-package"
+    assert report["baseline_commits"] == sorted([baseline, latest_reviewed])
+
+    data["upstream_sha256"]["SKILL.md"] = "0" * 64
+    code_record.write_text(json.dumps(data))
+    try:
+        detector.detect_matt(upstream, root)
+    except ValueError as error:
+        assert "hashes do not match pin" in str(error)
+    else:
+        raise AssertionError("fabricated per-package pin hashes were accepted")
+
+
 def test_matt_missing_or_mismatched_adaptation_metadata_fails_closed(tmp_path):
     upstream = tmp_path / "matt"
     upstream.mkdir()

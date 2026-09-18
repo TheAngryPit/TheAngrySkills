@@ -264,6 +264,55 @@ def snapshot(checkout: Path, source_path: str) -> dict[str, str]:
     return values
 
 
+def snapshot_at_revision(checkout: Path, source_path: str, revision: str) -> dict[str, str]:
+    """Read the pinned source inventory from Git without checking it out."""
+
+    prefix = source_path.rstrip("/")
+    values: dict[str, str] = {}
+    for path in sorted(tree_files(checkout, revision, prefix)):
+        relative = path.removeprefix(prefix + "/")
+        value = blob_sha(checkout, revision, path)
+        if relative and value is not None:
+            values[relative] = value
+    license_value = blob_sha(checkout, revision, "LICENSE")
+    if license_value is not None:
+        values["LICENSE"] = license_value
+    return values
+
+
+def latest_reviewed_revision(checkout: Path, revisions: set[str]) -> str:
+    """Return one pinned commit that descends from every other pinned commit."""
+
+    if not revisions or any(
+        not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{40}", value)
+        for value in revisions
+    ):
+        raise ValueError("Matt adaptation metadata has a missing or invalid baseline commit")
+    if len(revisions) > 1 and git(checkout, "rev-parse", "--is-shallow-repository") == "true":
+        subprocess.run(
+            ["git", "-C", str(checkout), "fetch", "--unshallow", "origin", "main"],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    for revision in revisions:
+        if not ensure_baseline(checkout, revision):
+            raise ValueError(f"Matt pinned baseline is unavailable: {revision}")
+    candidates = []
+    for candidate in revisions:
+        if all(
+            subprocess.run(
+                ["git", "-C", str(checkout), "merge-base", "--is-ancestor", revision, candidate],
+                capture_output=True,
+            ).returncode == 0
+            for revision in revisions
+        ):
+            candidates.append(candidate)
+    if len(candidates) != 1:
+        raise ValueError("Matt adaptation metadata has divergent baseline commits")
+    return candidates[0]
+
+
 def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     items = matt_items(root)
     # Inventory discovery covers the whole upstream skills tree, so reject
@@ -286,27 +335,24 @@ def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
         if not isinstance(record.get("upstream_sha256"), dict):
             raise ValueError(f"Matt adaptation metadata lacks hashes: {item['destination']}")
     baselines = {record.get("commit") for record in metadata}
-    if len(baselines) != 1 or not next(iter(baselines), None):
-        raise ValueError("Matt adaptation metadata has missing or mixed baseline commits")
-    baseline = next(iter(baselines))
+    baseline = latest_reviewed_revision(checkout, baselines)
+    for item, record in zip(items, metadata):
+        pinned = snapshot_at_revision(checkout, item["source_path"], record["commit"])
+        if pinned != record["upstream_sha256"]:
+            raise ValueError(f"Matt adaptation metadata hashes do not match pin: {item['destination']}")
     latest = head(checkout)
     result = blank_result("matt", "adapted", MATT_REPOSITORY, baseline, latest)
+    result["baseline_mode"] = "per-package"
+    result["baseline_commits"] = sorted(baselines)
     current = source_skill_paths(checkout, "skills")
     current_dirs = skill_dirs(current)
-    have_baseline = ensure_baseline(checkout, baseline)
-    if have_baseline:
-        # The accepted adaptation list is intentionally smaller than Matt's
-        # full upstream catalog.  Inventory drift must therefore compare the
-        # live tree with the pinned revision, not with our published subset.
-        baseline_skills = skill_dirs(
-            path for path in tree_files(checkout, baseline, "skills")
-            if path.endswith("/SKILL.md")
-        )
-    else:
-        # A source checkout without its pinned commit cannot prove the full
-        # historical inventory.  The accepted paths are the safe fallback;
-        # any discrepancy remains reviewable rather than being imported.
-        baseline_skills = {item["source_path"] for item in items}
+    # The accepted adaptation list is intentionally smaller than Matt's full
+    # upstream catalog. Inventory drift uses the newest reviewed package pin;
+    # every older package pin is separately hash-verified above.
+    baseline_skills = skill_dirs(
+        path for path in tree_files(checkout, baseline, "skills")
+        if path.endswith("/SKILL.md")
+    )
     result["new_skills"] = sorted(current_dirs - baseline_skills)
     result["removed_skills"] = sorted(baseline_skills - current_dirs)
     # Compare each pinned source inventory directly.  A git diff for the
@@ -526,6 +572,8 @@ This is a detector report for a reviewable proposal. It does not promote upstrea
 
 - Repository: `{report['repository']}`
 - Reviewed baseline: `{report['baseline']}`
+- Baseline mode: `{report.get('baseline_mode', 'single-family-pin')}`
+- Reviewed baseline commits: `{', '.join(report.get('baseline_commits', [report['baseline']]))}`
 - Observed upstream HEAD: `{head_value}`
 - Candidate content promoted: `false`
 - Existing pins, hashes, provenance, patches, exclusions, global installs and homes: unchanged

@@ -1251,3 +1251,15 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     assert "readiness attestation does not originate from a trusted finalizer run" in finalizer
     assert "--draft" in detector_workflow
     assert "codex-review-gate.yml/dispatches" in detector_workflow
+
+
+def test_cli_routes_tree_payload_only_to_finalization_admission():
+    source = (ROOT / "scripts/upstream-pr-lifecycle.py").read_text()
+    assess_ready_block = source.split('if args.command == "assess-ready":', 1)[1].split(
+        'if args.command == "render-readiness-attestation":', 1
+    )[0]
+    finalization_block = source.split('if args.command == "assess-finalization":', 1)[1].split(
+        'if args.command == "assess-codex-review":', 1
+    )[0]
+    assert "tree_payload=" not in assess_ready_block
+    assert 'tree_payload=json.loads(Path(args.tree_json).read_text())' in finalization_block

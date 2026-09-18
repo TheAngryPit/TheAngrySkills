@@ -1475,7 +1475,6 @@ def main() -> int:
                 json.loads(Path(args.files_json).read_text()),
                 json.loads(Path(args.commits_json).read_text()),
                 report_text=Path(args.report_file).read_text(),
-                tree_payload=json.loads(Path(args.tree_json).read_text()),
                 family=args.family,
                 batch=args.batch,
                 expected_head=args.expected_head,
@@ -1512,6 +1511,7 @@ def main() -> int:
                     if args.existing_readiness_json else None
                 ),
                 report_text=Path(args.report_file).read_text(),
+                tree_payload=json.loads(Path(args.tree_json).read_text()),
                 family=args.family,
                 batch=args.batch,
                 expected_adaptation_head=args.expected_adaptation_head,

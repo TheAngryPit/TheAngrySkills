@@ -6,6 +6,7 @@ on:
     - cron: "47 6 * * *"
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -168,10 +169,18 @@ jobs:
               pr_url="$(gh pr create \
                 --base main \
                 --head "$branch" \
+                --draft \
                 --title "Review ${family}/${batch} upstream drift" \
                 --body-file "$RUNNER_TEMP/pr-body.md")"
               number="${pr_url##*/}"
             fi
+
+            candidate_head="$(git rev-parse HEAD)"
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/codex-review-gate.yml/dispatches" \
+              -f ref=main \
+              -f "inputs[pr_number]=$number" \
+              -f "inputs[expected_head_sha]=$candidate_head"
 
             # The PR body is the durable handoff.  Do not post @codex from
             # github-actions[bot]: this identity is not authenticated as a

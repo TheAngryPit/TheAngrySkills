@@ -23,6 +23,11 @@ CODEX_EXECUTION_PREFIX = "codex-execution"
 EXPECTED_BATCHES = (("matt", "adapted"), ("cursor", "pstack"))
 BOT_LOGIN = "github-actions[bot]"
 MAINTAINER_PERMISSIONS = {"admin", "maintain"}
+CODEX_CONNECTOR_LOGIN = "chatgpt-codex-connector[bot]"
+CODEX_CONNECTOR_USER_ID = 199175422
+CODEX_CONNECTOR_APP_ID = 1144995
+CODEX_CONNECTOR_APP_SLUG = "chatgpt-codex-connector"
+CODEX_REVIEW_STATUS_CONTEXT = "Codex review gate"
 _REPORT_MARKER = re.compile(
     rf"<!-- {re.escape(MARKER_PREFIX)}:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+) -->"
 )
@@ -33,6 +38,16 @@ _CODEX_EXECUTION_MARKER = re.compile(
     rf"<!-- {re.escape(CODEX_EXECUTION_PREFIX)}:v1:family=(?P<family>[A-Za-z0-9_.-]+):batch=(?P<batch>[A-Za-z0-9_.-]+):head=(?P<head>[0-9a-f]{{7,64}}) -->"
 )
 _REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+_CODEX_SUMMARY_COMMIT = re.compile(
+    r"\|\s*📝\s*\*\*Code Review\*\*\s*\|\s*✅\s*\*\*Completed\*\*.*?\|\s*`(?P<sha>[0-9a-f]{7,40})`\s*\|"
+)
+_CODEX_CLEAN_COMMIT = re.compile(
+    r"^Codex Review: Didn't find any major issues\..*?\*\*Reviewed commit:\*\*\s*`(?P<sha>[0-9a-f]{10,40})`",
+    re.DOTALL,
+)
+_READINESS_PATH = re.compile(
+    r"^reports/upstream-updates/readiness/(?P<family>matt|cursor)-(?P<batch>adapted|pstack)-(?P<source>[0-9a-f]{40})\.json$"
+)
 
 
 def family_batch_marker(family: str, batch: str) -> str:
@@ -145,6 +160,258 @@ def normalize_comments(payload: Any) -> list[dict[str, Any]]:
     return normalized
 
 
+def _official_codex_comment(comment: dict[str, Any]) -> bool:
+    user = comment.get("user") if isinstance(comment.get("user"), dict) else {}
+    app = comment.get("performed_via_github_app")
+    return (
+        user.get("login") == CODEX_CONNECTOR_LOGIN
+        and user.get("id") == CODEX_CONNECTOR_USER_ID
+        and isinstance(app, dict)
+        and app.get("id") == CODEX_CONNECTOR_APP_ID
+        and app.get("slug") == CODEX_CONNECTOR_APP_SLUG
+    )
+
+
+def _codex_actor(value: Any) -> bool:
+    user = value if isinstance(value, dict) else {}
+    return user.get("login") == CODEX_CONNECTOR_LOGIN and user.get("id") == CODEX_CONNECTOR_USER_ID
+
+
+def _head_matches(fragment: str, head: str) -> bool:
+    return 7 <= len(fragment) <= len(head) and head.startswith(fragment)
+
+
+def _canonical_identity(pr: dict[str, Any], repository: str) -> tuple[str, str] | None:
+    base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
+    head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+    head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
+    branch = head.get("ref")
+    expected = {
+        "automation/upstream-matt-adapted": ("matt", "adapted"),
+        "automation/upstream-cursor-pstack": ("cursor", "pstack"),
+    }
+    identity = expected.get(branch)
+    if identity is None:
+        return None
+    if base.get("ref") != "main" or head_repo.get("full_name") != repository:
+        raise ValueError("canonical review branch has unexpected base or repository")
+    report = report_from_pr_body(pr.get("body") or "")
+    if (report["family"], report["batch"]) != identity:
+        raise ValueError("canonical review branch marker does not match its family/batch")
+    return identity
+
+
+def _reviewed_head_for_bot_attestation(
+    pr: dict[str, Any],
+    current_commit: dict[str, Any] | None,
+    readiness: dict[str, Any] | None,
+    *,
+    family: str,
+    batch: str,
+    repository: str,
+) -> tuple[str, bool]:
+    head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+    current_head = head.get("sha")
+    if not isinstance(current_head, str) or not re.fullmatch(r"[0-9a-f]{40}", current_head):
+        raise ValueError("pull request head must be a full commit SHA")
+    if not isinstance(current_commit, dict):
+        return current_head, False
+    parents = current_commit.get("parents")
+    files = current_commit.get("files")
+    author = current_commit.get("author") if isinstance(current_commit.get("author"), dict) else {}
+    committer = current_commit.get("committer") if isinstance(current_commit.get("committer"), dict) else {}
+    if author.get("login") != BOT_LOGIN or committer.get("login") != BOT_LOGIN:
+        return current_head, False
+    if current_commit.get("sha") != current_head or not isinstance(parents, list) or len(parents) != 1:
+        raise ValueError("bot readiness commit must have the current head and one parent")
+    parent = parents[0].get("sha") if isinstance(parents[0], dict) else None
+    if not isinstance(parent, str) or not re.fullmatch(r"[0-9a-f]{40}", parent):
+        raise ValueError("bot readiness commit parent is invalid")
+    if not isinstance(files, list) or len(files) != 1 or not isinstance(files[0], dict):
+        raise ValueError("bot readiness commit must add exactly one file")
+    path = files[0].get("filename")
+    path_match = _READINESS_PATH.fullmatch(path or "")
+    if files[0].get("status") != "added" or path_match is None:
+        raise ValueError("bot readiness commit contains a non-readiness change")
+    if (path_match.group("family"), path_match.group("batch")) != (family, batch):
+        raise ValueError("bot readiness path does not match the canonical family/batch")
+    if not isinstance(readiness, dict):
+        raise ValueError("bot readiness content is unavailable")
+    finalizer = readiness.get("finalizer") if isinstance(readiness.get("finalizer"), dict) else {}
+    expected_branch = f"automation/upstream-{family}-{batch}"
+    if (
+        readiness.get("state") != "adapted_ready"
+        or readiness.get("family") != family
+        or readiness.get("batch") != batch
+        or readiness.get("repository") != repository
+        or readiness.get("branch") != expected_branch
+        or readiness.get("adaptation_head") != parent
+        or readiness.get("source_head") != path_match.group("source")
+        or readiness.get("attestation_file") != path
+        or finalizer.get("actor") != BOT_LOGIN
+    ):
+        raise ValueError("bot readiness content does not bind the parent review and canonical PR")
+    return parent, True
+
+
+def codex_review_gate(
+    pr: dict[str, Any],
+    issue_comments_payload: Any,
+    reviews_payload: Any,
+    review_comments_payload: Any,
+    threads_payload: Any,
+    *,
+    repository: str,
+    current_commit: dict[str, Any] | None = None,
+    readiness: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Evaluate authenticated Codex review evidence for the exact PR payload.
+
+    A completed summary is necessary but insufficient. Clean completion needs
+    the connector's exact-head clean result. Findings need resolved GitHub
+    threads plus an explicit human ``Codex disposition:`` rationale. A final
+    bot readiness-only commit may carry the parent's review forward only after
+    its identity, one-file diff, path, and bound JSON content all verify.
+    """
+
+    if not isinstance(pr, dict) or pr.get("state") != "open":
+        raise ValueError("pull request must be open")
+    identity = _canonical_identity(pr, repository)
+    if identity is None:
+        return {
+            "applicable": False,
+            "state": "success",
+            "description": "Codex review gate is not applicable to this PR",
+            "reviewed_head": None,
+            "carry_forward": False,
+        }
+    family, batch = identity
+    head = pr.get("head")
+    reviewed_head, carry_forward = _reviewed_head_for_bot_attestation(
+        pr,
+        current_commit,
+        readiness,
+        family=family,
+        batch=batch,
+        repository=repository,
+    )
+    comments = _flatten_pages(issue_comments_payload, "issue comment")
+    reviews = _flatten_pages(reviews_payload, "review")
+    review_comments = _flatten_pages(review_comments_payload, "review comment")
+    threads_root = threads_payload.get("data", {}).get("repository", {}).get("pullRequest", {})
+    threads_connection = threads_root.get("reviewThreads") if isinstance(threads_root, dict) else None
+    if not isinstance(threads_connection, dict) or not isinstance(threads_connection.get("nodes"), list):
+        raise ValueError("review thread response is invalid")
+    if (threads_connection.get("pageInfo") or {}).get("hasNextPage"):
+        raise ValueError("more than 100 review threads require manual inspection")
+
+    summaries = []
+    clean_results = []
+    for comment in comments:
+        if not isinstance(comment, dict) or not _official_codex_comment(comment):
+            continue
+        body = comment.get("body") if isinstance(comment.get("body"), str) else ""
+        if "<!-- codex-pull-request-review-summary -->" in body:
+            match = _CODEX_SUMMARY_COMMIT.search(body)
+            if match and _head_matches(match.group("sha"), reviewed_head):
+                summaries.append(comment)
+        clean = _CODEX_CLEAN_COMMIT.search(body)
+        if clean and _head_matches(clean.group("sha"), reviewed_head):
+            clean_results.append(comment)
+    if not summaries:
+        return {
+            "applicable": True,
+            "state": "pending",
+            "description": "Waiting for authenticated Codex review on the current payload",
+            "reviewed_head": reviewed_head,
+            "carry_forward": carry_forward,
+        }
+
+    exact_reviews = [
+        review for review in reviews
+        if isinstance(review, dict)
+        and _codex_actor(review.get("user"))
+        and review.get("commit_id") == reviewed_head
+        and review.get("state") == "COMMENTED"
+    ]
+    findings = [
+        comment for comment in review_comments
+        if isinstance(comment, dict)
+        and _codex_actor(comment.get("user"))
+        and comment.get("commit_id") == reviewed_head
+        and isinstance(comment.get("id"), int)
+        and isinstance(comment.get("body"), str)
+        and re.search(r"\bP[01]\b", comment["body"])
+    ]
+    suggestion_reviews = [
+        review for review in exact_reviews
+        if "automated review suggestions" in (review.get("body") or "")
+    ]
+    if suggestion_reviews and not findings:
+        return {
+            "applicable": True,
+            "state": "failure",
+            "description": "Codex reported findings that cannot be matched to review threads",
+            "reviewed_head": reviewed_head,
+            "carry_forward": carry_forward,
+        }
+    if not findings:
+        if not clean_results:
+            return {
+                "applicable": True,
+                "state": "pending",
+                "description": "Codex completed, but clean exact-head evidence is missing",
+                "reviewed_head": reviewed_head,
+                "carry_forward": carry_forward,
+            }
+    else:
+        thread_by_comment: dict[int, dict[str, Any]] = {}
+        for thread in threads_connection["nodes"]:
+            if not isinstance(thread, dict):
+                continue
+            connection = thread.get("comments") if isinstance(thread.get("comments"), dict) else {}
+            if (connection.get("pageInfo") or {}).get("hasNextPage"):
+                raise ValueError("more than 100 comments in a review thread require manual inspection")
+            for comment in connection.get("nodes") or []:
+                if isinstance(comment, dict) and isinstance(comment.get("databaseId"), int):
+                    thread_by_comment[comment["databaseId"]] = thread
+        unresolved = []
+        for finding in findings:
+            thread = thread_by_comment.get(finding["id"])
+            connection = thread.get("comments") if isinstance(thread, dict) else {}
+            replies = connection.get("nodes") if isinstance(connection, dict) else []
+            grounded = any(
+                isinstance(reply, dict)
+                and not _codex_actor(reply.get("author"))
+                and reply.get("authorAssociation") in {"OWNER", "MEMBER", "COLLABORATOR"}
+                and isinstance(reply.get("body"), str)
+                and re.search(r"(?im)^Codex disposition:\s*\S.{19,}$", reply["body"])
+                for reply in (replies or [])[1:]
+            )
+            if not isinstance(thread, dict) or thread.get("isResolved") is not True or not grounded:
+                unresolved.append(finding["id"])
+        if unresolved:
+            return {
+                "applicable": True,
+                "state": "failure",
+                "description": f"Codex findings remain unresolved or lack grounded disposition ({len(unresolved)})",
+                "reviewed_head": reviewed_head,
+                "carry_forward": carry_forward,
+            }
+
+    return {
+        "applicable": True,
+        "state": "success",
+        "description": (
+            "Codex review is clean for the reviewed parent; readiness-only bot commit verified"
+            if carry_forward
+            else "Codex review is complete and clean for the exact head"
+        ),
+        "reviewed_head": reviewed_head,
+        "carry_forward": carry_forward,
+    }
+
+
 def adaptation_readiness(
     pr: dict[str, Any],
     files_payload: Any,
@@ -202,8 +469,12 @@ def adaptation_readiness(
     )
     if report_file not in changed_files:
         raise ValueError("candidate_not_ready: canonical detector report is missing")
-    if attestation_file in changed_files:
-        raise ValueError("candidate already contains a readiness attestation")
+    readiness_files = [
+        path for path in changed_files
+        if path.startswith("reports/upstream-updates/readiness/")
+    ]
+    if readiness_files:
+        raise ValueError("candidate already contains readiness material")
 
     if family == "matt":
         adaptation_roots = (
@@ -276,13 +547,118 @@ def adaptation_readiness(
     }
 
 
+def finalization_admission(
+    pr: dict[str, Any],
+    files_payload: Any,
+    commits_payload: Any,
+    current_commit: dict[str, Any],
+    existing_readiness: dict[str, Any] | None,
+    *,
+    family: str,
+    batch: str,
+    expected_adaptation_head: str,
+    repository: str,
+    dispatcher: str,
+    dispatcher_permission: str,
+) -> dict[str, Any]:
+    """Admit a fresh finalization or a rigorously verified idempotent resume."""
+
+    if not re.fullmatch(r"[0-9a-f]{40}", expected_adaptation_head):
+        raise ValueError("expected adaptation head must be a full SHA")
+    head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+    current_head = head.get("sha")
+    if current_head == expected_adaptation_head:
+        if existing_readiness is not None:
+            raise ValueError("fresh finalization cannot supply existing readiness content")
+        result = adaptation_readiness(
+            pr,
+            files_payload,
+            commits_payload,
+            family=family,
+            batch=batch,
+            expected_head=expected_adaptation_head,
+            repository=repository,
+            dispatcher=dispatcher,
+            dispatcher_permission=dispatcher_permission,
+        )
+        return {
+            **result,
+            "mode": "initial",
+            "current_head": current_head,
+            "checkout_head": current_head,
+        }
+
+    identity = _canonical_identity(pr, repository)
+    if identity != (family, batch):
+        raise ValueError("resume PR identity does not match requested family/batch")
+    reviewed_head, carry_forward = _reviewed_head_for_bot_attestation(
+        pr,
+        current_commit,
+        existing_readiness,
+        family=family,
+        batch=batch,
+        repository=repository,
+    )
+    if not carry_forward or reviewed_head != expected_adaptation_head:
+        raise ValueError("current head is not the verified readiness-only child of the expected adaptation")
+    files = _flatten_pages(files_payload, "pull request files")
+    readiness_files = [
+        item for item in files
+        if isinstance(item, dict)
+        and isinstance(item.get("filename"), str)
+        and item["filename"].startswith("reports/upstream-updates/readiness/")
+    ]
+    if len(readiness_files) != 1 or readiness_files[0]["filename"] != existing_readiness.get("attestation_file"):
+        raise ValueError("resume requires exactly one verified readiness file in the PR")
+    filtered_files = [item for item in files if item not in readiness_files]
+    parent_pr = json.loads(json.dumps(pr))
+    parent_pr["head"]["sha"] = expected_adaptation_head
+    rebuilt = adaptation_readiness(
+        parent_pr,
+        filtered_files,
+        commits_payload,
+        family=family,
+        batch=batch,
+        expected_head=expected_adaptation_head,
+        repository=repository,
+        dispatcher=dispatcher,
+        dispatcher_permission=dispatcher_permission,
+    )
+    immutable_fields = (
+        "schema_version",
+        "state",
+        "family",
+        "batch",
+        "source_head",
+        "adaptation_head",
+        "branch",
+        "repository",
+        "changed_files",
+        "adaptation_files",
+        "attestation_file",
+    )
+    mismatched = [field for field in immutable_fields if existing_readiness.get(field) != rebuilt.get(field)]
+    if mismatched:
+        raise ValueError(f"existing readiness content differs from rebuilt admission: {', '.join(mismatched)}")
+    return {
+        **rebuilt,
+        "mode": "resume",
+        "current_head": current_head,
+        "checkout_head": current_head,
+    }
+
+
 def readiness_attestation(readiness: dict[str, Any], *, run_id: str, run_attempt: str) -> dict[str, Any]:
     """Render the material bot commit written only after local validations pass."""
 
     if readiness.get("state") != "adapted_ready":
         raise ValueError("readiness state is not adapted_ready")
+    durable = {
+        key: value for key, value in readiness.items()
+        if key not in {"mode", "current_head", "checkout_head"}
+    }
     return {
-        **readiness,
+        **durable,
         "finalizer": {
             "actor": BOT_LOGIN,
             "workflow_run_id": str(run_id),
@@ -962,6 +1338,21 @@ def main() -> int:
     readiness.add_argument("--pr-json", required=True)
     readiness.add_argument("--files-json", required=True)
     readiness.add_argument("--commits-json", required=True)
+    finalization = subparsers.add_parser(
+        "assess-finalization",
+        help="admit a fresh finalization or a verified readiness-only resume",
+    )
+    finalization.add_argument("--family", required=True)
+    finalization.add_argument("--batch", required=True)
+    finalization.add_argument("--expected-adaptation-head", required=True)
+    finalization.add_argument("--repository", required=True)
+    finalization.add_argument("--dispatcher", required=True)
+    finalization.add_argument("--dispatcher-permission", required=True)
+    finalization.add_argument("--pr-json", required=True)
+    finalization.add_argument("--files-json", required=True)
+    finalization.add_argument("--commits-json", required=True)
+    finalization.add_argument("--current-commit-json", required=True)
+    finalization.add_argument("--existing-readiness-json")
     attestation = subparsers.add_parser(
         "render-readiness-attestation",
         help="render the material finalizer record after validations pass",
@@ -969,6 +1360,18 @@ def main() -> int:
     attestation.add_argument("--readiness-json", required=True)
     attestation.add_argument("--run-id", required=True)
     attestation.add_argument("--run-attempt", required=True)
+    review_gate = subparsers.add_parser(
+        "assess-codex-review",
+        help="evaluate authenticated exact-head Codex review evidence",
+    )
+    review_gate.add_argument("--repository", required=True)
+    review_gate.add_argument("--pr-json", required=True)
+    review_gate.add_argument("--issue-comments-json", required=True)
+    review_gate.add_argument("--reviews-json", required=True)
+    review_gate.add_argument("--review-comments-json", required=True)
+    review_gate.add_argument("--threads-json", required=True)
+    review_gate.add_argument("--current-commit-json")
+    review_gate.add_argument("--readiness-json")
     bridge = subparsers.add_parser(
         "bridge",
         help="observe Codex candidates; post one only with explicit --execute",
@@ -1055,6 +1458,58 @@ def main() -> int:
             print(str(error), file=sys.stderr)
             return 2
         print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
+    if args.command == "assess-finalization":
+        try:
+            result = finalization_admission(
+                json.loads(Path(args.pr_json).read_text()),
+                json.loads(Path(args.files_json).read_text()),
+                json.loads(Path(args.commits_json).read_text()),
+                json.loads(Path(args.current_commit_json).read_text()),
+                (
+                    json.loads(Path(args.existing_readiness_json).read_text())
+                    if args.existing_readiness_json else None
+                ),
+                family=args.family,
+                batch=args.batch,
+                expected_adaptation_head=args.expected_adaptation_head,
+                repository=args.repository,
+                dispatcher=args.dispatcher,
+                dispatcher_permission=args.dispatcher_permission,
+            )
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
+    if args.command == "assess-codex-review":
+        try:
+            result = codex_review_gate(
+                json.loads(Path(args.pr_json).read_text()),
+                json.loads(Path(args.issue_comments_json).read_text()),
+                json.loads(Path(args.reviews_json).read_text()),
+                json.loads(Path(args.review_comments_json).read_text()),
+                json.loads(Path(args.threads_json).read_text()),
+                repository=args.repository,
+                current_commit=(
+                    json.loads(Path(args.current_commit_json).read_text())
+                    if args.current_commit_json else None
+                ),
+                readiness=(
+                    json.loads(Path(args.readiness_json).read_text())
+                    if args.readiness_json else None
+                ),
+            )
+        except (ValueError, json.JSONDecodeError) as error:
+            print(json.dumps({
+                "applicable": True,
+                "state": "failure",
+                "description": str(error)[:140],
+                "reviewed_head": None,
+                "carry_forward": False,
+            }, sort_keys=True))
+            return 0
+        print(json.dumps(result, sort_keys=True))
         return 0
     if args.command == "bridge":
         try:

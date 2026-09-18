@@ -614,7 +614,8 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert selection < workflow.index("branch_exists=false") < first_switch
     first_pr_write = min(workflow.index("gh pr edit"), workflow.index("gh pr create"))
     assert first_push < first_pr_write
-    assert "--method POST" not in workflow
+    assert workflow.count("--method POST") == 1
+    assert "actions/workflows/codex-review-gate.yml/dispatches" in workflow
     assert "issues/$number/comments" not in workflow
     assert "normalize-comments" not in workflow
     assert "render-codex-request-json" not in workflow
@@ -773,9 +774,25 @@ def test_readiness_fails_for_cross_family_or_existing_attestation():
             commits=readiness_commits(human_last=False),
         )
     except ValueError as error:
-        assert "already contains a readiness attestation" in str(error)
+        assert "already contains readiness material" in str(error)
     else:
         raise AssertionError("previously finalized candidate was accepted")
+
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "reports/upstream-updates/readiness/matt-adapted-" + ("f" * 40) + ".json",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+            ],
+        )
+    except ValueError as error:
+        assert "already contains readiness material" in str(error)
+    else:
+        raise AssertionError("alternate stale readiness material was accepted")
 
 
 def test_bot_report_refresh_after_human_adaptation_remains_finalizable():
@@ -818,12 +835,13 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "contents: read" in workflow
     assert "contents: write" in workflow
     assert "candidate_not_ready" not in workflow
-    assert "assess-ready" in workflow
+    assert "assess-finalization" in workflow
     assert "render-readiness-attestation" in workflow
     assert 'git config user.name "github-actions[bot]"' in workflow
     assert "final commit identity is not github-actions[bot]" in workflow
     assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
-    assert "--event workflow_dispatch" in workflow
+    assert '-f ref=main' in workflow
+    assert 'inputs[target_sha]=$final_head' in workflow
     assert 'gh pr merge "$PR_NUMBER"' in workflow
     assert "--auto --squash" in workflow
     assert "gh pr review" not in workflow
@@ -835,3 +853,260 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert push < dispatch < merge
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     assert "workflow_dispatch:" in ci
+
+
+def official_codex_comment(body):
+    return {
+        "id": 10,
+        "body": body,
+        "user": {
+            "login": "chatgpt-codex-connector[bot]",
+            "id": lifecycle.CODEX_CONNECTOR_USER_ID,
+        },
+        "performed_via_github_app": {
+            "id": lifecycle.CODEX_CONNECTOR_APP_ID,
+            "slug": "chatgpt-codex-connector",
+        },
+    }
+
+
+def codex_summary(head, state="Completed"):
+    status = "✅ **Completed**" if state == "Completed" else "🔄 **Running**"
+    return official_codex_comment(
+        "<!-- codex-pull-request-review-summary -->\n"
+        "| Review | Status | Commit | Review trigger |\n"
+        "| --- | --- | --- | --- |\n"
+        f"| 📝 **Code Review** | {status} | `{head[:7]}` | Manual request |"
+    )
+
+
+def clean_codex_result(head):
+    return official_codex_comment(
+        "Codex Review: Didn't find any major issues. Ready.\n\n"
+        f"**Reviewed commit:** `{head[:10]}`"
+    )
+
+
+def empty_threads(nodes=None):
+    return {
+        "data": {"repository": {"pullRequest": {"reviewThreads": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": nodes or [],
+        }}}}
+    }
+
+
+def test_codex_review_gate_requires_authenticated_clean_exact_head_evidence():
+    head = "b" * 40
+    pr = readiness_pr("matt", "adapted", head)
+    pending = lifecycle.codex_review_gate(
+        pr, [codex_summary(head, "Running")], [], [], empty_threads(), repository="owner/repo"
+    )
+    assert pending["state"] == "pending"
+
+    clean = lifecycle.codex_review_gate(
+        pr,
+        [[codex_summary(head), clean_codex_result(head)]],
+        [],
+        [],
+        empty_threads(),
+        repository="owner/repo",
+    )
+    assert clean["state"] == "success"
+    assert clean["reviewed_head"] == head
+
+    spoof = clean_codex_result(head)
+    spoof["performed_via_github_app"]["id"] = 999
+    rejected = lifecycle.codex_review_gate(
+        pr, [codex_summary(head), spoof], [], [], empty_threads(), repository="owner/repo"
+    )
+    assert rejected["state"] == "pending"
+
+    advanced = readiness_pr("matt", "adapted", "c" * 40)
+    stale = lifecycle.codex_review_gate(
+        advanced,
+        [codex_summary(head), clean_codex_result(head)],
+        [],
+        [],
+        empty_threads(),
+        repository="owner/repo",
+    )
+    assert stale["state"] == "pending"
+
+
+def test_codex_findings_need_resolved_thread_and_grounded_human_disposition():
+    head = "b" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    review = {
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "state": "COMMENTED",
+        "body": "Here are some automated review suggestions",
+    }
+    finding = {
+        "id": 42,
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "body": "[P1] Unsafe candidate workflow",
+    }
+    unresolved_thread = {
+        "isResolved": False,
+        "comments": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": [{"databaseId": 42, "body": finding["body"], "author": finding["user"]}],
+        },
+    }
+    blocked = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([unresolved_thread]), repository="owner/repo"
+    )
+    assert blocked["state"] == "failure"
+
+    resolved_thread = json.loads(json.dumps(unresolved_thread))
+    resolved_thread["isResolved"] = True
+    resolved_thread["comments"]["nodes"].append({
+        "databaseId": 43,
+        "body": "Codex disposition: Accepted false positive because the workflow always runs from trusted main.",
+        "author": {"login": "TheAngryPit", "id": 1},
+        "authorAssociation": "OWNER",
+    })
+    accepted = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([resolved_thread]), repository="owner/repo"
+    )
+    assert accepted["state"] == "success"
+
+
+def test_codex_gate_is_non_applicable_outside_two_canonical_branches():
+    pr = readiness_pr("matt", "adapted", "b" * 40)
+    pr["head"]["ref"] = "codex/unrelated"
+    result = lifecycle.codex_review_gate(pr, [], [], [], empty_threads(), repository="owner/repo")
+    assert result == {
+        "applicable": False,
+        "state": "success",
+        "description": "Codex review gate is not applicable to this PR",
+        "reviewed_head": None,
+        "carry_forward": False,
+    }
+
+
+def finalization_fixture():
+    parent = "b" * 40
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+    ]
+    pr = readiness_pr("matt", "adapted", parent)
+    initial = lifecycle.finalization_admission(
+        pr,
+        files,
+        readiness_commits(),
+        {"sha": parent, "author": {"login": "TheAngryPit"}, "committer": {"login": "TheAngryPit"}},
+        None,
+        family="matt",
+        batch="adapted",
+        expected_adaptation_head=parent,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+    attestation = lifecycle.readiness_attestation(initial, run_id="1", run_attempt="1")
+    final_head = "c" * 40
+    bot_commit = {
+        "sha": final_head,
+        "parents": [{"sha": parent}],
+        "files": [{"filename": attestation["attestation_file"], "status": "added"}],
+        "author": {"login": "github-actions[bot]"},
+        "committer": {"login": "github-actions[bot]"},
+    }
+    resumed_pr = readiness_pr("matt", "adapted", final_head)
+    return parent, files, initial, attestation, bot_commit, resumed_pr
+
+
+def test_finalization_resume_accepts_only_verified_single_bot_attestation():
+    parent, files, _, attestation, bot_commit, pr = finalization_fixture()
+    resumed = lifecycle.finalization_admission(
+        pr,
+        files + [{"filename": attestation["attestation_file"]}],
+        readiness_commits() + [bot_commit],
+        bot_commit,
+        attestation,
+        family="matt",
+        batch="adapted",
+        expected_adaptation_head=parent,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+    assert resumed["mode"] == "resume"
+    assert resumed["current_head"] == bot_commit["sha"]
+
+    spoofed = json.loads(json.dumps(bot_commit))
+    spoofed["committer"]["login"] = "TheAngryPit"
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            spoofed, attestation, family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "verified readiness-only child" in str(error) or "readiness" in str(error)
+    else:
+        raise AssertionError("spoofed bot metadata was accepted for resume")
+
+
+def test_finalization_rejects_stale_readiness_and_advanced_head():
+    parent, files, _, attestation, bot_commit, pr = finalization_fixture()
+    stale = dict(attestation)
+    stale["source_head"] = "d" * 40
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            bot_commit, stale, family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "does not bind" in str(error)
+    else:
+        raise AssertionError("stale readiness content was accepted")
+
+    advanced = json.loads(json.dumps(bot_commit))
+    advanced["sha"] = "e" * 40
+    advanced["parents"] = [{"sha": bot_commit["sha"]}]
+    pr["head"]["sha"] = advanced["sha"]
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            advanced, attestation, family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "verified readiness-only child" in str(error) or "does not bind" in str(error)
+    else:
+        raise AssertionError("head advanced beyond the readiness commit was accepted")
+
+
+def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credentials():
+    gate = (ROOT / ".github/workflows/codex-review-gate.yml").read_text()
+    finalizer = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
+    ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
+    detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
+    assert "pull_request_target:" in gate
+    assert 'context="Codex review gate"' in gate
+    assert "chatgpt-codex-connector" not in gate  # identity policy stays in trusted Python
+    assert "secrets." not in gate + finalizer + ci
+    assert 'ref=main' in finalizer
+    assert 'inputs[target_sha]=$final_head' in finalizer
+    assert '-f ref="$BRANCH"' not in finalizer
+    assert "Skill stack CI (trusted main)" in ci
+    assert "persist-credentials: false" in ci
+    assert "inputs.target_sha || github.sha" in ci
+    assert finalizer.count("persist-credentials: false") == 2
+    assert "if: needs.validate.outputs.mode == 'initial'" in finalizer
+    assert finalizer.count("assess-finalization") == 2
+    assert "previous_ci_url" in finalizer
+    assert "previous_gate_url" in finalizer
+    assert "--draft" in detector_workflow
+    assert "codex-review-gate.yml/dispatches" in detector_workflow

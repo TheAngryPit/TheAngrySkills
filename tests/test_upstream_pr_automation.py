@@ -893,6 +893,9 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert 'git config user.name "github-actions[bot]"' in workflow
     assert "immutable github-actions bot identity" in workflow
     assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
+    assert 'run.get("event") == "workflow_dispatch"' in workflow
+    assert "candidate-review-gate-run.json" in workflow
+    assert "Codex gate lacks a trusted workflow-dispatch run URL" in workflow
     assert '-f ref=main' in workflow
     assert 'inputs[target_sha]=$final_head' in workflow
     assert 'gh pr merge "$PR_NUMBER"' in workflow
@@ -1245,6 +1248,8 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
 
 def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credentials():
     gate = (ROOT / ".github/workflows/codex-review-gate.yml").read_text()
+    assert "group: codex-review-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number || github.run_id }}" in gate
+    assert "cancel-in-progress: true" in gate
     finalizer = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()

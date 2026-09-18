@@ -22,6 +22,10 @@ on:
         required: false
         type: string
 
+concurrency:
+  group: codex-review-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   observe:
     name: Evaluate authenticated exact-head Codex review

@@ -474,6 +474,34 @@ jobs:
           )"
             if [ -n "$result" ]; then
               IFS=$'\t' read -r gate_state gate_url <<< "$result"
+              gate_run_id="${gate_url##*/}"
+              if ! [[ "$gate_run_id" =~ ^[1-9][0-9]*$ ]]; then
+                sleep 10
+                continue
+              fi
+              if ! gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${gate_run_id}" \
+                > "$RUNNER_TEMP/candidate-review-gate-run.json"; then
+                sleep 10
+                continue
+              fi
+              trusted_dispatch="$(python - "$RUNNER_TEMP/candidate-review-gate-run.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          trusted = (
+              run.get("event") == "workflow_dispatch"
+              and run.get("head_branch") == "main"
+              and (run.get("path") or "").startswith(".github/workflows/codex-review-gate.yml")
+          )
+          print("true" if trusted else "false")
+          PY
+              )"
+              if [ "$trusted_dispatch" != true ]; then
+                sleep 10
+                continue
+              fi
               [ "$gate_state" != failure ] && [ "$gate_state" != error ] || {
                 echo "Codex review gate rejected the final readiness-only head: $gate_url" >&2
                 exit 1
@@ -488,8 +516,7 @@ jobs:
             echo "timed out waiting for the Codex review gate on $final_head" >&2
             exit 1
           }
-          gate_run_id="${gate_url##*/}"
-          [[ "$gate_run_id" =~ ^[1-9][0-9]*$ ]] || { echo "Codex gate lacks a workflow run URL" >&2; exit 1; }
+          [[ "${gate_run_id:-}" =~ ^[1-9][0-9]*$ ]] || { echo "Codex gate lacks a trusted workflow-dispatch run URL" >&2; exit 1; }
           for _ in $(seq 1 12); do
             gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${gate_run_id}" > "$RUNNER_TEMP/final-review-gate-run.json"
             run_status="$(python -c 'import json,sys; print(json.load(open(sys.argv[1])).get("status") or "")' "$RUNNER_TEMP/final-review-gate-run.json")"

@@ -964,6 +964,10 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "auto-merge remains disabled" in workflow
     assert "required_approving_review_count" in workflow
     assert "require_last_push_approval" in workflow
+    assert "required_conversation_resolution" in workflow
+    assert 'conversations.get("enabled") is not True' in workflow
+    assert 'protection.get("required_conversation_resolution")' in workflow
+    assert "main branch protection does not require resolved review conversations" in workflow
     assert '--match-head-commit "$final_head"' in workflow
     assert "Clear any pre-existing auto-merge request before branch writes" in workflow
     assert "--disable-auto" in workflow
@@ -1108,6 +1112,50 @@ def test_codex_findings_need_resolved_thread_and_grounded_human_disposition():
         pr, [codex_summary(head)], [review], [finding], empty_threads([resolved_thread]), repository="owner/repo"
     )
     assert accepted["state"] == "success"
+
+
+def test_codex_gate_reopened_thread_invalidates_stale_success():
+    head = "c" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    review = {
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "state": "COMMENTED",
+        "body": "Here are some automated review suggestions",
+    }
+    finding = {
+        "id": 52,
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "body": "[P1] Reopen regression",
+    }
+    thread = {
+        "isResolved": True,
+        "comments": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": [
+                {"databaseId": 52, "body": finding["body"], "author": finding["user"]},
+                {
+                    "databaseId": 53,
+                    "body": "Codex disposition: Accepted false positive because the trusted workflow is read-only.",
+                    "author": {"login": "TheAngryPit", "id": 1},
+                    "authorAssociation": "OWNER",
+                },
+            ],
+        },
+    }
+    resolved = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([thread]), repository="owner/repo"
+    )
+    assert resolved["state"] == "success"
+
+    reopened = json.loads(json.dumps(thread))
+    reopened["isResolved"] = False
+    stale_success = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([reopened]), repository="owner/repo"
+    )
+    assert stale_success["state"] == "failure"
+    assert "unresolved" in stale_success["description"]
 
 
 def test_codex_gate_reconciles_lower_priority_findings_too():
@@ -1316,8 +1364,8 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
     assert "pull_request_target:" in gate
     assert "types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]" in gate
-    assert "pull_request_review_thread:" in gate
-    assert "types: [resolved, unresolved]" in gate
+    assert "pull_request_review_thread:" not in gate
+    assert "workflow_dispatch:" in gate
     assert "types: [created, edited, deleted]" in gate
     assert "continue-on-error: true" in gate
     assert "Review evidence collection or assessment failed closed" in gate

@@ -651,6 +651,12 @@ jobs:
                   "main branch protection does not require the trusted Codex gate; "
                   "auto-merge remains disabled"
               )
+          conversations = protection.get("required_conversation_resolution") or {}
+          if conversations.get("enabled") is not True:
+              raise SystemExit(
+                  "main branch protection does not require resolved review conversations; "
+                  "auto-merge remains disabled"
+              )
           reviews = protection.get("required_pull_request_reviews") or {}
           if (
               int(reviews.get("required_approving_review_count") or 0) < 1

@@ -649,6 +649,27 @@ jobs:
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json autoMergeRequest,headRefOid,mergedAt,reviewDecision,state \
             > "$RUNNER_TEMP/auto-merge.json"
+          post_enable_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/auto-merge.json")"
+          if [ "$post_enable_head" != "$final_head" ]; then
+            post_enable_auto_merge="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/auto-merge.json")"
+            if [ "$post_enable_auto_merge" = true ]; then
+              gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+            fi
+            gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+              --json autoMergeRequest,headRefOid,state \
+              > "$RUNNER_TEMP/advanced-head-auto-merge.json"
+            python - "$RUNNER_TEMP/advanced-head-auto-merge.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("autoMergeRequest"):
+              raise SystemExit("auto-merge remained enabled after the admitted head changed")
+          PY
+            echo "pull request head changed while auto-merge was enabled; auto-merge was disabled" >&2
+            exit 1
+          fi
           python - "$RUNNER_TEMP/auto-merge.json" "$final_head" <<'PY'
           import json
           import pathlib
@@ -656,7 +677,7 @@ jobs:
 
           state = json.loads(pathlib.Path(sys.argv[1]).read_text())
           if state.get("headRefOid") != sys.argv[2]:
-              raise SystemExit("pull request head changed while auto-merge was enabled")
+              raise SystemExit("pull request head changed after auto-merge cleanup")
           queued = bool(state.get("autoMergeRequest"))
           merged = state.get("state") == "MERGED" and bool(state.get("mergedAt"))
           if not queued and not merged:

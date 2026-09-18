@@ -909,6 +909,10 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "--disable-auto" in workflow
     assert "auto-merge was not cleared on the admitted head" in workflow
     assert "auto-merge was re-enabled before final proof completed" in workflow
+    assert 'if [ "$post_enable_head" != "$final_head" ]; then' in workflow
+    assert "advanced-head-auto-merge.json" in workflow
+    assert "auto-merge remained enabled after the admitted head changed" in workflow
+    assert "pull request head changed while auto-merge was enabled; auto-merge was disabled" in workflow
     assert 'state.get("state") == "MERGED"' in workflow
     assert "auto-merge was neither queued nor completed" in workflow
     assert "secrets." not in workflow

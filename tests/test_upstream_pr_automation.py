@@ -722,6 +722,24 @@ def test_readiness_binds_body_source_marker_to_committed_report():
         raise AssertionError("editable body source marker was accepted without committed evidence")
 
 
+def test_readiness_rejects_candidate_github_control_plane_changes():
+    try:
+        assess_ready(
+            "cursor",
+            "pstack",
+            [
+                ".github/workflows/spoof-review.yml",
+                "reports/upstream-updates/cursor-pstack.md",
+                "sources/cursor-plugins/manifest.json",
+                "skills/mirrors-cursor/cursor-how/SKILL.md",
+            ],
+        )
+    except ValueError as error:
+        assert "GitHub control plane" in str(error)
+    else:
+        raise AssertionError("candidate-owned GitHub workflow change was accepted")
+
+
 def test_bot_cannot_dispatch_adaptation_finalization():
     head = "b" * 40
     try:
@@ -886,6 +904,8 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "--disable-auto" in workflow
     assert "auto-merge was not cleared on the admitted head" in workflow
     assert "auto-merge was re-enabled before final proof completed" in workflow
+    assert 'state.get("state") == "MERGED"' in workflow
+    assert "auto-merge was neither queued nor completed" in workflow
     assert "secrets." not in workflow
     push = workflow.index('git push origin "HEAD:$BRANCH"')
     clear_auto_merge = workflow.index("Clear any pre-existing auto-merge request before branch writes")

@@ -471,6 +471,8 @@ def adaptation_readiness(
     if not all(isinstance(item, dict) and isinstance(item.get("filename"), str) for item in files):
         raise ValueError("pull request files response is invalid")
     changed_files = sorted({item["filename"] for item in files})
+    if any(path.startswith(".github/") for path in changed_files):
+        raise ValueError("candidate_not_ready: canonical adaptation candidates cannot change GitHub control plane files")
     report_file = f"reports/upstream-updates/{family}-{batch}.md"
     attestation_file = (
         f"reports/upstream-updates/readiness/{family}-{batch}-{report['latest']}.json"

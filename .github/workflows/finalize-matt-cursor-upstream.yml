@@ -581,7 +581,7 @@ jobs:
           gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
             --match-head-commit "$final_head"
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
-            --json autoMergeRequest,headRefOid,reviewDecision \
+            --json autoMergeRequest,headRefOid,mergedAt,reviewDecision,state \
             > "$RUNNER_TEMP/auto-merge.json"
           python - "$RUNNER_TEMP/auto-merge.json" "$final_head" <<'PY'
           import json
@@ -589,8 +589,12 @@ jobs:
           import sys
 
           state = json.loads(pathlib.Path(sys.argv[1]).read_text())
-          if state.get("headRefOid") != sys.argv[2] or not state.get("autoMergeRequest"):
-              raise SystemExit("auto-merge was not enabled on the bot-owned final head")
+          if state.get("headRefOid") != sys.argv[2]:
+              raise SystemExit("pull request head changed while auto-merge was enabled")
+          queued = bool(state.get("autoMergeRequest"))
+          merged = state.get("state") == "MERGED" and bool(state.get("mergedAt"))
+          if not queued and not merged:
+              raise SystemExit("auto-merge was neither queued nor completed on the bot-owned final head")
           PY
           {
             echo "## Adapted upstream finalizer"

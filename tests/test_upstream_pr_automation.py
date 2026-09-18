@@ -678,6 +678,10 @@ def readiness_commits(human_last=True):
     return [bot, human] if human_last else [human, bot]
 
 
+def readiness_tree(*paths):
+    return {"truncated": False, "tree": [{"path": path, "type": "blob"} for path in paths]}
+
+
 def assess_ready(family, batch, files, commits=None, report_text=None):
     head = "b" * 40
     return lifecycle.adaptation_readiness(
@@ -887,7 +891,7 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "assess-finalization" in workflow
     assert "render-readiness-attestation" in workflow
     assert 'git config user.name "github-actions[bot]"' in workflow
-    assert "final commit identity is not github-actions[bot]" in workflow
+    assert "immutable github-actions bot identity" in workflow
     assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
     assert '-f ref=main' in workflow
     assert 'inputs[target_sha]=$final_head' in workflow
@@ -895,7 +899,8 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "--auto --squash" in workflow
     assert "gh pr review" not in workflow
     assert 'branches/main/protection' in workflow
-    assert '"Codex review gate" not in contexts' in workflow
+    assert '("Codex review gate", 15368)' in workflow
+    assert '("Skill stack CI (trusted main)", 15368)' in workflow
     assert "auto-merge remains disabled" in workflow
     assert "required_approving_review_count" in workflow
     assert "require_last_push_approval" in workflow
@@ -916,6 +921,7 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert protection < merge
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     assert "workflow_dispatch:" in ci
+    assert '${TARGET_SHA}: trusted main workflow' in ci
 
 
 def official_codex_comment(body):
@@ -1095,6 +1101,7 @@ def finalization_fixture():
         {"sha": parent, "author": {"login": "TheAngryPit"}, "committer": {"login": "TheAngryPit"}},
         None,
         report_text=readiness_report_text("matt", "adapted"),
+        tree_payload=readiness_tree(),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1108,11 +1115,36 @@ def finalization_fixture():
         "sha": final_head,
         "parents": [{"sha": parent}],
         "files": [{"filename": attestation["attestation_file"], "status": "added"}],
-        "author": {"login": "github-actions[bot]"},
-        "committer": {"login": "github-actions[bot]"},
+        "author": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
+        "committer": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
     }
     resumed_pr = readiness_pr("matt", "adapted", final_head)
     return parent, files, initial, attestation, bot_commit, resumed_pr
+
+
+def test_initial_finalization_rejects_inherited_readiness_tree_material():
+    parent = "b" * 40
+    path = "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json"
+    try:
+        lifecycle.finalization_admission(
+            readiness_pr("matt", "adapted", parent),
+            [
+                {"filename": "reports/upstream-updates/matt-adapted.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+            ],
+            readiness_commits(),
+            {"sha": parent},
+            None,
+            report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(path),
+            family="matt", batch="adapted", expected_adaptation_head=parent,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "empty readiness namespace" in str(error)
+    else:
+        raise AssertionError("inherited readiness material was accepted")
 
 
 def test_finalization_resume_accepts_only_verified_single_bot_attestation():
@@ -1124,6 +1156,7 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
         bot_commit,
         attestation,
         report_text=readiness_report_text("matt", "adapted"),
+        tree_payload=readiness_tree(attestation["attestation_file"]),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1140,6 +1173,7 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             spoofed, attestation, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1158,6 +1192,7 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             bot_commit, stale, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1175,6 +1210,7 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
         lifecycle.finalization_admission(
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             advanced, attestation, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1194,6 +1230,9 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     assert "types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]" in gate
     assert "pull_request_review_thread:" in gate
     assert "types: [resolved, unresolved]" in gate
+    assert "types: [created, edited, deleted]" in gate
+    assert "continue-on-error: true" in gate
+    assert "Review evidence collection or assessment failed closed" in gate
     assert 'context="Codex review gate"' in gate
     assert "chatgpt-codex-connector" not in gate  # identity policy stays in trusted Python
     assert "secrets." not in gate + finalizer + ci
@@ -1209,5 +1248,6 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     assert finalizer.count("assess-finalization") == 2
     assert "previous_ci_url" in finalizer
     assert "previous_gate_url" in finalizer
+    assert "readiness attestation does not originate from a trusted finalizer run" in finalizer
     assert "--draft" in detector_workflow
     assert "codex-review-gate.yml/dispatches" in detector_workflow

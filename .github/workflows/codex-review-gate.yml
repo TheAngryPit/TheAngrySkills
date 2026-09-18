@@ -4,7 +4,7 @@ on:
   pull_request_target:
     types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]
   issue_comment:
-    types: [created, edited]
+    types: [created, edited, deleted]
   pull_request_review:
     types: [submitted, edited, dismissed]
   pull_request_review_comment:
@@ -70,6 +70,8 @@ jobs:
           echo "number=$number" >> "$GITHUB_OUTPUT"
 
       - name: Read authenticated review evidence
+        id: assess
+        continue-on-error: true
         if: steps.target.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -79,11 +81,16 @@ jobs:
           set -euo pipefail
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
           head_sha="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          echo "head_sha=$head_sha" >> "$GITHUB_ENV"
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${head_sha}" \
+            -f state=pending \
+            -f context="Codex review gate" \
+            -f description="Reevaluating authenticated Codex evidence for ${head_sha}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           if [ -n "$EXPECTED_HEAD" ] && [ "$head_sha" != "$EXPECTED_HEAD" ]; then
             echo "stale gate dispatch: expected $EXPECTED_HEAD, observed $head_sha" >&2
             exit 1
           fi
-          echo "head_sha=$head_sha" >> "$GITHUB_ENV"
           gh api --paginate --slurp \
             "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
             > "$RUNNER_TEMP/issue-comments.json"
@@ -136,13 +143,19 @@ jobs:
             > "$RUNNER_TEMP/gate.json"
 
       - name: Publish dedicated commit status
-        if: steps.target.outputs.skip != 'true'
+        if: always() && steps.target.outputs.skip != 'true' && env.head_sha != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          state="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["state"])' "$RUNNER_TEMP/gate.json")"
-          description="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["description"][:140])' "$RUNNER_TEMP/gate.json")"
+          if [ -f "$RUNNER_TEMP/gate.json" ]; then
+            state="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["state"])' "$RUNNER_TEMP/gate.json")"
+            description="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["description"][:90])' "$RUNNER_TEMP/gate.json")"
+          else
+            state=error
+            description="Review evidence collection or assessment failed closed"
+          fi
+          description="${head_sha}: ${description}"
           case "$state" in pending|success|failure|error) ;; *) echo "invalid gate state" >&2; exit 1 ;; esac
           gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${head_sha}" \
             -f state="$state" \

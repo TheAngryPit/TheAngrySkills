@@ -87,6 +87,7 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
           report_file="reports/upstream-updates/${FAMILY}-${batch}.md"
           gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
             --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
@@ -121,11 +122,28 @@ jobs:
             --files-json "$RUNNER_TEMP/files.json" \
             --commits-json "$RUNNER_TEMP/commits.json" \
             --report-file "$RUNNER_TEMP/committed-report.md" \
+            --tree-json "$RUNNER_TEMP/candidate-tree.json" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
           checkout_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["checkout_head"])' "$RUNNER_TEMP/admission.json")"
           mode="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$RUNNER_TEMP/admission.json")"
+          if [ "$mode" = resume ]; then
+            run_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["finalizer"]["workflow_run_id"])' "$RUNNER_TEMP/existing-readiness.json")"
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "$RUNNER_TEMP/readiness-origin-run.json"
+            python - "$RUNNER_TEMP/readiness-origin-run.json" "$RUNNER_TEMP/existing-readiness.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          attestation = json.loads(pathlib.Path(sys.argv[2]).read_text())
+          finalizer = attestation["finalizer"]
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("status") != "completed"
+              or str(run.get("run_attempt")) != str(finalizer.get("workflow_run_attempt"))
+              or (run.get("actor") or {}).get("login") != attestation.get("dispatcher")
+              or not (run.get("path") or "").startswith(".github/workflows/finalize-matt-cursor-upstream.yml")):
+              raise SystemExit("readiness attestation does not originate from a trusted finalizer run")
+          PY
+          fi
           gate_head="$checkout_head"
           if [ "$mode" = resume ]; then
             gate_head="$EXPECTED_HEAD"
@@ -223,6 +241,7 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
           test "$current_head" = "$EXPECTED_CURRENT_HEAD"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
           report_file="reports/upstream-updates/${FAMILY}-${BATCH}.md"
           gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
             --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
@@ -257,10 +276,27 @@ jobs:
             --files-json "$RUNNER_TEMP/files.json" \
             --commits-json "$RUNNER_TEMP/commits.json" \
             --report-file "$RUNNER_TEMP/committed-report.md" \
+            --tree-json "$RUNNER_TEMP/candidate-tree.json" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
           test "$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$RUNNER_TEMP/admission.json")" = "$EXPECTED_MODE"
+          if [ "$EXPECTED_MODE" = resume ]; then
+            run_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["finalizer"]["workflow_run_id"])' "$RUNNER_TEMP/existing-readiness.json")"
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "$RUNNER_TEMP/readiness-origin-run.json"
+            python - "$RUNNER_TEMP/readiness-origin-run.json" "$RUNNER_TEMP/existing-readiness.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          attestation = json.loads(pathlib.Path(sys.argv[2]).read_text())
+          finalizer = attestation["finalizer"]
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("status") != "completed"
+              or str(run.get("run_attempt")) != str(finalizer.get("workflow_run_attempt"))
+              or (run.get("actor") or {}).get("login") != attestation.get("dispatcher")
+              or not (run.get("path") or "").startswith(".github/workflows/finalize-matt-cursor-upstream.yml")):
+              raise SystemExit("readiness attestation does not originate from a trusted finalizer run")
+          PY
+          fi
           gate_head="$current_head"
           if [ "$EXPECTED_MODE" = resume ]; then
             gate_head="$EXPECTED_ADAPTATION_HEAD"
@@ -365,10 +401,13 @@ jobs:
           import sys
 
           commit = json.loads(pathlib.Path(sys.argv[1]).read_text())
-          author = (commit.get("author") or {}).get("login")
-          committer = (commit.get("committer") or {}).get("login")
-          if author != "github-actions[bot]" or committer != "github-actions[bot]":
-              raise SystemExit(f"final commit identity is not github-actions[bot]: {author=}, {committer=}")
+          author = commit.get("author") or {}
+          committer = commit.get("committer") or {}
+          if not (
+              author.get("login") == committer.get("login") == "github-actions[bot]"
+              and author.get("id") == committer.get("id") == 41898282
+          ):
+              raise SystemExit("final commit identity is not the immutable github-actions bot identity")
           PY
 
       - name: Carry the reviewed parent through the readiness-only bot commit
@@ -400,19 +439,16 @@ jobs:
           print((gate or {}).get("target_url") or "")
           PY
           )"
-          require_new=false
-          if [ "$gate_state" != success ]; then
-            require_new=true
-            gh api --method POST \
-              "repos/${GITHUB_REPOSITORY}/actions/workflows/codex-review-gate.yml/dispatches" \
-              -f ref=main \
-              -f "inputs[pr_number]=$PR_NUMBER" \
-              -f "inputs[expected_head_sha]=$final_head"
-          fi
+          require_new=true
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/codex-review-gate.yml/dispatches" \
+            -f ref=main \
+            -f "inputs[pr_number]=$PR_NUMBER" \
+            -f "inputs[expected_head_sha]=$final_head"
           for _ in $(seq 1 40); do
             gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
               > "$RUNNER_TEMP/final-review-gate.json"
-            result="$(python - "$RUNNER_TEMP/final-review-gate.json" "$require_new" "$previous_gate_url" <<'PY'
+            result="$(python - "$RUNNER_TEMP/final-review-gate.json" "$require_new" "$previous_gate_url" "$final_head" <<'PY'
           import json
           import pathlib
           import sys
@@ -420,7 +456,13 @@ jobs:
           statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
           gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
           is_new = sys.argv[2] != "true" or (gate or {}).get("target_url") != sys.argv[3]
-          if gate and is_new:
+          creator = (gate or {}).get("creator") or {}
+          trusted = (
+              creator.get("login") == "github-actions[bot]"
+              and creator.get("id") == 41898282
+              and sys.argv[4] in ((gate or {}).get("description") or "")
+          )
+          if gate and is_new and trusted:
               print("\t".join((gate.get("state") or "", gate.get("target_url") or "")))
           PY
           )"
@@ -440,6 +482,22 @@ jobs:
             echo "timed out waiting for the Codex review gate on $final_head" >&2
             exit 1
           }
+          gate_run_id="${gate_url##*/}"
+          [[ "$gate_run_id" =~ ^[1-9][0-9]*$ ]] || { echo "Codex gate lacks a workflow run URL" >&2; exit 1; }
+          for _ in $(seq 1 12); do
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${gate_run_id}" > "$RUNNER_TEMP/final-review-gate-run.json"
+            run_status="$(python -c 'import json,sys; print(json.load(open(sys.argv[1])).get("status") or "")' "$RUNNER_TEMP/final-review-gate-run.json")"
+            [ "$run_status" != completed ] || break
+            sleep 5
+          done
+          python - "$RUNNER_TEMP/final-review-gate-run.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("conclusion") != "success"
+              or not (run.get("path") or "").startswith(".github/workflows/codex-review-gate.yml")):
+              raise SystemExit("Codex gate status did not come from the trusted main workflow run")
+          PY
           echo "final_review_gate_url=$gate_url" >> "$GITHUB_ENV"
 
       - name: Dispatch CI explicitly on the bot-owned final head
@@ -469,14 +527,11 @@ jobs:
           print((item or {}).get("target_url") or "")
           PY
           )"
-          require_new=false
-          if [ "$ci_state" != success ]; then
-            require_new=true
-            gh api --method POST \
-              "repos/${GITHUB_REPOSITORY}/actions/workflows/skill-stack-ci.yml/dispatches" \
-              -f ref=main \
-              -f "inputs[target_sha]=$final_head"
-          fi
+          require_new=true
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/skill-stack-ci.yml/dispatches" \
+            -f ref=main \
+            -f "inputs[target_sha]=$final_head"
           ci_url=""
           for _ in $(seq 1 40); do
             gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
@@ -489,7 +544,9 @@ jobs:
           statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
           item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
           is_new = sys.argv[3] != "true" or (item or {}).get("target_url") != sys.argv[4]
-          if item and is_new and sys.argv[2][:12] in (item.get("description") or ""):
+          creator = (item or {}).get("creator") or {}
+          trusted = creator.get("login") == "github-actions[bot]" and creator.get("id") == 41898282
+          if item and is_new and trusted and sys.argv[2] in (item.get("description") or ""):
               print("\t".join((item.get("state") or "", item.get("target_url") or "")))
           PY
           )"
@@ -548,15 +605,18 @@ jobs:
 
           protection = json.loads(pathlib.Path(sys.argv[1]).read_text())
           required = protection.get("required_status_checks") or {}
-          contexts = set(required.get("contexts") or [])
-          contexts.update(
-              item.get("context")
+          checks = {
+              (item.get("context"), item.get("app_id"))
               for item in (required.get("checks") or [])
-              if isinstance(item, dict) and isinstance(item.get("context"), str)
-          )
-          if "Codex review gate" not in contexts:
+              if isinstance(item, dict)
+          }
+          expected_checks = {
+              ("Codex review gate", 15368),
+              ("Skill stack CI (trusted main)", 15368),
+          }
+          if not expected_checks.issubset(checks):
               raise SystemExit(
-                  "main branch protection does not yet require the Codex review gate; "
+                  "main branch protection does not require both trusted GitHub Actions checks; "
                   "auto-merge remains disabled"
               )
           reviews = protection.get("required_pull_request_reviews") or {}

@@ -22,6 +22,7 @@ CODEX_HANDOFF_PREFIX = "codex-handoff"
 CODEX_EXECUTION_PREFIX = "codex-execution"
 EXPECTED_BATCHES = (("matt", "adapted"), ("cursor", "pstack"))
 BOT_LOGIN = "github-actions[bot]"
+BOT_USER_ID = 41898282
 MAINTAINER_PERMISSIONS = {"admin", "maintain"}
 CODEX_CONNECTOR_LOGIN = "chatgpt-codex-connector[bot]"
 CODEX_CONNECTOR_USER_ID = 199175422
@@ -220,7 +221,12 @@ def _reviewed_head_for_bot_attestation(
     files = current_commit.get("files")
     author = current_commit.get("author") if isinstance(current_commit.get("author"), dict) else {}
     committer = current_commit.get("committer") if isinstance(current_commit.get("committer"), dict) else {}
-    if author.get("login") != BOT_LOGIN or committer.get("login") != BOT_LOGIN:
+    if (
+        author.get("login") != BOT_LOGIN
+        or committer.get("login") != BOT_LOGIN
+        or author.get("id") != BOT_USER_ID
+        or committer.get("id") != BOT_USER_ID
+    ):
         return current_head, False
     if current_commit.get("sha") != current_head or not isinstance(parents, list) or len(parents) != 1:
         raise ValueError("bot readiness commit must have the current head and one parent")
@@ -565,6 +571,7 @@ def finalization_admission(
     existing_readiness: dict[str, Any] | None,
     *,
     report_text: str,
+    tree_payload: dict[str, Any],
     family: str,
     batch: str,
     expected_adaptation_head: str,
@@ -576,9 +583,23 @@ def finalization_admission(
 
     if not re.fullmatch(r"[0-9a-f]{40}", expected_adaptation_head):
         raise ValueError("expected adaptation head must be a full SHA")
+    if not isinstance(tree_payload, dict) or tree_payload.get("truncated") is True:
+        raise ValueError("candidate tree response is unavailable or truncated")
+    tree = tree_payload.get("tree")
+    if not isinstance(tree, list):
+        raise ValueError("candidate tree response has no entries")
+    readiness_tree = sorted(
+        item.get("path") for item in tree
+        if isinstance(item, dict)
+        and item.get("type") == "blob"
+        and isinstance(item.get("path"), str)
+        and item["path"].startswith("reports/upstream-updates/readiness/")
+    )
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     current_head = head.get("sha")
     if current_head == expected_adaptation_head:
+        if readiness_tree:
+            raise ValueError("fresh finalization requires an empty readiness namespace in the candidate tree")
         if existing_readiness is not None:
             raise ValueError("fresh finalization cannot supply existing readiness content")
         result = adaptation_readiness(
@@ -622,6 +643,8 @@ def finalization_admission(
     ]
     if len(readiness_files) != 1 or readiness_files[0]["filename"] != existing_readiness.get("attestation_file"):
         raise ValueError("resume requires exactly one verified readiness file in the PR")
+    if readiness_tree != [existing_readiness.get("attestation_file")]:
+        raise ValueError("resume requires exactly one verified readiness file in the candidate tree")
     filtered_files = [item for item in files if item not in readiness_files]
     parent_pr = json.loads(json.dumps(pr))
     parent_pr["head"]["sha"] = expected_adaptation_head
@@ -1368,6 +1391,7 @@ def main() -> int:
     finalization.add_argument("--current-commit-json", required=True)
     finalization.add_argument("--existing-readiness-json")
     finalization.add_argument("--report-file", required=True)
+    finalization.add_argument("--tree-json", required=True)
     attestation = subparsers.add_parser(
         "render-readiness-attestation",
         help="render the material finalizer record after validations pass",
@@ -1451,6 +1475,7 @@ def main() -> int:
                 json.loads(Path(args.files_json).read_text()),
                 json.loads(Path(args.commits_json).read_text()),
                 report_text=Path(args.report_file).read_text(),
+                tree_payload=json.loads(Path(args.tree_json).read_text()),
                 family=args.family,
                 batch=args.batch,
                 expected_head=args.expected_head,

@@ -848,6 +848,9 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert 'branches/main/protection' in workflow
     assert '"Codex review gate" not in contexts' in workflow
     assert "auto-merge remains disabled" in workflow
+    assert "required_approving_review_count" in workflow
+    assert "require_last_push_approval" in workflow
+    assert '--match-head-commit "$final_head"' in workflow
     assert "secrets." not in workflow
     push = workflow.index('git push origin "HEAD:$BRANCH"')
     dispatch = workflow.index("actions/workflows/skill-stack-ci.yml/dispatches")
@@ -1127,6 +1130,7 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
     assert "pull_request_target:" in gate
+    assert "types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]" in gate
     assert "pull_request_review_thread:" in gate
     assert "types: [resolved, unresolved]" in gate
     assert 'context="Codex review gate"' in gate

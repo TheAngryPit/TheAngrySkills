@@ -518,6 +518,15 @@ jobs:
                   "main branch protection does not yet require the Codex review gate; "
                   "auto-merge remains disabled"
               )
+          reviews = protection.get("required_pull_request_reviews") or {}
+          if (
+              int(reviews.get("required_approving_review_count") or 0) < 1
+              or reviews.get("require_last_push_approval") is not True
+          ):
+              raise SystemExit(
+                  "main branch protection does not require a human approval after the final push; "
+                  "auto-merge remains disabled"
+              )
           PY
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/pre-auto-merge.json"
@@ -525,7 +534,8 @@ jobs:
           test "$current_head" = "$final_head"
           auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-auto-merge.json")"
           if [ "$auto_merge_present" != true ]; then
-            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
+              --match-head-commit "$final_head"
           fi
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json autoMergeRequest,headRefOid,reviewDecision \

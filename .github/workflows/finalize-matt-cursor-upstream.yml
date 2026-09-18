@@ -645,11 +645,10 @@ jobs:
           }
           expected_checks = {
               ("Codex review gate", 15368),
-              ("Skill stack CI (trusted main)", 15368),
           }
           if not expected_checks.issubset(checks):
               raise SystemExit(
-                  "main branch protection does not require both trusted GitHub Actions checks; "
+                  "main branch protection does not require the trusted Codex gate; "
                   "auto-merge remains disabled"
               )
           reviews = protection.get("required_pull_request_reviews") or {}

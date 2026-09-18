@@ -113,6 +113,18 @@ def _flatten_pages(payload: Any, label: str) -> list[Any]:
     return payload
 
 
+def _complete_pr_files(pr: dict[str, Any], payload: Any) -> list[dict[str, Any]]:
+    files = _flatten_pages(payload, "pull request files")
+    if not all(isinstance(item, dict) and isinstance(item.get("filename"), str) for item in files):
+        raise ValueError("pull request files response is invalid")
+    declared_count = pr.get("changed_files")
+    if type(declared_count) is not int or declared_count < 0:
+        raise ValueError("pull request changed_files count is unavailable")
+    if len(files) >= 3000 or declared_count != len(files):
+        raise ValueError("pull request files response is incomplete or capped")
+    return files
+
+
 def normalize_prs(payload: Any) -> list[dict[str, Any]]:
     """Flatten gh api --paginate --slurp output and normalize refs."""
 
@@ -473,9 +485,7 @@ def adaptation_readiness(
     ):
         raise ValueError("PR body source marker does not match the committed detector report")
 
-    files = _flatten_pages(files_payload, "pull request files")
-    if not all(isinstance(item, dict) and isinstance(item.get("filename"), str) for item in files):
-        raise ValueError("pull request files response is invalid")
+    files = _complete_pr_files(pr, files_payload)
     changed_files = sorted({item["filename"] for item in files})
     if any(path.startswith(".github/") for path in changed_files):
         raise ValueError("candidate_not_ready: canonical adaptation candidates cannot change GitHub control plane files")
@@ -638,7 +648,7 @@ def finalization_admission(
     )
     if not carry_forward or reviewed_head != expected_adaptation_head:
         raise ValueError("current head is not the verified readiness-only child of the expected adaptation")
-    files = _flatten_pages(files_payload, "pull request files")
+    files = _complete_pr_files(pr, files_payload)
     readiness_files = [
         item for item in files
         if isinstance(item, dict)
@@ -653,6 +663,7 @@ def finalization_admission(
     filtered_files = [item for item in files if item not in readiness_files]
     parent_pr = json.loads(json.dumps(pr))
     parent_pr["head"]["sha"] = expected_adaptation_head
+    parent_pr["changed_files"] = len(filtered_files)
     rebuilt = adaptation_readiness(
         parent_pr,
         filtered_files,

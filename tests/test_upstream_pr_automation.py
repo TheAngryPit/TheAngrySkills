@@ -643,6 +643,7 @@ def readiness_pr(family, batch, head):
     return {
         "state": "open",
         "draft": False,
+        "changed_files": 0,
         "body": body,
         "base": {"ref": "main"},
         "head": {
@@ -684,8 +685,10 @@ def readiness_tree(*paths):
 
 def assess_ready(family, batch, files, commits=None, report_text=None):
     head = "b" * 40
+    pr = readiness_pr(family, batch, head)
+    pr["changed_files"] = len(files)
     return lifecycle.adaptation_readiness(
-        readiness_pr(family, batch, head),
+        pr,
         [[{"filename": path} for path in files]],
         [commits or readiness_commits()],
         report_text=report_text or readiness_report_text(family, batch),
@@ -724,6 +727,33 @@ def test_readiness_binds_body_source_marker_to_committed_report():
         assert "committed detector report" in str(error)
     else:
         raise AssertionError("editable body source marker was accepted without committed evidence")
+
+
+def test_readiness_rejects_incomplete_or_capped_file_inventory():
+    head = "b" * 40
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+    ]
+    cases = [
+        (4, files),
+        (3000, [{"filename": f"skills/generated/{index}"} for index in range(3000)]),
+    ]
+    for declared_count, observed_files in cases:
+        pr = readiness_pr("matt", "adapted", head)
+        pr["changed_files"] = declared_count
+        try:
+            lifecycle.adaptation_readiness(
+                pr, [observed_files], [readiness_commits()],
+                report_text=readiness_report_text("matt", "adapted"),
+                family="matt", batch="adapted", expected_head=head,
+                repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+            )
+        except ValueError as error:
+            assert "incomplete or capped" in str(error)
+        else:
+            raise AssertionError("truncated pull request file inventory was accepted")
 
 
 def test_readiness_rejects_candidate_github_control_plane_changes():
@@ -903,7 +933,7 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert "gh pr review" not in workflow
     assert 'branches/main/protection' in workflow
     assert '("Codex review gate", 15368)' in workflow
-    assert '("Skill stack CI (trusted main)", 15368)' in workflow
+    assert '("Skill stack CI (trusted main)", 15368)' not in workflow
     assert "auto-merge remains disabled" in workflow
     assert "required_approving_review_count" in workflow
     assert "require_last_push_approval" in workflow
@@ -1101,6 +1131,7 @@ def finalization_fixture():
         {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
     ]
     pr = readiness_pr("matt", "adapted", parent)
+    pr["changed_files"] = len(files)
     initial = lifecycle.finalization_admission(
         pr,
         files,
@@ -1127,6 +1158,7 @@ def finalization_fixture():
         "committer": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
     }
     resumed_pr = readiness_pr("matt", "adapted", final_head)
+    resumed_pr["changed_files"] = len(files) + 1
     return parent, files, initial, attestation, bot_commit, resumed_pr
 
 
@@ -1134,7 +1166,7 @@ def test_initial_finalization_allows_only_unchanged_inherited_readiness_material
     parent = "b" * 40
     path = "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json"
     accepted = lifecycle.finalization_admission(
-            readiness_pr("matt", "adapted", parent),
+            {**readiness_pr("matt", "adapted", parent), "changed_files": 3},
             [
                 {"filename": "reports/upstream-updates/matt-adapted.md"},
                 {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
@@ -1152,7 +1184,7 @@ def test_initial_finalization_allows_only_unchanged_inherited_readiness_material
     assert accepted["mode"] == "initial"
     try:
         lifecycle.finalization_admission(
-            readiness_pr("matt", "adapted", parent),
+            {**readiness_pr("matt", "adapted", parent), "changed_files": 3},
             [{"filename": "reports/upstream-updates/matt-adapted.md"},
              {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
              {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"}],

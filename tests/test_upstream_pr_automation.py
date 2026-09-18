@@ -979,6 +979,35 @@ def test_codex_findings_need_resolved_thread_and_grounded_human_disposition():
     assert accepted["state"] == "success"
 
 
+def test_codex_gate_reconciles_lower_priority_findings_too():
+    head = "b" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    review = {
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "state": "COMMENTED",
+        "body": "Here are some automated review suggestions",
+    }
+    finding = {
+        "id": 44,
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "body": "[P3] Minor but valid issue",
+    }
+    thread = {
+        "isResolved": False,
+        "comments": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": [{"databaseId": 44, "body": finding["body"], "author": finding["user"]}],
+        },
+    }
+    result = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([thread]), repository="owner/repo"
+    )
+    assert result["state"] == "failure"
+    assert "unresolved" in result["description"]
+
+
 def test_codex_gate_is_non_applicable_outside_two_canonical_branches():
     pr = readiness_pr("matt", "adapted", "b" * 40)
     pr["head"]["ref"] = "codex/unrelated"
@@ -1098,6 +1127,8 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
     assert "pull_request_target:" in gate
+    assert "pull_request_review_thread:" in gate
+    assert "types: [resolved, unresolved]" in gate
     assert 'context="Codex review gate"' in gate
     assert "chatgpt-codex-connector" not in gate  # identity policy stays in trusted Python
     assert "secrets." not in gate + finalizer + ci
@@ -1108,6 +1139,7 @@ def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credential
     assert "persist-credentials: false" in ci
     assert "inputs.target_sha || github.sha" in ci
     assert finalizer.count("persist-credentials: false") == 2
+    assert finalizer.count("statuses: read") == 2
     assert "if: needs.validate.outputs.mode == 'initial'" in finalizer
     assert finalizer.count("assess-finalization") == 2
     assert "previous_ci_url" in finalizer

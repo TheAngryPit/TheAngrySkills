@@ -341,7 +341,7 @@ def codex_review_gate(
         and comment.get("commit_id") == reviewed_head
         and isinstance(comment.get("id"), int)
         and isinstance(comment.get("body"), str)
-        and re.search(r"\bP[01]\b", comment["body"])
+        and re.search(r"\bP[0-9]\b", comment["body"])
     ]
     suggestion_reviews = [
         review for review in exact_reviews

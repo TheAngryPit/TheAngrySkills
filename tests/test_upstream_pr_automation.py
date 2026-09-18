@@ -845,12 +845,16 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert 'gh pr merge "$PR_NUMBER"' in workflow
     assert "--auto --squash" in workflow
     assert "gh pr review" not in workflow
-    assert "branches/main/protection" not in workflow
+    assert 'branches/main/protection' in workflow
+    assert '"Codex review gate" not in contexts' in workflow
+    assert "auto-merge remains disabled" in workflow
     assert "secrets." not in workflow
     push = workflow.index('git push origin "HEAD:$BRANCH"')
     dispatch = workflow.index("actions/workflows/skill-stack-ci.yml/dispatches")
     merge = workflow.index('gh pr merge "$PR_NUMBER"')
+    protection = workflow.index('branches/main/protection')
     assert push < dispatch < merge
+    assert protection < merge
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     assert "workflow_dispatch:" in ci
 

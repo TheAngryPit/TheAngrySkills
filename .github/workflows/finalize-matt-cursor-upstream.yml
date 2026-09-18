@@ -496,6 +496,27 @@ jobs:
           PR_NUMBER: ${{ inputs.pr_number }}
         run: |
           set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/branches/main/protection" \
+            > "$RUNNER_TEMP/main-protection.json"
+          python - "$RUNNER_TEMP/main-protection.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          protection = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          required = protection.get("required_status_checks") or {}
+          contexts = set(required.get("contexts") or [])
+          contexts.update(
+              item.get("context")
+              for item in (required.get("checks") or [])
+              if isinstance(item, dict) and isinstance(item.get("context"), str)
+          )
+          if "Codex review gate" not in contexts:
+              raise SystemExit(
+                  "main branch protection does not yet require the Codex review gate; "
+                  "auto-merge remains disabled"
+              )
+          PY
           gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
             --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/pre-auto-merge.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/pre-auto-merge.json")"

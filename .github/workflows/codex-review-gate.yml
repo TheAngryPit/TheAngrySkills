@@ -1,0 +1,175 @@
+name: Codex review gate observer
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]
+  issue_comment:
+    types: [created, edited, deleted]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+  pull_request_review_thread:
+    types: [resolved, unresolved]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number to re-evaluate
+        required: true
+        type: string
+      expected_head_sha:
+        description: Optional exact head; stale dispatches fail closed
+        required: false
+        type: string
+
+concurrency:
+  group: codex-review-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  observe:
+    name: Evaluate authenticated exact-head Codex review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      statuses: write
+    steps:
+      - name: Check out trusted gate from main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Resolve pull request event
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_PR: ${{ inputs.pr_number }}
+          EVENT_PR: ${{ github.event.pull_request.number }}
+          ISSUE_PR: ${{ github.event.issue.number }}
+          ISSUE_IS_PR: ${{ github.event.issue.pull_request.url }}
+        run: |
+          set -euo pipefail
+          case "$EVENT_NAME" in
+            workflow_dispatch) number="$DISPATCH_PR" ;;
+            issue_comment)
+              if [ -z "$ISSUE_IS_PR" ]; then
+                echo "skip=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              number="$ISSUE_PR"
+              ;;
+            *) number="$EVENT_PR" ;;
+          esac
+          [[ "$number" =~ ^[1-9][0-9]*$ ]] || { echo "invalid PR number" >&2; exit 1; }
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Read authenticated review evidence
+        id: assess
+        continue-on-error: true
+        if: steps.target.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.target.outputs.number }}
+          EXPECTED_HEAD: ${{ inputs.expected_head_sha }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
+          head_sha="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          echo "head_sha=$head_sha" >> "$GITHUB_ENV"
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${head_sha}" \
+            -f state=pending \
+            -f context="Codex review gate" \
+            -f description="Reevaluating authenticated Codex evidence for ${head_sha}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          if [ -n "$EXPECTED_HEAD" ] && [ "$head_sha" != "$EXPECTED_HEAD" ]; then
+            echo "stale gate dispatch: expected $EXPECTED_HEAD, observed $head_sha" >&2
+            exit 1
+          fi
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" \
+            > "$RUNNER_TEMP/issue-comments.json"
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/reviews?per_page=100" \
+            > "$RUNNER_TEMP/reviews.json"
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/comments?per_page=100" \
+            > "$RUNNER_TEMP/review-comments.json"
+          owner="${GITHUB_REPOSITORY%/*}"
+          repository="${GITHUB_REPOSITORY#*/}"
+          gh api graphql \
+            -f owner="$owner" \
+            -f repository="$repository" \
+            -F number="$PR_NUMBER" \
+            -f query='query($owner:String!,$repository:String!,$number:Int!){repository(owner:$owner,name:$repository){pullRequest(number:$number){reviewThreads(first:100){pageInfo{hasNextPage} nodes{isResolved resolvedBy{login} comments(first:100){pageInfo{hasNextPage} nodes{databaseId body createdAt authorAssociation author{login}}}}}}}}' \
+            > "$RUNNER_TEMP/threads.json"
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${head_sha}" > "$RUNNER_TEMP/current-commit.json"
+
+          readiness_file="$(python - "$RUNNER_TEMP/current-commit.json" <<'PY'
+          import json
+          import re
+          import sys
+
+          commit = json.load(open(sys.argv[1]))
+          author = (commit.get("author") or {}).get("login")
+          committer = (commit.get("committer") or {}).get("login")
+          files = commit.get("files") or []
+          if author == committer == "github-actions[bot]" and len(files) == 1:
+              path = files[0].get("filename", "")
+              if re.fullmatch(r"reports/upstream-updates/readiness/(matt-adapted|cursor-pstack)-[0-9a-f]{40}\.json", path):
+                  print(path)
+          PY
+          )"
+          readiness_args=()
+          if [ -n "$readiness_file" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/contents/${readiness_file}?ref=${head_sha}" \
+              --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/readiness.json"
+            readiness_args=(--readiness-json "$RUNNER_TEMP/readiness.json")
+          fi
+          python scripts/upstream-pr-lifecycle.py assess-codex-review \
+            --repository "$GITHUB_REPOSITORY" \
+            --pr-json "$RUNNER_TEMP/pr.json" \
+            --issue-comments-json "$RUNNER_TEMP/issue-comments.json" \
+            --reviews-json "$RUNNER_TEMP/reviews.json" \
+            --review-comments-json "$RUNNER_TEMP/review-comments.json" \
+            --threads-json "$RUNNER_TEMP/threads.json" \
+            --current-commit-json "$RUNNER_TEMP/current-commit.json" \
+            "${readiness_args[@]}" \
+            > "$RUNNER_TEMP/gate.json"
+
+      - name: Publish dedicated commit status
+        if: always() && steps.target.outputs.skip != 'true' && env.head_sha != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ -f "$RUNNER_TEMP/gate.json" ]; then
+            state="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["state"])' "$RUNNER_TEMP/gate.json")"
+            description="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["description"][:90])' "$RUNNER_TEMP/gate.json")"
+          else
+            state=error
+            description="Review evidence collection or assessment failed closed"
+          fi
+          description="${head_sha}: ${description}"
+          case "$state" in pending|success|failure|error) ;; *) echo "invalid gate state" >&2; exit 1 ;; esac
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${head_sha}" \
+            -f state="$state" \
+            -f context="Codex review gate" \
+            -f description="$description" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          {
+            echo "## Codex review gate"
+            echo
+            echo "- Head: \`$head_sha\`"
+            echo "- State: \`$state\`"
+            echo "- Evidence: $description"
+          } >> "$GITHUB_STEP_SUMMARY"

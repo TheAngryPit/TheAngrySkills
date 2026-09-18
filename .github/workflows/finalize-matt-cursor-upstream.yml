@@ -1,0 +1,732 @@
+name: Finalize reviewed Matt or Cursor adaptation
+
+on:
+  workflow_dispatch:
+    inputs:
+      family:
+        description: Canonical upstream family
+        required: true
+        type: choice
+        options:
+          - matt
+          - cursor
+      pr_number:
+        description: Existing canonical review PR number
+        required: true
+        type: string
+      expected_head_sha:
+        description: Exact maintainer adaptation head to validate
+        required: true
+        type: string
+      confirm_adapted_ready:
+        description: Confirm this is reviewed adaptation work, not detector-only evidence
+        required: true
+        type: boolean
+
+concurrency:
+  group: finalize-upstream-${{ inputs.family }}-${{ inputs.pr_number }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate reviewed adaptation without write credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+      statuses: read
+    outputs:
+      family: ${{ steps.identity.outputs.family }}
+      batch: ${{ steps.identity.outputs.batch }}
+      branch: ${{ steps.identity.outputs.branch }}
+      mode: ${{ steps.identity.outputs.mode }}
+      adaptation_head: ${{ steps.identity.outputs.adaptation_head }}
+      current_head: ${{ steps.identity.outputs.current_head }}
+      checkout_head: ${{ steps.identity.outputs.checkout_head }}
+      attestation_file: ${{ steps.identity.outputs.attestation_file }}
+    steps:
+      - name: Require explicit reviewed-adaptation confirmation
+        if: ${{ ! inputs.confirm_adapted_ready }}
+        run: |
+          echo "confirm_adapted_ready must be true" >&2
+          exit 1
+
+      - name: Check out trusted control plane from main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Resolve canonical PR and adaptation readiness
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAMILY: ${{ inputs.family }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          EXPECTED_HEAD: ${{ inputs.expected_head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]] || { echo "invalid PR number" >&2; exit 1; }
+          [[ "$EXPECTED_HEAD" =~ ^[0-9a-f]{40}$ ]] || { echo "expected head must be a full SHA" >&2; exit 1; }
+          case "$FAMILY" in
+            matt) batch=adapted ;;
+            cursor) batch=pstack ;;
+            *) echo "unsupported family" >&2; exit 1 ;;
+          esac
+          branch="automation/upstream-${FAMILY}-${batch}"
+          permission="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" --jq .permission)"
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
+          current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          base_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["base"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${base_head}?recursive=1" > "$RUNNER_TEMP/base-tree.json"
+          report_file="reports/upstream-updates/${FAMILY}-${batch}.md"
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
+            --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${current_head}" > "$RUNNER_TEMP/current-commit.json"
+          readiness_file="$(python - "$RUNNER_TEMP/current-commit.json" <<'PY'
+          import json
+          import re
+          import sys
+
+          commit = json.load(open(sys.argv[1]))
+          files = commit.get("files") or []
+          if len(files) == 1:
+              path = files[0].get("filename", "")
+              if re.fullmatch(r"reports/upstream-updates/readiness/(matt-adapted|cursor-pstack)-[0-9a-f]{40}\.json", path):
+                  print(path)
+          PY
+          )"
+          readiness_args=()
+          if [ -n "$readiness_file" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/contents/${readiness_file}?ref=${current_head}" \
+              --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/existing-readiness.json"
+            readiness_args=(--existing-readiness-json "$RUNNER_TEMP/existing-readiness.json")
+          fi
+          python scripts/upstream-pr-lifecycle.py assess-finalization \
+            --family "$FAMILY" \
+            --batch "$batch" \
+            --expected-adaptation-head "$EXPECTED_HEAD" \
+            --repository "$GITHUB_REPOSITORY" \
+            --dispatcher "$GITHUB_ACTOR" \
+            --dispatcher-permission "$permission" \
+            --pr-json "$RUNNER_TEMP/pr.json" \
+            --files-json "$RUNNER_TEMP/files.json" \
+            --commits-json "$RUNNER_TEMP/commits.json" \
+            --report-file "$RUNNER_TEMP/committed-report.md" \
+            --tree-json "$RUNNER_TEMP/candidate-tree.json" \
+            --base-tree-json "$RUNNER_TEMP/base-tree.json" \
+            --current-commit-json "$RUNNER_TEMP/current-commit.json" \
+            "${readiness_args[@]}" \
+            > "$RUNNER_TEMP/admission.json"
+          checkout_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["checkout_head"])' "$RUNNER_TEMP/admission.json")"
+          mode="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$RUNNER_TEMP/admission.json")"
+          if [ "$mode" = resume ]; then
+            run_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["finalizer"]["workflow_run_id"])' "$RUNNER_TEMP/existing-readiness.json")"
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "$RUNNER_TEMP/readiness-origin-run.json"
+            python - "$RUNNER_TEMP/readiness-origin-run.json" "$RUNNER_TEMP/existing-readiness.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          attestation = json.loads(pathlib.Path(sys.argv[2]).read_text())
+          finalizer = attestation["finalizer"]
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("status") != "completed"
+              or str(run.get("run_attempt")) != str(finalizer.get("workflow_run_attempt"))
+              or (run.get("actor") or {}).get("login") != attestation.get("dispatcher")
+              or not (run.get("path") or "").startswith(".github/workflows/finalize-matt-cursor-upstream.yml")):
+              raise SystemExit("readiness attestation does not originate from a trusted finalizer run")
+          PY
+          fi
+          gate_head="$checkout_head"
+          if [ "$mode" = resume ]; then
+            gate_head="$EXPECTED_HEAD"
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${gate_head}/status" > "$RUNNER_TEMP/review-gate-status.json"
+          python - "$RUNNER_TEMP/review-gate-status.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
+          if not gate or gate.get("state") != "success":
+              raise SystemExit("reviewed adaptation head lacks a successful Codex review gate")
+          PY
+          cp scripts/upstream-pr-lifecycle.py "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py"
+          echo "family=$FAMILY" >> "$GITHUB_OUTPUT"
+          echo "batch=$batch" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          python - "$RUNNER_TEMP/admission.json" "$GITHUB_OUTPUT" <<'PY'
+          import json
+          import sys
+
+          state = json.load(open(sys.argv[1]))
+          with open(sys.argv[2], "a") as output:
+              for key in ("mode", "adaptation_head", "current_head", "checkout_head", "attestation_file"):
+                  print(f"{key}={state[key]}", file=output)
+          PY
+
+      - name: Check out exact admitted head
+        env:
+          BRANCH: ${{ steps.identity.outputs.branch }}
+          CHECKOUT_HEAD: ${{ steps.identity.outputs.checkout_head }}
+        run: |
+          set -euo pipefail
+          git fetch origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          test "$(git rev-parse "origin/${BRANCH}")" = "$CHECKOUT_HEAD"
+          git switch --detach "$CHECKOUT_HEAD"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v7
+        with:
+          node-version: "22"
+
+      - name: Install pinned test runner
+        run: python -m pip install --disable-pip-version-check pytest==9.1.1
+
+      - name: Validate adapted content at the exact head
+        run: |
+          set -euo pipefail
+          node scripts/sync-curated-mirrors.mjs --check
+          node scripts/sync-hyperframes-mirror.mjs --check
+          python scripts/sync-matt-adaptations.py --check
+          python -m pytest -q tests
+          scripts/theangry-skills.mjs check --root skills --profile shared
+
+  finalize:
+    name: Push bot readiness record, prove final CI, enable auto-merge
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+      statuses: read
+    steps:
+      - name: Check out trusted control plane from main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate live PR before any write
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAMILY: ${{ needs.validate.outputs.family }}
+          BATCH: ${{ needs.validate.outputs.batch }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          EXPECTED_ADAPTATION_HEAD: ${{ needs.validate.outputs.adaptation_head }}
+          EXPECTED_CURRENT_HEAD: ${{ needs.validate.outputs.current_head }}
+          EXPECTED_MODE: ${{ needs.validate.outputs.mode }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          permission="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" --jq .permission)"
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
+          current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          test "$current_head" = "$EXPECTED_CURRENT_HEAD"
+          base_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["base"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${base_head}?recursive=1" > "$RUNNER_TEMP/base-tree.json"
+          report_file="reports/upstream-updates/${FAMILY}-${BATCH}.md"
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
+            --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${current_head}" > "$RUNNER_TEMP/current-commit.json"
+          readiness_file="$(python - "$RUNNER_TEMP/current-commit.json" <<'PY'
+          import json
+          import re
+          import sys
+
+          commit = json.load(open(sys.argv[1]))
+          files = commit.get("files") or []
+          if len(files) == 1:
+              path = files[0].get("filename", "")
+              if re.fullmatch(r"reports/upstream-updates/readiness/(matt-adapted|cursor-pstack)-[0-9a-f]{40}\.json", path):
+                  print(path)
+          PY
+          )"
+          readiness_args=()
+          if [ -n "$readiness_file" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/contents/${readiness_file}?ref=${current_head}" \
+              --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/existing-readiness.json"
+            readiness_args=(--existing-readiness-json "$RUNNER_TEMP/existing-readiness.json")
+          fi
+          python scripts/upstream-pr-lifecycle.py assess-finalization \
+            --family "$FAMILY" \
+            --batch "$BATCH" \
+            --expected-adaptation-head "$EXPECTED_ADAPTATION_HEAD" \
+            --repository "$GITHUB_REPOSITORY" \
+            --dispatcher "$GITHUB_ACTOR" \
+            --dispatcher-permission "$permission" \
+            --pr-json "$RUNNER_TEMP/pr.json" \
+            --files-json "$RUNNER_TEMP/files.json" \
+            --commits-json "$RUNNER_TEMP/commits.json" \
+            --report-file "$RUNNER_TEMP/committed-report.md" \
+            --tree-json "$RUNNER_TEMP/candidate-tree.json" \
+            --base-tree-json "$RUNNER_TEMP/base-tree.json" \
+            --current-commit-json "$RUNNER_TEMP/current-commit.json" \
+            "${readiness_args[@]}" \
+            > "$RUNNER_TEMP/admission.json"
+          test "$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$RUNNER_TEMP/admission.json")" = "$EXPECTED_MODE"
+          if [ "$EXPECTED_MODE" = resume ]; then
+            run_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["finalizer"]["workflow_run_id"])' "$RUNNER_TEMP/existing-readiness.json")"
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "$RUNNER_TEMP/readiness-origin-run.json"
+            python - "$RUNNER_TEMP/readiness-origin-run.json" "$RUNNER_TEMP/existing-readiness.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          attestation = json.loads(pathlib.Path(sys.argv[2]).read_text())
+          finalizer = attestation["finalizer"]
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("status") != "completed"
+              or str(run.get("run_attempt")) != str(finalizer.get("workflow_run_attempt"))
+              or (run.get("actor") or {}).get("login") != attestation.get("dispatcher")
+              or not (run.get("path") or "").startswith(".github/workflows/finalize-matt-cursor-upstream.yml")):
+              raise SystemExit("readiness attestation does not originate from a trusted finalizer run")
+          PY
+          fi
+          gate_head="$current_head"
+          if [ "$EXPECTED_MODE" = resume ]; then
+            gate_head="$EXPECTED_ADAPTATION_HEAD"
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${gate_head}/status" > "$RUNNER_TEMP/review-gate-status.json"
+          python - "$RUNNER_TEMP/review-gate-status.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
+          if not gate or gate.get("state") != "success":
+              raise SystemExit("exact adaptation head lost its successful Codex review gate")
+          PY
+          if [ "$EXPECTED_MODE" = initial ]; then
+            python scripts/upstream-pr-lifecycle.py render-readiness-attestation \
+              --readiness-json "$RUNNER_TEMP/admission.json" \
+              --run-id "$GITHUB_RUN_ID" \
+              --run-attempt "$GITHUB_RUN_ATTEMPT" \
+              > "$RUNNER_TEMP/readiness-attestation.json"
+          fi
+          attestation_file="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["attestation_file"])' "$RUNNER_TEMP/admission.json")"
+          echo "attestation_file=$attestation_file" >> "$GITHUB_ENV"
+          echo "final_head=$current_head" >> "$GITHUB_ENV"
+
+      - name: Clear any pre-existing auto-merge request before branch writes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/pre-write-auto-merge.json"
+          python - "$RUNNER_TEMP/pre-write-auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2]:
+              raise SystemExit("PR head changed before auto-merge could be cleared")
+          PY
+          auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-write-auto-merge.json")"
+          if [ "$auto_merge_present" = true ]; then
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+          fi
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/cleared-auto-merge.json"
+          python - "$RUNNER_TEMP/cleared-auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2] or state.get("autoMergeRequest"):
+              raise SystemExit("auto-merge was not cleared on the admitted head")
+          PY
+
+      - name: Push a material bot-owned readiness record
+        if: needs.validate.outputs.mode == 'initial'
+        env:
+          BRANCH: ${{ needs.validate.outputs.branch }}
+          EXPECTED_HEAD: ${{ needs.validate.outputs.adaptation_head }}
+          FAMILY: ${{ needs.validate.outputs.family }}
+          BATCH: ${{ needs.validate.outputs.batch }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          test "$(git rev-parse "origin/${BRANCH}")" = "$EXPECTED_HEAD"
+          git switch -C "$BRANCH" "origin/$BRANCH"
+          destination="$attestation_file"
+          test ! -L reports
+          test ! -L reports/upstream-updates
+          if [ -e reports/upstream-updates/readiness ]; then
+            test -d reports/upstream-updates/readiness
+            test ! -L reports/upstream-updates/readiness
+          else
+            mkdir reports/upstream-updates/readiness
+          fi
+          test ! -e "$destination"
+          cp "$RUNNER_TEMP/readiness-attestation.json" "$destination"
+          git add -- "$destination"
+          test "$(git diff --cached --name-only)" = "$destination"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record ${FAMILY}/${BATCH} adaptation readiness"
+          gh auth setup-git
+          git push origin "HEAD:$BRANCH"
+          echo "final_head=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Verify final commit and push identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}" > "$RUNNER_TEMP/final-commit.json"
+          python - "$RUNNER_TEMP/final-commit.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          commit = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          author = commit.get("author") or {}
+          committer = commit.get("committer") or {}
+          if not (
+              author.get("login") == committer.get("login") == "github-actions[bot]"
+              and author.get("id") == committer.get("id") == 41898282
+          ):
+              raise SystemExit("final commit identity is not the immutable github-actions bot identity")
+          PY
+
+      - name: Carry the reviewed parent through the readiness-only bot commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gate_url=""
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+            > "$RUNNER_TEMP/final-review-gate.json"
+          gate_state="$(python - "$RUNNER_TEMP/final-review-gate.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
+          print((gate or {}).get("state") or "")
+          PY
+          )"
+          previous_gate_url="$(python - "$RUNNER_TEMP/final-review-gate.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
+          print((gate or {}).get("target_url") or "")
+          PY
+          )"
+          require_new=true
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/codex-review-gate.yml/dispatches" \
+            -f ref=main \
+            -f "inputs[pr_number]=$PR_NUMBER" \
+            -f "inputs[expected_head_sha]=$final_head"
+          for _ in $(seq 1 40); do
+            gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+              > "$RUNNER_TEMP/final-review-gate.json"
+            result="$(python - "$RUNNER_TEMP/final-review-gate.json" "$require_new" "$previous_gate_url" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
+          is_new = sys.argv[2] != "true" or (gate or {}).get("target_url") != sys.argv[3]
+          creator = (gate or {}).get("creator") or {}
+          trusted = (
+              creator.get("login") == "github-actions[bot]"
+              and creator.get("id") == 41898282
+              and sys.argv[4] in ((gate or {}).get("description") or "")
+          )
+          if gate and is_new and trusted:
+              print("\t".join((gate.get("state") or "", gate.get("target_url") or "")))
+          PY
+          )"
+            if [ -n "$result" ]; then
+              IFS=$'\t' read -r gate_state gate_url <<< "$result"
+              gate_run_id="${gate_url##*/}"
+              if ! [[ "$gate_run_id" =~ ^[1-9][0-9]*$ ]]; then
+                sleep 10
+                continue
+              fi
+              if ! gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${gate_run_id}" \
+                > "$RUNNER_TEMP/candidate-review-gate-run.json"; then
+                sleep 10
+                continue
+              fi
+              trusted_dispatch="$(python - "$RUNNER_TEMP/candidate-review-gate-run.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          trusted = (
+              run.get("event") == "workflow_dispatch"
+              and run.get("head_branch") == "main"
+              and (run.get("path") or "").startswith(".github/workflows/codex-review-gate.yml")
+          )
+          print("true" if trusted else "false")
+          PY
+              )"
+              if [ "$trusted_dispatch" != true ]; then
+                sleep 10
+                continue
+              fi
+              [ "$gate_state" != failure ] && [ "$gate_state" != error ] || {
+                echo "Codex review gate rejected the final readiness-only head: $gate_url" >&2
+                exit 1
+              }
+              if [ "$gate_state" = success ]; then
+                break
+              fi
+            fi
+            sleep 10
+          done
+          [ "${gate_state:-}" = success ] || {
+            echo "timed out waiting for the Codex review gate on $final_head" >&2
+            exit 1
+          }
+          [[ "${gate_run_id:-}" =~ ^[1-9][0-9]*$ ]] || { echo "Codex gate lacks a trusted workflow-dispatch run URL" >&2; exit 1; }
+          for _ in $(seq 1 12); do
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${gate_run_id}" > "$RUNNER_TEMP/final-review-gate-run.json"
+            run_status="$(python -c 'import json,sys; print(json.load(open(sys.argv[1])).get("status") or "")' "$RUNNER_TEMP/final-review-gate-run.json")"
+            [ "$run_status" != completed ] || break
+            sleep 5
+          done
+          python - "$RUNNER_TEMP/final-review-gate-run.json" <<'PY'
+          import json, pathlib, sys
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if (run.get("event") != "workflow_dispatch" or run.get("head_branch") != "main"
+              or run.get("conclusion") != "success"
+              or not (run.get("path") or "").startswith(".github/workflows/codex-review-gate.yml")):
+              raise SystemExit("Codex gate status did not come from the trusted main workflow run")
+          PY
+          echo "final_review_gate_url=$gate_url" >> "$GITHUB_ENV"
+
+      - name: Dispatch CI explicitly on the bot-owned final head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+            > "$RUNNER_TEMP/trusted-ci-status.json"
+          ci_state="$(python - "$RUNNER_TEMP/trusted-ci-status.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
+          print((item or {}).get("state") or "")
+          PY
+          )"
+          previous_ci_url="$(python - "$RUNNER_TEMP/trusted-ci-status.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
+          print((item or {}).get("target_url") or "")
+          PY
+          )"
+          require_new=true
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/skill-stack-ci.yml/dispatches" \
+            -f ref=main \
+            -f "inputs[target_sha]=$final_head"
+          ci_url=""
+          for _ in $(seq 1 40); do
+            gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+              > "$RUNNER_TEMP/trusted-ci-status.json"
+            result="$(python - "$RUNNER_TEMP/trusted-ci-status.json" "$final_head" "$require_new" "$previous_ci_url" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
+          is_new = sys.argv[3] != "true" or (item or {}).get("target_url") != sys.argv[4]
+          creator = (item or {}).get("creator") or {}
+          trusted = creator.get("login") == "github-actions[bot]" and creator.get("id") == 41898282
+          if item and is_new and trusted and sys.argv[2] in (item.get("description") or ""):
+              print("\t".join((item.get("state") or "", item.get("target_url") or "")))
+          PY
+          )"
+            if [ -n "$result" ]; then
+              IFS=$'\t' read -r ci_state ci_url <<< "$result"
+              if [ "$ci_state" = failure ] || [ "$ci_state" = error ]; then
+                echo "trusted-main CI failed: $ci_url" >&2
+                exit 1
+              fi
+              if [ "$ci_state" = success ]; then
+                break
+              fi
+            fi
+            sleep 10
+          done
+          [ "$ci_state" = success ] && [ -n "$ci_url" ] || {
+            echo "timed out waiting for successful CI on $final_head" >&2
+            exit 1
+          }
+          run_id="${ci_url##*/}"
+          [[ "$run_id" =~ ^[1-9][0-9]*$ ]] || { echo "trusted CI status lacks a workflow run URL" >&2; exit 1; }
+          for _ in $(seq 1 12); do
+            gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "$RUNNER_TEMP/trusted-ci-run.json"
+            run_status="$(python -c 'import json,sys; print(json.load(open(sys.argv[1])).get("status") or "")' "$RUNNER_TEMP/trusted-ci-run.json")"
+            [ "$run_status" != completed ] || break
+            sleep 5
+          done
+          python - "$RUNNER_TEMP/trusted-ci-run.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          run = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if (
+              run.get("event") != "workflow_dispatch"
+              or run.get("head_branch") != "main"
+              or run.get("conclusion") != "success"
+              or not (run.get("path") or "").startswith(".github/workflows/skill-stack-ci.yml")
+          ):
+              raise SystemExit("CI result did not come from the trusted main workflow definition")
+          PY
+          echo "final_ci_url=$ci_url" >> "$GITHUB_ENV"
+
+      - name: Enable auto-merge while preserving human approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/branches/main/protection" \
+            > "$RUNNER_TEMP/main-protection.json"
+          python - "$RUNNER_TEMP/main-protection.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          protection = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          required = protection.get("required_status_checks") or {}
+          checks = {
+              (item.get("context"), item.get("app_id"))
+              for item in (required.get("checks") or [])
+              if isinstance(item, dict)
+          }
+          expected_checks = {
+              ("Codex review gate", 15368),
+          }
+          if not expected_checks.issubset(checks):
+              raise SystemExit(
+                  "main branch protection does not require the trusted Codex gate; "
+                  "auto-merge remains disabled"
+              )
+          reviews = protection.get("required_pull_request_reviews") or {}
+          if (
+              int(reviews.get("required_approving_review_count") or 0) < 1
+              or reviews.get("require_last_push_approval") is not True
+          ):
+              raise SystemExit(
+                  "main branch protection does not require a human approval after the final push; "
+                  "auto-merge remains disabled"
+              )
+          PY
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/pre-auto-merge.json"
+          current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/pre-auto-merge.json")"
+          test "$current_head" = "$final_head"
+          auto_merge_present="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/pre-auto-merge.json")"
+          if [ "$auto_merge_present" = true ]; then
+            gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+            gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+              --json autoMergeRequest,headRefOid > "$RUNNER_TEMP/re-enabled-auto-merge.json"
+            python - "$RUNNER_TEMP/re-enabled-auto-merge.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("autoMergeRequest"):
+              raise SystemExit("re-enabled auto-merge request could not be cleared")
+          PY
+            echo "auto-merge was re-enabled before final proof completed" >&2
+            exit 1
+          fi
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
+            --match-head-commit "$final_head"
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --json autoMergeRequest,headRefOid,mergedAt,reviewDecision,state \
+            > "$RUNNER_TEMP/auto-merge.json"
+          post_enable_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["headRefOid"])' "$RUNNER_TEMP/auto-merge.json")"
+          if [ "$post_enable_head" != "$final_head" ]; then
+            post_enable_auto_merge="$(python -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("autoMergeRequest") else "false")' "$RUNNER_TEMP/auto-merge.json")"
+            if [ "$post_enable_auto_merge" = true ]; then
+              gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --disable-auto
+            fi
+            gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
+              --json autoMergeRequest,headRefOid,state \
+              > "$RUNNER_TEMP/advanced-head-auto-merge.json"
+            python - "$RUNNER_TEMP/advanced-head-auto-merge.json" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("autoMergeRequest"):
+              raise SystemExit("auto-merge remained enabled after the admitted head changed")
+          PY
+            echo "pull request head changed while auto-merge was enabled; auto-merge was disabled" >&2
+            exit 1
+          fi
+          python - "$RUNNER_TEMP/auto-merge.json" "$final_head" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          state = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          if state.get("headRefOid") != sys.argv[2]:
+              raise SystemExit("pull request head changed after auto-merge cleanup")
+          queued = bool(state.get("autoMergeRequest"))
+          merged = state.get("state") == "MERGED" and bool(state.get("mergedAt"))
+          if not queued and not merged:
+              raise SystemExit("auto-merge was neither queued nor completed on the bot-owned final head")
+          PY
+          {
+            echo "## Adapted upstream finalizer"
+            echo
+            echo "- Final bot-owned head: \`$final_head\`"
+            echo "- Codex review gate: $final_review_gate_url"
+            echo "- Explicit final CI: $final_ci_url"
+            echo "- Auto-merge: enabled; protected human approval remains required"
+            echo "- Self-approval: not performed"
+          } >> "$GITHUB_STEP_SUMMARY"

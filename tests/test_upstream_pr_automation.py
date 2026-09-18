@@ -94,6 +94,44 @@ def test_matt_ignores_unrelated_commits_and_reports_support_and_new_skills(tmp_p
     assert report["candidate_content_promoted"] is False
 
 
+def test_matt_accepts_ancestral_per_package_pins_and_verifies_each_snapshot(tmp_path):
+    upstream = tmp_path / "matt"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "LICENSE", "MIT\n")
+    root = matt_root(tmp_path, upstream)
+    baseline = commit(upstream, "baseline")
+    code_record = root / "skills/mirrors-mattpocock/code-review/UPSTREAM.json"
+    writing_record = root / "skills/engineering/writing-for-astra/UPSTREAM.json"
+    for record in (code_record, writing_record):
+        data = json.loads(record.read_text())
+        data["commit"] = baseline
+        record.write_text(json.dumps(data))
+
+    code_source = upstream / "skills/engineering/code-review"
+    write(code_source / "SKILL.md", "# reviewed update\n")
+    latest_reviewed = commit(upstream, "review code only")
+    data = json.loads(code_record.read_text())
+    data["commit"] = latest_reviewed
+    data["upstream_sha256"] = detector.snapshot(upstream, data["source_path"])
+    code_record.write_text(json.dumps(data))
+
+    report = detector.detect_matt(upstream, root)
+    assert report["changed"] is False
+    assert report["baseline"] == latest_reviewed
+    assert report["baseline_mode"] == "per-package"
+    assert report["baseline_commits"] == sorted([baseline, latest_reviewed])
+
+    data["upstream_sha256"]["SKILL.md"] = "0" * 64
+    code_record.write_text(json.dumps(data))
+    try:
+        detector.detect_matt(upstream, root)
+    except ValueError as error:
+        assert "hashes do not match pin" in str(error)
+    else:
+        raise AssertionError("fabricated per-package pin hashes were accepted")
+
+
 def test_matt_missing_or_mismatched_adaptation_metadata_fails_closed(tmp_path):
     upstream = tmp_path / "matt"
     upstream.mkdir()
@@ -576,7 +614,8 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert selection < workflow.index("branch_exists=false") < first_switch
     first_pr_write = min(workflow.index("gh pr edit"), workflow.index("gh pr create"))
     assert first_push < first_pr_write
-    assert "--method POST" not in workflow
+    assert workflow.count("--method POST") == 1
+    assert "actions/workflows/codex-review-gate.yml/dispatches" in workflow
     assert "issues/$number/comments" not in workflow
     assert "normalize-comments" not in workflow
     assert "render-codex-request-json" not in workflow
@@ -590,3 +629,726 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()
     assert "workflow_dispatch:" in legacy_matt
     assert "schedule:" not in legacy_matt
+
+
+def readiness_pr(family, batch, head):
+    report = detector.blank_result(
+        family,
+        batch,
+        f"https://example.invalid/{family}",
+        "0" * 40,
+        "a" * 40,
+    )
+    body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
+    return {
+        "state": "open",
+        "draft": False,
+        "changed_files": 0,
+        "body": body,
+        "base": {"ref": "main"},
+        "head": {
+            "ref": f"automation/upstream-{family}-{batch}",
+            "sha": head,
+            "repo": {"full_name": "owner/repo"},
+        },
+    }
+
+
+def readiness_report_text(family, batch, latest="a" * 40):
+    report = detector.blank_result(
+        family,
+        batch,
+        f"https://example.invalid/{family}",
+        "0" * 40,
+        latest,
+    )
+    return detector.render_report(report)
+
+
+def readiness_commits(human_last=True):
+    bot = {
+        "sha": "1" * 40,
+        "author": {"login": "github-actions[bot]"},
+        "committer": {"login": "github-actions[bot]"},
+    }
+    human = {
+        "sha": "2" * 40,
+        "author": {"login": "TheAngryPit"},
+        "committer": {"login": "TheAngryPit"},
+    }
+    return [bot, human] if human_last else [human, bot]
+
+
+def readiness_tree(*paths):
+    return {"truncated": False, "tree": [{"path": path, "type": "blob"} for path in paths]}
+
+
+def assess_ready(family, batch, files, commits=None, report_text=None):
+    head = "b" * 40
+    pr = readiness_pr(family, batch, head)
+    pr["changed_files"] = len(files)
+    return lifecycle.adaptation_readiness(
+        pr,
+        [[{"filename": path} for path in files]],
+        [commits or readiness_commits()],
+        report_text=report_text or readiness_report_text(family, batch),
+        family=family,
+        batch=batch,
+        expected_head=head,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+
+
+def test_report_only_candidate_is_not_adapted_ready():
+    try:
+        assess_ready("matt", "adapted", ["reports/upstream-updates/matt-adapted.md"])
+    except ValueError as error:
+        assert "candidate_not_ready" in str(error)
+        assert "adapted skill files" in str(error)
+    else:
+        raise AssertionError("detector-only Matt report was accepted as an adaptation")
+
+
+def test_readiness_binds_body_source_marker_to_committed_report():
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+            ],
+            report_text=readiness_report_text("matt", "adapted", "c" * 40),
+        )
+    except ValueError as error:
+        assert "committed detector report" in str(error)
+    else:
+        raise AssertionError("editable body source marker was accepted without committed evidence")
+
+
+def test_readiness_rejects_incomplete_or_capped_file_inventory():
+    head = "b" * 40
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+    ]
+    cases = [
+        (4, files),
+        (3000, [{"filename": f"skills/generated/{index}"} for index in range(3000)]),
+    ]
+    for declared_count, observed_files in cases:
+        pr = readiness_pr("matt", "adapted", head)
+        pr["changed_files"] = declared_count
+        try:
+            lifecycle.adaptation_readiness(
+                pr, [observed_files], [readiness_commits()],
+                report_text=readiness_report_text("matt", "adapted"),
+                family="matt", batch="adapted", expected_head=head,
+                repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+            )
+        except ValueError as error:
+            assert "incomplete or capped" in str(error)
+        else:
+            raise AssertionError("truncated pull request file inventory was accepted")
+
+
+def test_readiness_rejects_candidate_github_control_plane_changes():
+    try:
+        assess_ready(
+            "cursor",
+            "pstack",
+            [
+                ".github/workflows/spoof-review.yml",
+                "reports/upstream-updates/cursor-pstack.md",
+                "sources/cursor-plugins/manifest.json",
+                "skills/mirrors-cursor/cursor-how/SKILL.md",
+            ],
+        )
+    except ValueError as error:
+        assert "GitHub control plane" in str(error)
+    else:
+        raise AssertionError("candidate-owned GitHub workflow change was accepted")
+
+
+def test_readiness_rejects_rename_from_github_control_plane():
+    head = "b" * 40
+    pr = readiness_pr("matt", "adapted", head)
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+        {
+            "filename": "docs/retired-review-gate.yml",
+            "previous_filename": ".github/workflows/codex-review-gate.yml",
+            "status": "renamed",
+        },
+    ]
+    pr["changed_files"] = len(files)
+    try:
+        lifecycle.adaptation_readiness(
+            pr, [files], [readiness_commits()],
+            report_text=readiness_report_text("matt", "adapted"),
+            family="matt", batch="adapted", expected_head=head,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "GitHub control plane" in str(error)
+    else:
+        raise AssertionError("rename from the GitHub control plane was accepted")
+
+
+def test_bot_cannot_dispatch_adaptation_finalization():
+    head = "b" * 40
+    try:
+        lifecycle.adaptation_readiness(
+            readiness_pr("matt", "adapted", head),
+            [[
+                {"filename": "reports/upstream-updates/matt-adapted.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+            ]],
+            [readiness_commits()],
+            report_text=readiness_report_text("matt", "adapted"),
+            family="matt",
+            batch="adapted",
+            expected_head=head,
+            repository="owner/repo",
+            dispatcher="github-actions[bot]",
+            dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "human maintainer" in str(error)
+    else:
+        raise AssertionError("bot dispatcher was accepted")
+
+
+def test_matt_and_cursor_adaptations_require_family_outputs_and_human_commit():
+    matt = assess_ready(
+        "matt",
+        "adapted",
+        [
+            "reports/upstream-updates/matt-adapted.md",
+            "skills/mirrors-mattpocock/retro/SKILL.md",
+            "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+        ],
+    )
+    assert matt["state"] == "adapted_ready"
+    assert matt["dispatcher"] == "TheAngryPit"
+    assert matt["non_bot_commits"][-1]["author"] == "TheAngryPit"
+
+    cursor = assess_ready(
+        "cursor",
+        "pstack",
+        [
+            "reports/upstream-updates/cursor-pstack.md",
+            "sources/cursor-plugins/manifest.json",
+            "skills/mirrors-cursor/cursor-setup-pstack/SKILL.md",
+        ],
+    )
+    assert cursor["state"] == "adapted_ready"
+    assert cursor["attestation_file"].endswith(
+        "cursor-pstack-" + ("a" * 40) + ".json"
+    )
+
+
+def test_readiness_fails_for_cross_family_or_existing_attestation():
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+                "sources/cursor-plugins/manifest.json",
+            ],
+        )
+    except ValueError as error:
+        assert "crosses into Cursor ownership" in str(error)
+    else:
+        raise AssertionError("cross-family candidate was accepted")
+
+    try:
+        assess_ready(
+            "cursor",
+            "pstack",
+            [
+                "reports/upstream-updates/cursor-pstack.md",
+                "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json",
+                "sources/cursor-plugins/manifest.json",
+                "skills/mirrors-cursor/cursor-how/SKILL.md",
+            ],
+            commits=readiness_commits(human_last=False),
+        )
+    except ValueError as error:
+        assert "already contains readiness material" in str(error)
+    else:
+        raise AssertionError("previously finalized candidate was accepted")
+
+    try:
+        assess_ready(
+            "matt",
+            "adapted",
+            [
+                "reports/upstream-updates/matt-adapted.md",
+                "reports/upstream-updates/readiness/matt-adapted-" + ("f" * 40) + ".json",
+                "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+                "skills/mirrors-mattpocock/retro/SKILL.md",
+            ],
+        )
+    except ValueError as error:
+        assert "already contains readiness material" in str(error)
+    else:
+        raise AssertionError("alternate stale readiness material was accepted")
+
+
+def test_bot_report_refresh_after_human_adaptation_remains_finalizable():
+    result = assess_ready(
+        "cursor",
+        "pstack",
+        [
+            "reports/upstream-updates/cursor-pstack.md",
+            "sources/cursor-plugins/manifest.json",
+            "skills/mirrors-cursor/cursor-how/SKILL.md",
+        ],
+        commits=readiness_commits(human_last=False),
+    )
+    assert result["state"] == "adapted_ready"
+    assert result["non_bot_commits"][0]["author"] == "TheAngryPit"
+
+
+def test_readiness_attestation_records_validation_without_claiming_semantic_proof():
+    readiness = assess_ready(
+        "matt",
+        "adapted",
+        [
+            "reports/upstream-updates/matt-adapted.md",
+            "skills/mirrors-mattpocock/retro/SKILL.md",
+            "skills/mirrors-mattpocock/retro/UPSTREAM.json",
+        ],
+    )
+    attestation = lifecycle.readiness_attestation(readiness, run_id="123", run_attempt="2")
+    assert attestation["finalizer"]["actor"] == "github-actions[bot]"
+    assert attestation["finalizer"]["workflow_run_id"] == "123"
+    assert attestation["semantic_review"].startswith("maintainer_dispatch_confirmed")
+    assert "python -m pytest -q tests" in attestation["finalizer"]["validated_commands"]
+
+
+def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_merge():
+    workflow = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
+    assert "workflow_dispatch:" in workflow
+    assert "schedule:" not in workflow
+    assert "confirm_adapted_ready" in workflow
+    assert "contents: read" in workflow
+    assert "contents: write" in workflow
+    assert "candidate_not_ready" not in workflow
+    assert "assess-finalization" in workflow
+    assert "render-readiness-attestation" in workflow
+    assert 'git config user.name "github-actions[bot]"' in workflow
+    assert "immutable github-actions bot identity" in workflow
+    assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
+    assert 'run.get("event") == "workflow_dispatch"' in workflow
+    assert "candidate-review-gate-run.json" in workflow
+    assert "Codex gate lacks a trusted workflow-dispatch run URL" in workflow
+    assert '-f ref=main' in workflow
+    assert 'inputs[target_sha]=$final_head' in workflow
+    assert 'gh pr merge "$PR_NUMBER"' in workflow
+    assert "--auto --squash" in workflow
+    assert "gh pr review" not in workflow
+    assert 'branches/main/protection' in workflow
+    assert '("Codex review gate", 15368)' in workflow
+    assert '("Skill stack CI (trusted main)", 15368)' not in workflow
+    assert "auto-merge remains disabled" in workflow
+    assert "required_approving_review_count" in workflow
+    assert "require_last_push_approval" in workflow
+    assert '--match-head-commit "$final_head"' in workflow
+    assert "Clear any pre-existing auto-merge request before branch writes" in workflow
+    assert "--disable-auto" in workflow
+    assert "auto-merge was not cleared on the admitted head" in workflow
+    assert "auto-merge was re-enabled before final proof completed" in workflow
+    assert "re-enabled-auto-merge.json" in workflow
+    assert "re-enabled auto-merge request could not be cleared" in workflow
+    assert 'if [ "$post_enable_head" != "$final_head" ]; then' in workflow
+    assert "advanced-head-auto-merge.json" in workflow
+    assert "auto-merge remained enabled after the admitted head changed" in workflow
+    assert "pull request head changed while auto-merge was enabled; auto-merge was disabled" in workflow
+    assert 'state.get("state") == "MERGED"' in workflow
+    assert "auto-merge was neither queued nor completed" in workflow
+    assert "secrets." not in workflow
+    push = workflow.index('git push origin "HEAD:$BRANCH"')
+    clear_auto_merge = workflow.index("Clear any pre-existing auto-merge request before branch writes")
+    dispatch = workflow.index("actions/workflows/skill-stack-ci.yml/dispatches")
+    merge = workflow.index("--auto --squash")
+    protection = workflow.index('branches/main/protection')
+    assert clear_auto_merge < push < dispatch < merge
+    assert protection < merge
+    ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
+    assert "workflow_dispatch:" in ci
+    assert '${TARGET_SHA}: trusted main workflow' in ci
+
+
+def official_codex_comment(body):
+    return {
+        "id": 10,
+        "body": body,
+        "user": {
+            "login": "chatgpt-codex-connector[bot]",
+            "id": lifecycle.CODEX_CONNECTOR_USER_ID,
+        },
+        "performed_via_github_app": {
+            "id": lifecycle.CODEX_CONNECTOR_APP_ID,
+            "slug": "chatgpt-codex-connector",
+        },
+    }
+
+
+def codex_summary(head, state="Completed"):
+    status = "✅ **Completed**" if state == "Completed" else "🔄 **Running**"
+    return official_codex_comment(
+        "<!-- codex-pull-request-review-summary -->\n"
+        "| Review | Status | Commit | Review trigger |\n"
+        "| --- | --- | --- | --- |\n"
+        f"| 📝 **Code Review** | {status} | `{head[:7]}` | Manual request |"
+    )
+
+
+def clean_codex_result(head):
+    return official_codex_comment(
+        "Codex Review: Didn't find any major issues. Ready.\n\n"
+        f"**Reviewed commit:** `{head[:10]}`"
+    )
+
+
+def empty_threads(nodes=None):
+    return {
+        "data": {"repository": {"pullRequest": {"reviewThreads": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": nodes or [],
+        }}}}
+    }
+
+
+def test_codex_review_gate_requires_authenticated_clean_exact_head_evidence():
+    head = "b" * 40
+    pr = readiness_pr("matt", "adapted", head)
+    pending = lifecycle.codex_review_gate(
+        pr, [codex_summary(head, "Running")], [], [], empty_threads(), repository="owner/repo"
+    )
+    assert pending["state"] == "pending"
+
+    clean = lifecycle.codex_review_gate(
+        pr,
+        [[codex_summary(head), clean_codex_result(head)]],
+        [],
+        [],
+        empty_threads(),
+        repository="owner/repo",
+    )
+    assert clean["state"] == "success"
+    assert clean["reviewed_head"] == head
+
+    spoof = clean_codex_result(head)
+    spoof["performed_via_github_app"]["id"] = 999
+    rejected = lifecycle.codex_review_gate(
+        pr, [codex_summary(head), spoof], [], [], empty_threads(), repository="owner/repo"
+    )
+    assert rejected["state"] == "pending"
+
+    advanced = readiness_pr("matt", "adapted", "c" * 40)
+    stale = lifecycle.codex_review_gate(
+        advanced,
+        [codex_summary(head), clean_codex_result(head)],
+        [],
+        [],
+        empty_threads(),
+        repository="owner/repo",
+    )
+    assert stale["state"] == "pending"
+
+
+def test_codex_findings_need_resolved_thread_and_grounded_human_disposition():
+    head = "b" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    review = {
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "state": "COMMENTED",
+        "body": "Here are some automated review suggestions",
+    }
+    finding = {
+        "id": 42,
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "body": "[P1] Unsafe candidate workflow",
+    }
+    unresolved_thread = {
+        "isResolved": False,
+        "comments": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": [{"databaseId": 42, "body": finding["body"], "author": finding["user"]}],
+        },
+    }
+    blocked = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([unresolved_thread]), repository="owner/repo"
+    )
+    assert blocked["state"] == "failure"
+
+    resolved_thread = json.loads(json.dumps(unresolved_thread))
+    resolved_thread["isResolved"] = True
+    resolved_thread["comments"]["nodes"].append({
+        "databaseId": 43,
+        "body": "Codex disposition: Accepted false positive because the workflow always runs from trusted main.",
+        "author": {"login": "TheAngryPit", "id": 1},
+        "authorAssociation": "OWNER",
+    })
+    accepted = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([resolved_thread]), repository="owner/repo"
+    )
+    assert accepted["state"] == "success"
+
+
+def test_codex_gate_reconciles_lower_priority_findings_too():
+    head = "b" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    review = {
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "state": "COMMENTED",
+        "body": "Here are some automated review suggestions",
+    }
+    finding = {
+        "id": 44,
+        "user": {"login": "chatgpt-codex-connector[bot]", "id": lifecycle.CODEX_CONNECTOR_USER_ID},
+        "commit_id": head,
+        "body": "[P3] Minor but valid issue",
+    }
+    thread = {
+        "isResolved": False,
+        "comments": {
+            "pageInfo": {"hasNextPage": False},
+            "nodes": [{"databaseId": 44, "body": finding["body"], "author": finding["user"]}],
+        },
+    }
+    result = lifecycle.codex_review_gate(
+        pr, [codex_summary(head)], [review], [finding], empty_threads([thread]), repository="owner/repo"
+    )
+    assert result["state"] == "failure"
+    assert "unresolved" in result["description"]
+
+
+def test_codex_gate_is_non_applicable_outside_two_canonical_branches():
+    pr = readiness_pr("matt", "adapted", "b" * 40)
+    pr["head"]["ref"] = "codex/unrelated"
+    result = lifecycle.codex_review_gate(pr, [], [], [], empty_threads(), repository="owner/repo")
+    assert result == {
+        "applicable": False,
+        "state": "success",
+        "description": "Codex review gate is not applicable to this PR",
+        "reviewed_head": None,
+        "carry_forward": False,
+    }
+
+
+def finalization_fixture():
+    parent = "b" * 40
+    files = [
+        {"filename": "reports/upstream-updates/matt-adapted.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+        {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+    ]
+    pr = readiness_pr("matt", "adapted", parent)
+    pr["changed_files"] = len(files)
+    initial = lifecycle.finalization_admission(
+        pr,
+        files,
+        readiness_commits(),
+        {"sha": parent, "author": {"login": "TheAngryPit"}, "committer": {"login": "TheAngryPit"}},
+        None,
+        report_text=readiness_report_text("matt", "adapted"),
+        tree_payload=readiness_tree(),
+        base_tree_payload=readiness_tree(),
+        family="matt",
+        batch="adapted",
+        expected_adaptation_head=parent,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+    attestation = lifecycle.readiness_attestation(initial, run_id="1", run_attempt="1")
+    final_head = "c" * 40
+    bot_commit = {
+        "sha": final_head,
+        "parents": [{"sha": parent}],
+        "files": [{"filename": attestation["attestation_file"], "status": "added"}],
+        "author": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
+        "committer": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
+    }
+    resumed_pr = readiness_pr("matt", "adapted", final_head)
+    resumed_pr["changed_files"] = len(files) + 1
+    return parent, files, initial, attestation, bot_commit, resumed_pr
+
+
+def test_initial_finalization_allows_only_unchanged_inherited_readiness_material():
+    parent = "b" * 40
+    path = "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json"
+    accepted = lifecycle.finalization_admission(
+            {**readiness_pr("matt", "adapted", parent), "changed_files": 3},
+            [
+                {"filename": "reports/upstream-updates/matt-adapted.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+                {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
+            ],
+            readiness_commits(),
+            {"sha": parent},
+            None,
+            report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(path),
+            base_tree_payload=readiness_tree(path),
+            family="matt", batch="adapted", expected_adaptation_head=parent,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+    )
+    assert accepted["mode"] == "initial"
+    try:
+        lifecycle.finalization_admission(
+            {**readiness_pr("matt", "adapted", parent), "changed_files": 3},
+            [{"filename": "reports/upstream-updates/matt-adapted.md"},
+             {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+             {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"}],
+            readiness_commits(), {"sha": parent}, None,
+            report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(path), base_tree_payload=readiness_tree(),
+            family="matt", batch="adapted", expected_adaptation_head=parent,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "inherited from main" in str(error)
+    else:
+        raise AssertionError("inherited readiness material was accepted")
+
+
+def test_finalization_resume_accepts_only_verified_single_bot_attestation():
+    parent, files, _, attestation, bot_commit, pr = finalization_fixture()
+    resumed = lifecycle.finalization_admission(
+        pr,
+        files + [{"filename": attestation["attestation_file"]}],
+        readiness_commits() + [bot_commit],
+        bot_commit,
+        attestation,
+        report_text=readiness_report_text("matt", "adapted"),
+        tree_payload=readiness_tree(attestation["attestation_file"]),
+        base_tree_payload=readiness_tree(),
+        family="matt",
+        batch="adapted",
+        expected_adaptation_head=parent,
+        repository="owner/repo",
+        dispatcher="TheAngryPit",
+        dispatcher_permission="admin",
+    )
+    assert resumed["mode"] == "resume"
+    assert resumed["current_head"] == bot_commit["sha"]
+
+    spoofed = json.loads(json.dumps(bot_commit))
+    spoofed["committer"]["login"] = "TheAngryPit"
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            spoofed, attestation, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
+            family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "verified readiness-only child" in str(error) or "readiness" in str(error)
+    else:
+        raise AssertionError("spoofed bot metadata was accepted for resume")
+
+
+def test_finalization_rejects_stale_readiness_and_advanced_head():
+    parent, files, _, attestation, bot_commit, pr = finalization_fixture()
+    stale = dict(attestation)
+    stale["source_head"] = "d" * 40
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            bot_commit, stale, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
+            family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "does not bind" in str(error)
+    else:
+        raise AssertionError("stale readiness content was accepted")
+
+    advanced = json.loads(json.dumps(bot_commit))
+    advanced["sha"] = "e" * 40
+    advanced["parents"] = [{"sha": bot_commit["sha"]}]
+    pr["head"]["sha"] = advanced["sha"]
+    try:
+        lifecycle.finalization_admission(
+            pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
+            advanced, attestation, report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
+            family="matt", batch="adapted",
+            expected_adaptation_head=parent, repository="owner/repo",
+            dispatcher="TheAngryPit", dispatcher_permission="admin",
+        )
+    except ValueError as error:
+        assert "verified readiness-only child" in str(error) or "does not bind" in str(error)
+    else:
+        raise AssertionError("head advanced beyond the readiness commit was accepted")
+
+
+def test_review_gate_and_trusted_ci_workflows_fail_closed_without_new_credentials():
+    gate = (ROOT / ".github/workflows/codex-review-gate.yml").read_text()
+    assert "group: codex-review-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number || github.run_id }}" in gate
+    assert "cancel-in-progress: true" in gate
+    finalizer = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
+    ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
+    detector_workflow = (ROOT / ".github/workflows/review-matt-cursor-upstreams.yml").read_text()
+    assert "pull_request_target:" in gate
+    assert "types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]" in gate
+    assert "pull_request_review_thread:" in gate
+    assert "types: [resolved, unresolved]" in gate
+    assert "types: [created, edited, deleted]" in gate
+    assert "continue-on-error: true" in gate
+    assert "Review evidence collection or assessment failed closed" in gate
+    assert 'context="Codex review gate"' in gate
+    assert "chatgpt-codex-connector" not in gate  # identity policy stays in trusted Python
+    assert "secrets." not in gate + finalizer + ci
+    assert 'ref=main' in finalizer
+    assert 'inputs[target_sha]=$final_head' in finalizer
+    assert '-f ref="$BRANCH"' not in finalizer
+    assert "Skill stack CI (trusted main)" in ci
+    assert "persist-credentials: false" in ci
+    assert "inputs.target_sha || github.sha" in ci
+    assert finalizer.count("persist-credentials: false") == 2
+    assert finalizer.count("statuses: read") == 2
+    assert "if: needs.validate.outputs.mode == 'initial'" in finalizer
+    assert finalizer.count("assess-finalization") == 2
+    assert "previous_ci_url" in finalizer
+    assert "previous_gate_url" in finalizer
+    assert "readiness attestation does not originate from a trusted finalizer run" in finalizer
+    assert "--draft" in detector_workflow
+    assert "codex-review-gate.yml/dispatches" in detector_workflow
+
+
+def test_cli_routes_tree_payload_only_to_finalization_admission():
+    source = (ROOT / "scripts/upstream-pr-lifecycle.py").read_text()
+    assess_ready_block = source.split('if args.command == "assess-ready":', 1)[1].split(
+        'if args.command == "render-readiness-attestation":', 1
+    )[0]
+    finalization_block = source.split('if args.command == "assess-finalization":', 1)[1].split(
+        'if args.command == "assess-codex-review":', 1
+    )[0]
+    assert "tree_payload=" not in assess_ready_block
+    assert 'tree_payload=json.loads(Path(args.tree_json).read_text())' in finalization_block
+    assert 'base_tree_payload=json.loads(Path(args.base_tree_json).read_text())' in finalization_block

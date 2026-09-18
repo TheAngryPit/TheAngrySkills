@@ -87,7 +87,9 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
+          base_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["base"]["sha"])' "$RUNNER_TEMP/pr.json")"
           gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${base_head}?recursive=1" > "$RUNNER_TEMP/base-tree.json"
           report_file="reports/upstream-updates/${FAMILY}-${batch}.md"
           gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
             --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
@@ -123,6 +125,7 @@ jobs:
             --commits-json "$RUNNER_TEMP/commits.json" \
             --report-file "$RUNNER_TEMP/committed-report.md" \
             --tree-json "$RUNNER_TEMP/candidate-tree.json" \
+            --base-tree-json "$RUNNER_TEMP/base-tree.json" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
@@ -241,7 +244,9 @@ jobs:
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits?per_page=100" > "$RUNNER_TEMP/commits.json"
           current_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["head"]["sha"])' "$RUNNER_TEMP/pr.json")"
           test "$current_head" = "$EXPECTED_CURRENT_HEAD"
+          base_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["base"]["sha"])' "$RUNNER_TEMP/pr.json")"
           gh api "repos/${GITHUB_REPOSITORY}/git/trees/${current_head}?recursive=1" > "$RUNNER_TEMP/candidate-tree.json"
+          gh api "repos/${GITHUB_REPOSITORY}/git/trees/${base_head}?recursive=1" > "$RUNNER_TEMP/base-tree.json"
           report_file="reports/upstream-updates/${FAMILY}-${BATCH}.md"
           gh api "repos/${GITHUB_REPOSITORY}/contents/${report_file}?ref=${current_head}" \
             --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/committed-report.md"
@@ -277,6 +282,7 @@ jobs:
             --commits-json "$RUNNER_TEMP/commits.json" \
             --report-file "$RUNNER_TEMP/committed-report.md" \
             --tree-json "$RUNNER_TEMP/candidate-tree.json" \
+            --base-tree-json "$RUNNER_TEMP/base-tree.json" \
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"

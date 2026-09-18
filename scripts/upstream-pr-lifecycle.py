@@ -572,6 +572,7 @@ def finalization_admission(
     *,
     report_text: str,
     tree_payload: dict[str, Any],
+    base_tree_payload: dict[str, Any],
     family: str,
     batch: str,
     expected_adaptation_head: str,
@@ -583,23 +584,26 @@ def finalization_admission(
 
     if not re.fullmatch(r"[0-9a-f]{40}", expected_adaptation_head):
         raise ValueError("expected adaptation head must be a full SHA")
-    if not isinstance(tree_payload, dict) or tree_payload.get("truncated") is True:
-        raise ValueError("candidate tree response is unavailable or truncated")
-    tree = tree_payload.get("tree")
-    if not isinstance(tree, list):
-        raise ValueError("candidate tree response has no entries")
-    readiness_tree = sorted(
-        item.get("path") for item in tree
-        if isinstance(item, dict)
-        and item.get("type") == "blob"
-        and isinstance(item.get("path"), str)
-        and item["path"].startswith("reports/upstream-updates/readiness/")
-    )
+    def readiness_paths(payload: dict[str, Any], label: str) -> list[str]:
+        if not isinstance(payload, dict) or payload.get("truncated") is True:
+            raise ValueError(f"{label} tree response is unavailable or truncated")
+        entries = payload.get("tree")
+        if not isinstance(entries, list):
+            raise ValueError(f"{label} tree response has no entries")
+        return sorted(
+            item.get("path") for item in entries
+            if isinstance(item, dict) and item.get("type") == "blob"
+            and isinstance(item.get("path"), str)
+            and item["path"].startswith("reports/upstream-updates/readiness/")
+        )
+
+    readiness_tree = readiness_paths(tree_payload, "candidate")
+    base_readiness_tree = readiness_paths(base_tree_payload, "base")
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     current_head = head.get("sha")
     if current_head == expected_adaptation_head:
-        if readiness_tree:
-            raise ValueError("fresh finalization requires an empty readiness namespace in the candidate tree")
+        if readiness_tree != base_readiness_tree:
+            raise ValueError("fresh finalization cannot change readiness material inherited from main")
         if existing_readiness is not None:
             raise ValueError("fresh finalization cannot supply existing readiness content")
         result = adaptation_readiness(
@@ -643,8 +647,9 @@ def finalization_admission(
     ]
     if len(readiness_files) != 1 or readiness_files[0]["filename"] != existing_readiness.get("attestation_file"):
         raise ValueError("resume requires exactly one verified readiness file in the PR")
-    if readiness_tree != [existing_readiness.get("attestation_file")]:
-        raise ValueError("resume requires exactly one verified readiness file in the candidate tree")
+    expected_tree = sorted(base_readiness_tree + [existing_readiness.get("attestation_file")])
+    if existing_readiness.get("attestation_file") in base_readiness_tree or readiness_tree != expected_tree:
+        raise ValueError("resume requires exactly one new verified readiness file beyond the base tree")
     filtered_files = [item for item in files if item not in readiness_files]
     parent_pr = json.loads(json.dumps(pr))
     parent_pr["head"]["sha"] = expected_adaptation_head
@@ -1392,6 +1397,7 @@ def main() -> int:
     finalization.add_argument("--existing-readiness-json")
     finalization.add_argument("--report-file", required=True)
     finalization.add_argument("--tree-json", required=True)
+    finalization.add_argument("--base-tree-json", required=True)
     attestation = subparsers.add_parser(
         "render-readiness-attestation",
         help="render the material finalizer record after validations pass",
@@ -1512,6 +1518,7 @@ def main() -> int:
                 ),
                 report_text=Path(args.report_file).read_text(),
                 tree_payload=json.loads(Path(args.tree_json).read_text()),
+                base_tree_payload=json.loads(Path(args.base_tree_json).read_text()),
                 family=args.family,
                 batch=args.batch,
                 expected_adaptation_head=args.expected_adaptation_head,

@@ -1102,6 +1102,7 @@ def finalization_fixture():
         None,
         report_text=readiness_report_text("matt", "adapted"),
         tree_payload=readiness_tree(),
+        base_tree_payload=readiness_tree(),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1122,11 +1123,10 @@ def finalization_fixture():
     return parent, files, initial, attestation, bot_commit, resumed_pr
 
 
-def test_initial_finalization_rejects_inherited_readiness_tree_material():
+def test_initial_finalization_allows_only_unchanged_inherited_readiness_material():
     parent = "b" * 40
     path = "reports/upstream-updates/readiness/cursor-pstack-" + ("a" * 40) + ".json"
-    try:
-        lifecycle.finalization_admission(
+    accepted = lifecycle.finalization_admission(
             readiness_pr("matt", "adapted", parent),
             [
                 {"filename": "reports/upstream-updates/matt-adapted.md"},
@@ -1138,11 +1138,25 @@ def test_initial_finalization_rejects_inherited_readiness_tree_material():
             None,
             report_text=readiness_report_text("matt", "adapted"),
             tree_payload=readiness_tree(path),
+            base_tree_payload=readiness_tree(path),
+            family="matt", batch="adapted", expected_adaptation_head=parent,
+            repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
+    )
+    assert accepted["mode"] == "initial"
+    try:
+        lifecycle.finalization_admission(
+            readiness_pr("matt", "adapted", parent),
+            [{"filename": "reports/upstream-updates/matt-adapted.md"},
+             {"filename": "skills/mirrors-mattpocock/retro/SKILL.md"},
+             {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"}],
+            readiness_commits(), {"sha": parent}, None,
+            report_text=readiness_report_text("matt", "adapted"),
+            tree_payload=readiness_tree(path), base_tree_payload=readiness_tree(),
             family="matt", batch="adapted", expected_adaptation_head=parent,
             repository="owner/repo", dispatcher="TheAngryPit", dispatcher_permission="admin",
         )
     except ValueError as error:
-        assert "empty readiness namespace" in str(error)
+        assert "inherited from main" in str(error)
     else:
         raise AssertionError("inherited readiness material was accepted")
 
@@ -1157,6 +1171,7 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
         attestation,
         report_text=readiness_report_text("matt", "adapted"),
         tree_payload=readiness_tree(attestation["attestation_file"]),
+        base_tree_payload=readiness_tree(),
         family="matt",
         batch="adapted",
         expected_adaptation_head=parent,
@@ -1174,6 +1189,7 @@ def test_finalization_resume_accepts_only_verified_single_bot_attestation():
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             spoofed, attestation, report_text=readiness_report_text("matt", "adapted"),
             tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1193,6 +1209,7 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             bot_commit, stale, report_text=readiness_report_text("matt", "adapted"),
             tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1211,6 +1228,7 @@ def test_finalization_rejects_stale_readiness_and_advanced_head():
             pr, files + [{"filename": attestation["attestation_file"]}], readiness_commits(),
             advanced, attestation, report_text=readiness_report_text("matt", "adapted"),
             tree_payload=readiness_tree(attestation["attestation_file"]),
+            base_tree_payload=readiness_tree(),
             family="matt", batch="adapted",
             expected_adaptation_head=parent, repository="owner/repo",
             dispatcher="TheAngryPit", dispatcher_permission="admin",
@@ -1263,3 +1281,4 @@ def test_cli_routes_tree_payload_only_to_finalization_admission():
     )[0]
     assert "tree_payload=" not in assess_ready_block
     assert 'tree_payload=json.loads(Path(args.tree_json).read_text())' in finalization_block
+    assert 'base_tree_payload=json.loads(Path(args.base_tree_json).read_text())' in finalization_block

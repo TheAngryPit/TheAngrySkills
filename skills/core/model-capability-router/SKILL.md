@@ -31,25 +31,30 @@ Continue the current thread when its context remains useful. A fresh task suits
 an independent objective; a full-history fork copies history rather than
 providing a clean context.
 
+Keep one visible task per coherent outcome. Use native subagents for useful,
+bounded work inside that task. Create a user-owned task only when the operator
+requests an independent or durable outcome, or a distinct host/cloud boundary
+requires one.
+
 ## Operator profiles
 
 | Profile | Model | Effort | Use |
 |---|---|---|---|
 | Home default and coordination | `gpt-5.6-sol` | `medium` | This home's selected default; sustained coordination, integration and open-ended execution. |
-| Planning and review | `gpt-6-astra` | `low` | Habitual Astra setting for conversation, planning and review when its judgment helps. |
-| Demanding decisions | `gpt-6-astra` | `medium` | Substantial ambiguity, cross-cutting decisions or tradeoffs requiring more analysis. |
+| Planning, review and difficult decisions | `gpt-6-astra` | `low` | Habitual Astra setting when its judgment helps. |
 | Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
 | Bounded subtask | `gpt-5.6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
 | Defined execution | `gpt-5.6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
 | Substantial execution | `gpt-5.6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
-| Tiny iteration, when available | `gpt-5.3-codex-spark` | `low` | Small deterministic edits or lookups with an immediate check. |
 
-Choose directly for the task. There is no Spark-first or Luna-first ladder,
-mandatory failed attempt, coordinator stage, automatic planning/review
-delegation, CLI resolver, receipt workflow or preset wrapper. Requested
-planning or review delegation remains available when suitable. Importance
-alone does not justify XHigh. A read-only task can still need Astra. Patch
-size alone does not prove that Luna suits autonomous systems administration.
+Choose directly for the task. Use an Astra → Sol → Luna sequence only when
+coordination materially helps the outcome; a direct bounded worker or the
+current agent is enough when it does not. There is no mandatory model ladder,
+failed-attempt retry, coordinator stage, automatic planning/review delegation,
+CLI resolver, receipt workflow or preset wrapper. Requested planning or review
+delegation remains available when suitable. Importance alone does not justify
+XHigh. A read-only task can still need Astra. Patch size alone does not prove
+that Luna suits autonomous systems administration.
 
 Luna Max is available when justified by the work; it requires no repeated
 approval merely for that effort. These profiles do not authorise new spending
@@ -62,10 +67,10 @@ and fixed bindings, including those outside this palette.
 
 Before selecting compute, check the exact channel's current advertised models
 and efforts. Current-task, native-subagent and user-owned-task support differ.
-Spark may be available in the main/task picker but absent from `spawn_agent`:
-do not invent support, create a task to work around it, or silently substitute.
-Report the gap and continue locally when the existing selection can meet the
-proof bar; otherwise surface the specific decision needed.
+Do not invent unsupported capability, create a task to work around it, or
+silently substitute. Report the gap and continue locally when the existing
+selection can meet the proof bar; otherwise surface the specific decision
+needed.
 
 For permitted delegation, give bounded ownership, relevant context, expected
 output and verification requirements. A differently modelled native worker
@@ -83,14 +88,16 @@ Respect native approvals and refusals. Do not force feature flags.
 ## Cost and evidence
 
 Compare the remaining whole task, including parent and worker input, output,
-briefing, startup, coordination, verification and rework. Reusing a worker can
-save context transfer; cached input is possible, not guaranteed across tasks,
-models or changed prefixes. Count reasoning and child usage once if a meter
-already includes them. API token prices and benchmarks inform comparisons but
-do not measure this account's Codex allowance or prove a routing saving. Use
-observed account usage or a like-for-like native task comparison for such claims;
-state when that evidence is unavailable. Keep changing prices and benchmark
-scores out of durable profile rules.
+briefing, startup, coordination, verification and rework. Reusing a relevant
+worker can save context transfer; cached input is possible, not guaranteed
+across tasks, models or changed prefixes. Do not add speculative cache
+retention, keepalive prompts or repetitive polling merely to preserve context
+or show activity. Count reasoning and child usage once if a meter already
+includes them. API token prices and benchmarks inform comparisons but do not
+measure this account's Codex allowance or prove a routing saving. Use observed
+account usage or a like-for-like native task comparison for such claims; state
+when that evidence is unavailable. Keep changing prices and benchmark scores
+out of durable profile rules.
 
 ## Installation and updates
 
@@ -115,6 +122,9 @@ profiles used by the adapted pstack workflows:
   `cursor-no-comments`.
 - `assets/agents/poteto-agent.toml` is the named delegate for
   `cursor-poteto-mode` playbooks.
+
+Keep these pstack specialist identities, ownership and verification contracts
+when the profiles are used; model routing does not flatten named roles.
 
 The assets are not loaded merely because this skill is installed. To make the
 profiles selectable by a new Codex session, run the bundled checked installer

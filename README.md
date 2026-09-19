@@ -101,9 +101,9 @@ as a separately configured home default, Astra Low for planning/review and
 difficult decisions with XHigh reserved for exceptional reasoning, and Luna
 High/XHigh/Max for bounded work. Choose directly for the task; use one visible
 task per coherent outcome and native subagents for useful bounded work. User-
-owned tasks are for requested independent or durable outcomes and distinct
-host/cloud boundaries. There is no mandatory escalation ladder, resolver or
-coordinator stage.
+owned tasks require an explicit request and are for independent or durable
+outcomes, schedules, or distinct host/cloud boundaries. There is no mandatory
+escalation ladder, resolver or coordinator stage.
 Respect the selected main model and live channel availability. The optional
 `model-routing-preset-builder` customises this same policy, not a second runtime.
 Both skills are installed only from this repository, never Workbench.

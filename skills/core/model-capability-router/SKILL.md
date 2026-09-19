@@ -32,9 +32,9 @@ an independent objective; a full-history fork copies history rather than
 providing a clean context.
 
 Keep one visible task per coherent outcome. Use native subagents for useful,
-bounded work inside that task. Create a user-owned task only when the operator
-requests an independent or durable outcome, or a distinct host/cloud boundary
-requires one.
+bounded work inside that task. Create a separate user-owned task only on the
+operator's explicit request, for an independent or durable outcome, a schedule,
+or a required host/cloud boundary.
 
 ## Operator profiles
 

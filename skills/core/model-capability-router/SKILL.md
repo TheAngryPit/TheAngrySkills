@@ -49,6 +49,10 @@ or a required host/cloud boundary.
 | Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
 | Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
 
+For demanding coding, Sol high is an available task-specific override when
+medium is insufficient; choose it for the work rather than forcing an Astra
+escalation. It does not replace the habitual medium coordination default.
+
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
 current agent is enough when it does not. There is no mandatory model ladder,

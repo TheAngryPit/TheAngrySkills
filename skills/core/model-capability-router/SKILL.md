@@ -7,8 +7,10 @@ description: "Use when the operator explicitly asks for native Codex model or re
 
 Use native Codex model, effort and agent selection. Respect the operator's
 selected main model and effort; this skill does not switch an active task.
-For this operator's home, Sol Medium is the separately configured Codex default.
-Choose the execution arrangement before a delegated worker's model.
+The profiles below are policy recommendations. They do not establish the
+current host configuration or model selected by a running task; check those
+separately before describing them as configured. Choose the execution
+arrangement before a delegated worker's model.
 Authorization to delegate alone does not require consulting this router.
 
 ## Execution arrangement
@@ -40,12 +42,16 @@ or a required host/cloud boundary.
 
 | Profile | Model | Effort | Use |
 |---|---|---|---|
-| Home default and coordination | `gpt-5.6-sol` | `medium` | This home's selected default; sustained coordination, integration and open-ended execution. |
+| Recommended coordination profile | `gpt-6-sol` | `medium` | Recommended for sustained coordination, integration and open-ended execution; verify the actual host selection separately. |
 | Planning, review and difficult decisions | `gpt-6-astra` | `low` | Habitual Astra setting when its judgment helps. |
 | Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
-| Bounded subtask | `gpt-5.6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
-| Defined execution | `gpt-5.6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
-| Substantial execution | `gpt-5.6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
+| Bounded subtask | `gpt-6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
+| Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
+| Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
+
+For demanding coding, Sol high is an available task-specific override when
+medium is insufficient; choose it for the work rather than forcing an Astra
+escalation. It does not replace the habitual medium coordination default.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
@@ -57,11 +63,27 @@ XHigh. A read-only task can still need Astra. Patch size alone does not prove
 that Luna suits autonomous systems administration.
 
 Luna Max is available when justified by the work; it requires no repeated
-approval merely for that effort. These profiles do not authorise new spending
-routes, external actions or additional access. Astra Max and Ultra are outside
-the habitual palette. Terra and other supported models remain available when
-selected by the operator or bound to a specialist. Honour explicit selections
-and fixed bindings, including those outside this palette.
+approval merely for that effort. Choose effort for the workload; higher effort does not guarantee better results.
+GPT-6 supports cache-preserving effort updates through its documented mechanism;
+do not assume every client uses it or that cache is shared across models or tasks.
+Dated capability, pricing, caching and benchmark evidence is in
+[references/gpt6-20260922.md](references/gpt6-20260922.md). These profiles do
+not authorise new spending routes, external actions or additional access. Astra
+Max and Ultra are outside the habitual palette. Terra and other supported
+models remain available when selected by the operator or bound to a specialist.
+Honour explicit selections and fixed bindings, including those outside this
+palette.
+
+## Changing selection during work
+
+Keep Sol medium as the default and choose task-specific overrides through the
+native surface that actually supports them. In CLI, `/model` changes model and
+supported effort within a session. A task follow-up tool may expose model and
+effort overrides; use them only when that tool supports the target. Do not
+message the current task recursively to simulate self-switching. The current
+agent cannot claim to change its own model without an exposed control and
+confirmation. Use the existing bounded specialist delegation when suitable.
+Changing `config.toml` sets a default, not proof that an active turn switched.
 
 ## Runtime and delegation
 
@@ -84,6 +106,11 @@ Creating a user-owned task, forking, moving or archiving tasks still requires
 the corresponding explicit user request. Routing grants no authority over
 hosts, accounts, private data, credentials, publication or destructive actions.
 Respect native approvals and refusals. Do not force feature flags.
+
+Before accepting a delegated deliverable, check the requested elements against
+the actual result and verification evidence. Concise reporting must not remove
+required work or presentation quality. Correct omissions before delivery;
+change the assignment or model when observed failures justify it.
 
 ## Cost and evidence
 

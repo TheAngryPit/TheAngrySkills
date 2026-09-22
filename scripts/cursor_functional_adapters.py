@@ -1720,10 +1720,9 @@ def run_pstack_model_mapping_fixture(
     This is deliberately a fixture-only boundary.  ``inventory`` is the
     caller's already-observed ``model -> supported efforts`` mapping; this
     helper does not discover models, call a provider, or persist config.  When
-    ``budget`` is supplied, it applies the upstream budget ladder to each real
-    model and picks the highest supported effort at or below the target.  The
-    two pstack aliases are valid without appearing in that inventory and are
-    preserved by budget selection.
+    ``budget`` is supplied, it is a ceiling on explicit efforts, not a
+    directive to raise efforts or substitute model families. The pstack
+    aliases are preserved without appearing in the inventory.
     """
 
     def fail(reason: str, details: Iterable[str] = ()) -> dict[str, object]:
@@ -1772,15 +1771,16 @@ def run_pstack_model_mapping_fixture(
 
         expected_roles = set(PSTACK_MODEL_ROLES)
         supplied_roles = set(choices)
-        missing_roles = tuple(sorted(expected_roles - supplied_roles))
         extra_roles = tuple(sorted(supplied_roles - expected_roles))
-        if missing_roles or extra_roles:
-            details = []
-            if missing_roles:
-                details.append("missing roles: " + ", ".join(missing_roles))
-            if extra_roles:
-                details.append("unknown roles: " + ", ".join(extra_roles))
-            return fail("choices must cover exactly every pstack role", details)
+        if extra_roles:
+            return fail(
+                "unknown pstack roles", ("unknown roles: " + ", ".join(extra_roles),)
+            )
+        if not supplied_roles:
+            return fail("choose at least one pstack role")
+        selected_roles = tuple(
+            role for role in PSTACK_MODEL_ROLES if role in supplied_roles
+        )
 
         def normalize_selection(selection: object, label: str) -> dict[str, object]:
             if isinstance(selection, str):
@@ -1815,7 +1815,7 @@ def run_pstack_model_mapping_fixture(
             return result
 
         normalized_choices: dict[str, tuple[dict[str, object], ...]] = {}
-        for role in PSTACK_MODEL_ROLES:
+        for role in selected_roles:
             raw = choices[role]
             if role in PSTACK_MODEL_PANEL_ROLES:
                 if not isinstance(raw, (list, tuple)) or not raw:
@@ -1835,80 +1835,23 @@ def run_pstack_model_mapping_fixture(
     budget_spec = PSTACK_BUDGETS.get(budget) if budget else None
     requested_choices = normalized_choices
     budget_issues: dict[tuple[str, int], str] = {}
-
-    def model_family(model: str) -> str:
-        parts = model.split("-")
-        # Upstream model slugs put the effort token at the end, or immediately
-        # before a trailing ``fast`` token.  Strip only that position so a
-        # genuine family token such as ``medium`` is not discarded.
-        if parts and parts[-1] in PSTACK_EFFORT_LADDER:
-            parts.pop()
-        elif (
-            len(parts) >= 2
-            and parts[-2] in PSTACK_EFFORT_LADDER
-            and parts[-1] == "fast"
-        ):
-            parts.pop(-2)
-        family = "-".join(parts)
-        return family.removeprefix("cursor-")
-
     if budget_spec and budget != "unlimited":
         target_index = PSTACK_EFFORT_LADDER.index(budget_spec["target_effort"])
-        effective_choices: dict[str, tuple[dict[str, object], ...]] = {}
-        for role in PSTACK_MODEL_ROLES:
-            effective: list[dict[str, object]] = []
+        for role in selected_roles:
             for index, selection in enumerate(normalized_choices[role]):
-                model = selection["model"]
-                if model in PSTACK_MODEL_ALIASES:
-                    effective.append(dict(selection))
-                    continue
-                family = model_family(model)
-                candidates = [
-                    candidate
-                    for candidate in normalized_inventory
-                    if model_family(candidate) == family
-                ]
-                if model in normalized_inventory and model not in candidates:
-                    candidates.insert(0, model)
-                ranked: list[tuple[int, int, str, str]] = []
-                for candidate in candidates:
-                    supported = [
-                        effort
-                        for effort in normalized_inventory[candidate]
-                        if effort in PSTACK_EFFORT_LADDER
-                        and PSTACK_EFFORT_LADDER.index(effort) <= target_index
-                    ]
-                    if not supported:
-                        continue
-                    selected_effort = max(
-                        supported, key=PSTACK_EFFORT_LADDER.index
-                    )
-                    ranked.append(
-                        (
-                            PSTACK_EFFORT_LADDER.index(selected_effort),
-                            int(candidate == model),
-                            candidate,
-                            selected_effort,
-                        )
-                    )
-                if not ranked:
+                effort = selection.get("effort")
+                if (
+                    effort in PSTACK_EFFORT_LADDER
+                    and PSTACK_EFFORT_LADDER.index(effort) > target_index
+                ):
                     budget_issues[(role, index)] = (
-                        f"{role}[{index}]: no detected model in family {family!r} "
-                        f"supports budget {budget!r} at or below "
-                        f"{budget_spec['target_effort']!r}"
+                        f"{role}[{index}]: requested effort {effort!r} exceeds "
+                        f"budget ceiling {budget_spec['target_effort']!r}; needs choice"
                     )
-                    effective.append(dict(selection))
-                    continue
-                _, _, selected_model, selected_effort = max(ranked)
-                effective.append(
-                    {"model": selected_model, "effort": selected_effort}
-                )
-            effective_choices[role] = tuple(effective)
-        normalized_choices = effective_choices
 
     unavailable: list[str] = []
     mapping: dict[str, dict[str, object]] = {}
-    for role in PSTACK_MODEL_ROLES:
+    for role in selected_roles:
         selections = normalized_choices[role]
         selection_report: list[dict[str, object]] = []
         for index, selection in enumerate(selections):
@@ -1953,7 +1896,7 @@ def run_pstack_model_mapping_fixture(
         lines.append(
             f"budget: {budget_spec['label']} ({budget_spec['target_effort']})"
         )
-    for role in PSTACK_MODEL_ROLES:
+    for role in selected_roles:
         entries = mapping[role]["selections"]
         rendered = ", ".join(
             "/".join(

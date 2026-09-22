@@ -139,66 +139,51 @@ class CursorSetupPstackFixtureTests(unittest.TestCase):
         self.assertFalse(result["writes_performed"])
         self.assertIn("without the parent model", result["reason"])
 
-    def test_budget_maps_efforts_and_same_family_model_variants_without_write(self):
-        choices = choices_for_all_roles()
-        choices["bug-fix"] = "grok-4.6-fast-xhigh"
+    def test_budget_is_a_ceiling_without_raising_effort_or_changing_model(self):
+        choices = {
+            "feature, refactoring": {"model": "gpt-5.6-sol", "effort": "medium"},
+            "hillclimb": {"model": "gpt-6-astra", "effort": "low"},
+            "judgment and prose": {"model": "inherit-parent"},
+        }
         result = run_pstack_model_mapping_fixture(
-            BUDGET_INVENTORY, choices, budget="small"
+            BUDGET_INVENTORY, choices, budget="medium"
         )
         self.assertEqual(result["status"], "DRY_RUN")
-        self.assertEqual(result["budget"], "small")
-        self.assertEqual(result["budget_label"], PSTACK_BUDGETS["small"]["label"])
-        self.assertEqual(result["target_effort"], "medium")
-        self.assertFalse(result["writes_performed"])
-        bug_fix = result["mapping"]["bug-fix"]["selections"][0]
+        self.assertEqual(result["budget_label"], PSTACK_BUDGETS["medium"]["label"])
+        self.assertEqual(set(result["mapping"]), set(choices))
         self.assertEqual(
-            bug_fix["selection"],
-            {"model": "cursor-grok-4.6-medium-fast", "effort": "medium"},
-        )
-        self.assertEqual(
-            bug_fix["requested_selection"], {"model": "grok-4.6-fast-xhigh"}
-        )
-        self.assertEqual(
-            result["mapping"]["feature, refactoring"]["selections"][0]["selection"],
-            {"model": "gpt-5.6-sol", "effort": "medium"},
+            result["mapping"]["hillclimb"]["selections"][0]["selection"],
+            {"model": "gpt-6-astra", "effort": "low"},
         )
         self.assertEqual(
             result["mapping"]["judgment and prose"]["selections"][0]["selection"],
             {"model": "inherit-parent"},
         )
-        self.assertIn("budget: small — medium reasoning (medium)", result["dry_run"])
+        self.assertFalse(result["writes_performed"])
 
-        for budget, specification in PSTACK_BUDGETS.items():
-            budget_choices = choices_for_all_roles()
-            if budget != "unlimited":
-                budget_choices["bug-fix"] = "grok-4.6-fast-xhigh"
-            budget_result = run_pstack_model_mapping_fixture(
-                BUDGET_INVENTORY, budget_choices, budget=budget
-            )
-            self.assertEqual(budget_result["status"], "DRY_RUN", budget)
-            self.assertEqual(budget_result["budget_label"], specification["label"])
-            self.assertEqual(
-                budget_result["target_effort"], specification["target_effort"]
-            )
-
-    def test_budget_without_supported_effort_marks_roles_needing_choice(self):
-        choices = choices_for_all_roles()
-        unavailable_inventory = dict(BUDGET_INVENTORY)
-        unavailable_inventory["gpt-5.6-luna"] = ("max",)
+    def test_budget_conflict_requires_choice_without_substitution(self):
+        choices = {"bug-fix": {"model": "gpt-5.6-luna", "effort": "xhigh"}}
         result = run_pstack_model_mapping_fixture(
-            unavailable_inventory, choices, budget="small"
+            BUDGET_INVENTORY, choices, budget="small"
         )
         self.assertEqual(result["status"], "BLOCKED")
         self.assertFalse(result["writes_performed"])
-        self.assertTrue(
-            any("no detected model in family 'gpt-5.6-luna'" in item for item in result["unavailable"])
+        self.assertEqual(
+            result["mapping"]["bug-fix"]["selections"][0]["selection"],
+            choices["bug-fix"],
         )
-        self.assertTrue(
-            any(
-                item["availability"] == "needs-choice"
-                for item in result["mapping"]["how explorer"]["selections"]
-            )
+        self.assertTrue(any("exceeds budget ceiling" in item for item in result["unavailable"]))
+        self.assertEqual(
+            result["mapping"]["bug-fix"]["selections"][0]["availability"],
+            "needs-choice",
         )
+
+    def test_missing_model_family_does_not_trigger_automatic_variant(self):
+        result = run_pstack_model_mapping_fixture(
+            BUDGET_INVENTORY, {"bug-fix": "grok-4.6-fast-xhigh"}, budget="small"
+        )
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertTrue(any("unavailable model" in item for item in result["unavailable"]))
 
     def test_unknown_budget_is_an_explicit_error_without_write(self):
         result = run_pstack_model_mapping_fixture(

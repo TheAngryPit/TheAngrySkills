@@ -60,8 +60,8 @@ that Luna suits autonomous systems administration.
 
 Luna Max is available when justified by the work; it requires no repeated
 approval merely for that effort. Choose effort for the workload; higher effort does not guarantee better results.
-GPT-6 preserves earlier context for cache reuse across effort changes, but
-that does not guarantee cache hits or sharing across models and tasks.
+GPT-6 supports cache-preserving effort updates through its documented mechanism;
+do not assume every client uses it or that cache is shared across models or tasks.
 Dated capability, pricing, caching and benchmark evidence is in
 [references/gpt6-20260922.md](references/gpt6-20260922.md). These profiles do
 not authorise new spending routes, external actions or additional access. Astra
@@ -69,6 +69,17 @@ Max and Ultra are outside the habitual palette. Terra and other supported
 models remain available when selected by the operator or bound to a specialist.
 Honour explicit selections and fixed bindings, including those outside this
 palette.
+
+## Changing selection during work
+
+Keep Sol medium as the default and choose task-specific overrides through the
+native surface that actually supports them. In CLI, `/model` changes model and
+supported effort within a session. A task follow-up tool may expose model and
+effort overrides; use them only when that tool supports the target. Do not
+message the current task recursively to simulate self-switching. The current
+agent cannot claim to change its own model without an exposed control and
+confirmation. Use the existing bounded specialist delegation when suitable.
+Changing `config.toml` sets a default, not proof that an active turn switched.
 
 ## Runtime and delegation
 

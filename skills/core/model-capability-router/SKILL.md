@@ -103,6 +103,11 @@ the corresponding explicit user request. Routing grants no authority over
 hosts, accounts, private data, credentials, publication or destructive actions.
 Respect native approvals and refusals. Do not force feature flags.
 
+Before accepting a delegated deliverable, check the requested elements against
+the actual result and verification evidence. Concise reporting must not remove
+required work or presentation quality. Correct omissions before delivery;
+change the assignment or model when observed failures justify it.
+
 ## Cost and evidence
 
 Compare the remaining whole task, including parent and worker input, output,

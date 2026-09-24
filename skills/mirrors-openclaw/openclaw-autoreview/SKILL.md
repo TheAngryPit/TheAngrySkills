@@ -1,6 +1,6 @@
 ---
 name: openclaw-autoreview
-description: "Structured Codex, Claude, Amp, Pi, or Kimi code review when explicitly requested."
+description: "Structured code review when explicitly requested, preferring OpenAI/Codex before Claude."
 ---
 
 # Auto Review
@@ -68,6 +68,21 @@ validated scalar value reaches diff/status; other global and system Git
 configuration stays disabled. Repository-owned or relative global-config
 overrides are not imported, and reviewed source bytes are not rewritten.
 
+Local collection disables effective Git clean/process commands and requires
+conversion to succeed. Unused drivers, unchanged filtered neighbors, staged-only
+changes, and deletions can still be reviewed without executing converters.
+If Git needs executable conversion to assemble the diff, collection fails before
+any reviewer starts. This can include an unchanged filtered file whose stat cache
+needs refreshing. Use explicit branch or commit mode for committed content in
+that case. Built-in line-ending normalization remains enabled; raw bytes never
+stand in for a required executable conversion.
+PR-base discovery uses trusted external Git and a scoped GitHub CLI environment,
+preserving external authentication/configuration and proxy settings while excluding
+inherited Git routing, `GH_REPO` redirection, and checkout-owned executables.
+A differently named `AUTOREVIEW_GIT` override that cannot also be selected as `git`
+by the child requires an explicit `--base`; rejected GitHub configuration paths
+also require one.
+
 ## Context and severity
 
 Use `--prompt` for task-specific guidance, or `--prompt-file` and `--dataset` for
@@ -76,6 +91,28 @@ target. The reviewer cannot read unchanged repository files from its empty
 sandbox; supply relevant source or dependency evidence when the diff is insufficient.
 `--prompt-file` also accepts an absolute path inside the repository; the same
 sensitive-path, symlink, and mutation checks apply. `--dataset` stays repo-relative.
+Repeated paths in the same evidence role share one validated capture. Equal
+content at different paths and prompt-file versus dataset roles stay distinct.
+
+For unchanged committed source, use repeatable `--source-context <repo-relative-path>`
+with branch or commit mode. It reads the exact regular-file blob from the frozen
+reviewed commit (branch HEAD or `--commit`), including executable source files.
+Local mode, including an auto-selected local target, is unsupported. No separate
+context revision or working-copy substitution is accepted. The checkout path must
+remain a regular file; its bytes and path topology are revalidated throughout review.
+Repeated normalized source-context paths share one capture after every argument
+is validated; different paths and evidence roles remain distinct.
+
+This role uses tracked-source filename classification, so source names such as
+`src/token_count.py` are accepted. Credential directories, stores and keyfiles
+remain forbidden. Existing prompt-file and dataset restrictions are unchanged.
+Every source fragment carries path, commit, blob and mode provenance. Complete
+bytes are partitioned with the change when needed; context never adds finding
+targets. This is a source-provenance contract, not secret-content scanning.
+
+```bash
+"$AUTOREVIEW" --mode branch --base origin/main --source-context src/token_count.py
+```
 
 The default threshold is **P0 only**: material blockers to normal operation or
 safety. Use `--max-priority P1`, `P2`, or `P3` when the caller requests a wider
@@ -89,27 +126,42 @@ parent-relative patch; otherwise leave the attribution unknown.
 
 ## Engines
 
-Codex is the default: `gpt-5.6-sol`, high reasoning, with a `gpt-5.6-terra` retry
-only for an account-access failure. Honor explicit engine/model choices; do not
-switch because a review is slow or rate-limited.
+For automatic reviewer selection, try OpenAI models through Codex before Claude.
+Start with `--engine codex` even when the invoking agent uses Codex or asks for
+an independent second opinion. Use Claude only when the user explicitly selects
+it or Codex is unavailable for the review; report the concrete availability failure
+before switching. Do not switch because a review is slow, rate-limited, or returns
+findings, or to bypass a safety refusal or isolation failure.
+
+Codex defaults to `gpt-6-sol`, high reasoning, with a `gpt-6-luna` retry
+only for an account-access failure. Explicit `gpt-6-sol` selections use the same
+retry; other explicit models, including Luna and Astra, have no model fallback.
+Explicit `gpt-5.6-sol` selections retain their access-only `gpt-5.6-terra` retry.
+GPT-6 Sol and Luna reject unsupported `minimal` effort before review preparation;
+an effort-only override no longer selects an older model.
+Honor explicit user engine/model choices.
+The helper does not automatically fall back between engines.
 
 Use `--engine`, `--model`, and `--thinking` to override the defaults.
 `--codex-speed fast` selects priority service when supported. Only Claude accepts
 `--fallback-model`. Per-engine environment overrides use `AUTOREVIEW_<ENGINE>_*`.
 
-For GPT-6 Astra, select it explicitly on a Codex account with access:
+If your account cannot access Sol or Luna, pin an available model. To require
+GPT-6 Astra without a model fallback, select it explicitly:
 
 ```bash
 "$AUTOREVIEW" --mode local --model gpt-6-astra --thinking high
 ```
 
-Use `low`, `medium`, `high`, `xhigh`, or `max`; Astra does not support `none`
-or `minimal`. AutoReview defaults to `high` and does not fall back from an
-explicit Astra selection. Codex's `ultra` mode uses automatic
+GPT-6 Sol and Luna support `none`, `low`, `medium`, `high`, `xhigh`, and `max`;
+neither supports `minimal`. Astra also excludes `none`. AutoReview defaults to
+`high` and does not fall back from an explicit Luna or Astra selection.
+Codex's `ultra` mode uses automatic
 delegation and is outside this helper's supported effort levels. Use `max`
 for its deepest supported review. For EU data residency, use
-`--codex-speed default`; Astra fast mode is unavailable there.
-See the [Astra migration guide](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra)
+`--codex-speed default`; GPT-6 fast mode is unavailable there.
+See the [GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol) and
+[GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model docs
 and [Codex reasoning modes](https://learn.chatgpt.com/docs/models#know-when-to-use-max-or-ultra).
 
 By default, Codex preserves only authentication settings from user configuration;
@@ -166,7 +218,8 @@ resolved executable (or the unresolved selection); it never means `scoped-clean`
 Set `AUTOREVIEW_GIT` to a trusted external Git executable to override every
 helper-owned Git invocation. On macOS with a broken selected Xcode, use
 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` for the invocation.
-Only `DEVELOPER_DIR` is additionally retained in Git's sanitized environment;
+Only an absolute, external `DEVELOPER_DIR` is additionally retained in Git's
+sanitized environment;
 neither override is forwarded to the isolated reviewer environment.
 
 Every reviewer pass must inspect its bundle for real credentials and report
@@ -193,11 +246,24 @@ Review files have no size/count cap and are never truncated. Large diffs and
 datasets are partitioned automatically. Intact instructions and required mixed
 source context must still fit the per-pass prompt budget. A failed pass does not
 produce a partial clean verdict.
+The planner compares a bounded set of evidence allocations and keeps the existing
+plan unless total prompt bytes improve without more passes, or equal bytes need
+fewer passes. Every change is still reviewed against every evidence batch.
+
+Each pass is an independent assignment, not a continuing conversation. Its
+private completion field must confirm a finished assessment; deferring to
+another pass leaves the overall review incomplete.
 
 Do not edit inputs during a review: the helper verifies captured sources before
 sending and publishing results. Long reviews are normal; advancing heartbeats
 mean progress. Use `--stream-engine-output` for visibility, not extra reviewer
 runs. `--dry-run` checks preparation and startup without contacting a reviewer.
+Both dry runs and execution print planned pass count and total prompt bytes.
+Use `--max-review-passes N` (or `AUTOREVIEW_MAX_REVIEW_PASSES`) to reject the whole
+plan before any reviewer starts when it exceeds an explicit campaign budget.
+There is no default pass ceiling. `--engine-timeout-seconds` remains an optional
+deadline per process attempt. Pass counts, prompt bytes, and deadlines are not
+token hard caps; they do not bound model reasoning or tool use.
 
 ## Results
 
@@ -206,11 +272,11 @@ reviewed repository. When using `--status-output`, all output paths must differ;
 case-only and Unicode normalization aliases are conservatively refused on every
 platform, even when the filesystem would permit distinct files.
 
-| Exit | Meaning                                                                         |
-| ---- | ------------------------------------------------------------------------------- |
-| `0`  | `scoped-clean`, or a correct verdict with only filtered lower-priority findings |
-| `1`  | Accepted findings, an incorrect provider verdict, or a failed review attempt    |
-| `2`  | Incomplete scope/attribution, or a missing required finding                     |
+| Exit | Meaning                                                                            |
+| ---- | ---------------------------------------------------------------------------------- |
+| `0`  | `scoped-clean`, or a correct verdict with only filtered lower-priority findings    |
+| `1`  | Accepted findings, an incorrect provider verdict, or a failed review attempt       |
+| `2`  | Unfinished assessment, incomplete scope/attribution, or a missing required finding |
 
 Treat `scoped-clean` as clean only for the selected target and requested priority.
 `filtered` is not clean; resolve `incomplete` before claiming completion.
@@ -223,6 +289,18 @@ machine-readable outcome. It preserves the existing exit codes and
 `findings`, `filtered`, `incorrect`, or `incomplete`; a launched reviewer that
 fails or returns an invalid report reports `reviewer_unavailable` with exit 1.
 A failed later pass never publishes a partial review report.
+
+Codex runs collect usage with live display on or off. The final report, status
+sidecar, and terminal summary include `usage`: process attempts, reported,
+unknown and partial attempt counts, `complete`, and observed token totals.
+Each fresh attempt contributes its last valid cumulative snapshot once, including
+access retries and failed passes. Cached input and reasoning output are subsets
+of input and output, not extra totals to add. These are observed tokens, not a
+billing estimate or a cache-hit promise. Missing telemetry, including Codex's
+all-zero defaults when no sample exists, is unknown, never measured zero;
+`tokens: null` means no attempt supplied usable totals. When `complete` is false,
+available totals are a lower bound. Interrupted runs print retained usage but
+still publish no status or review report. Other engines do not yet aggregate usage.
 
 ```json
 {
@@ -248,6 +326,11 @@ helper's deadline, not a reviewer that happens to exit 124. Completed envelopes
 have `report_produced: true`; this means a validated final report exists, not
 that its verdict is clean. `--expect-findings` changes exit codes as before;
 inspect `status` independently of `exit_code`.
+
+An unfinished assessment retains its validated provider observations with
+`incomplete`, exit 2, and `report_produced: true`, even when findings exist.
+The private completion field is not copied into public reports. Missing or
+invalid completion is an invalid report, not an unfinished assessment.
 
 The sidecar contains no provider logs, prompts, findings, or model identifiers.
 Existing bounded, display-safe diagnostics remain on stderr; command-auth

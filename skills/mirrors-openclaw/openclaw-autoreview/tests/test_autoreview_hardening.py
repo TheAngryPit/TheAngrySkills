@@ -328,6 +328,326 @@ class AutoreviewMixedTargetTests(unittest.TestCase):
                 expected = record.staged if span.target == "index" else record.unstaged
                 self.assertEqual(captured.text.encode()[span.start:span.end], expected.encode())
 
+    def test_mixed_full_dataset_preference_rebatches_before_tiny_change_splits(self):
+        budget, minimum = 512_000, 32_000
+        render = self.helper["render_review_prompt"]
+        split = self.helper["split_review_bundle"]
+        dataset = self.helper["ReviewDataset"]
+        render_data = self.helper["render_datasets"]
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            source = repo / "source.py"
+            source.write_text("baseline()\n")
+            git(repo, "add", ".")
+            git(repo, "commit", "-qm", "synthetic base")
+            source.write_text("indexed = '" + "x" * 60_000 + "'\n")
+            git(repo, "add", ".")
+            source.write_text("working = '" + "y" * 60_000 + "'\n")
+            captured = self.helper["local_bundle"](repo)
+            record, span = captured.mixed[0], captured.spans[0]
+            template = self.helper["ReviewChunk"]("", "", span.start, (record,), ((span.path, span.target),))
+            first_change = captured.text.encode()[span.start:span.end].decode()
+            branch = self.helper["current_branch"](repo)
+            overhead = len(render(branch, "local", None, template, "",
+                                  render_data([dataset("owner.py", "")]), (999_999, 999_999)).encode())
+            for capacity in (4, minimum + 64):
+                with self.subTest(capacity=capacity):
+                    datasets = [dataset("owner.py", "e" * (budget - overhead - capacity))]
+                    complete = render_data(datasets)
+                    preferred, split_limits = False, []
+
+                    def observe_render(*args, **kwargs):
+                        nonlocal preferred
+                        preferred = args[5] == complete
+                        return render(*args, **kwargs)
+
+                    def bounded_split(text, limit):
+                        if preferred:
+                            self.assertGreaterEqual(limit, minimum, "rebatch before allocating tiny speculative chunks")
+                            if text == first_change:
+                                split_limits.append(limit)
+                        return split(text, limit)
+
+                    optimize = self.helper["optimize_evidence_plan"]
+
+                    def probe_full_batch(baseline, available, change_bytes, evidence, build):
+                        # Exercise the optimizer's one-batch retry, including a
+                        # continuation correction that reduces change capacity.
+                        self.assertIsNone(build(len(complete.encode()) + 128, len(baseline)))
+                        return optimize(baseline, available, change_bytes, evidence, build)
+
+                    with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                        "render_review_prompt": observe_render, "split_review_bundle": bounded_split,
+                        "optimize_evidence_plan": probe_full_batch,
+                    }):
+                        passes = self.helper["build_review_prompts"](
+                            repo, "local", None, captured, "", datasets, budget,
+                        )
+                    self.assertEqual(bool(split_limits), capacity != 4)
+                    self.assertTrue(all(limit == capacity for limit in split_limits))
+                    batches = {}
+                    for item in passes:
+                        self.assertLessEqual(len(item.prompt.encode()), budget)
+                        batches.setdefault(item.evidence_batch, []).append(item.chunk.content)
+                        for owner in item.chunk.sources:
+                            self.assertEqual(owner, record)
+                            self.assertIn(owner.identity, item.prompt)
+                            for version in (owner.index, owner.working_tree):
+                                self.assertIn(version.identity, item.prompt)
+                                self.assertIn(version.content, item.prompt)
+                    self.assertGreater(len(batches), 1)
+                    for item in passes:
+                        self.assertIn(f"Evidence batch: {item.evidence_batch}/{len(batches)}", item.prompt)
+                    self.assertTrue(all("".join(changes) == captured.text for changes in batches.values()))
+
+    def test_mixed_initial_fallback_rebatches_small_evidence_before_tiny_splits(self):
+        budget, minimum = 512_000, 32_000
+        build = self.helper["build_mixed_change_passes"]
+        split = self.helper["split_review_bundle"]
+        render = self.helper["render_review_prompt"]
+        render_data = self.helper["render_datasets"]
+        dataset = self.helper["ReviewDataset"]
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            source = repo / "source.py"
+            source.write_text("baseline()\n")
+            git(repo, "add", ".")
+            git(repo, "commit", "-qm", "synthetic base")
+            source.write_text("indexed = '" + "x" * 130_000 + "'\n")
+            git(repo, "add", ".")
+            source.write_text("working = '" + "y" * 130_000 + "'\n")
+            captured = self.helper["local_bundle"](repo)
+            record, span = captured.mixed[0], captured.spans[0]
+            template = self.helper["ReviewChunk"]("", "", span.start, (record,), ((span.path, span.target),))
+            branch = self.helper["current_branch"](repo)
+            overhead = len(render(branch, "local", None, template, "",
+                                  render_data([dataset("owner.py", "")]), (999_999, 999_999)).encode())
+            evidence_bytes = budget - overhead - 1_024
+            self.assertLess(evidence_bytes, budget // 2)
+            datasets = [dataset("owner.py", "e" * evidence_bytes)]
+            complete = render_data(datasets)
+            whole, full_attempts = False, []
+
+            def observe_build(*args, **kwargs):
+                nonlocal whole
+                whole = render_data(args[5]) == complete
+                if whole:
+                    full_attempts.append(kwargs.get("min_change_bytes", 4))
+                return build(*args, **kwargs)
+
+            def bounded_split(text, limit):
+                if whole:
+                    self.assertGreaterEqual(limit, minimum, "initial fallback must rebatch complete evidence")
+                return split(text, limit)
+
+            with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                "build_mixed_change_passes": observe_build, "split_review_bundle": bounded_split,
+            }):
+                passes = self.helper["build_review_prompts"](repo, "local", None, captured, "", datasets, budget)
+            self.assertGreaterEqual(len(full_attempts), 2)
+            self.assertTrue(all(value == minimum for value in full_attempts))
+            batches = {}
+            for item in passes:
+                self.assertLessEqual(len(item.prompt.encode()), budget)
+                batches.setdefault(item.evidence_batch, []).append(item.chunk.content)
+                self.assertTrue(all(owner == record for owner in item.chunk.sources))
+            self.assertGreater(len(batches), 1)
+            self.assertTrue(all("".join(changes) == captured.text for changes in batches.values()))
+
+    def test_one_byte_evidence_keeps_terminal_fallback_for_both_planners(self):
+        budget, capacity = 512_000, 16_000
+        render = self.helper["render_review_prompt"]
+        render_data = self.helper["render_datasets"]
+        split = self.helper["split_review_bundle"]
+        split_data = self.helper["split_review_datasets"]
+        datasets = [self.helper["ReviewDataset"]("owner.py", "x")]
+        complete = render_data(datasets)
+        terminal_limit = len(render_data([datasets[0]._replace(content="", byte_offset=1)]).encode()) + 4
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            source = repo / "source.py"
+            source.write_text("baseline()\n")
+            git(repo, "add", ".")
+            git(repo, "commit", "-qm", "synthetic base")
+            source.write_text("indexed = '" + "x" * 20_000 + "'\n")
+            git(repo, "add", ".")
+            source.write_text("working = '" + "y" * 20_000 + "'\n")
+            captured = self.helper["local_bundle"](repo)
+            branch = self.helper["current_branch"](repo)
+            record, span = captured.mixed[0], captured.spans[0]
+            for mixed in (False, True):
+                with self.subTest(mixed=mixed):
+                    target = "local" if mixed else "branch"
+                    chunk = self.helper["ReviewChunk"]("", "", span.start, (record,), ((span.path, span.target),)) \
+                        if mixed else self.helper["ReviewChunk"]("")
+                    overhead = len(render(branch, target, None, chunk, "", complete, (999_999, 999_999)).encode())
+                    instructions = "i" * (budget - overhead - capacity - (0 if mixed else 4_096))
+                    builder_name = "build_mixed_change_passes" if mixed else "build_change_review_prompts"
+                    build = self.helper[builder_name]
+                    last_limit, active_minimum, low_splits = None, None, []
+
+                    def observe_datasets(values, limit):
+                        nonlocal last_limit
+                        last_limit = limit
+                        return split_data(values, limit)
+
+                    def observe_build(*args, **kwargs):
+                        nonlocal active_minimum
+                        active_minimum = kwargs.get("min_change_bytes", 4)
+                        return build(*args, **kwargs)
+
+                    def bounded_split(text, limit):
+                        if limit < 32_000:
+                            self.assertEqual(active_minimum, 4)
+                            self.assertEqual(last_limit, terminal_limit)
+                            low_splits.append(limit)
+                        return split(text, limit)
+
+                    with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                        builder_name: observe_build, "split_review_bundle": bounded_split,
+                        "split_review_datasets": observe_datasets,
+                    }):
+                        passes = self.helper["build_review_prompts"](
+                            repo, target, None, captured if mixed else captured.text,
+                            instructions, datasets, budget,
+                        )
+                    self.assertTrue(low_splits, "the terminal baseline must retain four-byte admission")
+                    changes = []
+                    for item in passes:
+                        prompt = item.prompt if mixed else item
+                        self.assertLessEqual(len(prompt.encode()), budget)
+                        self.assertIn(complete, prompt)
+                        changes.append(item.chunk.content if mixed else prompt.split("# Change Bundle\n", 1)[1])
+                    self.assertEqual("".join(changes), captured.text)
+
+    def test_mixed_terminal_single_batch_preserves_continuation_capacity(self):
+        budget, capacity = 12_000, 320
+        render = self.helper["render_review_prompt"]
+        render_data = self.helper["render_datasets"]
+        for evidence in ("x", "xxxxx"):
+            with self.subTest(evidence_bytes=len(evidence)):
+                datasets = [self.helper["ReviewDataset"]("owner.py", evidence)]
+                complete = render_data(datasets)
+                with tempfile.TemporaryDirectory() as tempdir:
+                    repo = init_repo(Path(tempdir))
+                    source = repo / "source.py"
+                    source.write_text("baseline()\n")
+                    git(repo, "add", ".")
+                    git(repo, "commit", "-qm", "synthetic base")
+                    source.write_text("indexed = '" + "x" * 200 + "'\n")
+                    git(repo, "add", ".")
+                    source.write_text("working = '" + "y" * 200 + "'\n")
+                    captured = self.helper["local_bundle"](repo)
+                    branch = self.helper["current_branch"](repo)
+                    record = captured.mixed[0]
+                    overhead = max(len(render(branch, "local", None, self.helper["ReviewChunk"](
+                        "", "", span.start, (record,), ((span.path, span.target),),
+                    ), "", complete, (999_999, 999_999)).encode()) for span in captured.spans)
+                    instructions = "i" * (budget - overhead - capacity)
+                    direct = self.helper["build_mixed_change_passes"](
+                        branch, "local", None, captured, instructions, datasets, budget,
+                    )
+                    self.assertTrue(any(item.chunk.context for item in direct))
+                    self.assertEqual("".join(item.chunk.content for item in direct), captured.text)
+                    passes = self.helper["build_review_prompts"](
+                        repo, "local", None, captured, instructions, datasets, budget,
+                    )
+                    self.assertEqual("".join(item.chunk.content for item in passes), captured.text)
+                    self.assertEqual(len(passes), len(direct))
+                    for item in passes:
+                        self.assertLessEqual(len(item.prompt.encode()), budget)
+                        self.assertNotIn("Evidence batch:", item.prompt)
+                        self.assertEqual(item.evidence_batch, 1)
+                        self.assertEqual(item.datasets, tuple(datasets))
+                        self.assertIn(complete, item.prompt)
+                        self.assertTrue(all(owner == record for owner in item.chunk.sources))
+
+    def test_ordinary_tiny_evidence_survives_terminal_batch_capacity_refusal(self):
+        budget = 12_000
+        bundle = "diff --git a/source.py b/source.py\n--- a/source.py\n+++ b/source.py\n@@ -0,0 +1 @@\n+" + "x" * 6_000 + "\n"
+        render = self.helper["render_review_prompt"]
+        render_data = self.helper["render_datasets"]
+        build = self.helper["build_change_review_prompts"]
+        split_data = self.helper["split_review_datasets"]
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            branch = self.helper["current_branch"](repo)
+            for path, capacity, terminal_batch in (
+                ("owner.py", 320, False),
+                ("context/" * 87 + "owner.py", 200, True),
+            ):
+                with self.subTest(path_bytes=len(path), capacity=capacity):
+                    datasets = [self.helper["ReviewDataset"](path, "xxxxx")]
+                    complete = render_data(datasets)
+                    overhead = len(render(
+                        branch, "branch", None, self.helper["ReviewChunk"](""),
+                        "", complete, (999_999, 999_999),
+                    ).encode())
+                    instructions = "i" * (budget - overhead - capacity - 4_096)
+                    direct = build(branch, "branch", None, bundle, instructions, complete, budget)
+                    self.assertIsNotNone(direct)
+                    attempts = []
+
+                    def observe_batches(values, limit):
+                        batches = split_data(values, limit)
+                        attempts.append((limit, [len(item.content.encode()) for batch in batches for item in batch]))
+                        return batches
+
+                    with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                        "split_review_datasets": observe_batches,
+                    }):
+                        prompts = self.helper["build_review_prompts"](
+                            repo, "branch", None, bundle, instructions, datasets, budget,
+                        )
+                    self.assertEqual(bool(attempts), terminal_batch)
+                    if terminal_batch:
+                        minimum = len(render_data([datasets[0]._replace(content="", byte_offset=5)]).encode()) + 4
+                        self.assertEqual(attempts[-1], (minimum, [4, 1]))
+                    self.assertEqual(prompts, direct)
+                    self.assertEqual("".join(prompt.split("# Change Bundle\n", 1)[1] for prompt in prompts), bundle)
+                    for prompt in prompts:
+                        self.assertLessEqual(len(prompt.encode()), budget)
+                        self.assertIn(complete, prompt)
+                        self.assertNotIn("Evidence batch:", prompt)
+                    impossible = instructions + "i" * (capacity + len(complete.encode()))
+                    self.assertIsNone(build(branch, "branch", None, bundle, impossible, complete, budget))
+                    with self.assertRaisesRegex(SystemExit, "intact context leave too little room"):
+                        self.helper["build_review_prompts"](
+                            repo, "branch", None, bundle, impossible, datasets, budget,
+                        )
+
+    def test_mixed_complete_spans_keep_datasets_below_preferred_split_capacity(self):
+        budget = 512_000
+        render = self.helper["render_review_prompt"]
+        render_data = self.helper["render_datasets"]
+        dataset = self.helper["ReviewDataset"]
+        with self.migration() as (repo, *_):
+            captured = self.helper["local_bundle"](repo)
+            records = {record.path: record for record in captured.mixed}
+            branch = self.helper["current_branch"](repo)
+            overhead = max(len(render(branch, "local", None, self.helper["ReviewChunk"](
+                "", "", span.start, (records[span.path],), ((span.path, span.target),),
+            ), "", render_data([dataset("owner.py", "")]), (999_999, 999_999)).encode())
+                for span in captured.spans)
+            capacity = max(span.end - span.start for span in captured.spans) + 256
+            self.assertLess(capacity, 32_000)
+            datasets = [dataset("owner.py", "e" * (budget - overhead - capacity))]
+            complete = render_data(datasets)
+            full = render(branch, "local", None, self.helper["mixed_bundle_chunk"](captured), "", complete)
+            self.assertGreater(len(full.encode()), budget)
+            passes = self.helper["build_review_prompts"](repo, "local", None, captured, "", datasets, budget)
+            self.assertGreater(len(passes), 1)
+            self.assertTrue("".join(item.chunk.content for item in passes) == captured.text,
+                            "complete spans must not be repeated across evidence batches")
+            for item in passes:
+                self.assertLessEqual(len(item.prompt.encode()), budget)
+                self.assertFalse("Evidence batch:" in item.prompt)
+                self.assertEqual(item.datasets, tuple(datasets))
+                self.assertTrue(complete in item.prompt)
+                for record in item.chunk.sources:
+                    self.assertEqual(record, records[record.path])
+                    self.assertIn(self.helper["render_mixed_context"](item.chunk), item.prompt)
+
     def test_mixed_planner_never_increases_passes_or_aggregate_prompt_bytes(self):
         with self.migration() as (repo, *_):
             captured = self.helper["local_bundle"](repo)
@@ -779,8 +1099,23 @@ class AutoreviewMixedTargetTests(unittest.TestCase):
                     self.helper["current_branch"](repo), "local", None, chunk, "", "", (999_999, 999_999),
                 ).encode()) + 1000
                 datasets = [self.helper["ReviewDataset"]("e" * 4000 + ".txt", "evidence")]
-                with self.assertRaisesRegex(SystemExit, r"mixed source src/migrate-\d.py .*prompt limit"):
-                    self.helper["prepare_review_prompts"](repo, "local", None, captured, "", datasets, budget)
+                build = self.helper["build_mixed_change_passes"]
+                failures = []
+
+                def observe_failure(*args, **kwargs):
+                    try:
+                        return build(*args, **kwargs)
+                    except self.helper["MixedContextCapacityError"] as error:
+                        failures.append(error)
+                        raise
+
+                with mock.patch.dict(self.helper["prepare_review_prompts"].__globals__, {
+                    "build_mixed_change_passes": observe_failure,
+                }):
+                    with self.assertRaisesRegex(SystemExit, r"mixed source src/migrate-\d.py .*prompt limit") as refused:
+                        self.helper["prepare_review_prompts"](repo, "local", None, captured, "", datasets, budget)
+                self.assertGreaterEqual(len(failures), 2)
+                self.assertIs(refused.exception, failures[-2], "retain the terminal batch error when whole evidence also fails")
             provider.assert_not_called()
 
 
@@ -1028,10 +1363,10 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 yield repo, sends, stdout, stderr
 
     @contextlib.contextmanager
-    def committed_context_fixture(self, *options, path="src/token_count.py",
+    def committed_context_fixture(self, *options, path="src/token_count.py", role="--source-context",
                                   content=b"def count_tokens(): return 7\r\n", setup=None):
         with self.preparation_fixture(
-            "--mode", "branch", "--base", "HEAD^", "--source-context", path, *options,
+            "--mode", "branch", "--base", "HEAD^", role, path, *options,
         ) as fixture:
             repo = fixture[0]
             source = repo / path
@@ -1046,8 +1381,9 @@ class AutoreviewHardeningTests(unittest.TestCase):
             yield fixture
 
     def test_source_context_uses_reviewed_blob_not_working_copy_or_current_head(self):
-        for mode in ("branch", "commit"):
-            with self.subTest(mode=mode), self.committed_context_fixture() as (repo, sends, *_):
+        for role, mode in ((role, mode) for role in ("--source-context", "--source-context-file")
+                           for mode in ("branch", "commit")):
+            with self.subTest(role=role, mode=mode), self.committed_context_fixture(role=role) as (repo, sends, *_):
                 commit = git(repo, "rev-parse", "HEAD").strip()
                 oid = git(repo, "rev-parse", "HEAD:src/token_count.py").strip()
                 source = repo / "src/token_count.py"
@@ -1068,20 +1404,22 @@ class AutoreviewHardeningTests(unittest.TestCase):
 
     def test_source_context_duplicates_keep_full_source_in_one_planned_pass(self):
         content = b"# context\n" * 30_000
-        with self.committed_context_fixture(
-            "--source-context", "./src/token_count.py", "--max-review-passes", "1",
-            content=content,
-        ) as (_repo, sends, out, _err):
-            self.assertEqual(self.helper["main_impl"](), 0)
-            self.assertEqual(len(sends), 1)
-            self.assertEqual(sends[0].count(content.decode()), 1)
-            self.assertEqual(sends[0].count('# Source context: "src/token_count.py"'), 1)
-            self.assertIn("review plan: 1 passes;", out.getvalue())
+        for role in ("--source-context", "--source-context-file"):
+            with self.subTest(role=role), self.committed_context_fixture(
+                role, "./src/token_count.py", "--max-review-passes", "1",
+                role=role, content=content,
+            ) as (_repo, sends, out, _err):
+                self.assertEqual(self.helper["main_impl"](), 0)
+                self.assertEqual(len(sends), 1)
+                self.assertEqual(sends[0].count(content.decode()), 1)
+                self.assertEqual(sends[0].count('# Source context: "src/token_count.py"'), 1)
+                self.assertIn("review plan: 1 passes;", out.getvalue())
 
     def test_source_context_duplicate_capture_refuses_changed_bytes_or_topology(self):
-        for change in ("bytes", "topology"):
-            with self.subTest(change=change), self.committed_context_fixture(
-                "--source-context", "./src/token_count.py",
+        for role, change in ((role, change) for role in ("--source-context", "--source-context-file")
+                             for change in ("bytes", "topology")):
+            with self.subTest(role=role, change=change), self.committed_context_fixture(
+                role, "./src/token_count.py", role=role,
             ) as (repo, sends, *_):
                 source = repo / "src/token_count.py"
                 original = self.helper["capture_source_context"]
@@ -1116,16 +1454,18 @@ class AutoreviewHardeningTests(unittest.TestCase):
         with self.committed_context_fixture(
             "--source-context", "./src/owner.py", "--source-context", "src/copy.py",
             "--dataset", "src/owner.py", "--prompt-file", "src/owner.py",
+            "--source-context-file", "src/owner.py", "--source-context-file", "./src/owner.py",
+            "--source-context-file", "src/copy.py",
             path="src/owner.py", content=content, setup=copy_source,
         ) as (_repo, sends, *_):
             self.assertEqual(self.helper["main_impl"](), 0)
             self.assertEqual(len(sends), 1)
-            self.assertEqual(sends[0].count(content.decode()), 4)
-            for header in (
-                '# Source context: "src/owner.py"', '# Source context: "src/copy.py"',
-                f"# Dataset: {Path('src/owner.py')}", f"# Prompt file: {Path('src/owner.py')}",
+            self.assertEqual(sends[0].count(content.decode()), 6)
+            for header, count in (
+                ('# Source context: "src/owner.py"', 2), ('# Source context: "src/copy.py"', 2),
+                (f"# Dataset: {Path('src/owner.py')}", 1), (f"# Prompt file: {Path('src/owner.py')}", 1),
             ):
-                self.assertEqual(sends[0].count(header), 1)
+                self.assertEqual(sends[0].count(header), count)
 
     def test_source_context_does_not_relax_existing_evidence_roles(self):
         for role in ("--dataset", "--prompt-file"):
@@ -1137,9 +1477,10 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 self.assertFalse(sends)
 
     def test_source_context_requires_committed_review_mode(self):
-        for mode in ("local", "uncommitted", "auto"):
-            with self.subTest(mode=mode), self.committed_context_fixture(
-                "--mode", mode,
+        for role, mode in ((role, mode) for role in ("--source-context", "--source-context-file")
+                           for mode in ("local", "uncommitted", "auto")):
+            with self.subTest(role=role, mode=mode), self.committed_context_fixture(
+                "--mode", mode, role=role,
             ) as (repo, sends, *_):
                 (repo / "source.md").write_text("dirty source\n")
                 with self.assertRaisesRegex(SystemExit, "requires a committed branch or commit review"):
@@ -1147,14 +1488,17 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 self.assertFalse(sends)
 
     def test_source_context_retains_strict_directories_stores_and_keyfiles(self):
-        for path in (
+        paths = (
             "private/parser.py", "credentials/prod.py", "src/secrets/runtime.ts",
             "service-account/client.ts", ".aws/config", ".ssh/client.py",
             ".docker/Dockerfile", ".config/gcloud/client.py", "tokens/session.json",
             "src/auth-token.json", "src/.env", "src/.netrc", "src/.git-credentials",
             "keys/id_ed25519", "keys/signing.pem", "keys/signing.p12", "keys/signing.key",
-        ):
-            with self.subTest(path=path), self.committed_context_fixture(path=path) as (_repo, sends, *_):
+        )
+        cases = [("--source-context", path) for path in paths]
+        cases.append(("--source-context-file", "credentials/prod.py"))
+        for role, path in cases:
+            with self.subTest(role=role, path=path), self.committed_context_fixture(path=path, role=role) as (_repo, sends, *_):
                 with self.assertRaisesRegex(SystemExit, "sensitive --source-context"):
                     self.helper["main_impl"]()
                 self.assertFalse(sends)
@@ -1217,8 +1561,11 @@ class AutoreviewHardeningTests(unittest.TestCase):
             self.assertFalse(sends)
 
     def test_source_context_revalidation_rejects_stale_publication_and_later_passes(self):
-        for timing in ("capture", "preparation", "review", "between passes"):
-            with self.subTest(timing=timing), self.committed_context_fixture() as (repo, sends, out, _err):
+        for role, timing in (
+            *(("--source-context", timing) for timing in ("capture", "preparation", "review", "between passes")),
+            ("--source-context-file", "review"), ("--source-context-file", "between passes"),
+        ):
+            with self.subTest(role=role, timing=timing), self.committed_context_fixture(role=role) as (repo, sends, out, _err):
                 source = repo / "src/token_count.py"
                 original_bytes = source.read_bytes()
                 output = repo.parent / "result.json"
@@ -1310,6 +1657,54 @@ class AutoreviewHardeningTests(unittest.TestCase):
                     self.assertEqual(len(sends), int(timing == "review"))
                     self.assertFalse(output.exists())
 
+    def test_source_context_file_stays_whole_in_every_pass_and_refuses_insufficient_capacity(self):
+        content = ("# context \U0001f99e\r\n" * 300 + "tail without newline \t").encode()
+        with self.committed_context_fixture(role="--source-context-file", content=content) as (repo, sends, *_):
+            (repo / "source.md").write_text("selected change\n" * 4_000)
+            git(repo, "commit", "-qam", "large selected change")
+            captured = self.helper["branch_bundle"](repo, "HEAD^")
+            record = self.helper["capture_source_context"](repo, "src/token_count.py", captured.commit)
+            _, oid, mode = record.source.identity.split(":")
+            block = self.helper["render_datasets"]([self.helper["ReviewDataset"](
+                record.raw_path, content.decode(), provenance=(record.commit, oid, mode),
+            )])
+            with mock.patch.dict(self.helper["main_impl"].__globals__, {
+                "max_prompt_bytes_for_reviewers": lambda _reviewers: 30_000,
+            }):
+                self.assertEqual(self.helper["main_impl"](), 0)
+            self.assertGreater(len(sends), 1)
+            changes = []
+            for prompt in sends:
+                self.assertLessEqual(len(prompt.encode()), 30_000)
+                self.assertEqual(prompt.count(block), 1)
+                prefix, change = prompt.rsplit("\n\n# Change Bundle\n", 1)
+                self.assertIn(block, prefix)
+                self.assertIn("Source-context paths are not finding targets", prefix)
+                changes.append(change)
+            self.assertEqual("".join(changes), captured.text)
+            sends.clear()
+            evidence = self.helper["capture_source_context_inputs"](
+                argparse.Namespace(source_context_file=[record.raw_path]), repo, captured,
+                self.helper["EvidenceInputs"]("complete instructions", [
+                    self.helper["ReviewDataset"]("large-evidence.txt", "partitionable evidence\n" * 3_000),
+                ], []),
+            )
+            prompts = self.helper["prepare_review_prompts"](
+                repo, "branch", "HEAD^", captured, evidence.prompt, evidence.datasets, 30_000,
+            )
+            self.assertTrue(all("Evidence batch:" in prompt for prompt in prompts))
+            for prompt in prompts:
+                self.assertLessEqual(len(prompt.encode()), 30_000)
+                self.assertEqual(prompt.count(block), 1)
+            with self.assertRaisesRegex(SystemExit, "--max-review-passes allows 1"):
+                self.helper["check_review_plan"](argparse.Namespace(max_review_passes=1), prompts)
+            self.assertFalse(sends)
+            with mock.patch.dict(self.helper["main_impl"].__globals__, {
+                "max_prompt_bytes_for_reviewers": lambda _reviewers: len(content),
+            }), self.assertRaisesRegex(SystemExit, "intact context leave too little room"):
+                self.helper["main_impl"]()
+            self.assertFalse(sends)
+
     def test_source_context_partitioning_preserves_full_bytes_and_provenance(self):
         content = ("# context \U0001f99e\r\n" * 10_000 + "tail without newline \t").encode()
         with self.committed_context_fixture(content=content) as (repo, _sends, *_):
@@ -1365,39 +1760,41 @@ class AutoreviewHardeningTests(unittest.TestCase):
             self.helper["verify_evidence"](repo, [record])
 
     def test_source_context_dry_run_uses_blob_without_executable_conversion(self):
-        with self.committed_context_fixture("--dry-run") as (repo, sends, out, _err):
-            converter = repo / "converter.py"
-            marker = repo.parent / "converter-ran"
-            converter.write_text(f"from pathlib import Path\nPath({str(marker)!r}).touch()\n")
-            command = f'"{sys.executable}" "{converter}"'
-            for key in ("clean", "smudge", "process"):
-                git(repo, "config", f"filter.test.{key}", command)
-            git(repo, "config", "filter.test.required", "true")
-            (repo / ".gitattributes").write_text("src/token_count.py filter=test\n")
-            self.assertEqual(self.helper["main_impl"](), 0)
-            self.assertIn("prompt: OK", out.getvalue())
-            self.assertFalse(sends)
-            self.assertFalse(marker.exists())
+        for role in ("--source-context", "--source-context-file"):
+            with self.subTest(role=role), self.committed_context_fixture("--dry-run", role=role) as (repo, sends, out, _err):
+                converter = repo / "converter.py"
+                marker = repo.parent / "converter-ran"
+                converter.write_text(f"from pathlib import Path\nPath({str(marker)!r}).touch()\n")
+                command = f'"{sys.executable}" "{converter}"'
+                for key in ("clean", "smudge", "process"):
+                    git(repo, "config", f"filter.test.{key}", command)
+                git(repo, "config", "filter.test.required", "true")
+                (repo / ".gitattributes").write_text("src/token_count.py filter=test\n")
+                self.assertEqual(self.helper["main_impl"](), 0)
+                self.assertIn("prompt: OK", out.getvalue())
+                self.assertFalse(sends)
+                self.assertFalse(marker.exists())
 
     def test_source_context_never_expands_finding_authority(self):
-        with self.committed_context_fixture() as (repo, _sends, *_):
-            output = repo.parent / "report.json"
-            finding = {
-                "title": "Context-only defect", "body": "This is outside the change.",
-                "priority": "P0", "confidence": 0.99, "category": "bug",
-                "code_location": {"file_path": "src/token_count.py", "line": 1},
-            }
-            report = {"findings": [finding], "overall_correctness": "patch is incorrect",
-                      "overall_explanation": "Context-only observation", "overall_confidence": 0.9,
-                      "review_completion": "complete"}
-            with mock.patch.dict(self.helper["main_impl"].__globals__, {
-                "run_engine": lambda *_args: json.dumps(report),
-            }), mock.patch.object(sys, "argv", [*sys.argv, "--json-output", str(output)]):
-                self.assertEqual(self.helper["main_impl"](), 2)
-            result = json.loads(output.read_text())
-            self.assertEqual(result["findings"], [])
-            self.assertEqual(result["scope_rejected_findings"], [finding])
-            self.assertEqual(result["review_status"], "incomplete")
+        for role in ("--source-context", "--source-context-file"):
+            with self.subTest(role=role), self.committed_context_fixture(role=role) as (repo, _sends, *_):
+                output = repo.parent / "report.json"
+                finding = {
+                    "title": "Context-only defect", "body": "This is outside the change.",
+                    "priority": "P0", "confidence": 0.99, "category": "bug",
+                    "code_location": {"file_path": "src/token_count.py", "line": 1},
+                }
+                report = {"findings": [finding], "overall_correctness": "patch is incorrect",
+                          "overall_explanation": "Context-only observation", "overall_confidence": 0.9,
+                          "review_completion": "complete"}
+                with mock.patch.dict(self.helper["main_impl"].__globals__, {
+                    "run_engine": lambda *_args: json.dumps(report),
+                }), mock.patch.object(sys, "argv", [*sys.argv, "--json-output", str(output)]):
+                    self.assertEqual(self.helper["main_impl"](), 2)
+                result = json.loads(output.read_text())
+                self.assertEqual(result["findings"], [])
+                self.assertEqual(result["scope_rejected_findings"], [finding])
+                self.assertEqual(result["review_status"], "incomplete")
 
     def test_preparation_reuses_untracked_capture_and_keeps_three_full_snapshots(self):
         for explicit in (False, True):
@@ -1762,7 +2159,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             path.write_text("TOKEN=changed-placeholder\n", encoding="utf-8")
             git(repo, "add", path.name)
 
-            bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
 
             self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], bundle)
 
@@ -1780,7 +2177,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 path.write_text("placeholder=true\n", encoding="utf-8")
                 (repo / "review.py").write_text("print('review me')\n", encoding="utf-8")
 
-                bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+                bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
 
                 self.assertIn("# Review Input Omissions", bundle)
                 self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], bundle)
@@ -1827,7 +2224,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 self.helper["local_bundle"].__globals__,
                 {"read_file_bytes": read_once},
             ):
-                bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+                bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
 
             expected_record = json.dumps("review me" + os.linesep)
             self.assertIn(
@@ -2119,7 +2516,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             snapshot = self.helper["source_tree_snapshot"](repo)
             git(repo, "update-ref", "refs/heads/review-base", "HEAD")
             self.assertEqual(self.helper["source_tree_snapshot"](repo), snapshot)
-            bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo, pinned)
+            bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo, pinned)
             self.assertIn("+committed task change", bundle)
             self.assertEqual(
                 self.helper["build_bundle"](repo, target, pinned, "HEAD").paths,
@@ -2141,7 +2538,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 if staged:
                     git(repo, "add", safe)
                 with self.subTest(staged=staged):
-                    bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+                    bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
                     self.assertIn("struct CredentialFile", bundle)
                     self.assertIn(safe, self.helper["local_bundle"](repo).paths)
                     for label in ("--dataset", "--prompt-file"):
@@ -3344,6 +3741,198 @@ class AutoreviewHardeningTests(unittest.TestCase):
             )
         )
 
+    def test_change_partitions_keep_complete_datasets_when_context_fits(self) -> None:
+        def sized_content(size: int) -> str:
+            line = "synthetic owner \U0001f99e\r\n"
+            repeats, padding = divmod(size - 2, len(line.encode("utf-8")))
+            return line * repeats + "x" * padding + " \t"
+
+        dataset = self.helper["ReviewDataset"]
+        render = self.helper["render_datasets"]
+        instructions = (
+            "Review the complete change against the supplied owner modules, callers and tests.\n"
+            "Preserve source attribution and distinguish current behavior from intended behavior.\n"
+            "Report concrete P0-P2 findings; incomplete evidence is not proof of missing behavior.\n"
+        )
+        header = (
+            "diff --git a/source.py b/source.py\n"
+            "--- a/source.py\n+++ b/source.py\n@@ -0,0 +1 @@\n"
+        )
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            for context_bytes, change_bytes in ((430_139, 343_560), (437_973, 112_941)):
+                with self.subTest(context_bytes=context_bytes, change_bytes=change_bytes):
+                    paths = [f"owners/module-{index:02d}/source.py" for index in range(25)]
+                    size, remainder = divmod(context_bytes, len(paths))
+                    datasets = [dataset(path, sized_content(size + (index < remainder)))
+                                for index, path in enumerate(paths)]
+                    rendered = render(datasets)
+                    self.assertEqual(sum(len(item.content.encode("utf-8")) for item in datasets), context_bytes)
+                    self.assertGreater(len(rendered.encode("utf-8")), context_bytes)
+                    tail = "+\U0001f99e \t\r\n"
+                    padding = change_bytes - len((header + tail).encode("utf-8"))
+                    bundle = header + "+\U0001f99e" + "x" * padding + " \t\r\n"
+                    self.assertEqual(len(bundle.encode("utf-8")), change_bytes)
+                    with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                        "optimize_evidence_plan": mock.Mock(side_effect=AssertionError("complete context is preferred")),
+                    }):
+                        prompts = self.helper["build_review_prompts"](
+                            repo, "branch", "base", bundle, instructions, datasets, 512_000,
+                        )
+                    self.assertGreater(len(prompts), 1)
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        with self.assertRaisesRegex(SystemExit, "no reviewer was started"):
+                            self.helper["check_review_plan"](
+                                argparse.Namespace(max_review_passes=len(prompts) - 1), prompts,
+                            )
+                        self.helper["check_review_plan"](
+                            argparse.Namespace(max_review_passes=len(prompts)), prompts,
+                        )
+                    changes = []
+                    for index, prompt in enumerate(prompts, 1):
+                        self.assertLessEqual(len(prompt.encode("utf-8")), 512_000)
+                        prefix, change = prompt.split("# Change Bundle\n", 1)
+                        self.assertTrue(prefix.endswith(rendered + "\n\n"), "each pass needs complete owner context")
+                        self.assertEqual(prefix.count("[Dataset byte offset: 0]"), len(datasets))
+                        self.assertTrue(instructions in prefix)
+                        self.assertFalse("Evidence batch:" in prefix)
+                        if index > 1:
+                            for context in ("# Continuation Context", "+++ b/source.py",
+                                            "@@ -0,0 +1 @@", "original marker is `+`"):
+                                self.assertTrue(context in prefix, context)
+                        changes.append(change)
+                    self.assertTrue("".join(changes).encode("utf-8") == bundle.encode("utf-8"),
+                                    "change bytes must appear exactly once")
+
+    def test_full_dataset_preference_rebatches_before_tiny_change_splits(self) -> None:
+        budget, minimum = 512_000, 32_000
+        render = self.helper["render_review_prompt"]
+        split = self.helper["split_review_bundle"]
+        dataset = self.helper["ReviewDataset"]
+        render_data = self.helper["render_datasets"]
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            branch = self.helper["current_branch"](repo)
+            overhead = len(render(branch, "branch", "base", self.helper["ReviewChunk"](""),
+                                  "", render_data([dataset("owner.py", "")]), (999_999, 999_999)).encode())
+            for capacity, hunk_bytes in ((4, 0), (minimum + 64, 6_000)):
+                with self.subTest(capacity=capacity):
+                    datasets = [dataset("owner.py", "e" * (budget - overhead - 4_096 - capacity))]
+                    complete = render_data(datasets)
+                    bundle = ("diff --git a/source.py b/source.py\n--- a/source.py\n+++ b/source.py\n"
+                              "@@ -0,0 +1 @@ " + "h" * hunk_bytes + "\n+" + "x" * 120_000 + "\n")
+                    preferred, split_limits = False, []
+
+                    def observe_render(*args, **kwargs):
+                        nonlocal preferred
+                        preferred = args[5] == complete
+                        return render(*args, **kwargs)
+
+                    def bounded_split(text, limit):
+                        if preferred:
+                            self.assertGreaterEqual(limit, minimum, "rebatch before allocating tiny speculative chunks")
+                            split_limits.append(limit)
+                        return split(text, limit)
+
+                    optimize = self.helper["optimize_evidence_plan"]
+
+                    def probe_full_batch(baseline, available, change_bytes, evidence, build):
+                        # Exercise the optimizer's one-batch retry, including a
+                        # continuation correction that reduces change capacity.
+                        self.assertIsNone(build(len(complete.encode()) + 128, len(baseline)))
+                        return optimize(baseline, available, change_bytes, evidence, build)
+
+                    with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                        "render_review_prompt": observe_render, "split_review_bundle": bounded_split,
+                        "optimize_evidence_plan": probe_full_batch,
+                    }):
+                        prompts = self.helper["build_review_prompts"](
+                            repo, "branch", "base", bundle, "", datasets, budget,
+                        )
+                    self.assertEqual(bool(split_limits), capacity != 4)
+                    self.assertTrue(all(limit == capacity for limit in split_limits))
+                    batches = {}
+                    for prompt in prompts:
+                        self.assertLessEqual(len(prompt.encode()), budget)
+                        batch = re.search(r"Evidence batch: (\d+)/(\d+)", prompt)
+                        self.assertIsNotNone(batch)
+                        batches.setdefault(batch[1], []).append(prompt.split("# Change Bundle\n", 1)[1])
+                    self.assertGreater(len(batches), 1)
+                    self.assertTrue(all("".join(changes) == bundle for changes in batches.values()))
+
+    def test_intact_prompt_initial_fallback_rebatches_small_evidence(self) -> None:
+        budget = 512_000
+        render_data = self.helper["render_datasets"]
+        split = self.helper["split_review_bundle"]
+        build = self.helper["build_change_review_prompts"]
+        datasets = [self.helper["ReviewDataset"]("owner.py", "e" * 8_000)]
+        complete = render_data(datasets)
+        instructions = "i" * 480_000
+        bundle = "diff --git a/source.py b/source.py\n--- a/source.py\n+++ b/source.py\n@@ -0,0 +1 @@\n+" + "x" * 60_000 + "\n"
+        whole, full_attempts = False, []
+
+        def observe_build(*args, **kwargs):
+            nonlocal whole
+            whole = args[5] == complete
+            if whole:
+                full_attempts.append(kwargs.get("min_change_bytes", 4))
+            return build(*args, **kwargs)
+
+        def bounded_split(text, limit):
+            if whole:
+                self.assertGreaterEqual(limit, 32_000, "initial fallback must rebatch complete evidence")
+            return split(text, limit)
+
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            with mock.patch.dict(self.helper["build_review_prompts"].__globals__, {
+                "build_change_review_prompts": observe_build, "split_review_bundle": bounded_split,
+            }):
+                prompts = self.helper["build_review_prompts"](repo, "branch", "base", bundle, instructions, datasets, budget)
+        self.assertGreaterEqual(len(full_attempts), 2)
+        self.assertTrue(all(value == 32_000 for value in full_attempts))
+        batches = {}
+        for prompt in prompts:
+            self.assertLessEqual(len(prompt.encode()), budget)
+            self.assertIn(instructions, prompt)
+            batch = re.search(r"Evidence batch: (\d+)/(\d+)", prompt)
+            self.assertIsNotNone(batch)
+            batches.setdefault(batch[1], []).append(prompt.split("# Change Bundle\n", 1)[1])
+        self.assertGreater(len(batches), 1)
+        self.assertTrue(all("".join(changes) == bundle for changes in batches.values()))
+
+    def test_evidence_fallback_keeps_incomplete_passes_incomplete(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            prompts = self.helper["build_review_prompts"](
+                repo, "branch", "base", "diff --git a/source.py b/source.py\n+changed\n", "",
+                [self.helper["ReviewDataset"]("owner.py", "owner context\n" * 3_000)], 30_000,
+            )
+            self.assertGreater(len(prompts), 1)
+            self.assertTrue(all("Evidence batch:" in prompt for prompt in prompts))
+            args = argparse.Namespace(engine="codex", max_priority="P2")
+            for incomplete_index in (0, len(prompts) - 1):
+                with self.subTest(incomplete_index=incomplete_index):
+                    engine = mock.Mock(side_effect=[json.dumps({
+                        "findings": [], "overall_correctness": "patch is correct",
+                        "overall_explanation": "Synthetic assessment.", "overall_confidence": 0.9,
+                        "review_completion": "incomplete" if index == incomplete_index else "complete",
+                    }) for index in range(len(prompts))])
+                    with mock.patch.dict(self.helper["run_review_passes"].__globals__, {
+                        "run_engine": engine,
+                    }), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                        results = self.helper["run_review_passes"](
+                            args, [args], repo, prompts, {"source.py"},
+                        )
+                    self.assertEqual(engine.call_count, len(prompts))
+                    report = self.helper["merge_chunk_reports"]([
+                        (label, result.report) for label, result in results
+                    ])
+                    complete = all(result.complete for _, result in results)
+                    self.assertFalse(complete)
+                    self.assertEqual(self.helper["review_status"](report, complete=complete), "incomplete")
+                    self.assertEqual(len(report["pass_reports"]), len(prompts))
+
     def test_large_datasets_review_every_change_against_all_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
             repo = init_repo(Path(tempdir))
@@ -3599,14 +4188,14 @@ class AutoreviewHardeningTests(unittest.TestCase):
             (repo / ".env").write_text("placeholder=true\n", encoding="utf-8")
             (repo / "base.txt").write_text("base\nreview me\n", encoding="utf-8")
             git(repo, "add", ".env", "base.txt")
-            local, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            local, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
             self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], local)
             self.assertNotIn(".env", local)
             self.assertNotIn("placeholder=true", local)
             self.assertIn("+review me", local)
 
             git(repo, "commit", "-q", "-m", "sensitive path")
-            for bundle, paths, _mixed, _spans, _commit in (
+            for bundle, paths, _mixed, _spans, _commit, _images in (
                 self.helper["branch_bundle"](repo, base),
                 self.helper["commit_bundle"](repo, "HEAD"),
             ):
@@ -3626,16 +4215,16 @@ class AutoreviewHardeningTests(unittest.TestCase):
             workflow = repo / ".github" / "workflows" / "secret-scan.yml"
             workflow.parent.mkdir(parents=True)
             workflow.write_text("name: Secret scan\n", encoding="utf-8")
-            untracked_bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            untracked_bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
             self.assertIn("secret-scan.yml", untracked_bundle)
 
             git(repo, "add", str(workflow.relative_to(repo)))
-            tracked_bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            tracked_bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
             self.assertIn("secret-scan.yml", tracked_bundle)
 
             git(repo, "commit", "-q", "-m", "add secret scanner")
-            branch_bundle, _paths, _mixed, _spans, _commit = self.helper["branch_bundle"](repo, base)
-            commit_bundle, _paths, _mixed, _spans, _commit = self.helper["commit_bundle"](repo, "HEAD")
+            branch_bundle, _paths, _mixed, _spans, _commit, _images = self.helper["branch_bundle"](repo, base)
+            commit_bundle, _paths, _mixed, _spans, _commit, _images = self.helper["commit_bundle"](repo, "HEAD")
             self.assertIn("secret-scan.yml", branch_bundle)
             self.assertIn("secret-scan.yml", commit_bundle)
 
@@ -3703,7 +4292,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             path.parent.mkdir()
             path.write_text(source, encoding="utf-8")
 
-            bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
 
             self.assertIn("ordinary-hardcoded-value-12345", bundle)
 
@@ -3975,7 +4564,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             git(repo, "add", "-u")
             git(repo, "commit", "-q", "-m", "delete template")
 
-            bundle, _paths, _mixed, _spans, _commit = self.helper["branch_bundle"](repo, base)
+            bundle, _paths, _mixed, _spans, _commit, _images = self.helper["branch_bundle"](repo, base)
 
             self.assertIn("deleted file mode 100644", bundle)
             self.assertIn("------BEGIN [A-Z ]+-----", bundle)
@@ -4135,7 +4724,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
 
             path.write_text('const request = { token: String() };\n', encoding="utf-8")
 
-            bundle, _paths, _mixed, _spans, _commit = self.helper["local_bundle"](repo)
+            bundle, _paths, _mixed, _spans, _commit, _images = self.helper["local_bundle"](repo)
 
             self.assertIn('-const request = { token: "test-token" };', bundle)
 

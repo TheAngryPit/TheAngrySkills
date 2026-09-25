@@ -95,23 +95,28 @@ Repeated paths in the same evidence role share one validated capture. Equal
 content at different paths and prompt-file versus dataset roles stay distinct.
 
 For unchanged committed source, use repeatable `--source-context <repo-relative-path>`
-with branch or commit mode. It reads the exact regular-file blob from the frozen
-reviewed commit (branch HEAD or `--commit`), including executable source files.
+with branch or commit mode. Use `--source-context-file <repo-relative-path>` when
+that source must stay intact in every review pass. Both read the exact regular-file
+blob from the frozen reviewed commit (branch HEAD or `--commit`), including executable source files.
 Local mode, including an auto-selected local target, is unsupported. No separate
 context revision or working-copy substitution is accepted. The checkout path must
 remain a regular file; its bytes and path topology are revalidated throughout review.
 Repeated normalized source-context paths share one capture after every argument
 is validated; different paths and evidence roles remain distinct.
 
-This role uses tracked-source filename classification, so source names such as
+Both roles use tracked-source filename classification, so source names such as
 `src/token_count.py` are accepted. Credential directories, stores and keyfiles
 remain forbidden. Existing prompt-file and dataset restrictions are unchanged.
-Every source fragment carries path, commit, blob and mode provenance. Complete
-bytes are partitioned with the change when needed; context never adds finding
-targets. This is a source-provenance contract, not secret-content scanning.
+Every source block carries path, commit, blob and mode provenance. `--source-context`
+bytes are partitioned with the change when needed. `--source-context-file` blocks
+stay complete in every pass and must fit with the instructions and change framing;
+the helper refuses an over-capacity plan without dropping required evidence.
+Context never adds finding targets or instruction authority. This is a
+source-provenance contract, not secret-content scanning.
 
 ```bash
 "$AUTOREVIEW" --mode branch --base origin/main --source-context src/token_count.py
+"$AUTOREVIEW" --mode branch --base origin/main --source-context-file src/token_count.py
 ```
 
 The default threshold is **P0 only**: material blockers to normal operation or
@@ -208,6 +213,31 @@ split context overrides are unsupported when projection is selected.
 | Pi              | CLI 0.79.0+; configured model; no tools or project resources                                          |
 | Kimi            | CLI 0.30.0+; configured model; Python 3.11+ or `tomli` for TOML config                                |
 
+## Image review
+
+Branch mode with Codex supports **added, single-frame PNG, JPEG and WebP** files.
+Install Pillow in the Python environment running the helper (`python -m pip install Pillow`).
+Use a vision-capable Codex model and a CLI supporting `codex exec --image`.
+No new bypass flag is required. Full decoding rejects corrupt and animated files.
+Images must have at most 16,777,216 pixels and no dimension above 16,384 pixels;
+decoder bomb warnings fail closed before pixel loading. Added image paths are
+limited to 20 MiB of encoded bytes each and 100 MiB total, checked against Git
+object sizes before capture. Exceeding a limit fails the entire review.
+
+The helper captures exact bytes from the pinned HEAD, stages only those images
+in its isolated workspace, and attaches them through Codex's native image input.
+Every pass receives the path, media type, byte count and SHA-256 manifest alongside
+the image attachments and text diff. Image findings use the original path and line 1.
+Text-only review does not require Pillow.
+
+Other binaries, modified/deleted images, local/commit image changes and image review
+with other engines remain unsupported and fail closed. Missing Pillow or provider
+image limits fail the review rather than silently dropping assets. Sensitive-path,
+source-mutation, authentication and sandbox controls remain enabled.
+
+For partial clones, materialize required Git objects **before** review. The isolated
+Git reader intentionally disables lazy network fetching; do not weaken that boundary.
+
 ## Runtime boundaries
 
 The helper owns reviewer isolation, sanitized authentication, process cleanup,
@@ -242,11 +272,15 @@ roots before workspace, runtime, or authentication setup; unset a shared
 temporary directory. Other engines and platforms retain their normal isolation.
 Tools installed in shared scratch or requiring writes there will be denied too.
 
-Review files have no size/count cap and are never truncated. Large diffs and
-datasets are partitioned automatically. Intact instructions and required mixed
-source context must still fit the per-pass prompt budget. A failed pass does not
-produce a partial clean verdict.
-The planner compares a bounded set of evidence allocations and keeps the existing
+Text review files have no size/count cap and are never truncated; image inputs
+use the explicit safety limits above. Large diffs and
+datasets are partitioned automatically. Change partitions retain complete
+datasets when they fit with sufficient change space. This preference may use more
+passes or prompt bytes than evidence batching; the explicit pass budget still applies.
+Terminal fallbacks preserve a feasible complete-evidence plan when batch framing cannot fit.
+Intact instructions, source-context files and required mixed source context must
+fit the per-pass prompt budget. A failed pass does not produce a partial clean verdict.
+Otherwise, the planner compares a bounded set of evidence allocations and keeps the existing
 plan unless total prompt bytes improve without more passes, or equal bytes need
 fewer passes. Every change is still reviewed against every evidence batch.
 

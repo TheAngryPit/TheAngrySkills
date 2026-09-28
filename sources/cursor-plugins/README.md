@@ -8,6 +8,8 @@ upstream path; it retains the three Benny automation sources for historical
 provenance, but Vítor excluded them from this mirror and its previews.
 
 `upstream_commit` is the default revision for entries without a `source_commit`.
+`pstack_upstream_commit` is the separate reviewed baseline for the pstack drift
+detector; it prevents the same reviewed plugin changes from reopening a report.
 The 20 reviewed Pstack skill entries use per-skill provenance at
 `ecc249f1e306fc64ddf83c7bed16cacf7c2239db`; the global snapshot baseline stays
 at `c1c0a32802223f4be824112dd83d33ad29a8b26c` for all other entries. This mixed

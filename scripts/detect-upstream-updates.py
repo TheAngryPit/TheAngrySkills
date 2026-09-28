@@ -401,7 +401,9 @@ def cursor_plugin(path: str) -> str:
 
 def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     manifest = json.loads((root / "sources" / "cursor-plugins" / "manifest.json").read_text())
-    baseline = manifest["upstream_commit"]
+    baseline = manifest.get("pstack_upstream_commit", manifest["upstream_commit"])
+    if not isinstance(baseline, str) or not re.fullmatch(r"[0-9a-f]{40}", baseline):
+        raise ValueError("invalid pstack upstream commit")
     latest = head(checkout)
     result = blank_result("cursor", "pstack", CURSOR_REPOSITORY, baseline, latest)
     reject_symlinks(checkout / "pstack", "Cursor pstack")

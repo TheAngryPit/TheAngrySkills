@@ -70,6 +70,11 @@ def validate_manifest(manifest: dict) -> list[dict]:
         r"[0-9a-f]{40}", manifest["upstream_commit"]
     ):
         raise ValueError("invalid default upstream commit")
+    pstack_commit = manifest.get("pstack_upstream_commit")
+    if pstack_commit is not None and (
+        not isinstance(pstack_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", pstack_commit)
+    ):
+        raise ValueError("invalid pstack upstream commit")
     entries = manifest.get("skills")
     if not isinstance(entries, list) or not entries:
         raise ValueError("empty skill ledger")

@@ -309,6 +309,39 @@ def test_cursor_unchanged_when_only_another_plugin_moves(tmp_path):
     assert report["changed_support_files"] == []
 
 
+def test_cursor_reviewed_pstack_baseline_does_not_reopen_old_drift(tmp_path):
+    upstream = tmp_path / "cursor"
+    upstream.mkdir()
+    subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+    write(upstream / "pstack/LICENSE", "MIT\n")
+    write(upstream / "pstack/README.md", "pstack\n")
+    write(upstream / "pstack/agents/pstack-subagent.md", "agent\n")
+    setup = upstream / "pstack/skills/setup-pstack/SKILL.md"
+    write(setup, "budget: 1\n")
+    write(upstream / "pstack/skills/make-bot-ui/SKILL.md", "held\n")
+    baseline = commit(upstream, "baseline")
+    root = cursor_root(tmp_path, upstream, baseline)
+
+    write(setup, "budget: 2\n")
+    write(upstream / "pstack/README.md", "reviewed docs\n")
+    reviewed = commit(upstream, "reviewed pstack")
+    manifest_path = root / "sources/cursor-plugins/manifest.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["pstack_upstream_commit"] = reviewed
+    manifest["skills"][0]["files"]["SKILL.md"] = detector.sha(setup)
+    write(manifest_path, json.dumps(manifest))
+
+    report = detector.detect_cursor(upstream, root)
+    assert report["baseline"] == reviewed
+    assert report["changed"] is False
+
+    write(upstream / "pstack/README.md", "newer docs\n")
+    commit(upstream, "new pstack drift")
+    report = detector.detect_cursor(upstream, root)
+    assert report["changed"] is True
+    assert report["changed_support_files"] == ["pstack/README.md"]
+
+
 def test_cursor_compares_support_hashes_without_baseline_object(tmp_path):
     upstream = tmp_path / "cursor"
     upstream.mkdir()

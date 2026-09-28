@@ -2229,6 +2229,7 @@
   ],
   "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
   "upstream_commit": "c1c0a32802223f4be824112dd83d33ad29a8b26c",
+  "pstack_upstream_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db",
   "upstream_repository": "https://github.com/cursor/plugins.git",
   "support_files": {
     "advisor/agents/advisor-subagent.md": {

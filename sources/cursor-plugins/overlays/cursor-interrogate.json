@@ -38,7 +38,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -55,22 +55,22 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "Launch all reviewers in a single message using the Task tool. Use the `interrogate reviewers` list from `~/.cursor/rules/pstack-models.mdc` when present, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count. Otherwise use the table defaults.",
+      "before": "Launch all reviewers in a single message using the Task tool. Use the `interrogate reviewers` line in `~/.cursor/rules/pstack-models.mdc`, one reviewer per entry, extending or shrinking the Reviewer A/B/C labels below to the configured entry count. If the rule or that line is missing, use the table defaults.",
       "after": "Launch independent read-only reviewers through native Codex subagents when authorized. Use the actual available reviewers under the standing `model-capability-router` and the operator-selected model/effort; extend or shrink Reviewer A/B/C/D labels to match. Record unavailable reviewer slots."
     },
     {
       "file": "SKILL.md",
-      "before": "| Subagent | Default model |\n|----------|---------------|\n| Reviewer A | `claude-fable-5-1-thinking-max` |\n| Reviewer B | `gpt-5.6-sol-max` |\n| Reviewer C | `grok-4.6-fast-xhigh` |\n| Reviewer D | `claude-opus-5-thinking-xhigh` |",
+      "before": "| Subagent | Default model |\n|----------|---------------|\n| Reviewer A | `claude-opus-5-5-max` |\n| Reviewer B | `gpt-5.6-sol-max` |\n| Reviewer C | `grok-4.7-xhigh-fast` |",
       "after": "| Reviewer | Native Codex model |\n|----------|--------------------|\n| A/B/C/D as available | Record the requested model and effort; record effective identity only if the native surface exposes authoritative readback |"
     },
     {
       "file": "SKILL.md",
-      "before": "- `subagent_type`: `generalPurpose`\n- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line\n- `readonly`: `true`",
+      "before": "For each reviewer:\n- `subagent_type`: `generalPurpose`\n- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `auto` or `inherit-parent` entry, omit `model` so that reviewer runs on the parent model.\n- `readonly`: `true`",
       "after": "- Assign a bounded review responsibility to each native subagent.\n- Use a genuinely read-only role or instructions and verify no reviewer modified the workspace.\n- Use native model selection only as allowed by the standing router and operator."
     },
     {
       "file": "SKILL.md",
-      "before": "If a model slug is rejected as unresolvable when you try to spawn the subagent, check the valid slugs in the Task tool's error message, pick the closest equivalent (prefer the highest-reasoning tier of the same family), spawn with the valid slug, and open a separate PR to update the configured value or default table. Do not block the review on the slug issue. If the configured value is `inherit-parent` or `auto`, omit `model` instead. Never treat those aliases as broken slugs or enter this fallback for them.",
+      "before": "If the Task tool rejects a configured entry, run that reviewer on the table default of its family and say so. Families go by prefix: `claude-*`, `gpt-*`, and `grok-*`. With no family match, use Reviewer A's default. If it rejects a table default, check the valid slugs in the Task tool's error message, pick the closest equivalent (prefer the highest-reasoning tier of the same family), spawn with it, and open a separate PR to update the default table. Do not block the review on the slug issue. Never treat an alias entry as a rejected slug or apply either fallback to it.",
       "after": "If a requested model is unavailable, record that reviewer as unavailable. Continue with authorized available reviewers only when the proof bar can still be met. Do not silently substitute a model or create a repair PR."
     },
     {
@@ -85,5 +85,5 @@
     }
   ],
   "source_path": "pstack/skills/interrogate/SKILL.md",
-  "source_sha256": "2867910309e81411123ae4edca68ffca5795e66521d3f3bc0876f6213b542fb9"
+  "source_sha256": "59d498c3e9848a24b2d105eb3f05b808aa4152adf4cb1de7bbb6aff4f4cd9b68"
 }

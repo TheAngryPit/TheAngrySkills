@@ -37,7 +37,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -54,17 +54,22 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "Spawn all explorers in a single message:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explorer model (default `grok-4.6-fast-xhigh`)\n- `readonly`: `true`",
+      "before": "Each spawn below names a role line in the `pstack-models.mdc` rule and a default. Set `model` to that line's value, or to the default if the rule or the line is missing. Leave `model` unset when the value is `auto` or `inherit-parent`. If the Task tool rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message.",
+      "after": "For each delegation, choose the model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report the exact gap; do not invent a replacement slug."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Spawn all explorers in a single message:\n\n- `subagent_type`: `generalPurpose`\n- `model`: the `how explorer` line, default `grok-4.7-xhigh-fast`\n- `readonly`: `true`",
       "after": "Delegate the 2 to 4 distinct angles to read-only Codex subagents in parallel when the task permits delegation. Select available model and effort under the standing `model-capability-router` policy. If delegation is unavailable, investigate the same angles sequentially and keep the evidence separate."
     },
     {
       "file": "SKILL.md",
-      "before": "Spawn one Task subagent that explores and explains in one pass:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)\n- `readonly`: `true`",
+      "before": "Spawn one Task subagent that explores and explains in one pass:\n\n- `subagent_type`: `generalPurpose`\n- `model`: the `how explainer` line, default `claude-opus-5-5-max`\n- `readonly`: `true`",
       "after": "Use one read-only Codex subagent when delegation is authorized and useful; choose model and effort under the standing `model-capability-router` policy. Otherwise explore and explain directly in one pass."
     },
     {
       "file": "SKILL.md",
-      "before": "Once all explorers have returned, spawn one Task subagent to synthesize their findings into one explanation:\n\n- `subagent_type`: `generalPurpose`\n- `model`: your configured how-explainer model (default `claude-fable-5-1-thinking-max`)\n- `readonly`: `true`",
+      "before": "Once all explorers have returned, spawn one Task subagent to synthesize their findings into one explanation:\n\n- `subagent_type`: `generalPurpose`\n- `model`: the `how explainer` line, default `claude-opus-5-5-max`\n- `readonly`: `true`",
       "after": "After all explorers return, synthesize their cited findings in the coordinator or one read-only Codex subagent chosen under the standing `model-capability-router` policy. The coordinator checks the source paths and owns the final explanation."
     },
     {
@@ -84,5 +89,5 @@
     }
   ],
   "source_path": "pstack/skills/how/SKILL.md",
-  "source_sha256": "06b714dbd830bc829bfb89e33a1c39daf6d72ea412e488ea9d65f5f33b885a0c"
+  "source_sha256": "d31805589c7f6a63a6db6c9fadebbd79fb9660682cf1654e9b2e5e1e7cd30bc0"
 }

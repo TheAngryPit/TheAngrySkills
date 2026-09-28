@@ -42,7 +42,6 @@ Launch independent read-only reviewers through native Codex subagents when autho
 |----------|--------------------|
 | A/B/C/D as available | Record the requested model and effort; record effective identity only if the native surface exposes authoritative readback |
 
-For each reviewer:
 - Assign a bounded review responsibility to each native subagent.
 - Use a genuinely read-only role or instructions and verify no reviewer modified the workspace.
 - Use native model selection only as allowed by the standing router and operator.

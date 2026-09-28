@@ -217,7 +217,7 @@ class CursorFunctionalOverlayTests(unittest.TestCase):
             )
             self.assertEqual(
                 contract["upstream_readme"]["url"],
-                f"https://github.com/cursor/plugins/blob/{read_manifest()['upstream_commit']}/{entry['family']}/README.md",
+                f"https://github.com/cursor/plugins/blob/{entry.get('source_commit', read_manifest()['upstream_commit'])}/{entry['family']}/README.md",
             )
 
     def test_security_holds_retain_findings_and_are_not_published(self):

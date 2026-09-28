@@ -14,6 +14,8 @@ Investigate the motivation and intent behind code.
 
 Companion to the `how` skill. `how` answers what the code does and how it works. `why` answers what forces led to its shape.
 
+For each delegation, choose the model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report the exact gap; do not invent a replacement slug.
+
 ## Operating Posture
 
 Operate as a **careful, cautious, and precise investigator**. Be honest about what you know vs what you're inferring. Read `references/epistemics.md` for the full confidence framework and phrasing guide. The synthesizer must follow it.
@@ -81,7 +83,6 @@ Aim for a complete **coverage map**, not a minimal one. Document the null, don't
 
 Launch independent investigators concurrently when delegation and source access are authorized. Give each a bounded source category and do not let a single report conceal a category that was never searched.
 
-Subagent config (each):
 - Use available native Codex subagents when delegation is authorized. Select model and effort under the standing `model-capability-router` policy. Give each investigator only the tools and source scope it needs; prohibit writes and external messages. If a connector is unavailable to subagents, investigate that category in the coordinator and record the actual access path.
 
 Each investigator gets:
@@ -121,8 +122,6 @@ Only skip with an **explicit, written justification** that goes in the final "So
 If a single-commit trivial target has a PR description containing the complete answer, you may answer inline after checking that available additional categories cannot change the claim. Record which categories were actually assessed and which were unavailable. Say so explicitly. This should be rare.
 
 ## Step 4. Synthesize
-
-Spawn one synthesizer subagent:
 
 - Use an available native Codex synthesizer subagent when authorized, with model and effort chosen under the standing `model-capability-router` policy. Provide read-only source access required for spot checks; otherwise synthesize and verify citations in the coordinator.
 

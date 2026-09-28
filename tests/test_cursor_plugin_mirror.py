@@ -1,6 +1,7 @@
 """Behavioral guards for the pinned Cursor skill mirror build."""
 
 import json
+import importlib.util
 import re
 import shutil
 import subprocess
@@ -11,6 +12,12 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parent.parent
+_SYNC_SPEC = importlib.util.spec_from_file_location(
+    "sync_cursor_plugin_skills", REPO / "scripts/sync-cursor-plugin-skills.py"
+)
+_SYNC = importlib.util.module_from_spec(_SYNC_SPEC)
+assert _SYNC_SPEC.loader is not None
+_SYNC_SPEC.loader.exec_module(_SYNC)
 
 
 def published_count(root: Path = REPO) -> int:
@@ -60,6 +67,110 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn(f"91 physical, {published_count()} published", result.stdout)
+
+    def test_reviewed_pstack_source_overrides_preserve_the_global_baseline(self):
+        manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
+        state = json.loads((REPO / "reports/cursor-plugin-skills-state.json").read_text())
+        expected_names = {
+            "cursor-architect",
+            "cursor-arena",
+            "cursor-blast-radius",
+            "cursor-figure-it-out",
+            "cursor-how",
+            "cursor-interrogate",
+            "cursor-poteto-mode",
+            "cursor-principle-guard-the-context-window",
+            "cursor-principle-never-block-on-the-human",
+            "cursor-principle-outcome-oriented-execution",
+            "cursor-principle-prove-it-works",
+            "cursor-principle-sequence-verifiable-units",
+            "cursor-reflect",
+            "cursor-setup-pstack",
+            "cursor-show-me-your-work",
+            "cursor-swarm",
+            "cursor-tdd",
+            "cursor-technical-writing",
+            "cursor-unslop",
+            "cursor-why",
+        }
+        reported = "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+        self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
+        entries = {entry["published_name"]: entry for entry in manifest["skills"]}
+        overrides = {
+            entry["published_name"]: entry["source_commit"]
+            for entry in manifest["skills"]
+            if entry.get("source_commit")
+        }
+        self.assertEqual(set(overrides), expected_names)
+        self.assertEqual(set(state["source_commit_overrides"]), expected_names)
+        self.assertEqual(set(state["source_commit_overrides"].values()), {reported})
+        self.assertEqual(set(overrides.values()), {reported})
+
+        for name in sorted(expected_names):
+            entry = entries[name]
+            overlay = json.loads(
+                (REPO / "sources/cursor-plugins/overlays" / f"{name}.json").read_text()
+            )
+            mirror = (REPO / "skills/mirrors-cursor" / name / "MIRROR.md").read_text()
+            self.assertEqual(entry["family"], "pstack")
+            self.assertEqual(entry["source_commit"], reported)
+            self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
+            self.assertIn(f"Commit: {reported}\n", mirror)
+            self.assertIn(f"blob/{reported}/pstack/README.md", mirror)
+            readme = overlay.get("codex_contract", {}).get("upstream_readme")
+            if readme:
+                self.assertIn(f"blob/{reported}/pstack/README.md", readme["url"])
+        setup_readme = json.loads(
+            (REPO / "sources/cursor-plugins/overlays/cursor-setup-pstack.json").read_text()
+        )["codex_contract"]["upstream_readme"]
+        self.assertEqual(
+            setup_readme["sha256"],
+            "16262f32aa041d857f2936f3ad6c589648f8e7b5d23e03c3c0a8c76ef99fd08c",
+        )
+        for entry in manifest["skills"]:
+            if entry["published_name"] not in expected_names:
+                self.assertNotIn("source_commit", entry)
+        self.assertTrue(
+            all(not entry.get("source_commit") for entry in manifest["skills"]
+                if entry.get("family") == "grok-voice")
+        )
+        self.assertTrue(
+            all(not entry.get("source_commit") for entry in manifest["skills"]
+                if entry.get("upstream_skill") == "x-api-mcp-guide")
+        )
+
+    def test_held_sibling_links_use_the_siblings_reviewed_source_commit(self):
+        baseline = "c1c0a32802223f4be824112dd83d33ad29a8b26c"
+        reported = "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "upstream"
+            source_file = root / "pstack/skills/publisher/SKILL.md"
+            output_file = Path(temporary) / "staging/publisher/SKILL.md"
+            held_path = root / "pstack/skills/held/SKILL.md"
+            baseline_path = root / "pstack/skills/baseline/SKILL.md"
+            source_to_entry = {
+                held_path.resolve(): {
+                    "path": "pstack/skills/held/SKILL.md",
+                    "publish": False,
+                    "source_commit": reported,
+                },
+                baseline_path.resolve(): {
+                    "path": "pstack/skills/baseline/SKILL.md",
+                    "publish": False,
+                },
+            }
+            text = "[held](../held/SKILL.md) [baseline](../baseline/SKILL.md)"
+            result = _SYNC.rewrite_sibling_links(
+                source_file,
+                output_file,
+                text,
+                source_to_entry,
+                Path(temporary) / "staging",
+                reported,
+                baseline,
+            )
+            self.assertIn(f"blob/{reported}/pstack/skills/held/SKILL.md", result)
+            self.assertIn(f"blob/{baseline}/pstack/skills/baseline/SKILL.md", result)
 
     def test_cursor_explicit_only_policy_is_native_and_complete(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())

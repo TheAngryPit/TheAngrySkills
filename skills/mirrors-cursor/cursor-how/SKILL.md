@@ -11,6 +11,8 @@ Use native read-only subagents only when authorized; the standing `model-capabil
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
+For each delegation, choose the model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report the exact gap; do not invent a replacement slug.
+
 ## Step 1. Assess Complexity
 
 If the scope is ambiguous, state your interpretation and explore. The user can redirect.
@@ -22,7 +24,7 @@ When in doubt, take the simple path.
 
 ## Step 2a. Explore (complex questions only)
 
-Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Delegate the 2 to 4 distinct angles to read-only Codex subagents in parallel when the task permits delegation. Select available model and effort under the standing `model-capability-router` policy. If delegation is unavailable, investigate the same angles sequentially and keep the evidence separate.
+Delegate the 2 to 4 distinct angles to read-only Codex subagents in parallel when the task permits delegation. Select available model and effort under the standing `model-capability-router` policy. If delegation is unavailable, investigate the same angles sequentially and keep the evidence separate.
 
 Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
 

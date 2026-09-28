@@ -28,7 +28,7 @@ The N candidates will receive the same prompt, so the prompt is the contract.
 
 1. State the artifact each candidate is producing.
 2. Derive the rubric. State what success looks like for *this* task, then turn it into 3-6 concrete gradeable criteria. The rubric is the picker's tool in Phase D. Candidates only see the task.
-3. Pick the runners. Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners. Spawn more when the arena covers multiple design directions. Same model N times when the work is generation-bound rather than judgment-sensitive.
+Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners.
 4. Assign output paths. Each candidate writes to its own location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per `cursor-principle-separate-before-serializing-shared-state`.
 
 ## Phase B: Fan out
@@ -41,7 +41,7 @@ If a candidate fails to produce output, proceed with N-1 and note the dropout in
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.
+choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict.
 
 ## Phase D: Pick a base
 

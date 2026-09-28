@@ -66,6 +66,10 @@ def physical_skills(root: Path) -> set[str]:
 def validate_manifest(manifest: dict) -> list[dict]:
     if manifest.get("schema_version") != 1:
         raise ValueError("unknown manifest schema")
+    if not isinstance(manifest.get("upstream_commit"), str) or not re.fullmatch(
+        r"[0-9a-f]{40}", manifest["upstream_commit"]
+    ):
+        raise ValueError("invalid default upstream commit")
     entries = manifest.get("skills")
     if not isinstance(entries, list) or not entries:
         raise ValueError("empty skill ledger")
@@ -75,6 +79,11 @@ def validate_manifest(manifest: dict) -> list[dict]:
         raise ValueError("duplicate source path or published name")
     for entry in entries:
         safe_relative(entry["path"])
+        source_commit = entry.get("source_commit")
+        if source_commit is not None and (
+            not isinstance(source_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", source_commit)
+        ):
+            raise ValueError(f"invalid per-skill source commit: {entry['published_name']}")
         if entry.get("excluded_from_mirror"):
             if entry["publish"] or not entry.get("exclusion_reason", "").strip():
                 raise ValueError(f"excluded source cannot be published: {entry['published_name']}")
@@ -193,7 +202,8 @@ def codex_invocation_policy(frontmatter: str, target: Path) -> str:
 
 
 def rewrite_sibling_links(source_file: Path, output_file: Path, text: str,
-                          source_to_entry: dict[Path, dict], staging: Path, commit: str) -> str:
+                          source_to_entry: dict[Path, dict], staging: Path,
+                          commit: str, default_commit: str) -> str:
     def replace(match: re.Match[str]) -> str:
         value = match.group(1)
         if ":" in value or value.startswith("/"):
@@ -207,14 +217,16 @@ def rewrite_sibling_links(source_file: Path, output_file: Path, text: str,
             output_target = staging / sibling["published_name"] / "SKILL.md"
             link = os.path.relpath(output_target, output_file.parent).replace(os.sep, "/")
         else:
-            link = f"https://github.com/cursor/plugins/blob/{commit}/{sibling['path']}"
+            sibling_commit = sibling.get("source_commit", default_commit)
+            link = f"https://github.com/cursor/plugins/blob/{sibling_commit}/{sibling['path']}"
         return f"]({link}{sep}{fragment})"
 
     return MARKDOWN_LINK.sub(replace, text)
 
 
-def render_skill(entry: dict, staging: Path, commit: str,
+def render_skill(entry: dict, staging: Path, default_commit: str,
                  source_to_entry: dict[Path, dict]) -> dict[str, str]:
+    commit = entry.get("source_commit", default_commit)
     name = entry["published_name"]
     source_dir = SOURCE / Path(entry["path"]).parent
     target = staging / name
@@ -313,7 +325,9 @@ def render_skill(entry: dict, staging: Path, commit: str,
         if not source_file.is_file():
             continue
         original = output_file.read_text()
-        rewritten = rewrite_sibling_links(source_file, output_file, original, source_to_entry, staging, commit)
+        rewritten = rewrite_sibling_links(
+            source_file, output_file, original, source_to_entry, staging, commit, default_commit
+        )
         if rewritten != original:
             output_file.write_text(rewritten)
     if entry.get("license_path"):
@@ -390,9 +404,15 @@ def build(check: bool) -> None:
             render_skill(entry, staged, manifest["upstream_commit"], source_to_entry)
         changed = compare_trees(staged, DEST)
         generated = {p.relative_to(staged).as_posix(): sha(p) for p in files(staged)}
+        source_commit_overrides = {
+            entry["published_name"]: entry["source_commit"]
+            for entry in entries
+            if entry.get("source_commit") and entry["source_commit"] != manifest["upstream_commit"]
+        }
         state = {
             "schema_version": 1,
             "upstream_commit": manifest["upstream_commit"],
+            "source_commit_overrides": source_commit_overrides,
             "physical_skills": len(entries),
             "published_skills": len(active),
             "source_dormant_skills": sum(not e["declared_for_distribution"] for e in entries),
@@ -485,6 +505,10 @@ def refresh(upstream: Path) -> None:
             changed_licenses.append(license_path)
     head = subprocess.check_output(["git", "-C", str(upstream), "rev-parse", "HEAD"], text=True).strip()
     report = {"upstream_commit": head, "pinned_commit": manifest["upstream_commit"],
+              "source_commit_overrides": {
+                  entry["published_name"]: entry["source_commit"]
+                  for entry in entries if entry.get("source_commit")
+              },
               "new_skills": sorted(current-pinned), "removed_skills": sorted(pinned-current),
               "changed_skills": changed, "changed_licenses": changed_licenses}
     print(dump(report), end="")

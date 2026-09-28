@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
 Physical source path: pstack/skills/principle-never-block-on-the-human/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: d82bce9ab9193249d1ec0d514202d89602f0fd3d312174d622c2dd222bae5a2e
+Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Source SHA-256: f2764bb9338cbfc788c903cf4b9cd0a5f4042d3a04dd6d59cbd525d9beaadd0a
 Published name: cursor-principle-never-block-on-the-human
 Decision class: intacta
 Availability: content available; live selection not demonstrated

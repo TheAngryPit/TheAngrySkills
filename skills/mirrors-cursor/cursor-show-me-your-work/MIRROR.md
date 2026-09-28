@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
 Physical source path: pstack/skills/show-me-your-work/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: 831e85ba3f84f38bf338cd03e6af050fea357752e25a825e334c99f59d7f2077
+Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Source SHA-256: bcff5f7f9fd23f92c12b251f9cd6b947e9485e1055cfacb6fdd9cae0789d7550
 Published name: cursor-show-me-your-work
 Decision class: adaptação funcional
 Availability: bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved

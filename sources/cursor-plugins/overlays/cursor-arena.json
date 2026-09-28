@@ -40,7 +40,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -57,7 +57,7 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "Use `arena runners` from `~/.cursor/rules/pstack-models.mdc` when present. Otherwise default to one each on `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`.",
+      "before": "3. Pick the runners. Use the `arena runners` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, default to one each on `claude-opus-5-5-max`, `gpt-5.6-sol-max`, `grok-4.7-xhigh-fast`. An `auto` or `inherit-parent` entry in this line or the cross-judge line means the parent model, so omit `model` for it. If the Task tool rejects a configured entry, run that seat on its family's default and say so. Families go by prefix: `claude-*`, `gpt-*`, and `grok-*`. With no family match, use `claude-opus-5-5-max`. If it rejects a default, use the closest valid slug of the same family from its error message. Spawn more when the arena covers multiple design directions. Same model N times when the work is generation-bound rather than judgment-sensitive.",
       "after": "Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners."
     },
     {
@@ -72,7 +72,7 @@
     },
     {
       "file": "SKILL.md",
-      "before": "choose one model from the `arena cross-judge pool` in `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use `claude-fable-5-1-thinking-max`, `gpt-5.6-sol-max`, `grok-4.6-fast-xhigh`, `claude-opus-5-thinking-xhigh`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model.",
+      "before": "After all Phase B candidates complete, choose one model from the `arena cross-judge pool` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, choose from `claude-opus-5-5-max`, `gpt-5.6-sol-max`, `grok-4.7-xhigh-fast`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.",
       "after": "choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict."
     },
     {
@@ -97,5 +97,5 @@
     }
   ],
   "source_path": "pstack/skills/arena/SKILL.md",
-  "source_sha256": "8d431f7b1aa19daf6300366fc876c4d1aadac06417ec5502407345ffaf4e90d9"
+  "source_sha256": "e3a1f6c49a08b7e0b92134e53300d146f1f22ba83386d2019926e736df421851"
 }

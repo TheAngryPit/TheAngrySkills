@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
 Physical source path: pstack/skills/unslop/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: c6d2572294d933a428211921069e9a248490e9b466ca59437cb4d9de248600ca
+Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Source SHA-256: 195411d320b5b328f9f642baf59757ed19aaf0931c0838740e0aca273d538dc1
 Published name: cursor-unslop
 Decision class: adaptação nominal
 Availability: external connector or routing not demonstrated

@@ -6,5 +6,5 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "pstack/skills/unslop/SKILL.md",
-  "source_sha256": "c6d2572294d933a428211921069e9a248490e9b466ca59437cb4d9de248600ca"
+  "source_sha256": "195411d320b5b328f9f642baf59757ed19aaf0931c0838740e0aca273d538dc1"
 }

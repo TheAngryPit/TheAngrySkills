@@ -6,5 +6,5 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "pstack/skills/blast-radius/SKILL.md",
-  "source_sha256": "20cb2945f5fe62055166f745107274af5f19428ca033e53a9b8bc69650d3ded1"
+  "source_sha256": "5f02db9101ccf26c20254718f0fcd5c2c7ac5d4292b0e0923d0944ac47237aff"
 }

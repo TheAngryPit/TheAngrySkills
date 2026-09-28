@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
 Physical source path: pstack/skills/principle-outcome-oriented-execution/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: beedcaed75572a6a1662d47f16da203c2bd2c9dbffbbd678d4ba187d67b7e670
+Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Source SHA-256: 10eb91633aa570355ba4bb37088fcade2b22e498df7a58edc749e65bc5a78e2d
 Published name: cursor-principle-outcome-oriented-execution
 Decision class: intacta
 Availability: content available; live selection not demonstrated

@@ -43,8 +43,8 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
-      "sha256": "cd63df9733eb5b393371baca8194ea2dd9a3c815803ac48b8ff6580e49adef71",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
+      "sha256": "16262f32aa041d857f2936f3ad6c589648f8e7b5d23e03c3c0a8c76ef99fd08c",
       "note": "Verified at the reviewed upstream head; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -72,5 +72,5 @@
     }
   ],
   "source_path": "pstack/skills/setup-pstack/SKILL.md",
-  "source_sha256": "2399a5670c6408e92a996299c9de9f22736997cb7e835c694309e7c6fc8c39bf"
+  "source_sha256": "125dd0c8f588782cfb271efae8f97a0719e43e79f56b3495c095f460bcee6389"
 }

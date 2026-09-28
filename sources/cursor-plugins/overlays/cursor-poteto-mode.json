@@ -75,7 +75,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -170,7 +170,7 @@
     },
     {
       "file": "SKILL.md",
-      "before": " Defaults `grok-4.6-fast-xhigh` for code, `claude-fable-5-1-thinking-max` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-fable-5-1-thinking-max`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).",
+      "before": " Defaults `grok-4.7-xhigh-fast` for code, `claude-opus-5-5-max` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-opus-5-5-max`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).",
       "after": " Keep the bounded brief with the coordinator and do not invent a model ladder or sticky routing."
     },
     {
@@ -190,32 +190,32 @@
     },
     {
       "file": "playbooks/bug-fix.md",
-      "before": "Delegate implementation to a subagent using your configured bug-fix model (default `grok-4.6-fast-xhigh`)",
+      "before": "Delegate implementation to a subagent using your configured bug-fix model (default `grok-4.7-xhigh-fast`)",
       "after": "Delegate implementation through native bounded delegation while respecting the selected model and effort"
     },
     {
       "file": "playbooks/feature.md",
-      "before": "Delegate code-writing to a subagent using your configured feature model (default `grok-4.6-fast-xhigh`)",
+      "before": "Delegate code-writing to a subagent using your configured feature model (default `grok-4.7-xhigh-fast`)",
       "after": "Delegate code-writing through native bounded delegation while respecting the selected model and effort"
     },
     {
       "file": "playbooks/hillclimb.md",
-      "before": "Hand the change to a subagent using your configured hillclimb model (default `grok-4.6-fast-xhigh`)",
+      "before": "Hand the change to a subagent using your configured hillclimb model (default `grok-4.7-xhigh-fast`)",
       "after": "Hand the change to native bounded delegation while respecting the selected model and effort"
     },
     {
       "file": "playbooks/perf-issue.md",
-      "before": "Delegate implementation to a subagent using your configured perf-issue model (default `grok-4.6-fast-xhigh`)",
+      "before": "Delegate implementation to a subagent using your configured perf-issue model (default `grok-4.7-xhigh-fast`)",
       "after": "Delegate implementation through native bounded delegation while respecting the selected model and effort"
     },
     {
       "file": "playbooks/refactoring.md",
-      "before": "Delegate the mechanical edits to a subagent using your configured refactoring model (default `grok-4.6-fast-xhigh`)",
+      "before": "Delegate the mechanical edits to a subagent using your configured refactoring model (default `grok-4.7-xhigh-fast`)",
       "after": "Delegate the mechanical edits through native bounded delegation while respecting the selected model and effort"
     },
     {
       "file": "playbooks/multi-phase-plan.md",
-      "before": "Ten lanes on `grok-4.6-fast-xhigh` at the PR head drive the real surface through its control skill, per the **swarm** skill.",
+      "before": "Ten lanes at the PR head drive the real surface through its control skill, per the **swarm** skill, on the `swarm workers` model (default `grok-4.7-xhigh-fast`).",
       "after": "The proof-orchestrator selects bounded lanes at the PR head and drives the real surface through the target project's native verification skill, mapping browser/Electron/web work to `cursor-control-ui` and CLI/TUI work to `cursor-control-cli` when those concrete skills are installed and applicable."
     },
     {
@@ -235,7 +235,7 @@
     },
     {
       "file": "playbooks/multi-phase-plan.md",
-      "before": "Ten lanes on `grok-4.6-fast-xhigh` at the PR head, per the boot recipe.",
+      "before": "Ten lanes on `<swarm workers model>` at the PR head, per the boot recipe.",
       "after": "Bounded lanes selected by the proof-orchestrator at the PR head, per the boot recipe."
     },
     {
@@ -260,8 +260,8 @@
     },
     {
       "file": "playbooks/autopilot-full.md",
-      "before": "`control-cli` or `control-ui` from `cursor-team-kit` as the change demands",
-      "after": "`cursor-control-cli` or `cursor-control-ui` as the change demands, when the concrete skill and required cloud or local surface are available; otherwise record the exact gap and do not claim parity"
+      "before": "`control-cli` or `control-ui` from `cursor-team-kit`, or a named driver where none exists",
+      "after": "`cursor-control-cli` or `cursor-control-ui` when the concrete skill and required surface are available; otherwise use a named native driver when one exists, or record the exact gap and do not claim parity"
     },
     {
       "file": "playbooks/babysit.md",
@@ -350,8 +350,8 @@
     },
     {
       "file": "playbooks/shipping.md",
-      "before": "One subagent per PR, not batched, each a Cursor cloud agent, each exercising the real surface (`control-ui` or `control-cli` from `cursor-team-kit` as the change demands)",
-      "after": "One native bounded delegate in a verified cloud-capable task environment per PR, not batched, each exercising the real surface through `cursor-control-ui` or `cursor-control-cli` as the change demands; if cloud or surface capability is unavailable, record the exact gap and do not claim parity"
+      "before": "One subagent per PR, not batched, each a Cursor cloud agent, each exercising the real surface with the matching control skill (such as `control-ui` or `control-cli` from `cursor-team-kit`) against parent versus head",
+      "after": "One native bounded delegate in a verified cloud-capable task environment per PR, not batched, each exercising the real surface against base versus head through `cursor-control-ui` or `cursor-control-cli` when the concrete skill and surface are available; if cloud or surface capability is unavailable, record the exact gap and do not claim parity"
     },
     {
       "file": "playbooks/shipping.md",
@@ -395,8 +395,8 @@
     },
     {
       "file": "playbooks/opening-a-pr.md",
-      "before": "A subagent that opens a PR runs `interrogate`, `/deslop`, and `/no-comments`.",
-      "after": "A bounded delegate that opens a PR uses `cursor-interrogate`, `cursor-deslop`, and `cursor-no-comments` only when each concrete skill is installed and applicable; otherwise it records the gap."
+      "before": "A subagent that opens a PR runs `interrogate`, `/deslop`, and `/no-comments`, and posts the URL.",
+      "after": "A bounded delegate that opens a PR uses `cursor-interrogate`, `cursor-deslop`, and `cursor-no-comments` only when each concrete skill is installed and applicable; otherwise it records the gap. It posts the PR URL."
     },
     {
       "file": "playbooks/multi-phase-plan.md",
@@ -455,7 +455,7 @@
     }
   ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",
-  "source_sha256": "b3c505602b82fb3641a3983e9c46fb974881faa12ece1af804fae27afb7be532",
+  "source_sha256": "7645c9ee27ef9798c48a84060b6df409f8593d1058c7c25cbec28dce976195f9",
   "native_agent_profiles": [
     {
       "name": "poteto-agent",

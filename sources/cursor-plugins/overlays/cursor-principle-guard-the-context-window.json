@@ -30,7 +30,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -46,5 +46,5 @@
   "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
   "replacements": [],
   "source_path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
-  "source_sha256": "9f60e2c79b35f865cb103462f9128c6760b70f603475d1e535e5930f61840f66"
+  "source_sha256": "d2cef147862576e3d709b7afc149d85196245e8338b9c7eef337c95fba412b3e"
 }

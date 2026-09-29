@@ -96,15 +96,17 @@ npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --skill hyperfr
 
 ### 4. Use or customize my model-routing preset
 
-Install `model-capability-router` for this operator's native palette: Sol Medium
-as a separately configured home default, Astra Low for planning/review and
-difficult decisions with XHigh reserved for exceptional reasoning, and Luna
-High/XHigh/Max for bounded work. Choose directly for the task; use one visible
-task per coherent outcome and native subagents for useful bounded work. User-
-owned tasks require an explicit request and are for independent or durable
-outcomes, schedules, or distinct host/cloud boundaries. There is no mandatory
-escalation ladder, resolver or coordinator stage.
-Respect the selected main model and live channel availability. The optional
+Install `model-capability-router` for this operator's recommended native
+palette: GPT-6.1 Sol Medium for coordination and open-ended execution, Astra
+Low for planning/review and difficult decisions with XHigh reserved for
+exceptional reasoning, and Luna High/XHigh/Max for bounded work. Preserve an
+explicit native selection, including Sol Low; the recommendation does not
+change a home configuration or active thread. Choose directly for the task; use
+one visible task per coherent outcome and native subagents for useful bounded
+work. User-owned tasks require an explicit request and are for independent or
+durable outcomes, schedules, or distinct host/cloud boundaries. There is no
+mandatory escalation ladder, resolver or coordinator stage. Respect the selected
+main model and live channel availability. The optional
 `model-routing-preset-builder` customises this same policy, not a second runtime.
 Both skills are installed only from this repository, never Workbench.
 

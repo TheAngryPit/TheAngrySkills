@@ -1,9 +1,9 @@
 # emilkowalski/skills Skill Mirror
 
-Mirrored skill: apple-design
-Published skill: emil-apple-design
+Mirrored skill: break-ui
+Published skill: emil-break-ui
 Source: https://github.com/emilkowalski/skills.git
-Source path: skills/apple-design
+Source path: skills/break-ui
 Branch: main
 Commit: e8a175de22ae1e49370fc144c1f3bb9aeedf988d
 

@@ -5,6 +5,6 @@ Published skill: marketing-plan
 Source: https://github.com/coreyhaines31/marketingskills.git
 Source path: skills/marketing-plan
 Branch: main
-Commit: c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9
+Commit: dda3841f0b294e01e93b1541486beefbfab0915e
 
 This skill is vendored from upstream with a `marketing-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

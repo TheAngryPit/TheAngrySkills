@@ -1,9 +1,9 @@
 # openclaw/agent-skills Skill Mirror
 
-Mirrored skill: behavior-validator
-Published skill: openclaw-behavior-validator
+Mirrored skill: team-handoff
+Published skill: openclaw-team-handoff
 Source: https://github.com/openclaw/agent-skills.git
-Source path: skills/behavior-validator
+Source path: skills/team-handoff
 Branch: main
 Commit: 24fe6f4bb0841f741d8929a6ee3549e691d2ba02
 

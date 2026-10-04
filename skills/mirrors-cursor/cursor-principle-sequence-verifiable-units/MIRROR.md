@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
+Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 Physical source path: pstack/skills/principle-sequence-verifiable-units/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
 Source SHA-256: 2ccbbacc56ace5afdfb8670cef19d7bd009fb2a0033b9a741cbdf2b6baf72187
 Published name: cursor-principle-sequence-verifiable-units
 Decision class: intacta

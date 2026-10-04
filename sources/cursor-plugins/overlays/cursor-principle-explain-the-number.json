@@ -1,0 +1,10 @@
+{
+  "source_path": "pstack/skills/principle-explain-the-number/SKILL.md",
+  "source_sha256": "5aac99e7ce0bb1b37e2579acf4fe88c32a1456d9d46afd4a57cfe1df9092e89c",
+  "reason": "Reviewed pstack addition in the existing Codex parity mirror.",
+  "codex_rule": "Preserve native Codex permissions, selected models and tools; no automatic execution or installation.",
+  "codex_note": "",
+  "preserved_requirement": "Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
+  "proof": "Pinned source and deterministic renderer/catalog checks; live execution remains unproven.",
+  "replacements": []
+}

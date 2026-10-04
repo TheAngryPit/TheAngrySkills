@@ -1,0 +1,16 @@
+{
+  "source_path": "pstack/skills/benchmark-checklist/SKILL.md",
+  "source_sha256": "6a767e788a60428fa14e645ee10fe2e49896e514ff654f668b1d824deb9038e8",
+  "reason": "Reviewed pstack addition in the existing Codex parity mirror.",
+  "codex_rule": "Preserve native Codex permissions, selected models and tools; no automatic execution or installation.",
+  "codex_note": "",
+  "preserved_requirement": "Vet a perf measurement (limiter, tuning, limits, errors, repeatability, relevance, and whether the work happened) before you report or act on it. Use when you run a benchmark or report a speedup or regression you measured.",
+  "proof": "Pinned source and deterministic renderer/catalog checks; live execution remains unproven.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "the core count with `nproc`",
+      "after": "the core count with `nproc` on Linux, `sysctl -n hw.logicalcpu` on macOS, or the host's native processor query on Windows"
+    }
+  ]
+}

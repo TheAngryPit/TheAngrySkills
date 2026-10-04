@@ -887,8 +887,8 @@
       "dependencies_or_limitations": "supporting files in this skill: references/design-red-flags.md, references/rationale-template.md, references/runner-prompt.md",
       "family": "pstack",
       "files": {
-        "SKILL.md": "691cd39f52c7b613866e6baf9ea0b05451ffa21a6a9b4102f166418b89178fde",
-        "references/design-red-flags.md": "905066f9bbac81c573c2b325be47751d2c0f9325e0a0772bd4384e82dafe9336",
+        "SKILL.md": "741901140ee382ebf93263a7ed03c6ee3719e578416d81afcd195876fa16c496",
+        "references/design-red-flags.md": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce",
         "references/rationale-template.md": "0cedfccdc7b47fc881febd5a8293eecbc542c20f8df825639904a8102d2eb5d3",
         "references/runner-prompt.md": "983bf2820cc14ed8ecab6e448e1033e5cfe6031967d0a9287b48c7fa9c33d925"
       },
@@ -902,7 +902,7 @@
       "upstream_purpose": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
       "upstream_skill": "architect",
       "validation_requirement": "frontmatter and references; explicit-only invocation policy; Ground how/why before Sketch; two distinct candidates, independent judge, synthesis and verified disposable local result; separate automatic trigger and production gaps",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "Bounded native local Arena observed: N=2 isolated design candidates, independent cross-judge, base/grafts, runtime verification after a drift correction; automatic trigger, Work cloud and other task shapes remain unproven.",
@@ -925,7 +925,7 @@
       "upstream_purpose": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
       "upstream_skill": "arena",
       "validation_requirement": "frontmatter and links; explicit-only native invocation policy; isolated candidates, cross-judge, base/graft and verified local result; separately label cloud and automatic trigger gaps",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven",
@@ -950,6 +950,29 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
+      "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven",
+      "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação funcional",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "No installation or activation; actual tool availability and operator authority remain required.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "6a767e788a60428fa14e645ee10fe2e49896e514ff654f668b1d824deb9038e8"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/benchmark-checklist/SKILL.md",
+      "planned_adaptation": "Preserve the complete upstream procedure, map names and host commands to native Codex, and retain explicit invocation policy.",
+      "promotion_reason": "Operator requested the missing pstack capabilities in the established parity mirror.",
+      "publish": true,
+      "published_name": "cursor-benchmark-checklist",
+      "upstream_purpose": "Vet a perf measurement (limiter, tuning, limits, errors, repeatability, relevance, and whether the work happened) before you report or act on it. Use when you run a benchmark or report a speedup or regression you measured.",
+      "upstream_skill": "benchmark-checklist",
+      "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+    },
+    {
       "availability": "external connector or routing not demonstrated",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
@@ -970,7 +993,7 @@
       "upstream_purpose": "Find what a change could break somewhere else before it ships, beyond the diff, and prove the one fact it's safe because of by running real code instead of writing it up. Use for 'blast radius of X', 'what could this break', or reviewing a small diff you don't trust.",
       "upstream_skill": "blast-radius",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -993,6 +1016,29 @@
       "upstream_purpose": "Restate the last message in plain human language, with no jargon.",
       "upstream_skill": "bro",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+    },
+    {
+      "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven",
+      "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação funcional",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "No installation or activation; actual tool availability and operator authority remain required.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "bf482bacc972b3f124a4af8bf9364b4b3e280cb5845e44c326ea4f4565e5c904"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/correct/SKILL.md",
+      "planned_adaptation": "Preserve the complete upstream procedure, map names and host commands to native Codex, and retain explicit invocation policy.",
+      "promotion_reason": "Operator requested the missing pstack capabilities in the established parity mirror.",
+      "publish": true,
+      "published_name": "cursor-correct",
+      "upstream_purpose": "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. Repeat this each time the operator corrects you. Use for /correct.",
+      "upstream_skill": "correct",
+      "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded explicit-only native adapter proven by an isolated CLI verification fixture and a disposable web target driven through the native in-app browser; project-local .agents/skills/verify-<app>/ generation, Doctor, feature drives, evidence preservation, cleanup ownership, controlled drift and second-run readback are observed; production target parity, reusable host activation and action-time reset remain unproven",
@@ -1040,7 +1086,7 @@
       "upstream_purpose": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
       "upstream_skill": "figure-it-out",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded native explorer/explainer role flow observed; automatic skill selection unobserved",
@@ -1065,7 +1111,7 @@
       "upstream_purpose": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
       "upstream_skill": "how",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "Bounded native same-scope two-reviewer review and separate PR #66 case observed; requested model selections accepted, effective backend model readback and automatic trigger unproven.",
@@ -1092,7 +1138,7 @@
       "upstream_purpose": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
       "upstream_skill": "interrogate",
       "validation_requirement": "frontmatter and relative references; explicit-only policy; at least two distinct requested native reviewers on same scope/rubric, separate reports, lead judgment, no auto-apply; PARTIAL on missing configured reviewer; effective model readback gap labeled",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded explicit-only native maintenance adapter proven by CLI Doctor/feature drives and a disposable web target with two read-only source-wave receipts and clean re-drives; project-local feature-map reconciliation, persisted before/after evidence, cleanup ownership and second execution are observed; production target parity, reusable host activation and action-time reset remain unproven",
@@ -1180,22 +1226,22 @@
       "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); concrete mirror dependencies `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` are conditional and require availability checks; cloud-capable task execution is conditional; bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
       "family": "pstack",
       "files": {
-        "SKILL.md": "7645c9ee27ef9798c48a84060b6df409f8593d1058c7c25cbec28dce976195f9",
+        "SKILL.md": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d",
         "playbooks/authoring-a-skill.md": "f6a13a445c360b48d6cd72780ac01955f45b82826476efe0e67c7559329407aa",
         "playbooks/autonomous-run.md": "15e54ad3ac92565613980772d8708de6e19cc4690bfd4bb3fb8836522407377b",
-        "playbooks/autopilot-full.md": "975439613b9073b637a88c6df762b474dbd745f0e86150bb07d2121e32eb48e7",
-        "playbooks/autopilot-stack.md": "f626f4ed17725de5ea96ac22597a1c298c46c36015e844bf86a68f6d38d57fbf",
+        "playbooks/autopilot-full.md": "05ca30a16242c19d0c78ba1e88cca66f858d75252cb154fd740099fe292de802",
+        "playbooks/autopilot-stack.md": "007c0a3b12011954a224f54773ef4ad7b75918be0a311914c1b51ad4e794c1e5",
         "playbooks/babysit.md": "a0346c37c2313f36a863b80f66ee7b98059c2242adf74fc7b3e48abdb9ec6f5a",
         "playbooks/bug-fix.md": "018bbc146ae19145caa6c7e70591fee081b64447dda1c1c4b681c9974d928b13",
         "playbooks/eval.md": "b862bfa2fae2399abf047a8e80d3e3dddb64003af96fb1cebb625216131e36bb",
         "playbooks/feature.md": "3a62cc4a8cbcf144bb9dd05f05420a15be0d38b784d3b141bb730a5852f50a62",
-        "playbooks/hillclimb.md": "41980da135de2579bb38570e4b3373e015029148734ab5dc7d6103417b499af6",
+        "playbooks/hillclimb.md": "244f289898fe67a458065e90fe8217c916c5acf61cdee8975ade3f9831a12e91",
         "playbooks/investigation.md": "dc66bcf6af3a074fc7f67aa5e12b93ef571a4fb4d8e17f2f1af5ae5359f42e46",
-        "playbooks/multi-phase-plan.md": "8f8603f97aa57bce07a4c29e83e24e84db62a1fbd1fa5b3f639e1e74ea3c9da9",
-        "playbooks/opening-a-pr.md": "1c0281f84348aa5dc6f10defbcdd8357f4b0786d874f340ba34bfc169dc6c26f",
+        "playbooks/multi-phase-plan.md": "27d310e3fc3937a60b8fcbe1318f9d249a7477a722907bf85b3e4eb3dc436b11",
+        "playbooks/opening-a-pr.md": "ab40de7163c1c6e274f46ee559b2e53ef45673703f601f13f4931c199e6fb90f",
         "playbooks/orchestrate.md": "d42b4375f1bd4ce23da0b575a198571a2117df7eea10c3c9fc6d92ae1053f7be",
         "playbooks/pause-safely.md": "77968cfe5f4a71a8cd33e0ae8ffcdbd88dd693a212c240457773e6c40c96c21d",
-        "playbooks/perf-issue.md": "bb957907426666b7aa599aed3f6ddebf423364a1428f93790b5cb9e15c878e7e",
+        "playbooks/perf-issue.md": "2b88ad0f880e4d4d755ac19fe52414d6631d6baa816d060f53cf0a7429d7e14a",
         "playbooks/prototype.md": "7aa1f52c691c3d46d5afc527b23f90977fce869ce33573c73c81a4c7f0cde962",
         "playbooks/refactoring.md": "50f4f7d3d301551f8b8a57c3303c99958c5ca630ae0d0051823b6987c0eb5b96",
         "playbooks/runtime-forensics.md": "594f02c40c243a346e1f57b688ecf2ed5e882f21b3d24ed2204d1ac6f1c24a8a",
@@ -1207,7 +1253,7 @@
         "references/bugbot-triage.md": "b2d146c770d8d3593e1ef3d77b668039b8e1f78093ea1a86f1d45d7f99614309",
         "scripts/bootstrap.ts": "ccd2ed08fd9da9d0d942e5f2491cfc74bb92d8a08fa51755e0da1ac8de287361",
         "scripts/bun.lock": "667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46",
-        "scripts/check-plan.mjs": "1f9e788ce90a13a9973e35e8c3a52737857c375e057bdccc13c8510a9af30f04",
+        "scripts/check-plan.mjs": "4f9432d9989880b6afc2bdda503d5b12a9d07d357ecf31936b7ab5e83bc80523",
         "scripts/orch/orch.test.ts": "174b86d21ff51ccd28d1a8c938cb2e0c6fa287b209d4ca6c03932fcb1b53372e",
         "scripts/orch/orch.ts": "f091687df627a0b75fabd54af58945a9cd6c7039ef0622012ac9ed60cd8ec434",
         "scripts/orch/store.ts": "0eae7cf69282e827b1227166f2e32cee3560f2f3e65b3f1f2faf6fb83d3b4c5b",
@@ -1241,11 +1287,11 @@
           "name": "poteto-agent",
           "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
           "pinned_source_path": "pstack/agents/poteto-agent.md",
-          "pinned_source_sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+          "pinned_source_sha256": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201",
           "loading": "explicit profile installation; fresh-session selection not proven"
         }
       ],
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1380,6 +1426,29 @@
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
     },
     {
+      "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven",
+      "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação funcional",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "No installation or activation; actual tool availability and operator authority remain required.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "5aac99e7ce0bb1b37e2579acf4fe88c32a1456d9d46afd4a57cfe1df9092e89c"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/principle-explain-the-number/SKILL.md",
+      "planned_adaptation": "Preserve the complete upstream procedure, map names and host commands to native Codex, and retain explicit invocation policy.",
+      "promotion_reason": "Operator requested the missing pstack capabilities in the established parity mirror.",
+      "publish": true,
+      "published_name": "cursor-principle-explain-the-number",
+      "upstream_purpose": "Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
+      "upstream_skill": "principle-explain-the-number",
+      "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+    },
+    {
       "availability": "content available; live selection not demonstrated",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
@@ -1444,7 +1513,7 @@
       "upstream_purpose": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
       "upstream_skill": "principle-guard-the-context-window",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed",
@@ -1577,7 +1646,7 @@
       "upstream_purpose": "Apply when tempted to ask 'should I do X?' on reversible work. Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions.",
       "upstream_skill": "principle-never-block-on-the-human",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1600,7 +1669,7 @@
       "upstream_purpose": "Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code.",
       "upstream_skill": "principle-outcome-oriented-execution",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed",
@@ -1623,7 +1692,7 @@
       "upstream_purpose": "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'",
       "upstream_skill": "principle-prove-it-works",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1690,7 +1759,7 @@
       "upstream_purpose": "Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer.",
       "upstream_skill": "principle-sequence-verifiable-units",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1805,7 +1874,7 @@
       "upstream_purpose": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
       "upstream_skill": "reflect",
       "validation_requirement": "frontmatter/relative refs, explicit-only policy, three distinct lenses plus synthesis on one scoped transcript, adversarial prompt-isolation proof, source findings retained, no auto-edit, generated security scan",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven",
@@ -1828,7 +1897,7 @@
       "upstream_purpose": "Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", \"pstack budget\", or changing pstack's model choices.",
       "upstream_skill": "setup-pstack",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger, budget e fallback de família; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved",
@@ -1853,7 +1922,7 @@
       "upstream_purpose": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
       "upstream_skill": "show-me-your-work",
       "validation_requirement": "frontmatter e referências relativas; writer bounded, trail e auditoria cross-model observados; seleção automática e outros hosts por verificar",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded native local four-phase N=2 swarm observed; automatic skill selection, Work cloud workers, race and other hosts unobserved",
@@ -1864,7 +1933,7 @@
       "dependencies_or_limitations": "native bounded delegation and coordinator aggregation are observed for a local-computer case; Work cloud default remains unavailable without a proved worker route",
       "family": "pstack",
       "files": {
-        "SKILL.md": "e28057fbbd1113257b2e953c6e891c41f535dbb01400b6bfd3eb9a85a2ab861f"
+        "SKILL.md": "bdcee4168e22428036e93d7cdeec3f391dbc4132f927f6db2540328c22db0273"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1876,7 +1945,7 @@
       "upstream_purpose": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
       "upstream_skill": "swarm",
       "validation_requirement": "frontmatter e referências relativas; native local four-phase fanout/drain/aggregate observado; Work cloud default, race, dropout, seleção automática e outros hosts por verificar",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1899,7 +1968,7 @@
       "upstream_purpose": "Use only when the user explicitly asks for TDD, a failing test, or a regression test, OR when the bug has an obvious cheap local test target. Skip when the test path is unclear, expensive, integration-heavy, or not requested.",
       "upstream_skill": "tdd",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1932,7 +2001,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "10c74685e1639cc4f8ff096007e5405b25ca0e824b65aaa17105c238faf6a1e8"
+        "SKILL.md": "f5c512ffeec70bc4e0dee50f7bb4c26742e1be77967a6e8b15d1921e1c209ceb"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1944,7 +2013,7 @@
       "upstream_purpose": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
       "upstream_skill": "technical-writing",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1956,7 +2025,7 @@
       "family": "pstack",
       "files": {
         "SKILL.md": "28f9e61710e205f6f3c5476f333483cff0e988f6a5b639e2faad536344b40c5e",
-        "references/patterns.md": "62e9cd32d2fa066a35d0d1349aac22dce31a48ad7d5eaf142570770cfe707384"
+        "references/patterns.md": "faa1362055374452efccac1b629677c61acfb0bcc6c4e3311836b5715638ee18"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1967,7 +2036,8 @@
       "published_name": "cursor-typescript-best-practices",
       "upstream_purpose": "TypeScript best practices. Use when reading or editing any .ts or .tsx file.",
       "upstream_skill": "typescript-best-practices",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1990,7 +2060,7 @@
       "upstream_purpose": "Cut AI tells from any writing. Must always apply.",
       "upstream_skill": "unslop",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded native read-only investigator/synthesizer flow observed; unavailable evidence categories remain explicit; automatic skill selection unobserved",
@@ -2025,7 +2095,7 @@
       "upstream_purpose": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "upstream_skill": "why",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar",
-      "source_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "bounded native Codex adaptation demonstrated with explicit limits",
@@ -2050,28 +2120,6 @@
       "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
-      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
-      "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
-      "baseline_security_verdict": "safe_docs_only",
-      "decision_classification": "adaptação funcional",
-      "declared_for_distribution": true,
-      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
-      "family": "ralph-loop",
-      "files": {
-        "SKILL.md": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09"
-      },
-      "license_path": "ralph-loop/LICENSE",
-      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
-      "path": "ralph-loop/skills/ralph-loop/SKILL.md",
-      "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
-      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
-      "publish": true,
-      "published_name": "cursor-ralph-loop",
-      "upstream_purpose": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
-      "upstream_skill": "ralph-loop",
-      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
-    },
-    {
       "availability": "guide-only; native Ralph loop execution remains unproven",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
@@ -2092,6 +2140,28 @@
       "upstream_purpose": "Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.",
       "upstream_skill": "ralph-loop-help",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex"
+    },
+    {
+      "availability": "bounded native Codex adaptation demonstrated with explicit limits",
+      "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação funcional",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "Use only the bundled bounded Codex adaptation; preserved upstream automation, active external surfaces, and unproven parity remain unavailable.",
+      "family": "ralph-loop",
+      "files": {
+        "SKILL.md": "3583d0868329b2b1a0f081cd7d0d1ef51cf5a12696e407edbc6b8cdca41f8a09"
+      },
+      "license_path": "ralph-loop/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "path": "ralph-loop/skills/ralph-loop/SKILL.md",
+      "planned_adaptation": "Preservar comportamento pretendido; substituir constructs Cursor específicos por capabilities nativas e provar o fluxo numa fixture.",
+      "promotion_reason": "bounded native adaptation and behavior proof reviewed",
+      "publish": true,
+      "published_name": "cursor-ralph-loop",
+      "upstream_purpose": "Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.",
+      "upstream_skill": "ralph-loop",
+      "validation_requirement": "frontmatter and links; bounded behavior tests; local security scan; explicit capability limits"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -2229,7 +2299,7 @@
   ],
   "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
   "upstream_commit": "c1c0a32802223f4be824112dd83d33ad29a8b26c",
-  "pstack_upstream_commit": "ecc249f1e306fc64ddf83c7bed16cacf7c2239db",
+  "pstack_upstream_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
   "upstream_repository": "https://github.com/cursor/plugins.git",
   "support_files": {
     "advisor/agents/advisor-subagent.md": {
@@ -2415,7 +2485,7 @@
       "relationship": "named agent dependency"
     },
     "pstack/agents/poteto-agent.md": {
-      "sha256": "c3850be1b97bc97cec0568ed8b26d04e7693c4e07868137c58fe546d37f288e9",
+      "sha256": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201",
       "related_skills": [
         "cursor-poteto-mode"
       ],

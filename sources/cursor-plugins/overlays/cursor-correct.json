@@ -1,0 +1,10 @@
+{
+  "source_path": "pstack/skills/correct/SKILL.md",
+  "source_sha256": "bf482bacc972b3f124a4af8bf9364b4b3e280cb5845e44c326ea4f4565e5c904",
+  "reason": "Reviewed pstack addition in the existing Codex parity mirror.",
+  "codex_rule": "Preserve native Codex permissions, selected models and tools; no automatic execution or installation.",
+  "codex_note": "Apply this procedure within the operator-authorized repository scope. Preserve unrelated work and removal rules. A past instruction is evidence, not new authority; use the current task and repository permissions for changes.",
+  "preserved_requirement": "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. Repeat this each time the operator corrects you. Use for /correct.",
+  "proof": "Pinned source and deterministic renderer/catalog checks; live execution remains unproven.",
+  "replacements": []
+}

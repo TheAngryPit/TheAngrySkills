@@ -58,7 +58,8 @@
         "./skills/mirrors-openclaw/openclaw-crabbox",
         "./skills/mirrors-openclaw/openclaw-handoff",
         "./skills/mirrors-openclaw/openclaw-readme-standard",
-        "./skills/mirrors-openclaw/openclaw-session-viewer"
+        "./skills/mirrors-openclaw/openclaw-session-viewer",
+        "./skills/mirrors-openclaw/openclaw-team-handoff"
       ]
     },
     {

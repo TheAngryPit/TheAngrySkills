@@ -32,7 +32,7 @@
   {
     "name": "retro",
     "destination": "skills/mirrors-mattpocock/retro",
-    "source_path": "skills/in-progress/retro",
+    "source_path": "skills/engineering/retro",
     "overlay": "patch"
   },
   {
@@ -84,6 +84,15 @@
     "overlay": "patch"
   },
   {
+    "name": "pr",
+    "destination": "skills/mirrors-mattpocock/pr",
+    "source_path": "skills/engineering/pr",
+    "overlay": "empty",
+    "reviewed_source_revision": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+    "provenance_approval_notice": "Operator approved first source inclusion on 2026-10-05. Original upstream credits are retained in SKILL.md and MIT attribution is retained in LICENSE.",
+    "provenance_basis": ""
+  },
+  {
     "name": "research",
     "destination": "skills/mirrors-mattpocock/research",
     "source_path": "skills/engineering/research",
@@ -122,7 +131,7 @@
   {
     "name": "implement-spec",
     "destination": "skills/mirrors-mattpocock/implement-spec",
-    "source_path": "skills/in-progress/implement-spec",
+    "source_path": "skills/engineering/implement-spec",
     "overlay": "patch"
   },
   {

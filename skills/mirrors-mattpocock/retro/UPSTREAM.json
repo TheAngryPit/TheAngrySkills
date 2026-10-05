@@ -1,8 +1,8 @@
 {
   "name": "retro",
   "repository": "https://github.com/mattpocock/skills.git",
-  "source_path": "skills/in-progress/retro",
-  "commit": "959a8e9f1edc3adbe2f7e3054bb6fbefa6696260",
+  "source_path": "skills/engineering/retro",
+  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "2ed7931801e61010bb83e27fcd56a48e226aa07f80462751566dee5b34da7a4c",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "90e4e6a5d622b8c5ece150ac49913bab613df5c308742bc0eb53e61ce6ba9112",
+    "PROVENANCE.md": "65a70e80c0b0b291fefaaab85f25fb4cc912ecba127537403ce4e273478447e9",
     "SKILL.md": "2292ae2189012cd6ddc2e0365ef09a546d108b1ad640821c685fc2dc8a072f6b",
     "agents/openai.yaml": "cb6fb9d7e6b4be5975f41f6def1dd00a1255bad5d9b02696b124c924a8b8745c"
   }

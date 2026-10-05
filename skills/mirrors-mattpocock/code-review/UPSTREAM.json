@@ -2,7 +2,7 @@
   "name": "code-review",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/code-review",
-  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "ce6cfe015368e7c78ae48cd2fde791e08cdb29ceb1a24ce7a254d25c723cad77",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "f4ba46c680d2b4154b28af1880aa1d03a011cf1a8f5185732801e32e151a5877",
+    "PROVENANCE.md": "4e42a0a6e29075922995e037e3d87bbc84f33a5d8a8af240e50fc7613f56e177",
     "SKILL.md": "783a41c432fc3cc2336d32f9d32cd1c408ba42313c584d214aba9e98e6b322e7",
     "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
   }

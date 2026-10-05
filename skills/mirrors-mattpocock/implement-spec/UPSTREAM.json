@@ -1,20 +1,20 @@
 {
   "name": "implement-spec",
   "repository": "https://github.com/mattpocock/skills.git",
-  "source_path": "skills/in-progress/implement-spec",
-  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "source_path": "skills/engineering/implement-spec",
+  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
-    "SKILL.md": "f703b5f41df9c2202e19540d203e0d5fc32613572a838a070136cc22e712b129",
-    "agents/openai.yaml": "d457ae78ff282b8798380b0c2e393c9798bc2bf5ee7dfe9ca31607714c6cd7d3",
+    "SKILL.md": "7a22dd2e60b8fcece478ced9d2533582adf3520d695acd3ab715341535c9e56d",
+    "agents/openai.yaml": "fd41efb42c60c96320d6531be7e4bf15cbf5518cd652d57dff27ccffa46988e9",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "3ce42ba24d553348f15f007e68d0f5a3734d3e2291dabbb895ba76ee12676be1",
+    "ADAPTATIONS.patch": "bef6360cff1bf08cde092c513433eac69f5eddd527ea71eea3ea76b95af2a15e",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "37c794fc3fdf96b870fd66974db7091493c3ff56a567516f577be9751d9d43fd",
-    "SKILL.md": "c86750938a9fad749cac39994a907356e1cb2da1e8601e54183aed30a9531039",
-    "agents/openai.yaml": "d457ae78ff282b8798380b0c2e393c9798bc2bf5ee7dfe9ca31607714c6cd7d3"
+    "PROVENANCE.md": "b0add0b7afc0a1cf9c440b482b04d8e83a1dad2e6a000df4678a78db7f5d346e",
+    "SKILL.md": "b79ed4acc198467eca56cd6ad33059cc069ad8f2971c68f243029a3b383b7196",
+    "agents/openai.yaml": "fd41efb42c60c96320d6531be7e4bf15cbf5518cd652d57dff27ccffa46988e9"
   }
 }

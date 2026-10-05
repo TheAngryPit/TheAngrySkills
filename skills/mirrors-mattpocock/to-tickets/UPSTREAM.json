@@ -2,7 +2,7 @@
   "name": "to-tickets",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/to-tickets",
-  "commit": "3cca18b368ae95cdbdebbff572ccafa662551015",
+  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "cfb6db6825e1b9f5148c3db1788e096af0f7d9f3bdfcfdccaab20ea4023052b3",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "697fb27e45301e48fa57752683c63787725682af74c112a1afe375df5ff2bf15",
+    "PROVENANCE.md": "b3072f6bc44c0de2c4a3a2653940d7ad8a18ba45921e7492be387751d9d55c47",
     "SKILL.md": "f583081f41cf92892256230e91ce0bfe0730f00628296e13c3e12fa04a51059b",
     "agents/openai.yaml": "21bc6215fffcd7614e9f772bb1760e87cc5fc7dcc707e7d282bc9414267a6090"
   }

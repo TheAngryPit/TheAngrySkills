@@ -1,7 +1,7 @@
 # implement: approved adaptation
 
 Source: [https://github.com/mattpocock/skills.git](https://github.com/mattpocock/skills.git).
-Reviewed source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.
+Original integration source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.
 Operator approved the final Matt Pocock integration on 2026-09-12. MIT attribution is retained in LICENSE.
 
 ## What changed and why
@@ -11,6 +11,8 @@ No content adaptation is approved for this package. The upstream files are prese
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The empty file is intentional for a maintained copy.
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 No additional behavior was invented during integration.
+
+Current upstream review: `24fe0ef7737efae15c87225755e9f6f5965e4888` on 2026-10-05. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

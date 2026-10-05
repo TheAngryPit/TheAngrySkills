@@ -1,9 +1,11 @@
 # Matt Pocock skill integrations
 
-The public repository contains 30 curated Matt Pocock skills under
+The public repository contains 31 curated packages from Matt Pocock's skills
+repository under
 `skills/mirrors-mattpocock/`, plus the separately packaged AskPit adaptation.
 The upstream source is [Matt Pocock's skills repository](https://github.com/mattpocock/skills),
-reviewed at `3cca18b368ae95cdbdebbff572ccafa662551015`.
+originally reviewed at `3cca18b368ae95cdbdebbff572ccafa662551015`;
+current source review is recorded below.
 
 `ask-matt` and `writing-for-agents` are not copied into the mirror. AskPit and
 Writing for Astra are the repository's separate packages and retain their
@@ -33,6 +35,25 @@ The 15 approved changes are recorded byte-for-byte in each package's
 `ADAPTATIONS.patch`; this is an explicit no-change decision, not a missing or
 ignored patch. Every package carries its complete upstream support files,
 `LICENSE`, `PROVENANCE.md`, and `UPSTREAM.json` hashes.
+
+## Upstream review on 2026-10-05
+
+The reviewed upstream head is `24fe0ef7737efae15c87225755e9f6f5965e4888`.
+The existing mirror destinations for `implement-spec` and `retro` remain
+unchanged; their source paths moved from `skills/in-progress/` to
+`skills/engineering/`.
+
+The `pr` package is a new, verbatim source inclusion with an explicit empty
+overlay. Its upstream frontmatter credits Dex Horthy and Humanlayer; the
+package is sourced from Matt Pocock's repository without implying Matt authored
+that skill. This makes 19 curated packages with patches and 12 with explicit
+empty overlays, plus AskPit's separate patch.
+
+Upstream removed `skills/engineering/resolving-merge-conflicts`. Its existing
+mirror and Codex adaptation remain intact at their reviewed source pin and are
+held for legacy conflict-resolution use. The new `pr` skill drafts pull request
+bodies and is not an equivalent replacement. The removal is recorded at the
+reviewed head above; no new source was assigned to the legacy destination.
 
 ## Update and reverse proof
 

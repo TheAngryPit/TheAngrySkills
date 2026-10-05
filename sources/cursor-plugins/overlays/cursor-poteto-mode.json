@@ -75,7 +75,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -225,8 +225,8 @@
     },
     {
       "file": "playbooks/multi-phase-plan.md",
-      "before": "In a local session, a real terminal `/loop`.",
-      "after": "In a local session, an explicitly requested Codex heartbeat or automation."
+      "before": "On the operator's go, arm the audit tick as `/loop 1h` with the tick prompt below.",
+      "after": "When the operator explicitly requests recurring monitoring, arm a native Codex heartbeat for the hourly audit with the tick prompt below; if unavailable, report the cadence gap."
     },
     {
       "file": "playbooks/multi-phase-plan.md",
@@ -245,8 +245,8 @@
     },
     {
       "file": "playbooks/autopilot-stack.md",
-      "before": "A local root arms each tick as a real terminal `/loop`.",
-      "after": "A local root uses an explicitly requested Codex heartbeat or automation for each tick."
+      "before": "On the operator's go, the root arms `/loop 1h` with a prompt that runs this tick, per Autopilot-full step 6.",
+      "after": "When the operator explicitly requests recurring monitoring, the root arms a native Codex heartbeat for the hourly tick, per Autopilot-full step 6; if unavailable, report the cadence gap."
     },
     {
       "file": "playbooks/autopilot-full.md",
@@ -255,8 +255,8 @@
     },
     {
       "file": "playbooks/autopilot-full.md",
-      "before": "A local root arms each tick as a real terminal `/loop`.",
-      "after": "A local root uses an explicitly requested Codex heartbeat or automation for each tick."
+      "before": "On the operator's go, arm `/loop 1h` with a prompt that runs this tick. `/loop` works in local and cloud roots.",
+      "after": "When the operator explicitly requests recurring monitoring, arm a native Codex heartbeat for the hourly tick. Verify that the mechanism is available for the actual task environment; otherwise report the cadence gap."
     },
     {
       "file": "playbooks/autopilot-full.md",
@@ -452,16 +452,47 @@
       "file": "SKILL.md",
       "before": "the **no-comments** skill (`/no-comments`)",
       "after": "the adapted `cursor-no-comments` skill"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Fresh subagents by default.** Give new work to a fresh subagent with consolidated scope, meaning the original brief, every later directive, and the prior agent's report and branch. This holds for a fix round, a follow-up, a retry, and the next queue item. Resume, message, or queue a follow-up on an existing subagent only when the new work strictly needs state that lives in that agent and is costly to move: its local checkout, its uncommitted changes, or a process it still runs, such as a dev server, a simulator, or a babysit watcher. A stop or hold order to a running agent is not reuse. A role such as a PR owner outlives its agent. Once that agent returns, a fresh agent takes the role's next round. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a \"done\" summary.",
+      "after": "**Consolidated briefs for every round.** Follow the operator's standing delegation policy: reuse a suitable agent while its context remains relevant; otherwise spawn a fresh named delegate. In either case, provide the original brief, every later directive, and the prior report and branch. Preserve costly local checkout, uncommitted work and running-process state. A role such as a PR owner outlives its process. A stop or hold order is not a new task. After an interrupted chain, reconcile all directives before accepting its result; never trust a \"done\" summary alone."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**benchmark-checklist** skill",
+      "after": "adapted `cursor-benchmark-checklist` skill"
+    },
+    {
+      "file": "playbooks/perf-issue.md",
+      "before": "**benchmark-checklist** skill",
+      "after": "adapted `cursor-benchmark-checklist` skill"
+    },
+    {
+      "file": "playbooks/hillclimb.md",
+      "before": "**benchmark-checklist** skill",
+      "after": "adapted `cursor-benchmark-checklist` skill"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Explain the Number** (**principle-explain-the-number**)",
+      "after": "**Explain the Number** (`cursor-principle-explain-the-number`)"
+    },
+    {
+      "file": "scripts/check-plan.mjs",
+      "before": "const PROGRAM_MARKERS = [\"git show origin/main:\", \"/loop 1h\", \"status message\"];",
+      "after": "const PROGRAM_MARKERS = [\"git show origin/main:\", \"hourly audit\", \"status message\"];"
     }
   ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",
-  "source_sha256": "7645c9ee27ef9798c48a84060b6df409f8593d1058c7c25cbec28dce976195f9",
+  "source_sha256": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d",
   "native_agent_profiles": [
     {
       "name": "poteto-agent",
       "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
       "pinned_source_path": "pstack/agents/poteto-agent.md",
-      "loading": "explicit profile installation; fresh-session selection not proven"
+      "loading": "explicit profile installation; fresh-session selection not proven",
+      "pinned_source_sha256": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201"
     }
   ]
 }

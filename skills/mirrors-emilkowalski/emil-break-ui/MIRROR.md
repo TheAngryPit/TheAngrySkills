@@ -1,0 +1,10 @@
+# emilkowalski/skills Skill Mirror
+
+Mirrored skill: break-ui
+Published skill: emil-break-ui
+Source: https://github.com/emilkowalski/skills.git
+Source path: skills/break-ui
+Branch: main
+Commit: e8a175de22ae1e49370fc144c1f3bb9aeedf988d
+
+This skill is vendored from upstream with a `emil-` prefix to avoid global skill-name collisions. The mirrored frontmatter names and concrete references to renamed sibling paths and skill names are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

@@ -137,7 +137,7 @@ git show origin/main:
 
 ### Verdict and merge
 
-30-minute review
+hourly audit
 
 ### Boot recipe
 
@@ -1058,7 +1058,7 @@ console.log(JSON.stringify({{
             self.skipTest("node unavailable")
         script = (
             REPO
-            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/check-plan.mjs"
+            / "skills/mirrors-cursor/cursor-poteto-mode/scripts/check-plan.mjs"
         )
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -1067,7 +1067,7 @@ console.log(JSON.stringify({{
             valid = root / "valid.md"
             invalid = root / "invalid.md"
             valid.write_text(VALID_PLAN)
-            invalid.write_text("# invalid\n")
+            invalid.write_text(VALID_PLAN.replace("hourly audit", ""))
             environment = {
                 "PATH": str(Path(node).parent),
                 "HOME": str(home),
@@ -1103,7 +1103,7 @@ console.log(JSON.stringify({{
             self.assertEqual(rejected.returncode, 1)
             self.assertRegex(
                 rejected.stderr,
-                r'no "## How to read this" section|no "## Program checklist"',
+                r'Program checklist lacks "hourly audit"',
             )
 
     def test_worktree_audit_safe_fixture_uses_only_mocks(self):

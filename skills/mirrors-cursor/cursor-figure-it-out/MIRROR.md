@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
+Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 Physical source path: pstack/skills/figure-it-out/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
 Source SHA-256: 0eb9485f0e7d84fee56b5d0f0af0faf4635e3ca87c8cba3970c01293b76ecc19
 Published name: cursor-figure-it-out
 Decision class: adaptação funcional

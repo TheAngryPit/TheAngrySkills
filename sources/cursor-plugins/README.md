@@ -2,7 +2,7 @@
 
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at
 `c1c0a32802223f4be824112dd83d33ad29a8b26c`. The pinned `snapshot/`
-contains the 91 physical `SKILL.md` files, their 169 files of in-skill support,
+contains the 94 physical `SKILL.md` files, their 169 files of in-skill support,
 and the nearest physical license evidence. It also pins 27 plugin-level agent, hook, and rule dependencies in a hash-checked support ledger. Reviewed native adapters are bundled only into the published skills that use them; the old hook adapter and make-bot-ui adapter remain repository evidence and are not rendered. No adapter is registered as a hook. The raw support files are not registered or executed by the mirror. Nothing is installed globally. `manifest.json` is keyed by physical
 upstream path; it retains the three Benny automation sources for historical
 provenance, but Vítor excluded them from this mirror and its previews.
@@ -10,11 +10,13 @@ provenance, but Vítor excluded them from this mirror and its previews.
 `upstream_commit` is the default revision for entries without a `source_commit`.
 `pstack_upstream_commit` is the separate reviewed baseline for the pstack drift
 detector; it prevents the same reviewed plugin changes from reopening a report.
-The 20 reviewed Pstack skill entries use per-skill provenance at
-`ecc249f1e306fc64ddf83c7bed16cacf7c2239db`; the global snapshot baseline stays
-at `c1c0a32802223f4be824112dd83d33ad29a8b26c` for all other entries. This mixed
-pin keeps the newer Pstack source review bounded to the skills already mirrored.
-It does not advance X MCP, excluded voice skills, or new upstream inventory. Each rendered
+The 24 reviewed Pstack skill entries use per-skill provenance at
+`e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a`; the global snapshot baseline stays
+at `c1c0a32802223f4be824112dd83d33ad29a8b26c` for all other entries (including the unchanged operator exclusions). This mixed
+pin keeps the newer Pstack source review bounded to 21 existing entries and
+three reviewed additions: `cursor-benchmark-checklist`, `cursor-correct`, and
+`cursor-principle-explain-the-number`. It does not advance X MCP or the
+operator-excluded voice and Benny skills. Each rendered
 `MIRROR.md` and held-sibling link uses the applicable skill revision, and the
 generated state records only the overrides from the global default.
 
@@ -56,14 +58,15 @@ scaffolding and review, Ralph continuation, and exact-child cancellation. Their
 incompatible Cursor operational bodies are not emitted. `cursor-cursor-sdk` now
 publishes a bounded native migration guide and read-only adapter while excluding
 all seven upstream credential/MCP reference files from its rendered bundle.
-`cursor-orchestrate` remains held for Work-cloud behavior and permission proof, leaving
-82 published skills, one active held candidate, and eight operator exclusions. The current eight-source exclusion and twelve-skill
+The current generated catalog has 86 published skills after the reviewed
+additions; operator exclusions are unchanged. Earlier Work-cloud proof limits
+remain as recorded in their owning overlays. The current eight-source exclusion and twelve-skill
 selection are recorded in the [scope decision](../../reports/cursor-scope-selection-20260914.md).
 The verification pair is published only for the bounded explicit-only local
 CLI/UI paths. Production target parity, reusable host activation, action-time
 Reset cleanup, and changed-outcome PR publication remain separate gaps. The
 `cursor-no-comments` path is published only for the bounded named
-`comment-sicko` review with coordinator-owned integration. All 91 physical
+`comment-sicko` review with coordinator-owned integration. All 94 physical
 skills remain traceable in the manifest and snapshot. The `cursor-poteto-mode`
 candidate renders all 23 playbooks and bundles its role reference, but its
 bundled script security review, cloud task parity, and full live playbook

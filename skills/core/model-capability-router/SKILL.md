@@ -42,16 +42,16 @@ or a required host/cloud boundary.
 
 | Profile | Model | Effort | Use |
 |---|---|---|---|
-| Recommended coordination profile | `gpt-6-sol` | `medium` | Recommended for sustained coordination, integration and open-ended execution; verify the actual host selection separately. |
+| Recommended coordination profile | `gpt-6.1-sol` | `medium` | Recommended for sustained coordination, integration and open-ended execution when available; verify the actual host selection separately. |
 | Planning, review and difficult decisions | `gpt-6-astra` | `low` | Habitual Astra setting when its judgment helps. |
 | Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
 | Bounded subtask | `gpt-6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
 | Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
 | Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
 
-For demanding coding, Sol high is an available task-specific override when
-medium is insufficient; choose it for the work rather than forcing an Astra
-escalation. It does not replace the habitual medium coordination default.
+For demanding coding, GPT-6.1 Sol high is an available task-specific override
+when medium is insufficient; choose it for the work rather than forcing an Astra
+escalation. It does not replace the recommended medium coordination profile.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
@@ -66,7 +66,9 @@ Luna Max is available when justified by the work; it requires no repeated
 approval merely for that effort. Choose effort for the workload; higher effort does not guarantee better results.
 GPT-6 supports cache-preserving effort updates through its documented mechanism;
 do not assume every client uses it or that cache is shared across models or tasks.
-Dated capability, pricing, caching and benchmark evidence is in
+Current GPT-6.1 capability, pricing and benchmark evidence is in
+[references/gpt61-sol-20260929.md](references/gpt61-sol-20260929.md). The
+historical GPT-6 evidence remains in
 [references/gpt6-20260922.md](references/gpt6-20260922.md). These profiles do
 not authorise new spending routes, external actions or additional access. Astra
 Max and Ultra are outside the habitual palette. Terra and other supported
@@ -76,8 +78,11 @@ palette.
 
 ## Changing selection during work
 
-Keep Sol medium as the default and choose task-specific overrides through the
-native surface that actually supports them. In CLI, `/model` changes model and
+Keep GPT-6.1 Sol medium as the recommended policy default and choose
+task-specific overrides through the native surface that actually supports them.
+Honor an explicit native effort selection, including low; this recommendation
+does not require changing a home configuration or an active thread. In CLI,
+`/model` changes model and
 supported effort within a session. A task follow-up tool may expose model and
 effort overrides; use them only when that tool supports the target. Do not
 message the current task recursively to simulate self-switching. The current

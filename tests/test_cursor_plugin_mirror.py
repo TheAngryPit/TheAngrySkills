@@ -66,12 +66,16 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(f"91 physical, {published_count()} published", result.stdout)
+        self.assertIn(f"94 physical, {published_count()} published", result.stdout)
 
     def test_reviewed_pstack_source_overrides_preserve_the_global_baseline(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
         state = json.loads((REPO / "reports/cursor-plugin-skills-state.json").read_text())
         expected_names = {
+            "cursor-benchmark-checklist",
+            "cursor-correct",
+            "cursor-principle-explain-the-number",
+            "cursor-typescript-best-practices",
             "cursor-architect",
             "cursor-arena",
             "cursor-blast-radius",
@@ -93,7 +97,7 @@ class CursorMirrorTests(unittest.TestCase):
             "cursor-unslop",
             "cursor-why",
         }
-        reported = "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+        reported = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
         self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
         entries = {entry["published_name"]: entry for entry in manifest["skills"]}
         overrides = {
@@ -125,7 +129,7 @@ class CursorMirrorTests(unittest.TestCase):
         )["codex_contract"]["upstream_readme"]
         self.assertEqual(
             setup_readme["sha256"],
-            "16262f32aa041d857f2936f3ad6c589648f8e7b5d23e03c3c0a8c76ef99fd08c",
+            "850eea901004b9ef4633e17c1bd9932863046a021242b4e043907ae534b21fa8",
         )
         for entry in manifest["skills"]:
             if entry["published_name"] not in expected_names:
@@ -141,7 +145,7 @@ class CursorMirrorTests(unittest.TestCase):
 
     def test_held_sibling_links_use_the_siblings_reviewed_source_commit(self):
         baseline = "c1c0a32802223f4be824112dd83d33ad29a8b26c"
-        reported = "ecc249f1e306fc64ddf83c7bed16cacf7c2239db"
+        reported = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary) / "upstream"
             source_file = root / "pstack/skills/publisher/SKILL.md"
@@ -489,7 +493,7 @@ class CursorMirrorTests(unittest.TestCase):
         preview = self.root / "candidate-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), 83)
+        self.assertEqual(len(list(preview.glob("*/SKILL.md"))), published_count())
         self.assertFalse((preview / "cursor-setup-benny").exists())
         self.assertFalse((preview / "cursor-make-bot-ui").exists())
         self.assertEqual(marketplace.read_bytes(), before)
@@ -502,7 +506,7 @@ class CursorMirrorTests(unittest.TestCase):
         )
         self.assertEqual(audit.returncode, 0, audit.stderr)
         results = json.loads(audit.stdout)["results"]
-        self.assertEqual(len(results), 83)
+        self.assertEqual(len(results), published_count())
         self.assertTrue(all(item["counts"]["error"] == 0 for item in results))
         missing = []
         for file in preview.rglob("*.md"):

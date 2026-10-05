@@ -1324,6 +1324,259 @@ class AutoreviewMixedTargetTests(unittest.TestCase):
                     self.helper["local_bundle"](repo)
 
 
+class AutoreviewBinaryDeletionTests(unittest.TestCase):
+    def setUp(self):
+        self.helper = load_helper()
+
+    @contextlib.contextmanager
+    def asset_repo(self, name="asset.bin", *, binary=True):
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            asset = repo / name
+            asset.parent.mkdir(parents=True, exist_ok=True)
+            asset.write_bytes(b"\0FORMER_BINARY_BYTES" if binary else b"old text\n")
+            (repo / "source.py").write_bytes(b"before()\n")
+            git(repo, "add", ".")
+            git(repo, "commit", "-qm", "base")
+            base = git(repo, "rev-parse", "HEAD").strip()
+            yield repo, asset, base
+
+    def assert_deletion(self, repo, captured, name, target, ref=None, *, source=True):
+        self.assertEqual(captured.paths, {name, "source.py"} if source else {name})
+        self.assertIn("deleted file mode 100644", captured.text)
+        self.assertIn("Binary files ", captured.text)
+        self.assertIn(" and /dev/null differ", captured.text)
+        self.assertNotIn("FORMER_BINARY_BYTES", captured.text)
+        if source:
+            self.assertIn("+after()", captured.text)
+        prompts = self.helper["build_review_prompts"](repo, target, ref, captured, "", [])
+        self.assertEqual(len(prompts), 1)
+        prompt = prompts[0].prompt if captured.mixed else prompts[0]
+        self.assertIn(captured.text, prompt)
+        return prompt
+
+    def test_local_staged_and_unstaged_deletions_keep_metadata_and_scope(self):
+        for staged in (False, True):
+            with self.subTest(staged=staged), self.asset_repo() as (repo, asset, base):
+                asset.unlink()
+                (repo / "source.py").write_bytes(b"after()\n")
+                if staged:
+                    git(repo, "add", "-u")
+                for ref in (None, base):
+                    with self.subTest(base=ref):
+                        captured = self.helper["local_bundle"](repo, ref)
+                        self.assert_deletion(repo, captured, asset.name, "local", ref)
+                        self.assertEqual(captured.mixed, ())
+                        heading = "# Staged Diff" if staged else "# Unstaged Diff"
+                        self.assertIn("Binary files ", captured.text.split(heading, 1)[1])
+
+    def test_committed_deletion_is_reviewable_from_pinned_base_commit_and_branch(self):
+        with self.asset_repo() as (repo, asset, base):
+            git(repo, "rm", "--", asset.name)
+            (repo / "source.py").write_bytes(b"after()\n")
+            git(repo, "commit", "-qam", "remove asset")
+            commit = git(repo, "rev-parse", "HEAD").strip()
+            for target in ("local", "commit", "branch"):
+                with self.subTest(target=target):
+                    captured = self.helper["build_bundle"](repo, target, base, commit)
+                    self.assert_deletion(repo, captured, asset.name, target, base)
+            # Committed targets are authoritative, not the current filesystem.
+            asset.write_bytes(b"\0UNRELATED_DIRTY_BINARY")
+            for target in ("commit", "branch"):
+                with self.subTest(dirty_target=target):
+                    captured = self.helper["build_bundle"](repo, target, base, commit)
+                    self.assert_deletion(repo, captured, asset.name, target, base)
+                    self.assertNotIn("UNRELATED_DIRTY_BINARY", captured.text)
+
+    @unittest.skipIf(os.name == "nt", "literal tab/newline filenames require POSIX")
+    def test_literal_tab_newline_and_metadata_like_paths_remain_distinct(self):
+        names = ("tab\tasset.bin", "line\nbreak.bin", ":100644 000000 aaaaaaa 0000000 D")
+        for name in names:
+            with self.subTest(name=name), self.asset_repo(name) as (repo, asset, base):
+                asset.unlink()
+                for staged in (False, True):
+                    if staged:
+                        git(repo, "add", "-u")
+                    captured = self.helper["local_bundle"](repo, base)
+                    self.assert_deletion(repo, captured, name, "local", base, source=False)
+                git(repo, "commit", "-qm", "remove literal asset")
+                for target in ("branch", "commit"):
+                    captured = self.helper["build_bundle"](repo, target, base, "HEAD")
+                    self.assert_deletion(repo, captured, name, target, base, source=False)
+
+    def test_binary_only_removal_prompt_is_explicitly_metadata_only(self):
+        with self.asset_repo() as (repo, asset, _base):
+            asset.unlink()
+            captured = self.helper["local_bundle"](repo)
+            prompt = self.assert_deletion(repo, captured, asset.name, "local", source=False)
+            self.assertIn("Binary deletions include Git metadata only", prompt)
+            self.assertIn("not the former binary contents", prompt)
+
+    def test_binary_additions_modifications_and_text_replacements_still_refuse(self):
+        for kind in ("addition", "modification", "binary-to-text", "text-to-binary"):
+            with self.subTest(kind=kind), self.asset_repo(binary=kind != "text-to-binary") as (repo, asset, base):
+                if kind == "addition":
+                    asset = repo / "added.bin"
+                asset.write_bytes(b"new text\n" if kind == "binary-to-text" else b"\0NEW_BINARY_BYTES")
+                # Include a genuine deletion in the same transition: its permission
+                # must not exempt another path's binary content.
+                removed = repo / "removed.bin"
+                removed.write_bytes(b"\0removed")
+                git(repo, "add", "--", removed.name)
+                git(repo, "commit", "-qm", "deletion neighbor")
+                removed.unlink()
+                if kind != "addition":
+                    with self.assertRaisesRegex(SystemExit, "refusing binary changes"):
+                        self.helper["local_bundle"](repo, base)
+                git(repo, "add", ".")
+                for ref in (None, base):
+                    with self.assertRaisesRegex(SystemExit, "refusing binary changes"):
+                        self.helper["local_bundle"](repo, ref)
+                git(repo, "commit", "-qm", "binary content change")
+                for target in ("branch", "commit"):
+                    with self.assertRaisesRegex(SystemExit, "refusing (binary changes|unsupported or malformed image)"):
+                        self.helper["build_bundle"](repo, target, base, "HEAD")
+
+    def test_worktree_deletion_cannot_hide_staged_binary_change(self):
+        for kind in ("addition", "modification"):
+            with self.subTest(kind=kind), self.asset_repo() as (repo, asset, base):
+                if kind == "addition":
+                    asset = repo / "added.bin"
+                asset.write_bytes(b"\0STAGED_BINARY_BYTES")
+                git(repo, "add", "--", asset.name)
+                asset.unlink()
+                for ref in (None, base):
+                    with self.assertRaisesRegex(SystemExit, "binary changes in local staged diff"):
+                        self.helper["local_bundle"](repo, ref)
+
+    def test_transient_deletion_cannot_exempt_a_captured_binary_modification(self):
+        for staged in (False, True):
+            with self.subTest(staged=staged), self.asset_repo() as (repo, asset, _base):
+                asset.write_bytes(b"\0MODIFIED_BINARY_BYTES")
+                if staged:
+                    git(repo, "add", "--", asset.name)
+                real_git = self.helper["git"]
+
+                def mutate_raw(root, *args, **kwargs):
+                    if args[0] == "diff" and "--raw" in args and "--patch" not in args:
+                        asset.unlink()
+                        if staged:
+                            git(repo, "add", "-u")
+                        try:
+                            return real_git(root, *args, **kwargs)
+                        finally:
+                            asset.write_bytes(b"\0MODIFIED_BINARY_BYTES")
+                            if staged:
+                                git(repo, "add", "--", asset.name)
+                    return real_git(root, *args, **kwargs)
+
+                with mock.patch.dict(self.helper["local_bundle"].__globals__, {"git": mutate_raw}):
+                    with self.assertRaisesRegex(SystemExit, "refusing binary changes"):
+                        self.helper["local_bundle"](repo)
+
+    @unittest.skipIf(os.name == "nt", "symlink type change requires POSIX")
+    def test_binary_to_symlink_type_change_is_not_a_deletion(self):
+        with self.asset_repo() as (repo, asset, base):
+            asset.unlink()
+            asset.symlink_to("source.py")
+            for staged in (False, True):
+                if staged:
+                    git(repo, "add", ".")
+                with self.assertRaisesRegex(SystemExit, "refusing binary changes"):
+                    self.helper["local_bundle"](repo, base)
+            git(repo, "commit", "-qm", "change asset type")
+            for target in ("branch", "commit"):
+                with self.assertRaisesRegex(SystemExit, "refusing binary changes"):
+                    self.helper["build_bundle"](repo, target, base, "HEAD")
+
+    def test_staged_deletion_and_validated_text_readdition_keep_mixed_ownership(self):
+        with self.asset_repo() as (repo, asset, base):
+            git(repo, "rm", "--", asset.name)
+            asset.write_bytes(b"replacement text\n")
+            for ref in (None, base):
+                captured = self.helper["local_bundle"](repo, ref)
+                self.assert_deletion(repo, captured, asset.name, "local", ref, source=False)
+                record, = captured.mixed
+                self.assertEqual(record.path, asset.name)
+                self.assertEqual(record.index.identity, "absent")
+                self.assertIsNone(record.base.content)
+                self.assertEqual(record.index_removed, ())
+                self.assertEqual(record.working_tree.content, "replacement text\n")
+                self.assertEqual({span.target for span in captured.spans}, {"index", "working_tree"})
+                self.helper["verify_mixed_sources"](repo, captured.mixed)
+            asset.write_bytes(b"changed replacement\n")
+            with self.assertRaisesRegex(SystemExit, "mixed source changed"):
+                self.helper["verify_mixed_sources"](repo, captured.mixed)
+
+    def test_staged_deletion_does_not_admit_unsafe_readditions(self):
+        for kind in ("binary", "non-UTF-8", "ignored", "symlink"):
+            if kind == "symlink" and os.name == "nt":
+                continue
+            with self.subTest(kind=kind), self.asset_repo() as (repo, asset, base):
+                git(repo, "rm", "--", asset.name)
+                if kind == "symlink":
+                    asset.symlink_to(repo.parent / "unavailable")
+                else:
+                    asset.write_bytes({"binary": b"\0replacement", "non-UTF-8": b"\xff",
+                                       "ignored": b"ignored text\n"}[kind])
+                if kind == "ignored":
+                    (repo / ".git/info/exclude").write_text("*.bin\n")
+                reason = "binary file|non-UTF-8 file" if kind in {"binary", "non-UTF-8"} else "validated untracked membership"
+                for ref in (None, base):
+                    with self.assertRaisesRegex(SystemExit, reason):
+                        self.helper["local_bundle"](repo, ref)
+
+    def test_sensitive_binary_deletions_retain_security_omissions(self):
+        with self.asset_repo(".env") as (repo, asset, base):
+            git(repo, "rm", "--", asset.name)
+            (repo / "source.py").write_bytes(b"after()\n")
+            git(repo, "add", "source.py")
+            captured = self.helper["local_bundle"](repo, base)
+            git(repo, "commit", "-qm", "remove sensitive asset")
+            bundles = [captured, *(self.helper["build_bundle"](repo, target, base, "HEAD")
+                                   for target in ("branch", "commit"))]
+            for captured in bundles:
+                self.assertEqual(captured.paths, {"source.py"})
+                self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], captured.text)
+                self.assertIn("+after()", captured.text)
+                self.assertNotIn(".env", captured.text)
+                self.assertNotIn("FORMER_BINARY_BYTES", captured.text)
+
+    def test_gitlink_deletions_remain_refused(self):
+        with self.asset_repo() as (repo, _asset, base):
+            git(repo, "update-index", "--add", "--cacheinfo", f"160000,{base},dependency")
+            git(repo, "commit", "-qm", "gitlink base")
+            base = git(repo, "rev-parse", "HEAD").strip()
+            git(repo, "update-index", "--force-remove", "dependency")
+            for ref in (None, base):
+                with self.assertRaisesRegex(SystemExit, "gitlink/submodule changes"):
+                    self.helper["local_bundle"](repo, ref)
+            git(repo, "commit", "-qm", "remove gitlink")
+            for target in ("branch", "commit"):
+                with self.assertRaisesRegex(SystemExit, "gitlink/submodule changes"):
+                    self.helper["build_bundle"](repo, target, base, "HEAD")
+
+    def test_readdition_during_bundle_capture_prevents_reviewer_start(self):
+        with self.asset_repo() as (repo, asset, _base):
+            git(repo, "rm", "--", asset.name)
+            build = self.helper["build_bundle"]
+
+            def mutate(*args):
+                captured = build(*args)
+                asset.write_bytes(b"\0REAPPEARED_BINARY_BYTES")
+                return captured
+
+            reviewer = mock.Mock()
+            main = self.helper["main_impl"]
+            with mock.patch.dict(main.__globals__, {"repo_root": lambda: repo,
+                    "build_bundle": mutate, "run_engine": reviewer}), \
+                    mock.patch.object(sys, "argv", [str(SCRIPT), "--mode", "local"]), \
+                    contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaisesRegex(SystemExit, "source changed while"):
+                    main()
+            reviewer.assert_not_called()
+
+
 class AutoreviewHardeningTests(unittest.TestCase):
     def setUp(self) -> None:
         self.helper = load_helper()
@@ -6334,6 +6587,128 @@ else:
             self.assertIsNone(
                 self.helper["find_command"](str(repo_link), repo),
             )
+
+    def test_validate_report_normalizes_absolute_in_repo_finding_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = init_repo(Path(tempdir))
+            report = {
+                "findings": [
+                    {
+                        "title": "First",
+                        "body": "Body",
+                        "priority": "P1",
+                        "confidence": 0.9,
+                        "category": "bug",
+                        "code_location": {
+                            "file_path": str(repo / "src" / "index.ts"),
+                            "line": 1,
+                        },
+                    },
+                    {
+                        "title": "Second",
+                        "body": "Body",
+                        "priority": "P2",
+                        "confidence": 0.9,
+                        "category": "bug",
+                        "code_location": {"file_path": "src/other.ts", "line": 2},
+                    },
+                ],
+                "overall_correctness": "patch is incorrect",
+                "overall_explanation": "Explanation",
+                "overall_confidence": 0.9,
+            }
+
+            self.helper["validate_report"](
+                report, repo, {"src/index.ts", "src/other.ts"}, []
+            )
+
+            self.assertEqual(
+                report["findings"][0]["code_location"]["file_path"], "src/index.ts"
+            )
+            self.assertEqual(
+                [finding["title"] for finding in report["findings"]],
+                ["First", "Second"],
+            )
+
+            for invalid in (
+                Path(tempdir) / "elsewhere" / "outside.ts",
+                repo.with_name(repo.name + "-neighbor") / "src" / "index.ts",
+                repo / "src" / ".." / "src" / "index.ts",
+            ):
+                with self.subTest(invalid=invalid):
+                    outside = copy.deepcopy(report)
+                    outside["findings"][0]["code_location"]["file_path"] = str(invalid)
+                    with self.assertRaisesRegex(SystemExit, "invalid file path"):
+                        self.helper["validate_report"](
+                            outside, repo, {"src/index.ts", "src/other.ts"}, []
+                        )
+
+            unscoped = copy.deepcopy(report)
+            unscoped["findings"][0]["code_location"]["file_path"] = str(repo / "unchanged.ts")
+            with contextlib.redirect_stderr(io.StringIO()):
+                self.helper["validate_report"](
+                    unscoped, repo, {"src/index.ts", "src/other.ts"}, []
+                )
+            self.assertEqual([item["title"] for item in unscoped["findings"]], ["Second"])
+            self.assertEqual(unscoped["scope_rejected_findings"][0]["code_location"]["file_path"],
+                             "unchanged.ts")
+            self.assertEqual(self.helper["review_status"](unscoped, complete=True), "incomplete")
+
+            if os.name != "nt":
+                target = repo / "unchanged.ts"
+                target.write_text("unchanged\n", encoding="utf-8")
+                inside_link = repo / "changed-link.ts"
+                inside_link.symlink_to(target.name)
+                repo_alias = Path(tempdir) / "repo-alias"
+                repo_alias.symlink_to(repo, target_is_directory=True)
+                for root in (repo, repo_alias):
+                    with self.subTest(symlink_root=root):
+                        linked = copy.deepcopy(report)
+                        linked["findings"][0]["code_location"]["file_path"] = str(root / inside_link.name)
+                        self.helper["validate_report"](linked, repo, {inside_link.name, "src/other.ts"}, [])
+                        self.assertEqual(linked["findings"][0]["code_location"]["file_path"], inside_link.name)
+
+                (repo / "src").mkdir()
+                (repo / "src" / inside_link.name).symlink_to("../unchanged.ts")
+                subdir_alias = Path(tempdir) / "src-alias"
+                subdir_alias.symlink_to(repo / "src", target_is_directory=True)
+                file_alias = Path(tempdir) / "file-alias.ts"
+                file_alias.symlink_to(target)
+                for path, expected in (
+                    (subdir_alias / "index.ts", "src/index.ts"),
+                    (subdir_alias / inside_link.name, "src/changed-link.ts"),
+                    (file_alias, "unchanged.ts"),
+                ):
+                    with self.subTest(alias=path):
+                        aliased = copy.deepcopy(report)
+                        aliased["findings"][0]["code_location"]["file_path"] = str(path)
+                        self.helper["validate_report"](aliased, repo, {expected, "src/other.ts"}, [])
+                        self.assertEqual(aliased["findings"][0]["code_location"]["file_path"], expected)
+
+                (repo / "alias").symlink_to("src", target_is_directory=True)
+                for path, expected in (
+                    (repo / "alias" / "index.ts", "src/index.ts"),
+                    (inside_link, "unchanged.ts"),
+                ):
+                    with self.subTest(unchanged_alias=path):
+                        aliased = copy.deepcopy(report)
+                        aliased["findings"][0]["code_location"]["file_path"] = str(path)
+                        self.helper["validate_report"](aliased, repo, {expected, "src/other.ts"}, [])
+                        self.assertEqual(aliased["findings"][0]["code_location"]["file_path"], expected)
+
+                for name in (r"src\index.ts", " spaced \tname.ts"):
+                    with self.subTest(literal=name):
+                        literal = copy.deepcopy(report)
+                        literal["findings"][0]["code_location"]["file_path"] = str(repo / name)
+                        self.helper["validate_report"](literal, repo, {name, "src/other.ts"}, [])
+                        self.assertEqual(literal["findings"][0]["code_location"]["file_path"], name)
+
+                link = repo / "escape"
+                link.symlink_to(Path(tempdir), target_is_directory=True)
+                outside = copy.deepcopy(report)
+                outside["findings"][0]["code_location"]["file_path"] = str(link / "outside.ts")
+                with self.assertRaisesRegex(SystemExit, "invalid file path"):
+                    self.helper["validate_report"](outside, repo, {"escape/outside.ts"}, [])
 
     def test_validate_report_normalizes_relative_finding_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:

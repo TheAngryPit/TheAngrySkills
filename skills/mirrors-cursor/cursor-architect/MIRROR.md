@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: ecc249f1e306fc64ddf83c7bed16cacf7c2239db
+Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 Physical source path: pstack/skills/architect/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/ecc249f1e306fc64ddf83c7bed16cacf7c2239db/pstack/README.md
-Source SHA-256: 691cd39f52c7b613866e6baf9ea0b05451ffa21a6a9b4102f166418b89178fde
+Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
+Source SHA-256: 741901140ee382ebf93263a7ed03c6ee3719e578416d81afcd195876fa16c496
 Published name: cursor-architect
 Decision class: adaptação funcional
 Availability: Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven.

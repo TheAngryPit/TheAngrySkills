@@ -6,5 +6,32 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "cursor-team-kit/skills/control-cli/SKILL.md",
-  "source_sha256": "13ac93e595bbda2000849bdb815d5f2ca03f7c2ca63788c8335f9212b9b422a2"
+  "source_sha256": "13ac93e595bbda2000849bdb815d5f2ca03f7c2ca63788c8335f9212b9b422a2",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "control-cli",
+      "published_name": "cursor-control-cli",
+      "source_path": "cursor-team-kit/skills/control-cli/SKILL.md"
+    },
+    "preserved_semantics": "Build or adapt a local harness to drive, inspect, and profile an interactive CLI or TUI without external services. Use for CLI UX checks, startup regressions, memory leaks, hangs, prompt flows, or terminal demos.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

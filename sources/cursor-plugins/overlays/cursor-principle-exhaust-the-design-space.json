@@ -6,5 +6,32 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "pstack/skills/principle-exhaust-the-design-space/SKILL.md",
-  "source_sha256": "8583310d7297b7823d75494faa57b003564d436807febecdecbd8321abe5cf6e"
+  "source_sha256": "8583310d7297b7823d75494faa57b003564d436807febecdecbd8321abe5cf6e",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "principle-exhaust-the-design-space",
+      "published_name": "cursor-principle-exhaust-the-design-space",
+      "source_path": "pstack/skills/principle-exhaust-the-design-space/SKILL.md"
+    },
+    "preserved_semantics": "Apply when facing a novel UI interaction or architectural decision with no precedent in the codebase. Build 2-3 competing prototypes and compare side by side before committing.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

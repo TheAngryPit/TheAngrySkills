@@ -6,5 +6,32 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "teaching/skills/run-learning-retrospective/SKILL.md",
-  "source_sha256": "71b0159d0d4c19e94d873a11b1dc96d5fe0600e1e46a0eae3fab92e05bb0cc91"
+  "source_sha256": "71b0159d0d4c19e94d873a11b1dc96d5fe0600e1e46a0eae3fab92e05bb0cc91",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "run-learning-retrospective",
+      "published_name": "cursor-run-learning-retrospective",
+      "source_path": "teaching/skills/run-learning-retrospective/SKILL.md"
+    },
+    "preserved_semantics": "Evaluate learning progress, identify blockers, and adjust the learning plan",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

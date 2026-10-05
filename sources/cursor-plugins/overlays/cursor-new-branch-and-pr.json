@@ -6,5 +6,32 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it. Git/PR effects are explicitly separated under Codex permissions.",
   "replacements": [],
   "source_path": "cursor-team-kit/skills/new-branch-and-pr/SKILL.md",
-  "source_sha256": "4e8f502fcf48553949387a9a7f58b21349e0ff87c24bf8ff5c0013e9da6819fd"
+  "source_sha256": "4e8f502fcf48553949387a9a7f58b21349e0ff87c24bf8ff5c0013e9da6819fd",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "new-branch-and-pr",
+      "published_name": "cursor-new-branch-and-pr",
+      "source_path": "cursor-team-kit/skills/new-branch-and-pr/SKILL.md"
+    },
+    "preserved_semantics": "Create a fresh branch, complete work, and open a pull request",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

@@ -1,16 +1,45 @@
 {
-  "codex_note": "## Codex mirror boundary\n\nResolve the named skill, tool, connector, and account against what is actually available in this Codex session before following the upstream steps. Do not infer connection, authentication, credits, or runtime parity from this mirror. Preserve the external product named upstream and report a concrete missing capability when required.\n",
-  "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
-  "preserved_requirement": "ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure — not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive.",
-  "proof": "Pinned source hash, deterministic build, frontmatter parser, link check, security scan; live behavior pending where stated in manifest.",
-  "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it. Fold the description into one YAML line without changing its words so the repository auditor also parses it without PyYAML.",
+  "source_path": "third_party/x/skills/x-api-mcp-guide/SKILL.md",
+  "source_sha256": "c45693ef2bd73fd21e7c23cbed97e8c6205bba5dd1afdaa823959921fe324771",
+  "codex_note": "## Codex X capability and authorization boundary\n\nRead the upstream workflow below as product-specific guidance. Resolve the actual X connector and tool schemas first. Connector failure never authorizes another access route. The XChat helper is a separate executable dependency, not bundled or installed by this mirror. Reuse only an existing reviewed installation; cloning, package installation, credential-store access and private-message decryption need authorization for that purpose. A supported secret-input surface is required for Chat PIN; if absent, report the gap and stop Chat bootstrap. Never inspect Grok Bot secret stores as a fallback. Do not execute the setup code below merely because this skill was read. Preserve credits checks, cost approvals and outbound-message authorization. No X/XChat runtime proof is claimed.\n",
   "replacements": [
     {
-      "after": "description: \"ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure — not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive.\"\n",
-      "before": "description: >-\n  ALWAYS read this when a user connects the X plugin or any X MCP, before using\n  any X connection, and again on any X error. Do not call an X tool until this\n  file has been read in the current turn. On first connect, confirm X tools are\n  available, fetch get_usage_credits BEFORE any user-facing text, then send the\n  congrats + capabilities message. Never tell the user to buy credits until that\n  check returns ~$0 or a job would exceed the balance. If X is connected but\n  tools are missing (tools=0, user-X-* not found), that is a setup failure — not\n  a paywall. Estimate the cost of every X call before making it and confirm with\n  the user before anything expensive.\n",
-      "file": "SKILL.md"
+      "file": "SKILL.md",
+      "before": "description: >-\n  ALWAYS read this when a user connects the X plugin or any X MCP, before using\n  any X connection, and again on any X error. Do not call an X tool until this\n  file has been read in the current turn. On first connect, confirm X tools\n  exist, fetch get_usage_credits BEFORE any user-facing text, then send the\n  congrats + capabilities message. Never tell the user to buy credits until that\n  check returns ~$0 or a job would exceed the balance. tools=0 / user-X-* not\n  found is a setup failure, not a paywall. Encrypted X Chat, XChat, inbox, DMs,\n  Chat PIN, juicebox, and xchat_lite live in THIS file: clone\n  xchat-grokbot-helper and run xchat_lite.py locally — do not wait for the user\n  to name the helper or another skill. Missing chat tools or dm.read/dm.write\n  while other X tools work: reconnect the X plugin. Estimate every X call and\n  confirm before anything expensive.",
+      "after": "description: \"Use before authorized X connector work or errors, including encrypted X Chat. Resolve tools, credits, helper authorization and supported secret input before operations; do not infer runtime access from this guide.\""
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**Valid `public_key.fields`:**  \n`public_key_version,public_key,signing_public_key,identity_public_key_signature,juicebox_config`  \n",
+      "after": "**Valid `public_key.fields`:**\n\n`public_key_version,public_key,signing_public_key,identity_public_key_signature,juicebox_config`\n\n"
     }
   ],
-  "source_path": "third_party/x/skills/x-api-mcp-guide/SKILL.md",
-  "source_sha256": "5eec2b55c31edf69939142692f0015e933a0eb4d7fe1257826d2bd6fa880ca6f"
+  "proof": "Deterministic source and adaptation checks; live connector and workflow execution not demonstrated.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "X MCP guide",
+      "published_name": "cursor-x-mcp-guide",
+      "source_path": "third_party/x/skills/x-api-mcp-guide/SKILL.md"
+    },
+    "preserved_semantics": "ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure — not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

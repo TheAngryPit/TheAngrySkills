@@ -6,5 +6,32 @@
   "reason": "Namespaced frontmatter prevents collisions; Codex boundary note is added where runtime or naming requires it.",
   "replacements": [],
   "source_path": "cursor-team-kit/skills/control-ui/SKILL.md",
-  "source_sha256": "410cae25bdb1e5d2323b126abc5047b0213be7fdb0195710213fa8de8a751871"
+  "source_sha256": "410cae25bdb1e5d2323b126abc5047b0213be7fdb0195710213fa8de8a751871",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "control-ui",
+      "published_name": "cursor-control-ui",
+      "source_path": "cursor-team-kit/skills/control-ui/SKILL.md"
+    },
+    "preserved_semantics": "Build or adapt a local browser/CDP harness to drive and inspect a web, IDE, or Electron UI. Use for local UI verification, screenshots, accessibility snapshots, perf profiles, visual diffs, or reproducing UI bugs.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
 }

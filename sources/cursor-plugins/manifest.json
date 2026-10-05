@@ -585,6 +585,108 @@
       "validation_requirement": "frontmatter and relative references; explicit trigger; local docs artifact, path-boundary and visual inspection proof; bundled adapter integrity"
     },
     {
+      "path": "dyl-stack/skills/build-figma/SKILL.md",
+      "family": "dyl-stack",
+      "upstream_skill": "build-figma",
+      "published_name": "cursor-build-figma",
+      "files": {
+        "SKILL.md": "b769f1c84116eb2f368e52e62eb3b11b4d9e300804fbb1a11d3a9b6282610ac2",
+        "references/design-system-discovery.md": "5638ed42a58e5d5a5ffa82b3ca5980382f2338135da8d0e7101ab16ebe2b97c8",
+        "references/failure-lessons.md": "9ce0a40da4bffcc190c69418adac3ec7488f16a886a8036058c4b28670981d40",
+        "references/visual-judge.md": "8ceec58f9bc44faefa0988e071b44b26f1bc5fa4a2b99826c77240fe4b0462bd"
+      },
+      "license_path": "dyl-stack/LICENSE",
+      "license_sha256": "8e52513272899b2baca49b00ea0507d197c6b1ea559adf682fdd1f4b396140b8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": "\"Use for \\\"/build-figma\\\", a figma.com/design URL with node-id, or \\\"implement this Figma\\\" into a web, desktop, or shared UI. Orchestrates Figma MCP intake, maps nodes to the repo's own design system, then a verify-this visual judge. Do not paste Figma Tailwind.\"",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "dyl-stack/skills/dyl-mode/SKILL.md",
+      "family": "dyl-stack",
+      "upstream_skill": "dyl-mode",
+      "published_name": "cursor-dyl-mode",
+      "files": {
+        "SKILL.md": "1dafd1a4c2b441ee681eedeb333c2ede81b7f2f966f0adef052b2ffe82458c42",
+        "references/requirements.md": "447b540e6d0e2ae97cb0cb24739eac9ab82031929f5614552e705539b8055fa1",
+        "playbooks/bug-fix.md": "bf89ab60c7c9cf25b4f4e64f0f27d9064ce92d262f6da1fa3c632dfa5ba286cf",
+        "playbooks/opening-a-pr.md": "2432769a31eae19c7ff9ec4c4e03f09f4009cbc6d031237e878da69946bac1b9",
+        "playbooks/feature.md": "a21a678219464785acd259baa4580a68eb17afdc0ed0719fe60df5441e84ae18"
+      },
+      "license_path": "dyl-stack/LICENSE",
+      "license_sha256": "8e52513272899b2baca49b00ea0507d197c6b1ea559adf682fdd1f4b396140b8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": ">-\n  Dylan's agent style on top of pstack: concise verified delivery, root causes\n  over symptom patches, The Algorithm before design, plain /bro replies, live\n  UI proof, reuse/simplify, and hard merge gates. Use for Dylan, /dyl-mode, or\n  his style. \"Get PR green\" → /dyl-ready-pr. \"Review this PR like me\" →\n  /dyl-review. Figma URL → /build-figma.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "dyl-stack/skills/dyl-ready-pr/SKILL.md",
+      "family": "dyl-stack",
+      "upstream_skill": "dyl-ready-pr",
+      "published_name": "cursor-dyl-ready-pr",
+      "files": {
+        "SKILL.md": "c7f15ebe3be64e58ef09668ccb84ebe339109a7cd5f832346295a91169244ab7"
+      },
+      "license_path": "dyl-stack/LICENSE",
+      "license_sha256": "8e52513272899b2baca49b00ea0507d197c6b1ea559adf682fdd1f4b396140b8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": ">-\n  Get a PR merge-ready for Dylan: deep /dyl-review till 🟢, mark it ready,\n  resolve conflicts, then babysit CI and comments. Use for /dyl-ready-pr,\n  \"get PR green\", \"make the PR mergeable\", \"/dyl-review till green then\n  ready\", or ready-to-merge asks under /dyl-mode.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "dyl-stack/skills/dyl-review/SKILL.md",
+      "family": "dyl-stack",
+      "upstream_skill": "dyl-review",
+      "published_name": "cursor-dyl-review",
+      "files": {
+        "SKILL.md": "d87ccc179f3b3ed644abcf4a5ba82fec7b54b3fb90566547761527beb2741aa4"
+      },
+      "license_path": "dyl-stack/LICENSE",
+      "license_sha256": "8e52513272899b2baca49b00ea0507d197c6b1ea559adf682fdd1f4b396140b8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": ">-\n  Review one or more PRs in Dylan's style: up to 7 copy-pasteable asks and one\n  🟢/🟡/🔴 call. Quick by default; \"deep\" adds thermos and Bugbot. Use for\n  /dyl-review, \"review this PR like me\", or terse design/correctness comments.\n  Never posts to the PR.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "dyl-stack/skills/principle-the-algorithm/SKILL.md",
+      "family": "dyl-stack",
+      "upstream_skill": "principle-the-algorithm",
+      "published_name": "cursor-principle-the-algorithm",
+      "files": {
+        "SKILL.md": "a15929a44ddd3b856092513eade5ac884516723937c5fe2667e2f95806f27f7f"
+      },
+      "license_path": "dyl-stack/LICENSE",
+      "license_sha256": "8e52513272899b2baca49b00ea0507d197c6b1ea559adf682fdd1f4b396140b8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": ">-\n  Apply to any non-trivial change before designing it. Make the requirement\n  less dumb, delete, optimize, accelerate, automate, in that order, then run\n  it again on the result. The reply names the requirement you questioned and\n  what you deleted.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
       "availability": "Codex workflow not demonstrated",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "blocked_malicious",
@@ -595,7 +697,7 @@
       "exclusion_reason": "Vítor explicitly excluded this Grok Voice source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "grok-voice",
       "files": {
-        "SKILL.md": "fe0083e27ff2fefa1b5220b98b98db9110aad2e32c58a319b66c776d44e84d0b"
+        "SKILL.md": "72920f9582169131b64c2c947020ee379466962c4143b0ed20533bec4f7aa75b"
       },
       "license_path": "grok-voice/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
@@ -606,7 +708,8 @@
       "published_name": "cursor-add-dictation",
       "upstream_purpose": "Use when the user runs /add-dictation or wants speech turned into text with Grok speech-to-text: a mic button that dictates into the composer, live captions, or transcribing recorded audio (files, uploads, URLs) with word timestamps, diarization, subtitles, meeting notes. STT, transcribe, transcription. For a voice agent that talks back use /add-voice.",
       "upstream_skill": "add-dictation",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     },
     {
       "availability": "Codex workflow not demonstrated",
@@ -2274,7 +2377,102 @@
       "validation_requirement": "frontmatter e referências relativas; duas lentes e síntese nativas observadas; missing-lens parcial observado; seleção automática e outros hosts por verificar"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "path": "third_party/google-docs/skills/google-docs/SKILL.md",
+      "family": "third_party/google-docs",
+      "upstream_skill": "google-docs",
+      "published_name": "cursor-google-docs",
+      "files": {
+        "SKILL.md": "f8f7f49f8c1ada2d7fe22747075cc923fed975b466ec98c2fc758e99591193f2"
+      },
+      "license_path": "third_party/google-docs/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": "Author and edit Google Docs with the google-docs tools - structured writing, character and paragraph styling, lists, tables, images, headers/footers. Use when creating a formatted document, editing document content, or applying styles.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "third_party/google-drive/skills/google-drive/SKILL.md",
+      "family": "third_party/google-drive",
+      "upstream_skill": "google-drive",
+      "published_name": "cursor-google-drive",
+      "files": {
+        "SKILL.md": "f34e2877924e63e1c7231a697c7e703d3f427f9ffaa7653ea1778e3875a914e7"
+      },
+      "license_path": "third_party/google-drive/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": "Work with Google Drive through its MCP tools - search, read, create, organize, share, comment, and export files. Use when creating files in specific folders, moving or renaming, converting Markdown/CSV into Docs/Sheets, managing comments, or exporting a rendered PDF.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "third_party/google-sheets/skills/google-sheets/SKILL.md",
+      "family": "third_party/google-sheets",
+      "upstream_skill": "google-sheets",
+      "published_name": "cursor-google-sheets",
+      "files": {
+        "SKILL.md": "33d3072cdead2348af7b4e60cdcd9a494cc7c4e2b6ea0f66016065f5dc84a33a"
+      },
+      "license_path": "third_party/google-sheets/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": "Build and edit Google Sheets with the google-sheets tools - values, formatting, charts, conditional formatting, structure, validation, named and protected ranges. Use when creating a spreadsheet or dashboard, formatting cells, adding or fixing charts, or reorganizing tabs and rows.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "third_party/google-slides/skills/google-slides/SKILL.md",
+      "family": "third_party/google-slides",
+      "upstream_skill": "google-slides",
+      "published_name": "cursor-google-slides",
+      "files": {
+        "SKILL.md": "5f0529fec61100feecf5a5db472a9c4225652479dc4f68ce4b335c8daf2bef6f"
+      },
+      "license_path": "third_party/google-slides/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": "Build and edit Google Slides through the google-slides MCP tools - slides, grids of cards and columns, text boxes, shapes, images, tables, styling, layout inspection, and per-slide PNG rendering. Use when creating a deck, laying out slide elements, matching a template, or verifying how a slide looks.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "path": "third_party/x-money/skills/x-money-guide/SKILL.md",
+      "family": "third_party/x-money",
+      "upstream_skill": "x-money-guide",
+      "published_name": "cursor-x-money-guide",
+      "files": {
+        "SKILL.md": "773656a6cb4bf91899edf699c28bb46c3238d9d6c229cce0ca16ac9e48dd7a49"
+      },
+      "license_path": "third_party/x-money/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; named capabilities must be resolved on the host; live execution unproven",
+      "upstream_purpose": ">-\n  Read this before the first X Money action in a session and again on any\n  X Money error, refusal, or missing capability. Covers the approval rule for\n  every action that moves money (always ask, every time, no exceptions), how\n  the connection works (connection code plus passkey in the X app), how to\n  guide the user through connect, reconnect, and revoke at\n  x.com/i/money/settings/connections, and what each failure message means.",
+      "promotion_reason": "Operator requested complete source coverage; no runtime activation.",
+      "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
+    },
+    {
+      "availability": "source guidance refreshed; XChat helper, secret input and live connector execution unproven",
       "baseline_classification": "não demonstrada (equivalente nativo não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -2282,7 +2480,7 @@
       "dependencies_or_limitations": "supporting files in this skill: x-api-mcp-guide/references/pricing.md; this skill's workflow assumes MCP/tool discovery; native connector availability and permissions must be explicit",
       "family": "third_party/x",
       "files": {
-        "SKILL.md": "5eec2b55c31edf69939142692f0015e933a0eb4d7fe1257826d2bd6fa880ca6f",
+        "SKILL.md": "c45693ef2bd73fd21e7c23cbed97e8c6205bba5dd1afdaa823959921fe324771",
         "references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
       },
       "license_path": "third_party/x/LICENSE",
@@ -2294,10 +2492,11 @@
       "published_name": "cursor-x-mcp-guide",
       "upstream_purpose": "ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure — not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive.",
       "upstream_skill": "X MCP guide",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     }
   ],
-  "snapshot_scope": "91 physical SKILL.md files, supporting files inside skill directories, nearest ancestor license evidence, and 27 pinned plugin-level agent/hook/rule files; plugin-level files remain non-executable source until native adaptation",
+  "snapshot_scope": "104 physical skills, their in-skill support and licenses; 28 agent/hook/rule files; 18 hash-checked Pstack README/guide/image files. Eight operator exclusions retained. Source distribution does not activate runtimes.",
   "upstream_commit": "c1c0a32802223f4be824112dd83d33ad29a8b26c",
   "pstack_upstream_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
   "upstream_repository": "https://github.com/cursor/plugins.git",
@@ -2528,6 +2727,14 @@
         "cursor-thermos"
       ],
       "relationship": "named agent dependency; individual review skills related"
+    },
+    "dyl-stack/agents/dyl-agent.md": {
+      "sha256": "967c363f82c2766c588aefd9239d63f0d74a3f157acfa58c882cd3f2c0446e75",
+      "related_skills": [
+        "cursor-dyl-mode"
+      ],
+      "relationship": "named agent dependency",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
     }
   },
   "native_support_files": {
@@ -2575,6 +2782,98 @@
       "related_skills": [
         "cursor-orchestrate"
       ]
+    }
+  },
+  "documentation_files": {
+    "pstack/README.md": {
+      "sha256": "850eea901004b9ef4633e17c1bd9932863046a021242b4e043907ae534b21fa8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/01-setup.md": {
+      "sha256": "bbac20e25fb097029e2676ecf3212f4a72f566eaf2b1031b56317aa1e4fdf490",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/02-poteto-mode.md": {
+      "sha256": "379a1b2c9cd2ba54032b2b142563328d0f3d65039f067863d19b1d4c008737f5",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/03-understand.md": {
+      "sha256": "16f3fe0f7df092a5c69dac90971ef57e63a8a9ae926eed851285c7bfddc0f3fd",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/04-design.md": {
+      "sha256": "21e820ff73c0b70682aa570a967ede446b4d7caf62e8f391d0dd733ccb74874c",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/05-build-and-clean.md": {
+      "sha256": "6bd421b43a3cf9fec3cd201fd40ce65fd8c657264eac48b0c9a175b6afd7c252",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/06-verify-and-ship.md": {
+      "sha256": "c93cd50c0359ce875a82b3f7d64eab102a4b0815dbbecdb8e0e5e910bd2d18e9",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/07-overnight.md": {
+      "sha256": "5033d61e8b4b6fb0b2304b2132f26bf0b6aee685aa4ed53a76a73cf0ac1c3557",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/08-principles.md": {
+      "sha256": "a103e293dd6d9513f425feac39547f0c2c049300f36704d80b6d49c958e5a4bb",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/09-make-it-yours.md": {
+      "sha256": "b98588a232a38ca7acebbeecb95ac771df1981aed662dcb45c96b4b66ed20ec0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/10-recipes-and-pitfalls.md": {
+      "sha256": "a4662cd98870f08c6abe117a832abe37670ee84f8ed25dcbe7e99ef4eb8e05e0",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/README.md": {
+      "sha256": "125f870a93bf830d45bda187f585cec4508cc9ca5121271af58adbe937bbe54f",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/design.jpg": {
+      "sha256": "b8ed07427f6a0c37dd8ba97961fc0eb5071efeee6c4a230648bdb7547f6f2a8f",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/overnight.jpg": {
+      "sha256": "4b4405e4df8925c5b3abbe702f681af0f3b1f5f32271b599f95717f578f1a0c8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/recipes.jpg": {
+      "sha256": "9fa2d51b476635712737795ddef81806efaa0086bb3bfa9f9f45695d9ab0f8e8",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/router.jpg": {
+      "sha256": "525843055a4efd2b10acc50a8652fd02b0834ea733a8a2f895c1eb89036017da",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/understanding.jpg": {
+      "sha256": "b60587e9a9bbe2550e93be9819cf0cd4acf77d90fac769a0c43d82bd8e34e279",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
+    },
+    "pstack/docs/guide/images/verification.jpg": {
+      "sha256": "2a76b52007a1cd2866ba67fd47d7d9ef3e1118bb5a09c4665eee8c3f161bd09a",
+      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "relationship": "upstream Pstack reference; not native runtime instructions"
     }
   }
 }

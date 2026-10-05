@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 Physical source path: third_party/x/skills/x-api-mcp-guide/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/third_party/x/README.md
-Source SHA-256: 5eec2b55c31edf69939142692f0015e933a0eb4d7fe1257826d2bd6fa880ca6f
+Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/third_party/x/README.md
+Source SHA-256: c45693ef2bd73fd21e7c23cbed97e8c6205bba5dd1afdaa823959921fe324771
 Published name: cursor-x-mcp-guide
 Decision class: adaptação nominal
-Availability: external connector or routing not demonstrated
+Availability: source guidance refreshed; XChat helper, secret input and live connector execution unproven
 License evidence: third_party/x/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

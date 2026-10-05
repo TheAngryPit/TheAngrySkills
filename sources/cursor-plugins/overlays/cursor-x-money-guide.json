@@ -1,0 +1,45 @@
+{
+  "source_path": "third_party/x-money/skills/x-money-guide/SKILL.md",
+  "source_sha256": "773656a6cb4bf91899edf699c28bb46c3238d9d6c229cce0ca16ac9e48dd7a49",
+  "codex_note": "## Codex capability boundary\n\nThis is source guidance, not an installed connector or a runtime proof. Resolve tools against the current host and read their actual schemas before using them. Preserve the named product and requested outcome. If a required operation is unavailable, report its exact name and leave that step incomplete. Do not invent tool names, connect accounts, install helpers, spend money, or broaden access from this document alone. Current operator authorization and native permissions govern every action.\n\nResolve an already authorized X Money connector. Grok Bot connection screens below are upstream product instructions, not available Codex controls. If no supported native approval surface or X Money tool exists, do not move money. Ask for the exact action using the host permission surface or ordinary conversation and wait for explicit approval; never fabricate an approval field. Preserve the upstream per-action payment approvals and refusal/idempotency rules. Read-only account lookup still needs task-scoped authorization.\n",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "Send a `SendToUser` widget with **Approve** and **Cancel**.",
+      "after": "Use the supported native approval surface, or ask in ordinary conversation for explicit approval of this exact action. Never simulate a `SendToUser` widget."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "Offer the actions that are present. Do not tell the user to reinstall or reconnect.",
+      "after": "Offer the actions that are present. Reinstallation or reconnection cannot enable an action disabled for the account."
+    }
+  ],
+  "proof": "Deterministic source and adaptation checks; live connector and workflow execution not demonstrated.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "x-money-guide",
+      "published_name": "cursor-x-money-guide",
+      "source_path": "third_party/x-money/skills/x-money-guide/SKILL.md"
+    },
+    "preserved_semantics": ">-\n  Read this before the first X Money action in a session and again on any\n  X Money error, refusal, or missing capability. Covers the approval rule for\n  every action that moves money (always ask, every time, no exceptions), how\n  the connection works (connection code plus passkey in the X app), how to\n  guide the user through connect, reconnect, and revoke at\n  x.com/i/money/settings/connections, and what each failure message means.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
+}

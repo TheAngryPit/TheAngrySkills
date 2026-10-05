@@ -1,0 +1,117 @@
+{
+  "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+  "agents": {
+    "advisor/agents/advisor-subagent.md": {
+      "source_sha256": "50debf8b5848c7e9f43c84985631445e554e246b52ecf83d6691bfa79643878e",
+      "native_name": "advisor-subagent",
+      "asset_path": "skills/core/model-capability-router/assets/agents/advisor-subagent.toml",
+      "asset_sha256": "ff44834ac1f5c77ccbe2ce59f032438098efe177453e6c439320f04a2133efa5",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "agent-compatibility/agents/compatibility-scan-review.md": {
+      "source_sha256": "4ce59d99d3d882b8768abec5ff839dfe7ec055218507b49e8b89b76c94b40693",
+      "native_name": "compatibility-scan-review",
+      "asset_path": "skills/core/model-capability-router/assets/agents/compatibility-scan-review.toml",
+      "asset_sha256": "e9fa99a9c51c43d2c58353e5abb5d205640cc11d37eb3970f938dc9179ccc511",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "agent-compatibility/agents/docs-reliability-review.md": {
+      "source_sha256": "a0bb33ebc679b0ee0030580924c9d9915632af5e6fb41f6066346f2b688d48e8",
+      "native_name": "docs-reliability-review",
+      "asset_path": "skills/core/model-capability-router/assets/agents/docs-reliability-review.toml",
+      "asset_sha256": "529e1926382407b861cb9c069265271a01cc2f32ed04ca5320ceeea66f75bc0e",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "agent-compatibility/agents/startup-review.md": {
+      "source_sha256": "4e713f4dac1997febf48c1a5bdab96e2a4454f7062fed3a0e1142b8d4cfefd36",
+      "native_name": "startup-review",
+      "asset_path": "skills/core/model-capability-router/assets/agents/startup-review.toml",
+      "asset_sha256": "a249f0137cf4b4b2e5e19901c6c62178d32b537a085f69c76786d75a1d9a6288",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "agent-compatibility/agents/validation-review.md": {
+      "source_sha256": "38612d157dfd443955f2541248bf4b19fae1f50ee7e9fca0ab53c2f7060ce5cd",
+      "native_name": "validation-review",
+      "asset_path": "skills/core/model-capability-router/assets/agents/validation-review.toml",
+      "asset_sha256": "dd760e2fed9a6c51e245a65addc31b18be368f8076bf98357285e1626a4d657b",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "continual-learning/agents/agents-memory-updater.md": {
+      "source_sha256": "93dfb244f173e2240d8d6bffe4870a647d1da27d402b8de83197e3e2b471527d",
+      "native_name": "agents-memory-updater",
+      "asset_path": "skills/core/model-capability-router/assets/agents/agents-memory-updater.toml",
+      "asset_sha256": "5c057eeefe1dc30ce562c2fbd89c487b5bf1a4b9fb2393d9c91d8c9c494f65a6",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "create-plugin/agents/plugin-architect.md": {
+      "source_sha256": "100e47bdc94ba67f25c99358a211e8cf7de02564f0cf60a7069b0db07f97ed41",
+      "native_name": "plugin-architect",
+      "asset_path": "skills/core/model-capability-router/assets/agents/plugin-architect.toml",
+      "asset_sha256": "76de6190d763e2888355f2d76b50ca28130309e14a4d99e072d0f1f3c622f1ea",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "cursor-team-kit/agents/ci-watcher.md": {
+      "source_sha256": "8bc93b9ced5588f0ece54ce52690e9682ac49a7fd64be7124379b0e2e128556e",
+      "native_name": "ci-watcher",
+      "asset_path": "skills/core/model-capability-router/assets/agents/ci-watcher.toml",
+      "asset_sha256": "11cf8b3babedf09e43150e1efa5cb611b3250f70f93db6d5ac0ea2c33b07aacd",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "cursor-team-kit/agents/thermo-nuclear-code-quality-review.md": {
+      "source_sha256": "4d15c05be503f9fdb795a292807334558e7619ffc2fd75ddbc9e97e0d6312234",
+      "native_name": "thermo-nuclear-code-quality-review",
+      "asset_path": "skills/core/model-capability-router/assets/agents/thermo-nuclear-code-quality-review.toml",
+      "asset_sha256": "69cb1480b39ab049e415d8aef66aa9d2ced30876e5b6230897f19546900e48e8",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "dyl-stack/agents/dyl-agent.md": {
+      "source_sha256": "967c363f82c2766c588aefd9239d63f0d74a3f157acfa58c882cd3f2c0446e75",
+      "native_name": "dyl-agent",
+      "asset_path": "skills/core/model-capability-router/assets/agents/dyl-agent.toml",
+      "asset_sha256": "7d98015b39b0bbdd121f43b5475ddf25ea5274ddecae10d2b375efb344d4543e",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "pstack/agents/comment-sicko.md": {
+      "source_sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+      "native_name": "comment-sicko",
+      "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
+      "asset_sha256": "e32fb192894e2cf1d390d41a3421c0ade52fbfbdce16f3472f85afa6d95d4057",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "pstack/agents/poteto-agent.md": {
+      "source_sha256": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201",
+      "native_name": "poteto-agent",
+      "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
+      "asset_sha256": "50712f8f35fff5ac2677d953c59a83ce0e6c6458643f47ad9957e197a94b249c",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "thermos/agents/thermo-nuclear-code-quality-review-subagent.md": {
+      "source_sha256": "636800f1e5acf501f339779a8867b95d633396930b3356a2b0c9a0018343f02d",
+      "native_name": "thermo-nuclear-code-quality-review-subagent",
+      "asset_path": "skills/core/model-capability-router/assets/agents/thermo-nuclear-code-quality-review-subagent.toml",
+      "asset_sha256": "2a9805939bab7783758139d28d6fa51bb8e409ecb80a661bb3ef36d05c15901b",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    },
+    "thermos/agents/thermo-nuclear-review-subagent.md": {
+      "source_sha256": "9dfa8ed88d1ea5d775edb5557b8a8ecfa9f2977b904c55c902b0ceb648b563d0",
+      "native_name": "thermo-nuclear-review-subagent",
+      "asset_path": "skills/core/model-capability-router/assets/agents/thermo-nuclear-review-subagent.toml",
+      "asset_sha256": "60de79f561903b89f2cf09dc5e0024f810d2b7cc1cb178c34d18c08593ba0630",
+      "distribution": "source profile; installation separate",
+      "runtime": "not exercised in this source-only update"
+    }
+  }
+}

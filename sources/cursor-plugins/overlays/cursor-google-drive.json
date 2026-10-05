@@ -1,0 +1,34 @@
+{
+  "source_path": "third_party/google-drive/skills/google-drive/SKILL.md",
+  "source_sha256": "f34e2877924e63e1c7231a697c7e703d3f427f9ffaa7653ea1778e3875a914e7",
+  "codex_note": "## Codex capability boundary\n\nThis is source guidance, not an installed connector or a runtime proof. Resolve tools against the current host and read their actual schemas before using them. Preserve the named product and requested outcome. If a required operation is unavailable, report its exact name and leave that step incomplete. Do not invent tool names, connect accounts, install helpers, spend money, or broaden access from this document alone. Current operator authorization and native permissions govern every action.\n\nUse the official Codex Google plugin and its owning skill when available. The tool names and schema details below describe the upstream connector; they are not promises about the Codex plugin. Map each operation only after inspecting the exposed schema. If the official plugin lacks the operation, name the gap; do not fall back to GOG or another credential route without explicit authorization. Never widen sharing or make a private image public to satisfy an image URL requirement. For visual work, apply available design guidance and inspect exported output.\n",
+  "replacements": [],
+  "proof": "Deterministic source and adaptation checks; live connector and workflow execution not demonstrated.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "google-drive",
+      "published_name": "cursor-google-drive",
+      "source_path": "third_party/google-drive/skills/google-drive/SKILL.md"
+    },
+    "preserved_semantics": "Work with Google Drive through its MCP tools - search, read, create, organize, share, comment, and export files. Use when creating files in specific folders, moving or renaming, converting Markdown/CSV into Docs/Sheets, managing comments, or exporting a rendered PDF.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native skill discovery",
+        "actual connector schema inspection",
+        "native bounded delegation when requested"
+      ],
+      "fallback": "Report the exact missing dependency; do not complete or substitute that step."
+    },
+    "permission_gates": [
+      "Current operator authorization and native permissions govern actions. Source distribution grants no activation."
+    ],
+    "behavioral_proof": {
+      "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
+      "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
+      "error": "Native permissions and refusal remain binding; live error path not executed."
+    }
+  }
+}

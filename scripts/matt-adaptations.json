@@ -21,7 +21,10 @@
     "name": "resolving-merge-conflicts",
     "destination": "skills/mirrors-mattpocock/resolving-merge-conflicts",
     "source_path": "skills/engineering/resolving-merge-conflicts",
-    "overlay": "patch"
+    "overlay": "patch",
+    "refresh_policy": "pinned_legacy",
+    "retired_source_at": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+    "retirement_reason": "Upstream removed the executable skill; retain the reviewed legacy package and validate it without selecting a missing source during batch refresh."
   },
   {
     "name": "ask-pit",
@@ -32,7 +35,7 @@
   {
     "name": "retro",
     "destination": "skills/mirrors-mattpocock/retro",
-    "source_path": "skills/in-progress/retro",
+    "source_path": "skills/engineering/retro",
     "overlay": "patch"
   },
   {
@@ -84,6 +87,15 @@
     "overlay": "patch"
   },
   {
+    "name": "pr",
+    "destination": "skills/mirrors-mattpocock/pr",
+    "source_path": "skills/engineering/pr",
+    "overlay": "empty",
+    "reviewed_source_revision": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+    "provenance_approval_notice": "Operator approved first source inclusion on 2026-10-05. Original upstream credits are retained in SKILL.md and MIT attribution is retained in LICENSE.",
+    "provenance_basis": ""
+  },
+  {
     "name": "research",
     "destination": "skills/mirrors-mattpocock/research",
     "source_path": "skills/engineering/research",
@@ -122,7 +134,7 @@
   {
     "name": "implement-spec",
     "destination": "skills/mirrors-mattpocock/implement-spec",
-    "source_path": "skills/in-progress/implement-spec",
+    "source_path": "skills/engineering/implement-spec",
     "overlay": "patch"
   },
   {
@@ -184,5 +196,14 @@
     "destination": "skills/mirrors-mattpocock/wait-what",
     "source_path": "skills/productivity/wait-what",
     "overlay": "empty"
+  },
+  {
+    "name": "chief-of-staff",
+    "destination": "skills/mirrors-mattpocock/chief-of-staff",
+    "source_path": "skills/in-progress/chief-of-staff",
+    "overlay": "empty",
+    "reviewed_source_revision": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+    "provenance_approval_notice": "Operator authorized this source refresh and merge on 2026-10-06. This is the first inclusion of the portable source package; no installation or activation is authorized by publication. MIT attribution is retained in LICENSE.",
+    "provenance_basis": null
   }
 ]

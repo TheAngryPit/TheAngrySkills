@@ -1,7 +1,7 @@
 # resolving-merge-conflicts: approved adaptation
 
 Source: [Matt Pocock skills](https://github.com/mattpocock/skills).
-Reviewed source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.
+Original integration source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.
 Operator approved batch 01 on 2026-09-12. MIT attribution is retained in LICENSE.
 
 ## What changed and why
@@ -11,6 +11,16 @@ Scope staging to the merge/rebase work and preserve unrelated edits. Allow cance
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch).
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 These changes preserve the selected workflow; no measured performance or allowance improvement is claimed.
+
+## Current upstream status
+
+At upstream head `24fe0ef7737efae15c87225755e9f6f5965e4888`, the source path
+`skills/engineering/resolving-merge-conflicts` is absent. The existing mirror
+and its Codex adaptation are preserved at the original source pin for legacy
+conflict-resolution work and remain held for a maintainer retirement decision.
+The new `skills/engineering/pr` skill drafts pull request bodies and does not
+replace merge-conflict resolution. The source path, pin and per-file hashes in
+`UPSTREAM.json` remain those of the last available source revision.
 
 ## Upstream review
 

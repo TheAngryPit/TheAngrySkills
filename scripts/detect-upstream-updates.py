@@ -363,6 +363,8 @@ def detect_matt(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
         source_path = item["source_path"]
         expected = json.loads(upstream_file.read_text()).get("upstream_sha256", {})
         actual = snapshot(checkout, source_path)
+        if item.get("refresh_policy") == "pinned_legacy":
+            expected = {"LICENSE": expected["LICENSE"]}
         for name in sorted(set(expected) | set(actual)):
             path = "LICENSE" if name == "LICENSE" else f"{source_path}/{name}"
             if expected.get(name) != actual.get(name):

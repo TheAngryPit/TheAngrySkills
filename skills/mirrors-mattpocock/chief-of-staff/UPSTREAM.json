@@ -1,0 +1,20 @@
+{
+  "name": "chief-of-staff",
+  "repository": "https://github.com/mattpocock/skills.git",
+  "source_path": "skills/in-progress/chief-of-staff",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "adaptation_patch": "ADAPTATIONS.patch",
+  "overlay": "empty",
+  "upstream_sha256": {
+    "SKILL.md": "f91be032f9eec977e3e349fce33e20f768b7767c603491351d9efa3e358a2f40",
+    "agents/openai.yaml": "c0f68ed9da6977adc97a791be3bb0830d301b2d27f9c635d92d6f325bffefb83",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+  },
+  "generated_sha256": {
+    "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
+    "PROVENANCE.md": "39682322f9e4ba2e93e97cf1641f954db9f2ebc02e3cc2fee7df3de5eaffdd34",
+    "SKILL.md": "f91be032f9eec977e3e349fce33e20f768b7767c603491351d9efa3e358a2f40",
+    "agents/openai.yaml": "c0f68ed9da6977adc97a791be3bb0830d301b2d27f9c635d92d6f325bffefb83"
+  }
+}

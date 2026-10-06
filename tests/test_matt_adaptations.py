@@ -1,5 +1,6 @@
 import importlib.util
 import json
+from datetime import date
 from pathlib import Path
 import shutil
 import subprocess
@@ -13,14 +14,33 @@ ITEMS=json.loads((ROOT/'scripts/matt-adaptations.json').read_text())
 
 def test_manifest_contains_the_approved_surface_only():
     names={item['name'] for item in ITEMS}
-    assert len(ITEMS)==31
-    assert len(names-{ 'ask-pit' })==30
+    assert len(ITEMS)==33
+    assert len(names-{ 'ask-pit' })==32
     assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==19
-    assert sum(item['overlay']=='empty' for item in ITEMS)==11
+    assert sum(item['overlay']=='empty' for item in ITEMS)==13
     assert not names & {'ask-matt','writing-for-agents','claude-handoff','git-guardrails-claude-code',
                         'migrate-to-shoehorn','setup-pre-commit','setup-ts-deep-modules'}
     assert all(item['destination'].startswith('skills/mirrors-mattpocock/')
                for item in ITEMS if item['name']!='ask-pit')
+    assert next(item for item in ITEMS if item['name']=='retro')['source_path']=='skills/engineering/retro'
+    assert next(item for item in ITEMS if item['name']=='implement-spec')['source_path']=='skills/engineering/implement-spec'
+
+
+def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
+    item=next(i for i in ITEMS if i['name']=='pr')
+    package=ROOT/item['destination']
+    record=json.loads((package/'UPSTREAM.json').read_text())
+    provenance=(package/'PROVENANCE.md').read_text()
+    assert item['source_path']=='skills/engineering/pr'
+    assert item['overlay']=='empty'
+    assert record['commit']=='4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+    assert record['overlay']=='empty'
+    assert (package/'ADAPTATIONS.patch').read_bytes()==b''
+    assert 'Original integration source revision: 24fe0ef7737efae15c87225755e9f6f5965e4888.' in provenance
+    assert 'first source inclusion on 2026-10-05' in provenance
+    assert 'OpenAI Astra guidance' not in provenance
+    assert 'author: Dex Horthy' in (package/'SKILL.md').read_text()
+    assert 'organisation: Humanlayer' in (package/'SKILL.md').read_text()
 
 
 @pytest.mark.parametrize('item',ITEMS,ids=lambda i:i['name'])
@@ -73,3 +93,78 @@ def test_support_additions_and_removals_preserve_overlay(tmp_path):
     assert (dest/'new-support.md').is_file()
     assert not (dest/'agents/openai.yaml').exists()
     assert 'git diff --cached' in (dest/'SKILL.md').read_text()
+    reviewed=json.loads((dest/'UPSTREAM.json').read_text())['commit']
+    provenance=(dest/'PROVENANCE.md').read_text()
+    assert 'Original integration source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.' in provenance
+    assert f'Current upstream review: `{reviewed}` on {date.today().isoformat()}.' in provenance
+
+
+def test_patch_applies_inside_repository_staging_directory(tmp_path):
+    repo=tmp_path/'repo'; repo.mkdir()
+    subprocess.run(['git','init','-q',str(repo)],check=True)
+    work=repo/'nested'/'stage'; package=work/'example'; package.mkdir(parents=True)
+    (package/'SKILL.md').write_text('Before\n')
+    (package/'ADAPTATIONS.patch').write_text(
+        'diff --git a/example/SKILL.md b/example/SKILL.md\n'
+        'index 1234567..abcdef0 100644\n'
+        '--- a/example/SKILL.md\n+++ b/example/SKILL.md\n'
+        '@@ -1 +1 @@\n-Before\n+After\n')
+    matt.patch(work,'example')
+    assert (package/'SKILL.md').read_text()=='After\n'
+    matt.patch(work,'example',reverse=True)
+    assert (package/'SKILL.md').read_text()=='Before\n'
+
+
+def test_astra_original_integration_is_distinct_from_current_review():
+    package = ROOT / 'skills/engineering/writing-for-astra'
+    provenance = (package / 'PROVENANCE.md').read_text()
+    record = json.loads((package / 'UPSTREAM.json').read_text())
+    assert 'Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015' in provenance
+    assert '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d' in provenance
+    assert record['commit'] == '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+
+
+def test_batch_refresh_retains_legacy_and_reaches_later_packages(tmp_path, monkeypatch, capsys):
+    item, checkout, src, dest = fixture_source(tmp_path)
+    workspace = tmp_path / 'workspace'
+    legacy = dict(item, name='retired', destination='retired-package',
+                  source_path='missing-upstream-source', refresh_policy='pinned_legacy')
+    active = dict(item, destination='active-package')
+    workspace.mkdir()
+    shutil.copytree(dest, workspace / legacy['destination'])
+    shutil.copytree(dest, workspace / active['destination'])
+    before = matt.file_map(workspace / legacy['destination'])
+    config = workspace / 'manifest.json'
+    config.write_text(json.dumps([legacy, active]))
+    monkeypatch.setattr(matt, 'ROOT', workspace)
+    monkeypatch.setattr(matt, 'CONFIG', config)
+    monkeypatch.setattr('sys.argv', ['sync', '--upstream', str(checkout)])
+    matt.main()
+    assert matt.file_map(workspace / legacy['destination']) == before
+    record = json.loads((workspace / active['destination'] / 'UPSTREAM.json').read_text())
+    assert record['commit'] == subprocess.check_output(['git', '-C', str(checkout), 'rev-parse', 'HEAD'], text=True).strip()
+    assert 'retained pinned legacy: retired' in capsys.readouterr().out
+    monkeypatch.setattr('sys.argv', ['sync', '--upstream', str(checkout), '--skill', 'retired'])
+    with pytest.raises(SystemExit) as error:
+        matt.main()
+    assert error.value.code == 2
+    assert matt.file_map(workspace / legacy['destination']) == before
+
+
+def test_two_refreshes_preserve_history_and_one_current_revision(tmp_path):
+    item, checkout, src, dest = fixture_source(tmp_path)
+    matt.refresh(checkout, item, dest)
+    first = json.loads((dest / 'UPSTREAM.json').read_text())['commit']
+    (src / 'new-support.md').write_text('second revision')
+    subprocess.run(['git', '-C', str(checkout), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(checkout), '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'second'], check=True)
+    matt.refresh(checkout, item, dest)
+    second = json.loads((dest / 'UPSTREAM.json').read_text())['commit']
+    provenance = (dest / 'PROVENANCE.md').read_text()
+    assert f'Historical upstream review: `{first}`' in provenance
+    assert f'Current upstream review: `{second}`' in provenance
+    assert provenance.count('Current upstream review:') == 1
+    assert 'Original integration source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.' in provenance
+    before = matt.file_map(dest)
+    matt.refresh(checkout, item, dest)
+    assert matt.file_map(dest) == before

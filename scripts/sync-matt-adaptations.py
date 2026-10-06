@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Rebuild approved Matt adaptations for review; no automatic upstream acceptance."""
 import argparse
+from datetime import date
 import hashlib
 import importlib.util
 import json
+import re
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -41,7 +44,11 @@ def patch(work, name, reverse=False):
     if not patch_file.read_bytes().strip():
         return
     args = ['git', 'apply'] + (['--reverse'] if reverse else [])
-    subprocess.run(args + [str(patch_file)], cwd=work, check=True, capture_output=True)
+    env = os.environ.copy()
+    for key in ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR'):
+        env.pop(key, None)
+    env['GIT_CEILING_DIRECTORIES'] = str(work.parent.resolve())
+    subprocess.run(args + [str(patch_file)], cwd=work, env=env, check=True, capture_output=True)
 
 
 def prefix_patch(data, name):
@@ -65,6 +72,12 @@ def prefix_patch(data, name):
 
 def render_provenance(item, patch_data):
     overlay = item.get('overlay') or ('empty' if not patch_data.strip() else 'patch')
+    reviewed_revision = item.get('reviewed_source_revision', '3cca18b368ae95cdbdebbff572ccafa662551015')
+    approval_notice = item.get(
+        'provenance_approval_notice',
+        'Operator approved the final Matt Pocock integration on 2026-09-12. MIT attribution is retained in LICENSE.',
+    )
+    provenance_basis = item.get('provenance_basis', ASTRA_GUIDANCE)
     if overlay == 'empty':
         change = ('No content adaptation is approved for this package. The upstream '
                   'files are preserved verbatim behind an explicit empty overlay.')
@@ -77,15 +90,18 @@ def render_provenance(item, patch_data):
         f"# {item['name']}: approved adaptation",
         '',
         f'Source: [{REPOSITORY}]({REPOSITORY}).',
-        'Reviewed source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.',
-        'Operator approved the final Matt Pocock integration on 2026-09-12. MIT attribution is retained in LICENSE.',
+        f'Reviewed source revision: {reviewed_revision}.',
+        approval_notice,
         '',
         '## What changed and why',
         '',
         change,
         '',
         f'The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). {overlay_note}',
-        f'Basis: [OpenAI Astra guidance]({ASTRA_GUIDANCE}).',
+    ]
+    if provenance_basis:
+        lines.append(f'Basis: [OpenAI Astra guidance]({provenance_basis}).')
+    lines.extend([
         'No additional behavior was invented during integration.',
         '',
         '## Upstream review',
@@ -96,8 +112,28 @@ def render_provenance(item, patch_data):
         'During an approved review, scripts/sync-matt-adaptations.py builds in a temporary',
         'directory, reapplies this overlay and validates it. A patch conflict preserves the',
         'published version. Review every new upstream change before merging.',
-    ]
+    ])
     return ('\n'.join(lines) + '\n').encode()
+
+
+def record_current_source_review(provenance, previous_commit, current_commit):
+    """Keep the original integration record distinct from a refreshed source pin."""
+    text = provenance.decode('utf-8')
+    if previous_commit == current_commit:
+        return provenance
+    text = text.replace('Reviewed source revision:', 'Original integration source revision:', 1)
+    text = re.sub(r'(?m)^Current upstream review: `([0-9a-f]{40})`',
+                  lambda match: match.group(0) if match.group(1) == current_commit
+                  else f'Historical upstream review: `{match.group(1)}`', text)
+    marker = f'Current upstream review: `{current_commit}`'
+    if marker not in text:
+        line = (f'{marker} on {date.today().isoformat()}. Per-file source hashes are '
+                'recorded in UPSTREAM.json.')
+        heading = '## Upstream review\n'
+        if heading not in text:
+            raise ValueError('Provenance is missing the upstream review section')
+        text = text.replace(heading, line + '\n\n' + heading, 1)
+    return text.encode('utf-8')
 
 
 def bootstrap_assets(item, proposal_root):
@@ -168,6 +204,9 @@ def refresh(checkout, item, destination=None, proposal_root=None):
         raise ValueError('Upstream maintenance file collision')
     original['LICENSE'] = (checkout / 'LICENSE').read_bytes()
     commit = subprocess.check_output(['git','-C',str(checkout),'rev-parse','HEAD'],text=True).strip()
+    if destination.exists():
+        previous = json.loads((destination / 'UPSTREAM.json').read_text())
+        provenance = record_current_source_review(provenance, previous.get('commit'), commit)
     with tempfile.TemporaryDirectory(prefix='.matt-', dir=destination.parent) as temp:
         work = Path(temp); stage = work / item['name']
         stage.mkdir()
@@ -212,7 +251,14 @@ def main(single=None):
     if args.check:
         for item in items: validate(ROOT/item['destination'])
     elif args.upstream:
-        for item in items: refresh(args.upstream, item, proposal_root=args.proposals_root)
+        for item in items:
+            if item.get('refresh_policy') == 'pinned_legacy':
+                if selected:
+                    p.error(f"{item['name']} is pinned legacy; use --check to validate its retained package")
+                validate(ROOT / item['destination'])
+                print('retained pinned legacy: ' + item['name'])
+                continue
+            refresh(args.upstream, item, proposal_root=args.proposals_root)
     else:
         p.error('Use --upstream with a reviewed checkout, or --check; updates require review')
 

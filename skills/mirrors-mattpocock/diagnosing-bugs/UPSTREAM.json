@@ -2,20 +2,20 @@
   "name": "diagnosing-bugs",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/diagnosing-bugs",
-  "commit": "959a8e9f1edc3adbe2f7e3054bb6fbefa6696260",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
-    "SKILL.md": "77f3cf31bc99b2f49af943222526531fcc9fc41d047626d3640e875e85af3e84",
+    "SKILL.md": "9168404abda0967a5d32977e3498cd95fda6807018852f3de736a78357c82b40",
     "agents/openai.yaml": "3e430dbe4334a87597488c060cb3dc3786bb00c9182877d6f5ec41f62490e90b",
     "scripts/hitl-loop.template.sh": "35103539fc36873eea36074769ad454f9379d6fc8b2dc0e26ce987fd3bfe5503",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "f7075a17f15314e3de590a6c3f8b1b9f59e8eba4422343db02aa62382de583a2",
+    "ADAPTATIONS.patch": "dea09df59fa6ad0eb32ab31b54bdc57ccd5e3647a02d721d789f479b20c370df",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "eef6db4f444195eff2ade3779ef2690cce7f4388e6e97c89315f877892862cb7",
-    "SKILL.md": "bd1b76ba2975774289364248a79cc1cc90e5c36fc7b2ff2ee57c86f106463178",
+    "PROVENANCE.md": "e61dfa9cfb991e70272533bca8a64ed76c77a1d67cd9a32c498e2ad580a3b0f8",
+    "SKILL.md": "bbe132bcd01bee6380ce3bd333f49cb7c73c32e1bf06634b220b6fa9b19b70d9",
     "agents/openai.yaml": "3e430dbe4334a87597488c060cb3dc3786bb00c9182877d6f5ec41f62490e90b",
     "scripts/hitl-loop.template.sh": "35103539fc36873eea36074769ad454f9379d6fc8b2dc0e26ce987fd3bfe5503"
   }

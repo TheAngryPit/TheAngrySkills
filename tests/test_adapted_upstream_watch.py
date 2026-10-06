@@ -66,3 +66,34 @@ def test_watch_reports_drift_for_empty_overlay_without_mutating_baseline(tmp_pat
     assert reports[0]['skill'] == 'domain-modeling'
     assert reports[0]['changed'] == ['SKILL.md']
     assert before == {str(p):p.read_bytes() for p in repo.rglob('*') if p.is_file()}
+
+
+def test_known_retired_source_stays_quiet_but_return_and_license_change_alert(tmp_path, monkeypatch):
+    upstream = tmp_path / 'upstream'
+    upstream.mkdir()
+    source = upstream / 'skills/legacy'
+    source.mkdir(parents=True)
+    (upstream / 'LICENSE').write_text('MIT fixture')
+    (source / 'SKILL.md').write_text('original')
+    hashes = watch.snapshot(upstream, 'skills/legacy')
+    (source / 'SKILL.md').unlink()
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'retirement'], check=True)
+    repo = tmp_path / 'ours'
+    package = 'skills/mirrors-mattpocock/legacy'
+    dest = repo / package
+    dest.mkdir(parents=True)
+    (dest / 'SKILL.md').write_text('retained adaptation')
+    (dest / 'UPSTREAM.json').write_text(json.dumps(dict(commit='reviewed', source_path='skills/legacy', upstream_sha256=hashes)))
+    (repo / 'scripts').mkdir()
+    (repo / 'scripts/matt-adaptations.json').write_text(json.dumps([dict(destination=package, refresh_policy='pinned_legacy')]))
+    monkeypatch.setattr(watch, 'PACKAGES', (package,))
+    before = {str(p): p.read_bytes() for p in repo.rglob('*') if p.is_file()}
+    assert watch.check(upstream, repo) == []
+    (source / 'SKILL.md').write_text('returned source')
+    assert watch.check(upstream, repo)[0]['changed'] == ['SKILL.md']
+    (source / 'SKILL.md').unlink()
+    (upstream / 'LICENSE').write_text('license changed')
+    assert watch.check(upstream, repo)[0]['changed'] == ['LICENSE']
+    assert before == {str(p): p.read_bytes() for p in repo.rglob('*') if p.is_file()}

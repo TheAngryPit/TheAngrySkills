@@ -1,3 +1,7 @@
+## Refresh — 6 October 2026
+
+The current Matt source has been reviewed at4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d. Incorporate upstream updates underneath the local adaptations: do not freeze the custom packages and do not publish their vanilla counterparts. AskPit now includes the updated implementation graph, PR and retrospective routes; Writing for Astra incorporates current useful information-structure guidance with explicit adaptation rationale. Package publication and manual installation remain separate.
+
 # AskPit and Writing for Astra
 
 AskPit is the public replacement for the retired ask-pit/ask-theangrypit router

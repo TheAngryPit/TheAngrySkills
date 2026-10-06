@@ -10,7 +10,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 
 - **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
-- **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
+- **Domain docs**: where `GLOSSARY.md` and ADRs live, and the consumer rules for reading them
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm only choices that are still open, then write.
 
@@ -22,7 +22,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
 - The active harness's documented instruction file (for example `AGENTS.md` or `CLAUDE.md`): does it already contain an `## Agent skills` section?
-- `CONTEXT.md` and `CONTEXT-MAP.md` at the repo root
+- `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
@@ -58,7 +58,7 @@ The defaults are the five canonical roles, each label string equal to its name: 
 
 **Section C: Domain docs.** Use the existing documented single- or multi-context layout when it is settled. If it is not settled, propose the layout from the repository's actual domains, structure, and context-map signals; do not choose single-context merely because multiple-context documentation is absent. Confirm only when that choice remains open.
 
-When the layout is not settled, a repository without existing multiple-context documentation may still choose multi-context if its actual domains and structure warrant it; do not default from the absence of a `CONTEXT-MAP.md` alone.
+When the layout is not settled, a repository without existing multiple-context documentation may still choose multi-context if its actual domains and structure warrant it; do not default from the absence of a `GLOSSARY-MAP.md` alone.
 
 ### 3. Confirm and edit
 

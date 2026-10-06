@@ -1,6 +1,12 @@
+## Refresh — 6 October 2026
+
+Latest reviewed upstream: `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`. Existing reviewed overlays from PR100 remain the base for package refresh. AskPit retains its own identity and Writing for Astra route, incorporates current implement-spec/pr/retro flows, and uses native context decisions. Writing for Astra integrates useful pointer, information-structure, completion and source-of-truth guidance while retaining the documented Astra decisions. Vanilla ask-matt and writing-for-agents remain excluded from the emitted catalog.
+
+The new portable, explicit-only `chief-of-staff` guidance is curated with an intentional empty overlay. It suggests schedules subject to harness support; it creates no schedule or delegated run during source publication. `pr` was already curated in PR100 and is refreshed rather than duplicated. These packages need manual installation where absent. The removed resolving-merge-conflicts source remains preserved as a legacy package; it is not silently replaced by a docs page or deleted.
+
 # Matt Pocock skill integrations
 
-The public repository contains 31 curated packages from Matt Pocock's skills
+The public repository contains 32 curated packages from Matt Pocock's skills
 repository under
 `skills/mirrors-mattpocock/`, plus the separately packaged AskPit adaptation.
 The upstream source is [Matt Pocock's skills repository](https://github.com/mattpocock/skills),

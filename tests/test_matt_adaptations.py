@@ -14,10 +14,10 @@ ITEMS=json.loads((ROOT/'scripts/matt-adaptations.json').read_text())
 
 def test_manifest_contains_the_approved_surface_only():
     names={item['name'] for item in ITEMS}
-    assert len(ITEMS)==32
-    assert len(names-{ 'ask-pit' })==31
+    assert len(ITEMS)==33
+    assert len(names-{ 'ask-pit' })==32
     assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==19
-    assert sum(item['overlay']=='empty' for item in ITEMS)==12
+    assert sum(item['overlay']=='empty' for item in ITEMS)==13
     assert not names & {'ask-matt','writing-for-agents','claude-handoff','git-guardrails-claude-code',
                         'migrate-to-shoehorn','setup-pre-commit','setup-ts-deep-modules'}
     assert all(item['destination'].startswith('skills/mirrors-mattpocock/')
@@ -33,10 +33,10 @@ def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
     provenance=(package/'PROVENANCE.md').read_text()
     assert item['source_path']=='skills/engineering/pr'
     assert item['overlay']=='empty'
-    assert record['commit']=='24fe0ef7737efae15c87225755e9f6f5965e4888'
+    assert record['commit']=='4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
     assert record['overlay']=='empty'
     assert (package/'ADAPTATIONS.patch').read_bytes()==b''
-    assert 'Reviewed source revision: 24fe0ef7737efae15c87225755e9f6f5965e4888.' in provenance
+    assert 'Original integration source revision: 24fe0ef7737efae15c87225755e9f6f5965e4888.' in provenance
     assert 'first source inclusion on 2026-10-05' in provenance
     assert 'OpenAI Astra guidance' not in provenance
     assert 'author: Dex Horthy' in (package/'SKILL.md').read_text()

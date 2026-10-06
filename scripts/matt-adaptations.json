@@ -193,5 +193,14 @@
     "destination": "skills/mirrors-mattpocock/wait-what",
     "source_path": "skills/productivity/wait-what",
     "overlay": "empty"
+  },
+  {
+    "name": "chief-of-staff",
+    "destination": "skills/mirrors-mattpocock/chief-of-staff",
+    "source_path": "skills/in-progress/chief-of-staff",
+    "overlay": "empty",
+    "reviewed_source_revision": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+    "provenance_approval_notice": "Operator authorized this source refresh and merge on 2026-10-06. This is the first inclusion of the portable source package; no installation or activation is authorized by publication. MIT attribution is retained in LICENSE.",
+    "provenance_basis": null
   }
 ]

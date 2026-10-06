@@ -1,0 +1,20 @@
+{
+  "base_commit": "fff88c970dd09d17cd989d5798c9ce16137025e5",
+  "upstream_commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "baseline_findings": [
+    {
+      "skill": "diagnosing-bugs",
+      "finding_count": 1,
+      "findings_unchanged": true
+    },
+    {
+      "skill": "grilling",
+      "finding_count": 1,
+      "findings_unchanged": true
+    }
+  ],
+  "new_or_aggravated_findings": 0,
+  "askpit_findings": 0,
+  "writing_for_astra_findings": 0,
+  "new_chief_of_staff_findings": 0
+}

@@ -2,7 +2,7 @@
   "name": "ask-pit",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/ask-matt",
-  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -12,11 +12,11 @@
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "f720bd49a250a5d557b125660bfc2466d0e23ebd3bd43de24b780c45547852d8",
+    "ADAPTATIONS.patch": "ff6063765a91c6ae7c069d35e831b2c5f942d9cedd8939326b3d6cd9f76b9a58",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
     "PHASE-BOUNDARIES.md": "813f9a5f5cbb4fddd2caf7dd9abb89d22d4daa048a6012c8e35e4fcf5ff74e1a",
-    "PROVENANCE.md": "aaaa4d30011dd84fd678bbaef589c37583e0a4665d915aaa08f012d73a158298",
-    "SKILL.md": "c2e384590aed9958cf0e49ff973c98d5962ebb07c7565799acb6b05898caed95",
+    "PROVENANCE.md": "7be50a495258613e0a88a97da44bac037a7b20e12c01e85235574dd5765916e7",
+    "SKILL.md": "a44ada9912f68e221e40ed32ddd8bc58fac6659d88d21211dc2b820902329d09",
     "agents/openai.yaml": "023defaa88c7f3034ed3621f8bd450e3822199879b801c682b7b40f0dd11df11"
   }
 }

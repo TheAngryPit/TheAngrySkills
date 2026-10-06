@@ -2,7 +2,7 @@
   "name": "setup-matt-pocock-skills",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/setup-matt-pocock-skills",
-  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -18,7 +18,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "aa39bf0a03ce817cc3e72089debfc1a7e91cae822e61869664fdeb5e999d2a52",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "5e52948e0ff18c0e011415e2f8dd39ccddd8a58678131c2da05fd9d7019d304e",
+    "PROVENANCE.md": "9a3f7804d9a6d7211000db6d5e187c5467d25dc0fbb3bb34cfed9df17dd27099",
     "SKILL.md": "a16948c6909b41ef88e318719245d930d1e4debb640c52c6c455d470cc511b3b",
     "agents/openai.yaml": "9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939",
     "domain.md": "593a7042218689f1d24df89df14eaf0a20e19e0d0a7d479a01947ac78f0784b9",

@@ -196,6 +196,7 @@
     {
       "name": "mirrors-mattpocock",
       "skills": [
+        "./skills/mirrors-mattpocock/chief-of-staff",
         "./skills/mirrors-mattpocock/code-review",
         "./skills/mirrors-mattpocock/codebase-design",
         "./skills/mirrors-mattpocock/diagnosing-bugs",
@@ -217,9 +218,9 @@
         "./skills/mirrors-mattpocock/setup-matt-pocock-skills",
         "./skills/mirrors-mattpocock/tdd",
         "./skills/mirrors-mattpocock/teach",
+        "./skills/mirrors-mattpocock/to-questionnaire",
         "./skills/mirrors-mattpocock/to-spec",
         "./skills/mirrors-mattpocock/to-tickets",
-        "./skills/mirrors-mattpocock/to-questionnaire",
         "./skills/mirrors-mattpocock/triage",
         "./skills/mirrors-mattpocock/wait-what",
         "./skills/mirrors-mattpocock/wayfinder",

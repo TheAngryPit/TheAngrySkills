@@ -3,7 +3,7 @@
 Operator-owned adaptation inspired by Matt Pocock's writing-for-agents.
 Upstream: https://github.com/mattpocock/skills
 Source path: skills/productivity/writing-for-agents
-Reviewed revision: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d
+Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015
 License: MIT; upstream attribution is retained in LICENSE.
 
 Basis: [OpenAI guidance for Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
@@ -37,6 +37,8 @@ The rationale follows [Rethinking skills and prompts for GPT-6 Astra](https://de
 These are editorial choices, not measured performance claims.
 
 ## 2026-10-06 upstream review
+
+Current reviewed source revision: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d.
 
 The current upstream and support-file hashes match the previously reviewed
 baseline. This review compared the available source and support files with the

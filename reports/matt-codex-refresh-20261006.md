@@ -52,3 +52,5 @@ Generator reverse proof and hashes pass for33manifest packages (32mirrors plus A
 - `tests/test_matt_adaptations.py`
 
 New chief-of-staff package files are included in addition to this tracked diff list. No generator script changes are needed in this final integration.
+
+Remote Codex review found that Writing for Astra original integration hash had been replaced. The correction restores3cca18b368ae95cdbdebbff572ccafa662551015 as originalintegration and records4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d separately as currentreview. The added provenance regression failed before the current-review line was supplied and passed after the correction.

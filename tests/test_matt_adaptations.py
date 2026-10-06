@@ -113,3 +113,12 @@ def test_patch_applies_inside_repository_staging_directory(tmp_path):
     assert (package/'SKILL.md').read_text()=='After\n'
     matt.patch(work,'example',reverse=True)
     assert (package/'SKILL.md').read_text()=='Before\n'
+
+
+def test_astra_original_integration_is_distinct_from_current_review():
+    package = ROOT / 'skills/engineering/writing-for-astra'
+    provenance = (package / 'PROVENANCE.md').read_text()
+    record = json.loads((package / 'UPSTREAM.json').read_text())
+    assert 'Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015' in provenance
+    assert '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d' in provenance
+    assert record['commit'] == '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'

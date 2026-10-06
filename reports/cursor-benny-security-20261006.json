@@ -36,5 +36,11 @@
       "finding_count": 0
     }
   },
-  "runtime_activation": "not_performed"
+  "runtime_activation": "not_performed",
+  "detailed_findings_changed": [],
+  "new_skill_findings": {
+    "cursor-setup-benny": [],
+    "cursor-triage-issue-reports": [],
+    "cursor-reproduce-and-fix-issues": []
+  }
 }

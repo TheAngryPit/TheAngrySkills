@@ -243,7 +243,7 @@
     "cursor-poteto-mode/scripts/bootstrap.ts": "bccffa363c55f820825bcc87c8c78f226803a39634c17cca124c022d65507fe1",
     "cursor-poteto-mode/scripts/bun.lock": "667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46",
     "cursor-poteto-mode/scripts/check-plan.mjs": "3a941e58ca73fb7df4e4c93d43b607f4856d125ab6038a2e827b0b1293f8fdeb",
-    "cursor-poteto-mode/scripts/cursor_worktree_audit.py": "e683469be52c2f35c397df6de6cbf64fb8efc9371f9e428473f2cc55d6b95738",
+    "cursor-poteto-mode/scripts/cursor_worktree_audit.py": "9afd27f7e528f8fc6e2e96b4fb78ecb0bd766d5e8996e58e61ea5f856c09947b",
     "cursor-poteto-mode/scripts/orch/orch.test.ts": "773153ac74de6eb15f58d2682f487f5f30672d7efe3ef1d24a131aa9129d279b",
     "cursor-poteto-mode/scripts/orch/orch.ts": "f091687df627a0b75fabd54af58945a9cd6c7039ef0622012ac9ed60cd8ec434",
     "cursor-poteto-mode/scripts/orch/store.ts": "0eae7cf69282e827b1227166f2e32cee3560f2f3e65b3f1f2faf6fb83d3b4c5b",

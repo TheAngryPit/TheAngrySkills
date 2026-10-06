@@ -1,4 +1,7 @@
 import importlib.util
+import json
+import os
+import sys
 import shutil
 import subprocess
 from pathlib import Path
@@ -8,9 +11,12 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_native_audit_preserves_space_paths_and_holds_unknown_usage_and_untracked_work(tmp_path):
+@pytest.mark.parametrize("raw_worktree,raw_file", [(False, False), (True, False), (False, True)])
+def test_native_audit_preserves_space_paths_and_holds_unknown_usage_and_untracked_work(tmp_path, raw_worktree, raw_file):
+    if (raw_worktree or raw_file) and (os.name != "posix" or sys.platform == "darwin"):
+        pytest.skip("raw filename fixture requires a POSIX filesystem accepting non-UTF-8 bytes")
     repo = tmp_path / 'main repo'
-    child = tmp_path / 'child with spaces'
+    child = tmp_path / (os.fsdecode(b'child with spaces \xff') if raw_worktree else 'child with spaces')
     subprocess.run(['git', 'init', '-q', str(repo)], check=True)
     subprocess.run(['git', '-C', str(repo), '-c', 'user.name=Fixture', '-c',
                     'user.email=fixture@example.invalid', 'commit', '--allow-empty', '-qm', 'initial'], check=True)
@@ -23,11 +29,18 @@ def test_native_audit_preserves_space_paths_and_holds_unknown_usage_and_untracke
     assert clean['session_usage'] == 'unknown'
     assert clean['merged_into_cached_origin_main'] == 'unknown'
     assert clean['bucket'] == 'verify-native-usage'
-    (child / 'valuable untracked.txt').write_text('keep this work')
+    filename = os.fsdecode(b'valuable untracked \xff.txt') if raw_file else 'valuable untracked.txt'
+    (child / filename).write_text('keep this work')
     dirty = module.audit(repo)[0]
     assert dirty['dirty'] == 'has-work'
     assert dirty['bucket'] == 'hold-work'
-    assert (child / 'valuable untracked.txt').read_text() == 'keep this work'
+    assert (child / filename).read_text() == 'keep this work'
+    emitted = ROOT / 'skills/mirrors-cursor/cursor-poteto-mode/scripts/cursor_worktree_audit.py'
+    cli = subprocess.run([sys.executable, str(emitted), str(repo)], capture_output=True, text=True, timeout=30)
+    assert cli.returncode == 0, cli.stderr
+    result = json.loads(cli.stdout)['worktrees'][0]
+    assert os.fsencode(result['worktree']) == os.fsencode(child)
+    assert result['bucket'] == 'hold-work'
 
 
 def test_cli_missing_dependencies_fail_without_install_or_restart(tmp_path):
@@ -66,3 +79,17 @@ console.log(`spawn_attempts=${attempts}`);
     assert "dependencies_ready" in recovered.stdout
     assert "spawn_attempts=0" in recovered.stdout
     assert stamp.read_text() == "old lockfile stamp"
+
+
+def test_git_process_output_decodes_raw_bytes_losslessly(tmp_path, monkeypatch):
+    if os.name != "posix":
+        pytest.skip("executable subprocess fixture uses POSIX shebang")
+    executable = tmp_path / "git"
+    executable.write_text(f"#!{sys.executable}\nimport os\nos.write(1, b'?? invalid\\xff\\r\\n\\0')\nos.write(2, b'warning \\xff')\n")
+    executable.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path))
+    spec = importlib.util.spec_from_file_location('audit_bytes', ROOT / 'scripts/cursor_worktree_audit.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    output = module.git(tmp_path, "status", "--porcelain", "-z")
+    assert os.fsencode(output) == b"?? invalid\xff\r\n\0"

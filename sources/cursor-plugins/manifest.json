@@ -2920,7 +2920,7 @@
       ]
     },
     "scripts/cursor_worktree_audit.py": {
-      "sha256": "e683469be52c2f35c397df6de6cbf64fb8efc9371f9e428473f2cc55d6b95738",
+      "sha256": "9afd27f7e528f8fc6e2e96b4fb78ecb0bd766d5e8996e58e61ea5f856c09947b",
       "related_skills": [
         "cursor-poteto-mode"
       ]

@@ -9,8 +9,8 @@ from pathlib import Path
 
 def git(repo, *args):
     result = subprocess.run(['git', '-C', str(repo), *args], capture_output=True,
-                            text=True, timeout=30)
-    return result.stdout.strip() if result.returncode == 0 else None
+                            timeout=30)
+    return os.fsdecode(result.stdout).strip() if result.returncode == 0 else None
 
 
 def audit(repo):

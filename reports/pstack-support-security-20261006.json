@@ -1,0 +1,431 @@
+{
+  "base": "6e27f204e7d767c9f0e7ff1cb10a980fbbccfe6a",
+  "candidate": "reviewed supporting-file source update",
+  "changed": {
+    "cursor-poteto-mode": {
+      "before": [
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/bootstrap.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/bun.lock",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/check-plan.mjs",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/check-plan.mjs",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/package.json",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "dependency-manifest-surface",
+          "path": "scripts/package.json",
+          "line": null,
+          "summary": "Dependency or package manager surface present.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/worktree-audit.sh",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/worktree-audit.sh",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/orch.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/orch/orch.ts",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/orch.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/store.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/cli.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/cli.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/fakes.test-helper.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/github.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/github.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/policy.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/policy.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/render.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/tsconfig.json",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/types.compile.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/types.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/watch-pr/watch-pr",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/watch-pr",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        }
+      ],
+      "after": [
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/bootstrap.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/bun.lock",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/check-plan.mjs",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/check-plan.mjs",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/cursor_worktree_audit.py",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/package.json",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "dependency-manifest-surface",
+          "path": "scripts/package.json",
+          "line": null,
+          "summary": "Dependency or package manager surface present.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/worktree-audit.sh",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/worktree-audit.sh",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/orch.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/orch/orch.ts",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/orch.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/orch/store.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/cli.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/cli.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/fakes.test-helper.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/github.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/github.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/policy.test.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/policy.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/render.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/tsconfig.json",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/types.compile.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/types.ts",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "executable-file",
+          "path": "scripts/watch-pr/watch-pr",
+          "line": null,
+          "summary": "Executable file present; review before global admission.",
+          "sample": null
+        },
+        {
+          "severity": "warning",
+          "rule_id": "bundled-script-review",
+          "path": "scripts/watch-pr/watch-pr",
+          "line": null,
+          "summary": "Bundled script present; review required before global admission.",
+          "sample": null
+        }
+      ],
+      "verdict": "needs_human_review"
+    },
+    "cursor-poteto-help": {
+      "before": [],
+      "after": [],
+      "verdict": "safe_to_install"
+    },
+    "cursor-reflect": {
+      "before": [],
+      "after": [],
+      "verdict": "safe_to_install"
+    }
+  }
+}

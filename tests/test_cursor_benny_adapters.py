@@ -37,16 +37,21 @@ def no_write(result):
 
 class BennyAdapterTests(unittest.TestCase):
     def test_top_level_event_freezes_message_as_root(self):
-        result = evaluate_intake_event(
-            {"source_channel_id": "C-source", "message_ts": "100.001"}, CONFIG
-        )
-        self.assertEqual(result["status"], "READY_FOR_TRIAGE")
-        self.assertEqual(result["source_thread_ts"], "100.001")
-        no_write(result)
+        for timestamps in ({"message_ts": "100.001"}, {"ts": "100.001"},
+                           {"message_ts": "100.001", "ts": "100.001"}):
+            with self.subTest(timestamps=timestamps):
+                result = evaluate_intake_event(
+                    {"source_channel_id": "C-source", **timestamps}, CONFIG
+                )
+                self.assertEqual(result["status"], "READY_FOR_TRIAGE")
+                self.assertEqual(result["source_thread_ts"], "100.001")
+                no_write(result)
 
     def test_wrong_channel_and_reply_cannot_enter(self):
         for event in (
             {"source_channel_id": "C-other", "message_ts": "100.001"},
+            {"source_channel_id": "C-source", "message_ts": "100.001", "ts": "100.002"},
+            {"source_channel_id": "C-source", "message_ts": "100.001", "ts": ""},
             {"source_channel_id": "C-source", "message_ts": "100.002", "thread_ts": "100.001"},
         ):
             result = evaluate_intake_event(event, CONFIG)

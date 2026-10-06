@@ -906,14 +906,12 @@
       "validation_requirement": "frontmatter and relative references; explicit trigger; local diff positive, live-URL missing-capability and malformed-input tests; visual inspection proof; bundled adapter integrity"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "source_validated_runtime_unproven",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "supporting files in this skill: skills/reproduce-and-fix-issues/references/control-adapter.md, skills/reproduce-and-fix-issues/references/feature-map.example.md, skills/reproduce-and-fix-issues/references/verify-existing-fix.md",
-      "excluded_from_mirror": true,
-      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "1363cc07343fe86aab42853b1bd4563288cbcbdf12f1c265b3b3b1afa25c09cb",
@@ -925,22 +923,22 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
-      "promotion_reason": "upstream dormant; distribution not declared",
-      "publish": false,
+      "promotion_reason": "Operator selected Benny native distribution on 2026-10-06; explicit-only source guidance, activation separate.",
+      "publish": true,
       "published_name": "cursor-reproduce-and-fix-issues",
       "upstream_purpose": "Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro automation.",
       "upstream_skill": "reproduce-and-fix-issues",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
+      "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "source_validated_runtime_unproven",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
-      "excluded_from_mirror": true,
-      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "5a3cbe63360c9f6373b6cb6c79a1eaf7e0eba181bfaa1577e2e6431af3407282"
@@ -949,22 +947,22 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/automations/benny/skills/setup-benny/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
-      "promotion_reason": "upstream dormant; distribution not declared",
-      "publish": false,
+      "promotion_reason": "Operator selected Benny native distribution on 2026-10-06; explicit-only source guidance, activation separate.",
+      "publish": true,
       "published_name": "cursor-setup-benny",
       "upstream_purpose": "Configure Benny and prepare its triage and repro automations. Use when installing Benny or changing its Slack, tracker, repository, routing, control, model, or budget settings.",
       "upstream_skill": "setup-benny",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar",
+      "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
-      "availability": "external connector or routing not demonstrated",
+      "availability": "source_validated_runtime_unproven",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
       "declared_for_distribution": false,
       "dependencies_or_limitations": "supporting files in this skill: skills/triage-issue-reports/references/routing.example.md",
-      "excluded_from_mirror": true,
-      "exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
       "family": "pstack",
       "files": {
         "SKILL.md": "216a758b8711e64d19a55e6032c496527daac6364d010611040f3c04ef1a448f",
@@ -974,12 +972,14 @@
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
       "path": "pstack/automations/benny/skills/triage-issue-reports/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
-      "promotion_reason": "upstream dormant; distribution not declared",
-      "publish": false,
+      "promotion_reason": "Operator selected Benny native distribution on 2026-10-06; explicit-only source guidance, activation separate.",
+      "publish": true,
       "published_name": "cursor-triage-issue-reports",
       "upstream_purpose": "Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage automation.",
       "upstream_skill": "triage-issue-reports",
-      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio"
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
+      "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven.",
@@ -2799,6 +2799,78 @@
       ],
       "relationship": "named agent dependency",
       "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+    },
+    "pstack/automations/benny/FOR_AGENTS.md": {
+      "sha256": "a125e317dec1b8731fdc71f404c669f1127a73af932f7a7b8b8744a5542328a7",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/README.md": {
+      "sha256": "ca3c42cbb7f0bf7068f7407eb355815e6c234d5c2786942f3cbe751a3690024b",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md": {
+      "sha256": "1363cc07343fe86aab42853b1bd4563288cbcbdf12f1c265b3b3b1afa25c09cb",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/reproduce-and-fix-issues/references/control-adapter.md": {
+      "sha256": "58b0615d2fca895f9a20df83266e280042b0d585b5f2fd324e2094a682fd846b",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/reproduce-and-fix-issues/references/feature-map.example.md": {
+      "sha256": "1e5c7c8522daec3e43fcc2e73ceb97289ded65b552949ce65a11cc8eb3d2b6ee",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/reproduce-and-fix-issues/references/verify-existing-fix.md": {
+      "sha256": "c90eae00abcdec71a58fa8d60f2c495b082a526ad50b8e8e494837609129bf29",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/setup-benny/SKILL.md": {
+      "sha256": "5a3cbe63360c9f6373b6cb6c79a1eaf7e0eba181bfaa1577e2e6431af3407282",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/triage-issue-reports/SKILL.md": {
+      "sha256": "216a758b8711e64d19a55e6032c496527daac6364d010611040f3c04ef1a448f",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/skills/triage-issue-reports/references/routing.example.md": {
+      "sha256": "e5e53013692568cf69da8e8b302fff929fe2fbc9aec1a4651fd7997e2c7a4025",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/templates/configuration.example.yaml": {
+      "sha256": "13e24b4ce9b9a0913916e85fe3b080b88d45f8e55dccfe8ae38e0751a997b6f5",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/templates/reproduce-automation-prompt.md": {
+      "sha256": "71ec574f1844e379394ae4ef14c48d7df10afbaa319d395c788d7f856f0e6899",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
+    },
+    "pstack/automations/benny/templates/triage-automation-prompt.md": {
+      "sha256": "e0bba594547834f013ec805915610eb597e7929efe3ffbe85ae00339ee16d474",
+      "related_skills": [
+        "cursor-setup-benny"
+      ]
     }
   },
   "native_support_files": {
@@ -2846,98 +2918,155 @@
       "related_skills": [
         "cursor-orchestrate"
       ]
+    },
+    "scripts/cursor_worktree_audit.py": {
+      "sha256": "9afd27f7e528f8fc6e2e96b4fb78ecb0bd766d5e8996e58e61ea5f856c09947b",
+      "related_skills": [
+        "cursor-poteto-mode"
+      ]
     }
   },
   "documentation_files": {
     "pstack/README.md": {
-      "sha256": "850eea901004b9ef4633e17c1bd9932863046a021242b4e043907ae534b21fa8",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+      "sha256": "7f39feae81103e18b567e1fa5075cba86425cf4697a01be66a7422ef93c2c855",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
       "relationship": "upstream Pstack reference; not native runtime instructions"
     },
     "pstack/docs/guide/01-setup.md": {
-      "sha256": "bbac20e25fb097029e2676ecf3212f4a72f566eaf2b1031b56317aa1e4fdf490",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "86d0330f245d16254a2069955f993c15d96cf29cd1a73690a0164074b7ac1190",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/02-poteto-mode.md": {
-      "sha256": "379a1b2c9cd2ba54032b2b142563328d0f3d65039f067863d19b1d4c008737f5",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "979f61ca3d44cb8e68affda40327d32797e93fa9cc53ced7444c15e2600897e1",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/03-understand.md": {
-      "sha256": "16f3fe0f7df092a5c69dac90971ef57e63a8a9ae926eed851285c7bfddc0f3fd",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "0090afa9b8670adf175466a2a973ff4349e95ed67d2aa8cebdfc55ff4b7382c9",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/04-design.md": {
-      "sha256": "21e820ff73c0b70682aa570a967ede446b4d7caf62e8f391d0dd733ccb74874c",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "31f2abe6e9b29feafd1a9eece8f4fe21992f86b8c19ab2e9b5c11a20f36587e7",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/05-build-and-clean.md": {
-      "sha256": "6bd421b43a3cf9fec3cd201fd40ce65fd8c657264eac48b0c9a175b6afd7c252",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "a93cc7771f7b35c7b54d0120b6f66e8367794ce6791237e889a30e7585c190fa",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/06-verify-and-ship.md": {
-      "sha256": "c93cd50c0359ce875a82b3f7d64eab102a4b0815dbbecdb8e0e5e910bd2d18e9",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "3ef0eed5ea084dfbbaf1b1ae9e08d84f2c8a2b536ffb3ef5226710bf105f70e6",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/07-overnight.md": {
-      "sha256": "5033d61e8b4b6fb0b2304b2132f26bf0b6aee685aa4ed53a76a73cf0ac1c3557",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "d7bd33a3d880768688dff4c1c2b5481ca9f0f194f5d97e44b65c9f96624d3ff0",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/08-principles.md": {
-      "sha256": "a103e293dd6d9513f425feac39547f0c2c049300f36704d80b6d49c958e5a4bb",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "73c3db659d356d4aa6d7674d30d0db46fab2bdd60152fca717c2d1772a042bdc",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/09-make-it-yours.md": {
-      "sha256": "b98588a232a38ca7acebbeecb95ac771df1981aed662dcb45c96b4b66ed20ec0",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "157e0c20ad3c657857c2fbbea3afd26895b71b8f68475bc56f4c382dcdd0e118",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/10-recipes-and-pitfalls.md": {
-      "sha256": "a4662cd98870f08c6abe117a832abe37670ee84f8ed25dcbe7e99ef4eb8e05e0",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "c652474764b08da4a6364d85f5d03cf1fc1cf35e9d7c549348fb66e2d09f7b1f",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/README.md": {
-      "sha256": "125f870a93bf830d45bda187f585cec4508cc9ca5121271af58adbe937bbe54f",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "sha256": "49d92cfe91e01c04bd1150e5b000ee4fd4dfda8ce789b66a9dda98f7e5456e00",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/design.jpg": {
       "sha256": "b8ed07427f6a0c37dd8ba97961fc0eb5071efeee6c4a230648bdb7547f6f2a8f",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/overnight.jpg": {
       "sha256": "4b4405e4df8925c5b3abbe702f681af0f3b1f5f32271b599f95717f578f1a0c8",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/recipes.jpg": {
       "sha256": "9fa2d51b476635712737795ddef81806efaa0086bb3bfa9f9f45695d9ab0f8e8",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/router.jpg": {
       "sha256": "525843055a4efd2b10acc50a8652fd02b0834ea733a8a2f895c1eb89036017da",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/understanding.jpg": {
       "sha256": "b60587e9a9bbe2550e93be9819cf0cd4acf77d90fac769a0c43d82bd8e34e279",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     },
     "pstack/docs/guide/images/verification.jpg": {
       "sha256": "2a76b52007a1cd2866ba67fd47d7d9ef3e1118bb5a09c4665eee8c3f161bd09a",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-      "relationship": "upstream Pstack reference; not native runtime instructions"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "relationship": "upstream Pstack reference; not native runtime instructions",
+      "related_skills": [
+        "cursor-poteto-help"
+      ]
     }
   }
 }

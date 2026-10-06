@@ -40,6 +40,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_sdk_native_adapter.py",
             "scripts/cursor_orchestrate_adapters.py",
             "scripts/cursor_bot_ui_adapters.py",
+            "scripts/cursor_worktree_audit.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "skills/core/model-capability-router/assets/agents",
@@ -103,7 +104,8 @@ class CursorMirrorTests(unittest.TestCase):
         refreshed = {"cursor-architect", "cursor-arena", "cursor-blast-radius", "cursor-how",
                      "cursor-interrogate", "cursor-poteto-mode", "cursor-reflect",
                      "cursor-setup-pstack", "cursor-why", "cursor-poteto-help",
-                     "cursor-origin-api", "cursor-port-github-app-to-origin"}
+                     "cursor-origin-api", "cursor-port-github-app-to-origin",
+                     "cursor-setup-benny", "cursor-triage-issue-reports", "cursor-reproduce-and-fix-issues"}
         expected_names |= refreshed
         self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
         entries = {entry["published_name"]: entry for entry in manifest["skills"]}
@@ -235,8 +237,7 @@ class CursorMirrorTests(unittest.TestCase):
         manifest = json.loads(manifest_path.read_text())
         excluded_names = {
             "cursor-make-bot-ui", "cursor-add-dictation", "cursor-add-read-aloud",
-            "cursor-add-voice", "cursor-debug-voice", "cursor-setup-benny",
-            "cursor-triage-issue-reports", "cursor-reproduce-and-fix-issues",
+            "cursor-add-voice", "cursor-debug-voice",
         }
         excluded = [e for e in manifest["skills"] if e.get("excluded_from_mirror")]
         self.assertEqual({e["published_name"] for e in excluded}, excluded_names)
@@ -245,7 +246,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
         self.assertEqual(state["candidate_not_published"], 0)
-        self.assertEqual(state["operator_excluded_skills"], 8)
+        self.assertEqual(state["operator_excluded_skills"], 5)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -257,6 +258,33 @@ class CursorMirrorTests(unittest.TestCase):
         rejected = self.run_build("--check")
         self.assertNotEqual(rejected.returncode, 0)
         self.assertIn("excluded source cannot be published", rejected.stderr)
+
+    def test_benny_pack_is_portable_without_source_checkout(self):
+        output = self.root / "skills/mirrors-cursor"
+        for name in ("cursor-setup-benny", "cursor-triage-issue-reports",
+                     "cursor-reproduce-and-fix-issues"):
+            self.assertTrue((output / name / "SKILL.md").is_file(), name)
+            self.assertEqual((output / name / "agents/openai.yaml").read_text(),
+                             "policy:\n  allow_implicit_invocation: false\n")
+        project = self.root / "independent-target/.agents/automations/benny"
+        shutil.copytree(output / "cursor-setup-benny/references/benny", project)
+        self.assertEqual((project / "LICENSE.upstream").read_bytes(),
+                         (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
+        provenance = (project / "MIRROR.md").read_text()
+        self.assertIn("https://github.com/cursor/plugins.git", provenance)
+        self.assertIn("Commit: df581122cde17e6e27686b5a448bde23e4ad4318", provenance)
+        # The installed pack, detached from the source checkout, owns its complete links.
+        for file in project.rglob("*.md"):
+            for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):
+                target = target.split("#", 1)[0]
+                if target and ":" not in target:
+                    self.assertTrue((file.parent / target).resolve().is_file(),
+                                    f"{file.relative_to(project)}: {target}")
+        for name in ("setup-benny", "triage-issue-reports", "reproduce-and-fix-issues"):
+            self.assertTrue((project / "skills" / name / "instructions.md").is_file())
+        self.assertTrue((project / "templates/configuration.example.yaml").is_file())
+        self.assertTrue((project / "templates/triage-automation-prompt.md").is_file())
+        self.assertTrue((project / "templates/reproduce-automation-prompt.md").is_file())
 
     def test_local_skill_edit_is_preserved_on_rebuild(self):
         skill = self.root / "skills/mirrors-cursor/cursor-cli-for-agents/SKILL.md"
@@ -276,7 +304,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_plugin_level_agent_is_pinned_and_transitively_mapped(self):
         manifest = json.loads((self.root / "sources/cursor-plugins/manifest.json").read_text())
         support = manifest["support_files"]
-        self.assertEqual(len(support), 28)
+        self.assertEqual(len(support), 40)
         self.assertIn(
             "cursor-no-comments",
             support["pstack/agents/comment-sicko.md"]["related_skills"],
@@ -503,7 +531,7 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(list(preview.glob("*/SKILL.md"))), published_count())
-        self.assertFalse((preview / "cursor-setup-benny").exists())
+        self.assertTrue((preview / "cursor-setup-benny").exists())
         self.assertFalse((preview / "cursor-make-bot-ui").exists())
         self.assertEqual(marketplace.read_bytes(), before)
         self.assertEqual(self.run_build("--check").returncode, 0)
@@ -571,6 +599,49 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--check")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("retained source file is not inventoried", result.stderr)
+
+    def test_pack_support_only_upstream_drift_requires_review(self):
+        upstream = self.root / "external-upstream"
+        shutil.copytree(self.root / "sources/cursor-plugins/snapshot", upstream)
+        subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+        subprocess.run(["git", "-C", str(upstream), "-c", "user.name=Test",
+                        "-c", "user.email=test@example.invalid", "commit", "--allow-empty",
+                        "-qm", "fixture"], check=True)
+        unchanged = self.run_build("--compare-upstream", str(upstream))
+        self.assertEqual(unchanged.returncode, 0, unchanged.stderr)
+        cases = (
+            ("pstack/automations/benny/templates/triage-automation-prompt.md", "changed_support_files"),
+            ("pstack/docs/guide/02-poteto-mode.md", "changed_documentation_files"),
+        )
+        for relative, report_key in cases:
+            template = upstream / relative
+            original = template.read_bytes()
+            for content in (original + b"\nChanged workflow instruction.\n", None):
+                with self.subTest(path=relative, removed=content is None):
+                    if content is None:
+                        template.unlink()
+                    else:
+                        template.write_bytes(content)
+                    result = self.run_build("--compare-upstream", str(upstream))
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    report = json.loads(result.stdout)
+                    self.assertEqual(report[report_key], [relative])
+                    self.assertEqual(report["changed_skills"], [])
+                    self.assertEqual(report["changed_licenses"], [])
+            template.write_bytes(original)
+            self.assertEqual((self.root / "sources/cursor-plugins/snapshot" / relative).read_bytes(), original)
+        for relative, key in (
+            ("pstack/docs/guide/new-topic.md", "changed_documentation_files"),
+            ("pstack/automations/benny/templates/new-template.md", "changed_support_files"),
+        ):
+            with self.subTest(added=relative):
+                new_file = upstream / relative
+                new_file.write_text("New upstream workflow guidance")
+                result = self.run_build("--compare-upstream", str(upstream))
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(json.loads(result.stdout)[key], [relative])
+                self.assertFalse((self.root / "sources/cursor-plugins/snapshot" / relative).exists())
+                new_file.unlink()
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

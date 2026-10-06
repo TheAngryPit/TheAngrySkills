@@ -126,7 +126,7 @@ def verify_snapshot(manifest: dict) -> None:
     expected_support = {}
     for path, record in support.items():
         rel = safe_relative(path)
-        if len(rel.parts) < 3 or rel.parts[1] not in {"agents", "hooks", "rules"}:
+        if len(rel.parts) < 3 or (rel.parts[1] not in {"agents", "hooks", "rules"} and not rel.as_posix().startswith("pstack/automations/benny/")):
             raise ValueError(f"invalid plugin-level support path: {path}")
         related = record.get("related_skills")
         if (not isinstance(related, list) or not related
@@ -136,7 +136,7 @@ def verify_snapshot(manifest: dict) -> None:
     actual_support = {}
     for path in files(SOURCE):
         rel = path.relative_to(SOURCE)
-        if len(rel.parts) >= 3 and rel.parts[1] in {"agents", "hooks", "rules"}:
+        if len(rel.parts) >= 3 and (rel.parts[1] in {"agents", "hooks", "rules"} or rel.as_posix().startswith("pstack/automations/benny/")):
             actual_support[rel.as_posix()] = sha(path)
     if actual_support != expected_support:
         raise ValueError("plugin-level support inventory or hash drift")
@@ -292,7 +292,9 @@ def render_skill(entry: dict, staging: Path, default_commit: str,
         contents = target_file.read_text()
         contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
         target_file.write_text(contents)
-    support_ledger = load(LEDGER).get("support_files", {})
+    support_manifest = load(LEDGER)
+    support_ledger = {**support_manifest.get("support_files", {}),
+                      **support_manifest.get("documentation_files", {})}
     for bundle in overlay.get("bundled_support_files", []):
         source_rel = safe_relative(bundle["source_path"])
         output_rel = safe_relative(bundle["target_path"])
@@ -366,6 +368,17 @@ def render_skill(entry: dict, staging: Path, default_commit: str,
         "The decision class does not establish runtime availability.", "",
     ]
     (target / "MIRROR.md").write_text("\n".join(note))
+    detached = overlay.get("detached_pack_directory")
+    if detached is not None:
+        pack = target / safe_relative(detached)
+        if not pack.is_dir() or pack.is_symlink():
+            raise ValueError(f"missing detached pack directory: {name}/{detached}")
+        for filename in ("LICENSE.upstream", "MIRROR.md"):
+            source = target / filename
+            destination = pack / filename
+            if not source.is_file() or destination.exists():
+                raise ValueError(f"detached pack notice missing or colliding: {name}/{filename}")
+            shutil.copy2(source, destination)
     return {p.relative_to(target).as_posix(): sha(p) for p in files(target)}
 
 
@@ -483,11 +496,11 @@ def preview_candidates(destination: Path) -> None:
     manifest = load(LEDGER)
     verify_snapshot(manifest)
     entries = validate_manifest(manifest)
-    candidates = [e for e in entries if e["declared_for_distribution"] and not e.get("excluded_from_mirror")]
+    candidates = [e for e in entries if (e["declared_for_distribution"] or e["publish"]) and not e.get("excluded_from_mirror")]
     if destination.exists():
         raise ValueError(f"candidate preview destination already exists: {destination}")
     source_to_entry = {
-        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"] and not e.get("excluded_from_mirror")}
+        (SOURCE / e["path"]).resolve(): {**e, "publish": (e["declared_for_distribution"] or e["publish"]) and not e.get("excluded_from_mirror")}
         for e in entries
     }
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -520,6 +533,33 @@ def refresh(upstream: Path) -> None:
         live = upstream / license_path
         if not live.is_file() or sha(live) != expected_sha:
             changed_licenses.append(license_path)
+    support = manifest.get("support_files", {})
+    observed_support = set()
+    for path in upstream.rglob("*"):
+        if not (path.is_file() or path.is_symlink()):
+            continue
+        rel = path.relative_to(upstream)
+        if len(rel.parts) >= 3 and rel.parts[0] != ".git" and (rel.parts[1] in {"agents", "hooks", "rules"}
+                                  or rel.as_posix().startswith("pstack/automations/benny/")):
+            observed_support.add(rel.as_posix())
+    changed_support = observed_support ^ set(support)
+    for path, record in support.items():
+        live = upstream / safe_relative(path)
+        if not live.is_file() or live.is_symlink() or sha(live) != record["sha256"]:
+            changed_support.add(path)
+    changed_support = sorted(changed_support)
+    documents = manifest.get("documentation_files", {})
+    observed_documents = {p.relative_to(upstream).as_posix()
+                          for p in (upstream / "pstack/docs/guide").rglob("*")
+                          if p.is_file() or p.is_symlink()}
+    if (upstream / "pstack/README.md").exists():
+        observed_documents.add("pstack/README.md")
+    changed_documents = set(observed_documents) ^ set(documents)
+    for path, record in documents.items():
+        live = upstream / safe_relative(path)
+        if not live.is_file() or live.is_symlink() or sha(live) != record["sha256"]:
+            changed_documents.add(path)
+    changed_documents = sorted(changed_documents)
     head = subprocess.check_output(["git", "-C", str(upstream), "rev-parse", "HEAD"], text=True).strip()
     report = {"upstream_commit": head, "pinned_commit": manifest["upstream_commit"],
               "source_commit_overrides": {
@@ -527,9 +567,11 @@ def refresh(upstream: Path) -> None:
                   for entry in entries if entry.get("source_commit")
               },
               "new_skills": sorted(current-pinned), "removed_skills": sorted(pinned-current),
-              "changed_skills": changed, "changed_licenses": changed_licenses}
+              "changed_skills": changed, "changed_licenses": changed_licenses,
+              "changed_support_files": changed_support,
+              "changed_documentation_files": changed_documents}
     print(dump(report), end="")
-    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses:
+    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses or changed_support or changed_documents:
         raise ValueError("upstream changes require explicit per-skill review and overlay rebase")
 
 

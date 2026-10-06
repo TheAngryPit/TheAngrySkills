@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: df581122cde17e6e27686b5a448bde23e4ad4318
 Physical source path: pstack/skills/blast-radius/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
-Source SHA-256: 5f02db9101ccf26c20254718f0fcd5c2c7ac5d4292b0e0923d0944ac47237aff
+Upstream family README: https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md
+Source SHA-256: 2e10745b97f5862323dcda3b29ca60d56b5c3c98e37020085d26b48efbe0a436
 Published name: cursor-blast-radius
 Decision class: adaptação nominal
 Availability: external connector or routing not demonstrated

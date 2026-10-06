@@ -1,3 +1,9 @@
+## Current source review — 6 October 2026
+
+The complete raw tree is pinned to `df581122cde17e6e27686b5a448bde23e4ad4318`, pstack0.15.15:903files,107physical skills and14agent sources. All107skills have native adapters:99are emitted and8existing operator exclusions stay dormant. The historical global/per-skill pins below retain provenance; refreshed pstack entries and the three additions carry the current per-skill pin. See [refresh evidence](../../reports/cursor-refresh-20261006.md).
+
+`cursor-poteto-help` preserves the help/prompting map using native Codex roles, invocation and requested scheduling. `cursor-origin-api` and `cursor-port-github-app-to-origin` preserve current-spec lookup and planning-only behavior. No installation or runtime activation is implied.
+
 # Complete Cursor source and Codex adapters
 
 Current full upstream pin: `e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a`.

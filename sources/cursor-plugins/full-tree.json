@@ -1,13 +1,18 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/cursor/plugins.git",
-  "commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
-  "tree": "0953514ecbc1a0f38207d2d712ff1c6aee693f5a",
+  "commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+  "tree": "48f4daea97564bb3f4a90905d20f0198ab41d44e",
   "files": {
+    ".claude-plugin/marketplace.json": {
+      "mode": "100644",
+      "git_blob": "8d18083d7fb06c46b129630d783fedebbc0f98a9",
+      "sha256": "8edf2d9ca6d32eedbed82628295a2cacc697022f53e682f903415929c943d8d7"
+    },
     ".cursor-plugin/marketplace.json": {
       "mode": "100644",
-      "git_blob": "e5eba47bc6adad11745a1ff718069d574ad01fce",
-      "sha256": "2d443785d279b38863d50eff0a561a6976848b166b98f174a40bbc3d5463868c"
+      "git_blob": "7e4aa377f155a6c2b7f703cb8a0a7ee2595c7d36",
+      "sha256": "d767cc68936931d9f7e6af6e1ef5b5a18587cfe446c400e396a4bb7b4753c6d7"
     },
     ".github/workflows/validate-plugins.yml": {
       "mode": "100644",
@@ -21,8 +26,8 @@
     },
     "README.md": {
       "mode": "100644",
-      "git_blob": "a0a7acd5ef8e2f819bfd0629c87cf030c1300a2d",
-      "sha256": "1811bdcc286f072e30371aadef0968289c2265a901e1a32d9e2537e6e0b849c4"
+      "git_blob": "7d7e7cb99256bf2878ca016b505688d71e245142",
+      "sha256": "afad05193dfed1d1e6acd84d4dd7f1f524a14f49b866007287b9a61b322307e6"
     },
     "advisor/.cursor-plugin/plugin.json": {
       "mode": "100644",
@@ -1034,6 +1039,51 @@
       "git_blob": "5242f770aed14606b1ce37dbb87e0b65d55f7c9b",
       "sha256": "f952f412996c3ca4d2a81825f4ec587762e891ad6c8123925d0a6b5b97ff3d3e"
     },
+    "origin-apps/.claude-plugin/plugin.json": {
+      "mode": "100644",
+      "git_blob": "ac67f840dd3ee99c95e787ae798b90de5fecef49",
+      "sha256": "ad61a88cf5ff32a1e14e578ea354547fc96d3ff226b6ac26785b9659d292d35e"
+    },
+    "origin-apps/.cursor-plugin/plugin.json": {
+      "mode": "100644",
+      "git_blob": "bace676650146922d9c1c83d7ed7bfe2ea5c6a38",
+      "sha256": "836f317d4f91eac6740ec164fdb7b7012b32eb407466b595e74147836b1892c0"
+    },
+    "origin-apps/CHANGELOG.md": {
+      "mode": "100644",
+      "git_blob": "0becd4d61236dde69a86b46a5d9c7cbb47312a60",
+      "sha256": "8ea808feb062f1ede2cd0775a4e38cb2138edba338f9b31ef5e2ec1427a1fb5d"
+    },
+    "origin-apps/LICENSE": {
+      "mode": "100644",
+      "git_blob": "ca2bba771cd39dbef6acf96b52481133983451f3",
+      "sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0"
+    },
+    "origin-apps/README.md": {
+      "mode": "100644",
+      "git_blob": "272a728d86eaf40fba480dd82928b66aef382882",
+      "sha256": "f40792a179d217d54a95b32a272b3e543eb49800433b06e66d14b4216c2c5088"
+    },
+    "origin-apps/plugin.json": {
+      "mode": "100644",
+      "git_blob": "5f0961dbe0ff28c79a7babc2cdf5e11c0afbe2dd",
+      "sha256": "36f99b1835b0b4fc9bfb2e32c2bc710e22b4848bf8103528f560a4e5b5bacf7d"
+    },
+    "origin-apps/skills/origin-api/SKILL.md": {
+      "mode": "100644",
+      "git_blob": "803dc25a9aafbf97a2306468c114a428f816f61f",
+      "sha256": "97c1d9475a3949d32f8455ac6cb1c935978c272873de8d04816350a5aab66709"
+    },
+    "origin-apps/skills/port-github-app-to-origin/SKILL.md": {
+      "mode": "100644",
+      "git_blob": "0002dcf487e5a60b76ad9d697d569a91d9638713",
+      "sha256": "b4401e45b9a98aacc1dd544d2aa9c782e9a1cecac170489348c3c5ddef71988b"
+    },
+    "origin-apps/skills/port-github-app-to-origin/references/brief.md": {
+      "mode": "100644",
+      "git_blob": "41640b75c78cd69fff7bce5a1babb79f72815fee",
+      "sha256": "26e4e31ee476644cfb54ea84577bc7dc60f49a78c98c044278293914fe167734"
+    },
     "pr-review-canvas/.cursor-plugin/plugin.json": {
       "mode": "100644",
       "git_blob": "03dd9f2c04a30484d2d527a08fcef6ad625f90ca",
@@ -1066,8 +1116,8 @@
     },
     "pstack/.cursor-plugin/plugin.json": {
       "mode": "100644",
-      "git_blob": "0ab7fa1b6a2bbcbb1a25e797e74be5ee63370bed",
-      "sha256": "c17868a6a39a8f7c109fdedf5df7ebcc4d8cde127a10f40c663a8c46adc4087e"
+      "git_blob": "68cc4443afd6b6f4881ab572b779f39d47854d42",
+      "sha256": "7bc736c60985805f70465e044e5adc7028663f72a73deea7fa3e95e52d70dc8e"
     },
     "pstack/.gitignore": {
       "mode": "100644",
@@ -1081,8 +1131,8 @@
     },
     "pstack/README.md": {
       "mode": "100644",
-      "git_blob": "cf64d3602995ddf54f06fb8bf27e3520850d21f2",
-      "sha256": "850eea901004b9ef4633e17c1bd9932863046a021242b4e043907ae534b21fa8"
+      "git_blob": "7227da33bb709bf8744dbde5f3da38016a19350d",
+      "sha256": "7f39feae81103e18b567e1fa5075cba86425cf4697a01be66a7422ef93c2c855"
     },
     "pstack/agents/comment-sicko.md": {
       "mode": "100644",
@@ -1161,58 +1211,58 @@
     },
     "pstack/docs/guide/01-setup.md": {
       "mode": "100644",
-      "git_blob": "1e602f61c81eb1902150b849682b92b8e583fa7c",
-      "sha256": "bbac20e25fb097029e2676ecf3212f4a72f566eaf2b1031b56317aa1e4fdf490"
+      "git_blob": "62420df8255f5f3de03f3977e64bc0f34dbdc073",
+      "sha256": "86d0330f245d16254a2069955f993c15d96cf29cd1a73690a0164074b7ac1190"
     },
     "pstack/docs/guide/02-poteto-mode.md": {
       "mode": "100644",
-      "git_blob": "403cbe8cc9dbc5204c6f9399abcced228f8e76f7",
-      "sha256": "379a1b2c9cd2ba54032b2b142563328d0f3d65039f067863d19b1d4c008737f5"
+      "git_blob": "8341604aebe418077003b10a894ebcaff2a9ce0d",
+      "sha256": "979f61ca3d44cb8e68affda40327d32797e93fa9cc53ced7444c15e2600897e1"
     },
     "pstack/docs/guide/03-understand.md": {
       "mode": "100644",
-      "git_blob": "af985988c2ac9babbabf6e9b4447c2f22a346ee7",
-      "sha256": "16f3fe0f7df092a5c69dac90971ef57e63a8a9ae926eed851285c7bfddc0f3fd"
+      "git_blob": "e15bea0520eff6e03df789a22cd4224daee04bd6",
+      "sha256": "0090afa9b8670adf175466a2a973ff4349e95ed67d2aa8cebdfc55ff4b7382c9"
     },
     "pstack/docs/guide/04-design.md": {
       "mode": "100644",
-      "git_blob": "681d39cff22438b4feb3d40a8d97017af026bc3d",
-      "sha256": "21e820ff73c0b70682aa570a967ede446b4d7caf62e8f391d0dd733ccb74874c"
+      "git_blob": "61d5bbb591c93e432fafe77259cd62a7aaf1cce8",
+      "sha256": "31f2abe6e9b29feafd1a9eece8f4fe21992f86b8c19ab2e9b5c11a20f36587e7"
     },
     "pstack/docs/guide/05-build-and-clean.md": {
       "mode": "100644",
-      "git_blob": "c38bc44a39fe5e6ace2cd228f631c7eb57ecccf3",
-      "sha256": "6bd421b43a3cf9fec3cd201fd40ce65fd8c657264eac48b0c9a175b6afd7c252"
+      "git_blob": "fc48a46df4f3e7f980522d40571367d4b809733b",
+      "sha256": "a93cc7771f7b35c7b54d0120b6f66e8367794ce6791237e889a30e7585c190fa"
     },
     "pstack/docs/guide/06-verify-and-ship.md": {
       "mode": "100644",
-      "git_blob": "d96c76612c647bfd33270d510440991946c508ed",
-      "sha256": "c93cd50c0359ce875a82b3f7d64eab102a4b0815dbbecdb8e0e5e910bd2d18e9"
+      "git_blob": "007ea2cab45724e48e0ab8f52e52bf7957f694f2",
+      "sha256": "3ef0eed5ea084dfbbaf1b1ae9e08d84f2c8a2b536ffb3ef5226710bf105f70e6"
     },
     "pstack/docs/guide/07-overnight.md": {
       "mode": "100644",
-      "git_blob": "9ff66b7706041179ff3661213939a961eb196212",
-      "sha256": "5033d61e8b4b6fb0b2304b2132f26bf0b6aee685aa4ed53a76a73cf0ac1c3557"
+      "git_blob": "cbad0672355927da4aa86547c5e5e108b354a4e2",
+      "sha256": "d7bd33a3d880768688dff4c1c2b5481ca9f0f194f5d97e44b65c9f96624d3ff0"
     },
     "pstack/docs/guide/08-principles.md": {
       "mode": "100644",
-      "git_blob": "283a5e66b99917c12ca88f8c3e3e70ad69342062",
-      "sha256": "a103e293dd6d9513f425feac39547f0c2c049300f36704d80b6d49c958e5a4bb"
+      "git_blob": "0aaec930c3e6ca6a014087194d519048dd52b764",
+      "sha256": "73c3db659d356d4aa6d7674d30d0db46fab2bdd60152fca717c2d1772a042bdc"
     },
     "pstack/docs/guide/09-make-it-yours.md": {
       "mode": "100644",
-      "git_blob": "6723069b5108f586575fe5353272ee6567a49b02",
-      "sha256": "b98588a232a38ca7acebbeecb95ac771df1981aed662dcb45c96b4b66ed20ec0"
+      "git_blob": "321caaf9169aba31c69996fcf0de9c9423b24188",
+      "sha256": "157e0c20ad3c657857c2fbbea3afd26895b71b8f68475bc56f4c382dcdd0e118"
     },
     "pstack/docs/guide/10-recipes-and-pitfalls.md": {
       "mode": "100644",
-      "git_blob": "da0af5e6f7984d24818ef1cd28f518d0014da788",
-      "sha256": "a4662cd98870f08c6abe117a832abe37670ee84f8ed25dcbe7e99ef4eb8e05e0"
+      "git_blob": "68751e7c02bde6e7b0620b9469c0e10b5e022168",
+      "sha256": "c652474764b08da4a6364d85f5d03cf1fc1cf35e9d7c549348fb66e2d09f7b1f"
     },
     "pstack/docs/guide/README.md": {
       "mode": "100644",
-      "git_blob": "564eee1d5b43729d57caca4fddcef45d3dffdef5",
-      "sha256": "125f870a93bf830d45bda187f585cec4508cc9ca5121271af58adbe937bbe54f"
+      "git_blob": "627bfb222f5a6b0f544809de2ef43ec056ee684f",
+      "sha256": "49d92cfe91e01c04bd1150e5b000ee4fd4dfda8ce789b66a9dda98f7e5456e00"
     },
     "pstack/docs/guide/images/design.jpg": {
       "mode": "100644",
@@ -1246,8 +1296,8 @@
     },
     "pstack/skills/architect/SKILL.md": {
       "mode": "100644",
-      "git_blob": "2bd58a7d46f1899f107f3c502f6ddcfbd6717f99",
-      "sha256": "741901140ee382ebf93263a7ed03c6ee3719e578416d81afcd195876fa16c496"
+      "git_blob": "c9c0726f57556f4c26bd7e7df5314ba15b3f1ac9",
+      "sha256": "922238947195f2fb825e90688bb6cfa520b81a35a7bee12223c73a6cf96ae64b"
     },
     "pstack/skills/architect/references/design-red-flags.md": {
       "mode": "100644",
@@ -1261,13 +1311,13 @@
     },
     "pstack/skills/architect/references/runner-prompt.md": {
       "mode": "100644",
-      "git_blob": "580ec47a5df4259a6a9ace5c452e33092053bb90",
-      "sha256": "983bf2820cc14ed8ecab6e448e1033e5cfe6031967d0a9287b48c7fa9c33d925"
+      "git_blob": "b1ad21aef22e80d718c361787190b599eb359d6c",
+      "sha256": "21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e"
     },
     "pstack/skills/arena/SKILL.md": {
       "mode": "100644",
-      "git_blob": "e50356e2f97608dbb48d9c1cd75af6d70b3f7059",
-      "sha256": "e3a1f6c49a08b7e0b92134e53300d146f1f22ba83386d2019926e736df421851"
+      "git_blob": "bd260a064d6e07a06073df6841e3d180d643372a",
+      "sha256": "6e17736b5228b661569c3af054f8302c55cf9bf1649447652d53705cce38bed6"
     },
     "pstack/skills/automate-me/SKILL.md": {
       "mode": "100644",
@@ -1281,8 +1331,8 @@
     },
     "pstack/skills/blast-radius/SKILL.md": {
       "mode": "100644",
-      "git_blob": "1713b283d477530be64e925ede2bdbe5ce2d6e31",
-      "sha256": "5f02db9101ccf26c20254718f0fcd5c2c7ac5d4292b0e0923d0944ac47237aff"
+      "git_blob": "b296cce0d746260a53c16e3671cb05bacfe82daf",
+      "sha256": "2e10745b97f5862323dcda3b29ca60d56b5c3c98e37020085d26b48efbe0a436"
     },
     "pstack/skills/bro/SKILL.md": {
       "mode": "100644",
@@ -1321,8 +1371,8 @@
     },
     "pstack/skills/how/SKILL.md": {
       "mode": "100644",
-      "git_blob": "cd22fff659f14822ad2f485f711a355b6da0668d",
-      "sha256": "d31805589c7f6a63a6db6c9fadebbd79fb9660682cf1654e9b2e5e1e7cd30bc0"
+      "git_blob": "139cac5e4dce5d5889daaf77faa8d5f81dd87318",
+      "sha256": "7e0d902484a90eba73dcf518bff478dc5b962b456d23c3d0a188c2ce36b236d8"
     },
     "pstack/skills/how/references/explainer-prompt.md": {
       "mode": "100644",
@@ -1336,8 +1386,8 @@
     },
     "pstack/skills/interrogate/SKILL.md": {
       "mode": "100644",
-      "git_blob": "bd82e5b179f186e1cd7913dd112db9f8b07b4846",
-      "sha256": "59d498c3e9848a24b2d105eb3f05b808aa4152adf4cb1de7bbb6aff4f4cd9b68"
+      "git_blob": "bac0049e40b624343537d12fb8e13a974a5f376a",
+      "sha256": "2f7e570ec23791ed2e485a09c98ed0597c46035e2050b351b84d3dc760ddd71f"
     },
     "pstack/skills/interrogate/references/code-quality-review.md": {
       "mode": "100644",
@@ -1374,10 +1424,25 @@
       "git_blob": "3b3e76295a7ad66806dcc683e4de92fb25690f8b",
       "sha256": "5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05"
     },
+    "pstack/skills/poteto-help/SKILL.md": {
+      "mode": "100644",
+      "git_blob": "a97ecddf8953b92bda7d8a8cc070faf1d68abc79",
+      "sha256": "ea71bcb15c023a5d9cc70686e4812144687ffe03bf80d85cc480af3e0b181d1e"
+    },
+    "pstack/skills/poteto-help/references/prompting.md": {
+      "mode": "100644",
+      "git_blob": "6b72b2e6081fdb78a3261bd77cf7334596d1ee20",
+      "sha256": "463f450c44a60afd001a2f69fdf8a5dea174351f339369b12ec3c41515e564d3"
+    },
+    "pstack/skills/poteto-help/references/recipes.md": {
+      "mode": "100644",
+      "git_blob": "73118e2a2d2d025938d7b53b541b37cb1fe9c449",
+      "sha256": "1872323419a3e5c7783b1933f7a180ca26c25a6e1f4ec83bd65e091ebbfb812b"
+    },
     "pstack/skills/poteto-mode/SKILL.md": {
       "mode": "100644",
-      "git_blob": "90bfebeecd3b8344eee39d08803a3e2a0f09e3c9",
-      "sha256": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d"
+      "git_blob": "de51c56164ff3da8f958437e207d14cec7d7fe99",
+      "sha256": "31cd02290360ce63564ef22b74d69fc6d90e62181d05a644cbed8f6c47cc9412"
     },
     "pstack/skills/poteto-mode/playbooks/authoring-a-skill.md": {
       "mode": "100644",
@@ -1516,8 +1581,8 @@
     },
     "pstack/skills/poteto-mode/scripts/orch/orch.test.ts": {
       "mode": "100644",
-      "git_blob": "9c234de724991083b4644e906a5f1358f8ef8dcc",
-      "sha256": "174b86d21ff51ccd28d1a8c938cb2e0c6fa287b209d4ca6c03932fcb1b53372e"
+      "git_blob": "538775e37f3ac6fd2dd128883b7f7fe51c1316d5",
+      "sha256": "773153ac74de6eb15f58d2682f487f5f30672d7efe3ef1d24a131aa9129d279b"
     },
     "pstack/skills/poteto-mode/scripts/orch/orch.ts": {
       "mode": "100755",
@@ -1726,8 +1791,8 @@
     },
     "pstack/skills/reflect/SKILL.md": {
       "mode": "100644",
-      "git_blob": "cb270acc507aeaeab7c37db11fc8130cbb2f93f4",
-      "sha256": "36efa48cc4ec2ba6f8131651aae24c6321682b098ed47a1069a7509462bf4a84"
+      "git_blob": "5ac697a2cc4cd4d066772b76855848a49a8b33c6",
+      "sha256": "31b8fb866ebe084e7fb7f16dc0ea46ab84ffdc838d54f948edc78556f301a497"
     },
     "pstack/skills/reflect/references/divergent-reviewer.md": {
       "mode": "100644",
@@ -1751,8 +1816,8 @@
     },
     "pstack/skills/setup-pstack/SKILL.md": {
       "mode": "100644",
-      "git_blob": "1009e73c6116c8f6c24b5870c8f0600ae144b631",
-      "sha256": "125dd0c8f588782cfb271efae8f97a0719e43e79f56b3495c095f460bcee6389"
+      "git_blob": "90a9e575397fb59f4d9a47e6157c2106f4b4a5e2",
+      "sha256": "d61b47256a18155a81c8e5ef95e3cc6569ce8c18317c35c4dd9c8015cf68cb59"
     },
     "pstack/skills/show-me-your-work/SKILL.md": {
       "mode": "100644",
@@ -1806,8 +1871,8 @@
     },
     "pstack/skills/why/SKILL.md": {
       "mode": "100644",
-      "git_blob": "daac2c734a8f8fe43d30663054d694066f2b41ec",
-      "sha256": "2a852ec8680920109d2b56538b027c52867896a597250ac5d18a13e0b42e5b06"
+      "git_blob": "a78076f9d492dbdb8b87136cf9d657a1b97659f7",
+      "sha256": "442215bf70e491d4d31bd200c197f2ec447445df38e074c40880fc4bf30a1f9e"
     },
     "pstack/skills/why/references/epistemics.md": {
       "mode": "100644",
@@ -3991,13 +4056,13 @@
     },
     "third_party/statsig/.cursor-plugin/plugin.json": {
       "mode": "100644",
-      "git_blob": "d0b20df4be8df86575d5b34b64d516c717ff7c9e",
-      "sha256": "e719da92a33809540e4b6aee46792d665e492d4375f53203163a38aae901819b"
+      "git_blob": "5f506faad27ba7c08b555eea3cfe80a00f3ac45d",
+      "sha256": "be132320feb97254f98334e620d31c820914048dea211528a24d269810028e29"
     },
     "third_party/statsig/CHANGELOG.md": {
       "mode": "100644",
-      "git_blob": "bb8b8f45b90c784efed3918fbd9b9bc56bd57cb6",
-      "sha256": "7ed6cd7b2a86a74bd88e29565a9d89c35ae7e06be3b5723b7523468819cf2c93"
+      "git_blob": "30c89755e58b4b1cb1d930e442eebb10a595c521",
+      "sha256": "be8ffb376b47c6c53f8621af4d5df21888ffa86e0780340512880f57d5ec9100"
     },
     "third_party/statsig/LICENSE": {
       "mode": "100644",
@@ -4006,8 +4071,8 @@
     },
     "third_party/statsig/README.md": {
       "mode": "100644",
-      "git_blob": "9182c4c49fa6b5c1695f7370fade42e9908dff16",
-      "sha256": "72b26d3cd0226f69c4e95ad6583b24c083cdc1c591a744721c37e71a58c24f57"
+      "git_blob": "0762d14a9f93e238e33e6fcc893550d3f6bcfd17",
+      "sha256": "b8ba1a7fdfae2a12e27fa3c42f257d9a8406e4ef2813fdb9a7d332ad9b63f6fd"
     },
     "third_party/statsig/assets/logo.png": {
       "mode": "100644",
@@ -4016,8 +4081,8 @@
     },
     "third_party/statsig/mcp.json": {
       "mode": "100644",
-      "git_blob": "368a7b1420022d21cccb3e3fef31db3fe1fdc3ab",
-      "sha256": "28ec5fa7817610fad2d524fbd1fb07f24a9c2af785d2f339451981a5da341ecd"
+      "git_blob": "e520c31f4928cdcb190fcfd9f22a974e89568025",
+      "sha256": "b9479d09532127822b79bfeb4890ecccfa536492fafcf0083bd6ba03741641a9"
     },
     "third_party/teams/.cursor-plugin/plugin.json": {
       "mode": "100644",

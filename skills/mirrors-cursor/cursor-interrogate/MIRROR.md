@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: df581122cde17e6e27686b5a448bde23e4ad4318
 Physical source path: pstack/skills/interrogate/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
-Source SHA-256: 59d498c3e9848a24b2d105eb3f05b808aa4152adf4cb1de7bbb6aff4f4cd9b68
+Upstream family README: https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md
+Source SHA-256: 2f7e570ec23791ed2e485a09c98ed0597c46035e2050b351b84d3dc760ddd71f
 Published name: cursor-interrogate
 Decision class: adaptação funcional
 Availability: Bounded native same-scope two-reviewer review and separate PR #66 case observed; requested model selections accepted, effective backend model readback and automatic trigger unproven.

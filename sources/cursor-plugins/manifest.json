@@ -990,10 +990,10 @@
       "dependencies_or_limitations": "supporting files in this skill: references/design-red-flags.md, references/rationale-template.md, references/runner-prompt.md",
       "family": "pstack",
       "files": {
-        "SKILL.md": "741901140ee382ebf93263a7ed03c6ee3719e578416d81afcd195876fa16c496",
+        "SKILL.md": "922238947195f2fb825e90688bb6cfa520b81a35a7bee12223c73a6cf96ae64b",
         "references/design-red-flags.md": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce",
         "references/rationale-template.md": "0cedfccdc7b47fc881febd5a8293eecbc542c20f8df825639904a8102d2eb5d3",
-        "references/runner-prompt.md": "983bf2820cc14ed8ecab6e448e1033e5cfe6031967d0a9287b48c7fa9c33d925"
+        "references/runner-prompt.md": "21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1005,7 +1005,7 @@
       "upstream_purpose": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
       "upstream_skill": "architect",
       "validation_requirement": "frontmatter and references; explicit-only invocation policy; Ground how/why before Sketch; two distinct candidates, independent judge, synthesis and verified disposable local result; separate automatic trigger and production gaps",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "Bounded native local Arena observed: N=2 isolated design candidates, independent cross-judge, base/grafts, runtime verification after a drift correction; automatic trigger, Work cloud and other task shapes remain unproven.",
@@ -1016,7 +1016,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "e3a1f6c49a08b7e0b92134e53300d146f1f22ba83386d2019926e736df421851"
+        "SKILL.md": "6e17736b5228b661569c3af054f8302c55cf9bf1649447652d53705cce38bed6"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1028,7 +1028,7 @@
       "upstream_purpose": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
       "upstream_skill": "arena",
       "validation_requirement": "frontmatter and links; explicit-only native invocation policy; isolated candidates, cross-judge, base/graft and verified local result; separately label cloud and automatic trigger gaps",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven",
@@ -1084,7 +1084,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "5f02db9101ccf26c20254718f0fcd5c2c7ac5d4292b0e0923d0944ac47237aff"
+        "SKILL.md": "2e10745b97f5862323dcda3b29ca60d56b5c3c98e37020085d26b48efbe0a436"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1096,7 +1096,7 @@
       "upstream_purpose": "Find what a change could break somewhere else before it ships, beyond the diff, and prove the one fact it's safe because of by running real code instead of writing it up. Use for 'blast radius of X', 'what could this break', or reviewing a small diff you don't trust.",
       "upstream_skill": "blast-radius",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "external connector or routing not demonstrated",
@@ -1200,9 +1200,9 @@
       "dependencies_or_limitations": "supporting files in this skill: references/explainer-prompt.md, references/explorer-prompt.md; delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
       "family": "pstack",
       "files": {
-        "SKILL.md": "d31805589c7f6a63a6db6c9fadebbd79fb9660682cf1654e9b2e5e1e7cd30bc0",
-        "references/explainer-prompt.md": "ddb89cebefc24e2b54517a331aedfe045b6971e101f45c71b8cef4cccff45bff",
-        "references/explorer-prompt.md": "a3b44a6e5bb16a6d4d1cac19db8ed5322ffd5f5f5d45baca4e73990ca096f8be"
+        "SKILL.md": "7e0d902484a90eba73dcf518bff478dc5b962b456d23c3d0a188c2ce36b236d8",
+        "references/explorer-prompt.md": "a3b44a6e5bb16a6d4d1cac19db8ed5322ffd5f5f5d45baca4e73990ca096f8be",
+        "references/explainer-prompt.md": "ddb89cebefc24e2b54517a331aedfe045b6971e101f45c71b8cef4cccff45bff"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1214,7 +1214,7 @@
       "upstream_purpose": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
       "upstream_skill": "how",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "Bounded native same-scope two-reviewer review and separate PR #66 case observed; requested model selections accepted, effective backend model readback and automatic trigger unproven.",
@@ -1225,11 +1225,11 @@
       "dependencies_or_limitations": "supporting files in this skill: references/code-quality-review.md, references/lead-judgment.md, references/reviewer-prompt.md, references/rubric.md; delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
       "family": "pstack",
       "files": {
-        "SKILL.md": "59d498c3e9848a24b2d105eb3f05b808aa4152adf4cb1de7bbb6aff4f4cd9b68",
+        "SKILL.md": "2f7e570ec23791ed2e485a09c98ed0597c46035e2050b351b84d3dc760ddd71f",
         "references/code-quality-review.md": "79162fda183eafd40d51661fbb5e151c7ba250f89e506ba17f5bd135dcbd50a8",
-        "references/lead-judgment.md": "6e5bdf5670eb34017692e9b6c546f36ac7552e6bb9f3f2f3429164fcc46a9361",
         "references/reviewer-prompt.md": "e0598e254792b56de39bb16b1e6db559b03a522fdc54b98f942d254090920ae6",
-        "references/rubric.md": "a85aa801abbaf14434f00579440abc0d8e2723227ba8bf57de7cca8d6e7d2f25"
+        "references/rubric.md": "a85aa801abbaf14434f00579440abc0d8e2723227ba8bf57de7cca8d6e7d2f25",
+        "references/lead-judgment.md": "6e5bdf5670eb34017692e9b6c546f36ac7552e6bb9f3f2f3429164fcc46a9361"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1241,7 +1241,7 @@
       "upstream_purpose": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
       "upstream_skill": "interrogate",
       "validation_requirement": "frontmatter and relative references; explicit-only policy; at least two distinct requested native reviewers on same scope/rubric, separate reports, lead judgment, no auto-apply; PARTIAL on missing configured reviewer; effective model readback gap labeled",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "bounded explicit-only native maintenance adapter proven by CLI Doctor/feature drives and a disposable web target with two read-only source-wave receipts and clean re-drives; project-local feature-map reconciliation, persisted before/after evidence, cleanup ownership and second execution are observed; production target parity, reusable host activation and action-time reset remain unproven",
@@ -1329,51 +1329,51 @@
       "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); concrete mirror dependencies `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` are conditional and require availability checks; cloud-capable task execution is conditional; bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
       "family": "pstack",
       "files": {
-        "SKILL.md": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d",
-        "playbooks/authoring-a-skill.md": "f6a13a445c360b48d6cd72780ac01955f45b82826476efe0e67c7559329407aa",
-        "playbooks/autonomous-run.md": "15e54ad3ac92565613980772d8708de6e19cc4690bfd4bb3fb8836522407377b",
-        "playbooks/autopilot-full.md": "05ca30a16242c19d0c78ba1e88cca66f858d75252cb154fd740099fe292de802",
-        "playbooks/autopilot-stack.md": "007c0a3b12011954a224f54773ef4ad7b75918be0a311914c1b51ad4e794c1e5",
-        "playbooks/babysit.md": "a0346c37c2313f36a863b80f66ee7b98059c2242adf74fc7b3e48abdb9ec6f5a",
+        "SKILL.md": "31cd02290360ce63564ef22b74d69fc6d90e62181d05a644cbed8f6c47cc9412",
+        "references/bugbot-triage.md": "b2d146c770d8d3593e1ef3d77b668039b8e1f78093ea1a86f1d45d7f99614309",
         "playbooks/bug-fix.md": "018bbc146ae19145caa6c7e70591fee081b64447dda1c1c4b681c9974d928b13",
-        "playbooks/eval.md": "b862bfa2fae2399abf047a8e80d3e3dddb64003af96fb1cebb625216131e36bb",
-        "playbooks/feature.md": "3a62cc4a8cbcf144bb9dd05f05420a15be0d38b784d3b141bb730a5852f50a62",
-        "playbooks/hillclimb.md": "244f289898fe67a458065e90fe8217c916c5acf61cdee8975ade3f9831a12e91",
-        "playbooks/investigation.md": "dc66bcf6af3a074fc7f67aa5e12b93ef571a4fb4d8e17f2f1af5ae5359f42e46",
-        "playbooks/multi-phase-plan.md": "27d310e3fc3937a60b8fcbe1318f9d249a7477a722907bf85b3e4eb3dc436b11",
-        "playbooks/opening-a-pr.md": "ab40de7163c1c6e274f46ee559b2e53ef45673703f601f13f4931c199e6fb90f",
-        "playbooks/orchestrate.md": "d42b4375f1bd4ce23da0b575a198571a2117df7eea10c3c9fc6d92ae1053f7be",
-        "playbooks/pause-safely.md": "77968cfe5f4a71a8cd33e0ae8ffcdbd88dd693a212c240457773e6c40c96c21d",
-        "playbooks/perf-issue.md": "2b88ad0f880e4d4d755ac19fe52414d6631d6baa816d060f53cf0a7429d7e14a",
-        "playbooks/prototype.md": "7aa1f52c691c3d46d5afc527b23f90977fce869ce33573c73c81a4c7f0cde962",
-        "playbooks/refactoring.md": "50f4f7d3d301551f8b8a57c3303c99958c5ca630ae0d0051823b6987c0eb5b96",
-        "playbooks/runtime-forensics.md": "594f02c40c243a346e1f57b688ecf2ed5e882f21b3d24ed2204d1ac6f1c24a8a",
-        "playbooks/session-pickup.md": "1604fb463f7c7410d43fa024ca76c1c1824c166a01fd69d61f073d06fdca2a47",
         "playbooks/shipping.md": "19f3f6803a7bbe9ff04f624b03e3b55f07ac0a05e991aa00d5fe51239b920b2a",
         "playbooks/trace-forensics.md": "137ce3984fb96e45971fdff4d3c79fa4ccc647c5b30ae4945783b9fb23f8cec7",
-        "playbooks/visual-parity.md": "950ca51999a6454c98eee6bcbc3d1bbe501a4e3a5d5439b6f6ddc378991b256c",
+        "playbooks/multi-phase-plan.md": "27d310e3fc3937a60b8fcbe1318f9d249a7477a722907bf85b3e4eb3dc436b11",
+        "playbooks/autonomous-run.md": "15e54ad3ac92565613980772d8708de6e19cc4690bfd4bb3fb8836522407377b",
+        "playbooks/authoring-a-skill.md": "f6a13a445c360b48d6cd72780ac01955f45b82826476efe0e67c7559329407aa",
+        "playbooks/session-pickup.md": "1604fb463f7c7410d43fa024ca76c1c1824c166a01fd69d61f073d06fdca2a47",
+        "playbooks/eval.md": "b862bfa2fae2399abf047a8e80d3e3dddb64003af96fb1cebb625216131e36bb",
+        "playbooks/prototype.md": "7aa1f52c691c3d46d5afc527b23f90977fce869ce33573c73c81a4c7f0cde962",
+        "playbooks/investigation.md": "dc66bcf6af3a074fc7f67aa5e12b93ef571a4fb4d8e17f2f1af5ae5359f42e46",
         "playbooks/worktree-cleanup.md": "fc464dc4121926df1704f483c5feca83717c0a40b4651d3e11bd3aedd89441b6",
-        "references/bugbot-triage.md": "b2d146c770d8d3593e1ef3d77b668039b8e1f78093ea1a86f1d45d7f99614309",
-        "scripts/bootstrap.ts": "ccd2ed08fd9da9d0d942e5f2491cfc74bb92d8a08fa51755e0da1ac8de287361",
+        "playbooks/opening-a-pr.md": "ab40de7163c1c6e274f46ee559b2e53ef45673703f601f13f4931c199e6fb90f",
+        "playbooks/autopilot-full.md": "05ca30a16242c19d0c78ba1e88cca66f858d75252cb154fd740099fe292de802",
+        "playbooks/hillclimb.md": "244f289898fe67a458065e90fe8217c916c5acf61cdee8975ade3f9831a12e91",
+        "playbooks/pause-safely.md": "77968cfe5f4a71a8cd33e0ae8ffcdbd88dd693a212c240457773e6c40c96c21d",
+        "playbooks/autopilot-stack.md": "007c0a3b12011954a224f54773ef4ad7b75918be0a311914c1b51ad4e794c1e5",
+        "playbooks/babysit.md": "a0346c37c2313f36a863b80f66ee7b98059c2242adf74fc7b3e48abdb9ec6f5a",
+        "playbooks/orchestrate.md": "d42b4375f1bd4ce23da0b575a198571a2117df7eea10c3c9fc6d92ae1053f7be",
+        "playbooks/feature.md": "3a62cc4a8cbcf144bb9dd05f05420a15be0d38b784d3b141bb730a5852f50a62",
+        "playbooks/visual-parity.md": "950ca51999a6454c98eee6bcbc3d1bbe501a4e3a5d5439b6f6ddc378991b256c",
+        "playbooks/perf-issue.md": "2b88ad0f880e4d4d755ac19fe52414d6631d6baa816d060f53cf0a7429d7e14a",
+        "playbooks/runtime-forensics.md": "594f02c40c243a346e1f57b688ecf2ed5e882f21b3d24ed2204d1ac6f1c24a8a",
+        "playbooks/refactoring.md": "50f4f7d3d301551f8b8a57c3303c99958c5ca630ae0d0051823b6987c0eb5b96",
         "scripts/bun.lock": "667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46",
-        "scripts/check-plan.mjs": "4f9432d9989880b6afc2bdda503d5b12a9d07d357ecf31936b7ab5e83bc80523",
-        "scripts/orch/orch.test.ts": "174b86d21ff51ccd28d1a8c938cb2e0c6fa287b209d4ca6c03932fcb1b53372e",
-        "scripts/orch/orch.ts": "f091687df627a0b75fabd54af58945a9cd6c7039ef0622012ac9ed60cd8ec434",
-        "scripts/orch/store.ts": "0eae7cf69282e827b1227166f2e32cee3560f2f3e65b3f1f2faf6fb83d3b4c5b",
         "scripts/package.json": "d1f815091209d49763775cc188e8e06ff32d5fec648bffd2272bc25a165e87c3",
-        "scripts/watch-pr/cli.test.ts": "a35592b4c6da96caf8d47987e9cd503fab6c7774ab87d11a43f24b4b5df2a9d1",
-        "scripts/watch-pr/cli.ts": "89c08863089181a232be782c4b2ed90a1552f44aeecb0dcb7aac2c623620e680",
-        "scripts/watch-pr/fakes.test-helper.ts": "e53e31b7f03068063f53a99a3591b052aaed66e4e2b196b3a364980f60324ab1",
-        "scripts/watch-pr/github.test.ts": "0cbce011050522938523e36bb42a260e92b812dcd2076930fa681672ad316b24",
-        "scripts/watch-pr/github.ts": "d1bbbafbe8e2c703c84da2029de7f2c4011412512f8cf65a42100f46bcb92c8a",
-        "scripts/watch-pr/policy.test.ts": "a9fedb25feefd1f57ef6a662f80c99018690170a3a8070773a08eaf694d1d3d9",
-        "scripts/watch-pr/policy.ts": "68d240505852cf23c9b2dea463342e9e61243f486b3cc86c735d140f9ee7be49",
-        "scripts/watch-pr/render.ts": "2b709e86628d5b8fdb61f860e60ababc342b0626c67576305442cf548283a604",
-        "scripts/watch-pr/tsconfig.json": "1ecccc72320b086c63ce3f73c959896fd747363e63553b3b1136296ea4069e45",
-        "scripts/watch-pr/types.compile.ts": "621af4c9a664fbf699a9737efccdc248abb416df8819c9dc5f824beae2b9b1d6",
-        "scripts/watch-pr/types.ts": "64ba6221e3bfe61bbb292337d199cdec6309455477280efb060203dba34e0e91",
+        "scripts/check-plan.mjs": "4f9432d9989880b6afc2bdda503d5b12a9d07d357ecf31936b7ab5e83bc80523",
+        "scripts/worktree-audit.sh": "95b8530f3c0ccada8cabc4b0727c052fbc85c141531375aaace65c427af8aecc",
+        "scripts/bootstrap.ts": "ccd2ed08fd9da9d0d942e5f2491cfc74bb92d8a08fa51755e0da1ac8de287361",
         "scripts/watch-pr/watch-pr": "d955603be6cc0e8b8ffcec722f635192b2261410b1f2929abea94480e47eb5d4",
-        "scripts/worktree-audit.sh": "95b8530f3c0ccada8cabc4b0727c052fbc85c141531375aaace65c427af8aecc"
+        "scripts/watch-pr/policy.test.ts": "a9fedb25feefd1f57ef6a662f80c99018690170a3a8070773a08eaf694d1d3d9",
+        "scripts/watch-pr/github.ts": "d1bbbafbe8e2c703c84da2029de7f2c4011412512f8cf65a42100f46bcb92c8a",
+        "scripts/watch-pr/types.compile.ts": "621af4c9a664fbf699a9737efccdc248abb416df8819c9dc5f824beae2b9b1d6",
+        "scripts/watch-pr/cli.ts": "89c08863089181a232be782c4b2ed90a1552f44aeecb0dcb7aac2c623620e680",
+        "scripts/watch-pr/github.test.ts": "0cbce011050522938523e36bb42a260e92b812dcd2076930fa681672ad316b24",
+        "scripts/watch-pr/fakes.test-helper.ts": "e53e31b7f03068063f53a99a3591b052aaed66e4e2b196b3a364980f60324ab1",
+        "scripts/watch-pr/types.ts": "64ba6221e3bfe61bbb292337d199cdec6309455477280efb060203dba34e0e91",
+        "scripts/watch-pr/policy.ts": "68d240505852cf23c9b2dea463342e9e61243f486b3cc86c735d140f9ee7be49",
+        "scripts/watch-pr/tsconfig.json": "1ecccc72320b086c63ce3f73c959896fd747363e63553b3b1136296ea4069e45",
+        "scripts/watch-pr/render.ts": "2b709e86628d5b8fdb61f860e60ababc342b0626c67576305442cf548283a604",
+        "scripts/watch-pr/cli.test.ts": "a35592b4c6da96caf8d47987e9cd503fab6c7774ab87d11a43f24b4b5df2a9d1",
+        "scripts/orch/orch.test.ts": "773153ac74de6eb15f58d2682f487f5f30672d7efe3ef1d24a131aa9129d279b",
+        "scripts/orch/orch.ts": "f091687df627a0b75fabd54af58945a9cd6c7039ef0622012ac9ed60cd8ec434",
+        "scripts/orch/store.ts": "0eae7cf69282e827b1227166f2e32cee3560f2f3e65b3f1f2faf6fb83d3b4c5b"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1394,7 +1394,7 @@
           "loading": "explicit profile installation; fresh-session selection not proven"
         }
       ],
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "content available; live selection not demonstrated",
@@ -1961,11 +1961,11 @@
       "dependencies_or_limitations": "supporting files in this skill: references/divergent-reviewer.md, references/judgment-reviewer.md, references/synthesizer.md, references/tooling-reviewer.md; delegation/subagent role is part of the skill contract; use native bounded delegation or a documented sequential fallback",
       "family": "pstack",
       "files": {
-        "SKILL.md": "36efa48cc4ec2ba6f8131651aae24c6321682b098ed47a1069a7509462bf4a84",
-        "references/divergent-reviewer.md": "221dfc0abf7cbcd25e1da3cd87323f5d1050fc3bf652e096d093584e183c98fb",
-        "references/judgment-reviewer.md": "a40ecb9b28bd2a3491e11a541157fe58efe158e0eda7b61a5006c14590aabe61",
+        "SKILL.md": "31b8fb866ebe084e7fb7f16dc0ea46ab84ffdc838d54f948edc78556f301a497",
         "references/synthesizer.md": "2f76c847eb45b182dc6fbcbf7d96c8ee7e2986ecfd9e0d640fec44e3cc5a617c",
-        "references/tooling-reviewer.md": "bc49ced90fa81eaba3083b88aeb430d900a6d8f14ff40c1d6b52263bacfc77b6"
+        "references/judgment-reviewer.md": "a40ecb9b28bd2a3491e11a541157fe58efe158e0eda7b61a5006c14590aabe61",
+        "references/tooling-reviewer.md": "bc49ced90fa81eaba3083b88aeb430d900a6d8f14ff40c1d6b52263bacfc77b6",
+        "references/divergent-reviewer.md": "221dfc0abf7cbcd25e1da3cd87323f5d1050fc3bf652e096d093584e183c98fb"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1977,7 +1977,7 @@
       "upstream_purpose": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
       "upstream_skill": "reflect",
       "validation_requirement": "frontmatter/relative refs, explicit-only policy, three distinct lenses plus synthesis on one scoped transcript, adversarial prompt-isolation proof, source findings retained, no auto-edit, generated security scan",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven",
@@ -1988,7 +1988,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "125dd0c8f588782cfb271efae8f97a0719e43e79f56b3495c095f460bcee6389"
+        "SKILL.md": "d61b47256a18155a81c8e5ef95e3cc6569ce8c18317c35c4dd9c8015cf68cb59"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -2000,7 +2000,7 @@
       "upstream_purpose": "Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", \"pstack budget\", or changing pstack's model choices.",
       "upstream_skill": "setup-pstack",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger, budget e fallback de família; teste de comportamento no host Codex",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved",
@@ -2174,19 +2174,19 @@
       "dependencies_or_limitations": "supporting files in this skill: references/epistemics.md, references/investigator-prompt.md, references/source-playbook.md, references/sources/code-archaeology.md, references/sources/databricks.md, references/sources/datadog.md, references/sources/incident-postmortem.md, references/sources/linear.md, references/sources/notion.md, references/sources/sentry.md (+2); this skill's workflow assumes MCP/tool discovery; native connector availability and permissions must be explicit",
       "family": "pstack",
       "files": {
-        "SKILL.md": "2a852ec8680920109d2b56538b027c52867896a597250ac5d18a13e0b42e5b06",
-        "references/epistemics.md": "fcc0f559c072832c869a5ada72434b4849320a637ae63c09e8ee14f7ad787059",
+        "SKILL.md": "442215bf70e491d4d31bd200c197f2ec447445df38e074c40880fc4bf30a1f9e",
         "references/investigator-prompt.md": "6892956a7ab0b5ee6c4babaf4f793703abe89b350ea7cb9463b4a56eea1c8266",
+        "references/epistemics.md": "fcc0f559c072832c869a5ada72434b4849320a637ae63c09e8ee14f7ad787059",
+        "references/synthesizer-prompt.md": "733a3e9cf897b1aca56aaddeae01a3832e4bfed024c2f602db2d1bf807d7a73b",
         "references/source-playbook.md": "9ae9dcb9d09111c9facc68510331c5aba4aed9b1b057314ff1fc0e166ad3993a",
-        "references/sources/code-archaeology.md": "8c14aa382f0de40829b2668d43e3f54814480bb93a486c9282ada4003f6b9dbd",
-        "references/sources/databricks.md": "236ede7aab6454662a992db088a5393537a5233a4c26719c93188f9e174488f6",
-        "references/sources/datadog.md": "ebe9c07bac28e47757ee7f16fb93b0c01d427a08c501957d047f395a2f37b7e7",
         "references/sources/incident-postmortem.md": "a899470f05f86029630a13a2696491cc708ca7b56a6e822a69ff6e954d6ff8cf",
-        "references/sources/linear.md": "01304e7f1badfcfb78babbb0edcadeb3cc8dd3f713793420cdff24ba190f907c",
-        "references/sources/notion.md": "3bcfa695c49dfad4ac036d5d7181c12585f55ac04f1936198d16ab75a2788997",
-        "references/sources/sentry.md": "6f292bc4fb1548e956f95e1900b9481abf5134254419f1cd9edec95428c82d73",
         "references/sources/slack.md": "58fee61d024b3700b407e7acbed367944720ff05adfddb6954d36c88368f3ba7",
-        "references/synthesizer-prompt.md": "733a3e9cf897b1aca56aaddeae01a3832e4bfed024c2f602db2d1bf807d7a73b"
+        "references/sources/datadog.md": "ebe9c07bac28e47757ee7f16fb93b0c01d427a08c501957d047f395a2f37b7e7",
+        "references/sources/notion.md": "3bcfa695c49dfad4ac036d5d7181c12585f55ac04f1936198d16ab75a2788997",
+        "references/sources/databricks.md": "236ede7aab6454662a992db088a5393537a5233a4c26719c93188f9e174488f6",
+        "references/sources/sentry.md": "6f292bc4fb1548e956f95e1900b9481abf5134254419f1cd9edec95428c82d73",
+        "references/sources/linear.md": "01304e7f1badfcfb78babbb0edcadeb3cc8dd3f713793420cdff24ba190f907c",
+        "references/sources/code-archaeology.md": "8c14aa382f0de40829b2668d43e3f54814480bb93a486c9282ada4003f6b9dbd"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -2198,7 +2198,7 @@
       "upstream_purpose": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "upstream_skill": "why",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
     },
     {
       "availability": "bounded native Codex adaptation demonstrated with explicit limits",
@@ -2494,11 +2494,75 @@
       "upstream_skill": "X MCP guide",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
       "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+    },
+    {
+      "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven",
+      "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação funcional",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "No installation or activation; actual tool availability and operator authority remain required.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "ea71bcb15c023a5d9cc70686e4812144687ffe03bf80d85cc480af3e0b181d1e",
+        "references/recipes.md": "1872323419a3e5c7783b1933f7a180ca26c25a6e1f4ec83bd65e091ebbfb812b",
+        "references/prompting.md": "463f450c44a60afd001a2f69fdf8a5dea174351f339369b12ec3c41515e564d3"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/poteto-help/SKILL.md",
+      "planned_adaptation": "Preserve the complete upstream procedure, map names and host commands to native Codex, and retain explicit invocation policy.",
+      "promotion_reason": "Operator requested current pstack and complete Cursor parity, preserving native Codex behavior.",
+      "publish": true,
+      "published_name": "cursor-poteto-help",
+      "upstream_purpose": "Answer explicit questions about pstack skills, playbooks and principles without starting the proposed work.",
+      "upstream_skill": "poteto-help",
+      "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318"
+    },
+    {
+      "path": "origin-apps/skills/origin-api/SKILL.md",
+      "family": "origin-apps",
+      "upstream_skill": "origin-api",
+      "published_name": "cursor-origin-api",
+      "files": {
+        "SKILL.md": "97c1d9475a3949d32f8455ac6cb1c935978c272873de8d04816350a5aab66709"
+      },
+      "license_path": "origin-apps/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; current public documentation and repository access resolved at invocation; live execution unproven",
+      "upstream_purpose": "Read current Origin API documentation and name exact capability gaps.",
+      "promotion_reason": "Operator requested complete Cursor source parity and native Codex adaptations; no installation.",
+      "validation_requirement": "Full source census, deterministic rendering, namespaced dependency references, source/license hashes and runtime capability boundaries."
+    },
+    {
+      "path": "origin-apps/skills/port-github-app-to-origin/SKILL.md",
+      "family": "origin-apps",
+      "upstream_skill": "port-github-app-to-origin",
+      "published_name": "cursor-port-github-app-to-origin",
+      "files": {
+        "SKILL.md": "b4401e45b9a98aacc1dd544d2aa9c782e9a1cecac170489348c3c5ddef71988b",
+        "references/brief.md": "26e4e31ee476644cfb54ea84577bc7dc60f49a78c98c044278293914fe167734"
+      },
+      "license_path": "origin-apps/LICENSE",
+      "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
+      "source_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+      "publish": true,
+      "declared_for_distribution": true,
+      "decision_classification": "native guidance adaptation; runtime unproven",
+      "availability": "source distributed; current public documentation and repository access resolved at invocation; live execution unproven",
+      "upstream_purpose": "Plan an existing GitHub App port from repository evidence and the current Origin API spec; no implementation or external feedback submission.",
+      "promotion_reason": "Operator requested complete Cursor source parity and native Codex adaptations; no installation.",
+      "validation_requirement": "Full source census, deterministic rendering, namespaced dependency references, source/license hashes and runtime capability boundaries."
     }
   ],
   "snapshot_scope": "104 physical skills, their in-skill support and licenses; 28 agent/hook/rule files; 18 hash-checked Pstack README/guide/image files. Eight operator exclusions retained. Source distribution does not activate runtimes.",
   "upstream_commit": "c1c0a32802223f4be824112dd83d33ad29a8b26c",
-  "pstack_upstream_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+  "pstack_upstream_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
   "upstream_repository": "https://github.com/cursor/plugins.git",
   "support_files": {
     "advisor/agents/advisor-subagent.md": {

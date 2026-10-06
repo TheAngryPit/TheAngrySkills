@@ -17,9 +17,9 @@ def load(name):
 
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
-    assert load('check-cursor-full-tree').verify()['files'] == 890
+    assert load('check-cursor-full-tree').verify()['files'] == 903
     result = load('check-cursor-adaptations').verify()
-    assert result == dict(skills=104, published=96, held_adapted=8, agents_mapped=14,
+    assert result == dict(skills=107, published=99, held_adapted=8, agents_mapped=14,
                           unresolved_links=0, runtime_proof='not claimed')
 
 

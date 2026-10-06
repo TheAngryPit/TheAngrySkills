@@ -66,7 +66,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(f"104 physical, {published_count()} published", result.stdout)
+        self.assertIn(f"107 physical, {published_count()} published", result.stdout)
 
     def test_reviewed_pstack_source_overrides_preserve_the_global_baseline(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
@@ -98,7 +98,13 @@ class CursorMirrorTests(unittest.TestCase):
             "cursor-why",
         }
         expected_names.update({"cursor-add-dictation", "cursor-build-figma", "cursor-dyl-mode", "cursor-dyl-ready-pr", "cursor-dyl-review", "cursor-principle-the-algorithm", "cursor-google-docs", "cursor-google-drive", "cursor-google-sheets", "cursor-google-slides", "cursor-x-money-guide", "cursor-x-mcp-guide"})
-        reported = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+        previous = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+        reported = "df581122cde17e6e27686b5a448bde23e4ad4318"
+        refreshed = {"cursor-architect", "cursor-arena", "cursor-blast-radius", "cursor-how",
+                     "cursor-interrogate", "cursor-poteto-mode", "cursor-reflect",
+                     "cursor-setup-pstack", "cursor-why", "cursor-poteto-help",
+                     "cursor-origin-api", "cursor-port-github-app-to-origin"}
+        expected_names |= refreshed
         self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
         entries = {entry["published_name"]: entry for entry in manifest["skills"]}
         overrides = {
@@ -108,8 +114,8 @@ class CursorMirrorTests(unittest.TestCase):
         }
         self.assertEqual(set(overrides), expected_names)
         self.assertEqual(set(state["source_commit_overrides"]), expected_names)
-        self.assertEqual(set(state["source_commit_overrides"].values()), {reported})
-        self.assertEqual(set(overrides.values()), {reported})
+        self.assertEqual(state["source_commit_overrides"], overrides)
+        self.assertEqual(set(overrides.values()), {previous, reported})
 
         for name in sorted(expected_names):
             entry = entries[name]
@@ -118,20 +124,21 @@ class CursorMirrorTests(unittest.TestCase):
             )
             mirror_root = REPO / ("skills/mirrors-cursor" if entry["publish"] else "sources/cursor-plugins/adapted-held")
             mirror = (mirror_root / name / "MIRROR.md").read_text()
-            self.assertIn(entry["family"], {"pstack", "dyl-stack", "third_party/google-docs", "third_party/google-drive", "third_party/google-sheets", "third_party/google-slides", "third_party/x-money", "third_party/x", "grok-voice"})
-            self.assertEqual(entry["source_commit"], reported)
+            self.assertIn(entry["family"], {"pstack", "dyl-stack", "third_party/google-docs", "third_party/google-drive", "third_party/google-sheets", "third_party/google-slides", "third_party/x-money", "third_party/x", "grok-voice", "origin-apps"})
+            pin = reported if name in refreshed else previous
+            self.assertEqual(entry["source_commit"], pin)
             self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
-            self.assertIn(f"Commit: {reported}\n", mirror)
-            self.assertIn(f"blob/{reported}/{entry['family']}/README.md", mirror)
+            self.assertIn(f"Commit: {pin}\n", mirror)
+            self.assertIn(f"blob/{pin}/{entry['family']}/README.md", mirror)
             readme = overlay.get("codex_contract", {}).get("upstream_readme")
             if readme:
-                self.assertIn(f"blob/{reported}/{entry['family']}/README.md", readme["url"])
+                self.assertIn(f"blob/{pin}/{entry['family']}/README.md", readme["url"])
         setup_readme = json.loads(
             (REPO / "sources/cursor-plugins/overlays/cursor-setup-pstack.json").read_text()
         )["codex_contract"]["upstream_readme"]
         self.assertEqual(
             setup_readme["sha256"],
-            "850eea901004b9ef4633e17c1bd9932863046a021242b4e043907ae534b21fa8",
+            "7f39feae81103e18b567e1fa5075cba86425cf4697a01be66a7422ef93c2c855",
         )
         for entry in manifest["skills"]:
             if entry["published_name"] not in expected_names:
@@ -141,7 +148,7 @@ class CursorMirrorTests(unittest.TestCase):
                 if entry.get("family") == "grok-voice" and entry["published_name"] != "cursor-add-dictation")
         )
         self.assertTrue(
-            all(entry.get("source_commit") == reported for entry in manifest["skills"]
+            all(entry.get("source_commit") == previous for entry in manifest["skills"]
                 if entry.get("upstream_skill") == "x-api-mcp-guide")
         )
 

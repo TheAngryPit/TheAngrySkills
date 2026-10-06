@@ -1,0 +1,14 @@
+{
+  "source_path": "origin-apps/skills/port-github-app-to-origin/SKILL.md",
+  "source_sha256": "b4401e45b9a98aacc1dd544d2aa9c782e9a1cecac170489348c3c5ddef71988b",
+  "preserved_requirement": "Plan an existing GitHub App port from repository evidence and the current Origin API spec; no implementation or external feedback submission.",
+  "codex_note": "## Native Codex boundary\n\nOrigin remains the named external product. Fetch the current official public documentation through an available native web surface when this skill is invoked; the mirrored source pin is not a live API contract. Resolve actual capabilities and permissions before any API operation. Do not authenticate, install, create an app, register webhooks, send feedback, publish repository details or migrate code from guidance alone. The porting skill produces a local planning brief; feedback is draft material until explicitly authorized for sending. No connector, provider, credentials, cloud runtime or installation is supplied by this mirror.\n",
+  "proof": "Complete upstream source hashes and deterministic renderer; no live Origin operation or porting run performed.",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "`origin-api` skill",
+      "after": "`cursor-origin-api` skill"
+    }
+  ]
+}

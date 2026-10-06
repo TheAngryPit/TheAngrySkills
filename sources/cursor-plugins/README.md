@@ -1,3 +1,8 @@
+## Current supporting-file audit (6 October 2026)
+
+The current pin is pstack 0.15.15 at `df581122cde17e6e27686b5a448bde23e4ad4318`.
+Benny's three skills are admitted for explicit manual installation; five unrelated operator exclusions remain. The guide snapshot matches this pin, and native guide text and images travel with `cursor-poteto-help`. The historical counts and exclusions below describe earlier reviews, not the current catalog. See [supporting-file parity](../../reports/pstack-support-parity-20261006.md) and the generated manifest/state for current evidence. Nothing is installed or activated by this audit.
+
 ## Benny native distribution — 6 October 2026
 
 The operator selected all three Benny workflows for native Codex adaptation, superseding only the prior Benny exclusion. The current catalog emits 102 of 107 source skills; the five remaining exclusions are Grok Voice and make-bot-ui. Historical notes below retain their original counts and decisions.

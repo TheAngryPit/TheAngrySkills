@@ -158,6 +158,21 @@
       "file": "references/synthesizer.md",
       "before": "Synthesize three reviewers' findings from the active transcript into skill edits, backlog items, or rejections. Do not modify files. The parent applies the Accepted list after user approval. Use any MCP tool available in your environment to verify a finding (e.g. ticket, observability trace, chat thread).",
       "after": "Synthesize three reviewers' findings from the scoped transcript into skill edits, backlog items, or rejections. Do not modify files. The parent applies the Accepted list only after user approval. In this bounded native route, make no MCP or external-record lookup from reviewer citations; mark them unverified."
+    },
+    {
+      "file": "references/judgment-reviewer.md",
+      "before": "- `Read` tool calls against any `SKILL.md` file (workspace `.cursor/skills/`, user-level `~/.cursor/skills/`, or plugin-installed paths under `~/.cursor/plugins/`)\n- `Task` prompts that name a skill path\n- Tool calls (Shell, Grep, MCP, etc.) that match a skill's documented commands",
+      "after": "- Observed native file reads or shell commands that open an actual `SKILL.md`, using the exact source or installed path recorded in this session\n- Native skill selection or collaboration briefs that identify the skill and its required context\n- Tool calls whose inputs and outputs demonstrate the skill's documented operation; catalog visibility or a configured agent profile alone does not prove invocation"
+    },
+    {
+      "file": "references/tooling-reviewer.md",
+      "before": "- `Read` tool calls against any `SKILL.md` file (workspace `.cursor/skills/`, user-level `~/.cursor/skills/`, or plugin-installed paths under `~/.cursor/plugins/`)\n- `Task` prompts that name a skill path\n- Tool calls (Shell, Grep, MCP, etc.) that match a skill's documented commands",
+      "after": "- Observed native file reads or shell commands that open an actual `SKILL.md`, using the exact source or installed path recorded in this session\n- Native skill selection or collaboration briefs that identify the skill and its required context\n- Tool calls whose inputs and outputs demonstrate the skill's documented operation; catalog visibility or a configured agent profile alone does not prove invocation"
+    },
+    {
+      "file": "references/divergent-reviewer.md",
+      "before": "- `Read` tool calls against any `SKILL.md` file (workspace `.cursor/skills/`, user-level `~/.cursor/skills/`, or plugin-installed paths under `~/.cursor/plugins/`)\n- `Task` prompts that name a skill path\n- Tool calls (Shell, Grep, MCP, etc.) that match a skill's documented commands",
+      "after": "- Observed native file reads or shell commands that open an actual `SKILL.md`, using the exact source or installed path recorded in this session\n- Native skill selection or collaboration briefs that identify the skill and its required context\n- Tool calls whose inputs and outputs demonstrate the skill's documented operation; catalog visibility or a configured agent profile alone does not prove invocation"
     }
   ],
   "source_path": "pstack/skills/reflect/SKILL.md",

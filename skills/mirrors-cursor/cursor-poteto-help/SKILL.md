@@ -9,7 +9,7 @@ Answer the user's question about pstack, hand them a prompt they can send, and l
 
 A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`poteto-mode`](../cursor-poteto-mode/SKILL.md), do the work under it, and keep the distinction between answering a help question and executing an action request.
 
-This file maps questions to the skills and guide pages that hold the answers. Those files own the details. Read the file you route to before you quote it, and trust it when it disagrees with this map. The links here point into the source mirror, which the user may not be able to open, so give the user the file's public copy: `https://github.com/cursor/plugins/blob/main/pstack/` followed by its path.
+This file maps questions to the skills and guide pages that hold the answers. Read the native skill or bundled [Codex guide](references/guide/README.md) before answering. The pinned upstream guide remains provenance; its Cursor setup and runtime commands do not override native guidance. Use reviewed public mirror links when sharing these adapted files.
 
 ## Find out what they need
 
@@ -39,7 +39,7 @@ Native roles and configured defaults are not proof of a running model. Keep revi
 
 ## Start a task with `$cursor-poteto-mode`
 
-`$cursor-poteto-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/02-poteto-mode.md) has examples.
+`$cursor-poteto-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](references/guide/02-poteto-mode.md) has examples.
 
 In Codex, invoke `$cursor-poteto-mode` for the selected task and preserve it through that task's follow-ups. Cursor Custom Modes, Option+Enter/Alt+Enter and sticky per-turn loading are not Codex guarantees. Do not claim a native sticky mode exists without host proof. For a new task, explicitly select the skill again when needed. The named native `poteto-agent` reads the complete mode and principles before work; do not substitute a generic worker for that role.
 
@@ -105,11 +105,11 @@ Playbooks are step lists inside `$cursor-poteto-mode`, not skills, so they have 
 - "full autopilot on this queue" runs Autopilot-full. "stack them, don't ship" runs Autopilot-stack.
 - "run the eval playbook" runs Eval.
 
-Without `$cursor-poteto-mode`, a phrase such as "babysit this pr" can start the host's own workflow for the same job instead. The Playbooks section of [`poteto-mode`](../cursor-poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
+Without `$cursor-poteto-mode`, a phrase such as "babysit this pr" can start the host's own workflow for the same job instead. The Playbooks section of [`poteto-mode`](../cursor-poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](references/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
 
 pstack has no planning skill. Native Codex planning works alongside it. For work that spans phases or stacked PRs, asking `$cursor-poteto-mode` for a plan runs the [Multi-phase plan playbook](../cursor-poteto-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `$cursor-architect` settles it in code first.
 
-Principles are one-rule skills that `$cursor-poteto-mode` reads and cites in its replies. The user rarely invokes one. They steer with the names instead, as in "apply prove it works. show me the real output." Explicitly invoke the corresponding `$cursor-principle-<name>` skill when available. [Guide page 8](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/08-principles.md) lists them.
+Principles are one-rule skills that `$cursor-poteto-mode` reads and cites in its replies. The user rarely invokes one. They steer with the names instead, as in "apply prove it works. show me the real output." Explicitly invoke the corresponding `$cursor-principle-<name>` skill when available. [Guide page 8](references/guide/08-principles.md) lists them.
 
 ## Fix a run that went wrong
 
@@ -121,10 +121,10 @@ Principles are one-rule skills that `$cursor-poteto-mode` reads and cites in its
 | Runs cost more than expected | See the cost paragraph under Get set up. |
 | A skill didn't load on its own | Respect each skill's native invocation policy; this help skill is explicit-only. Automatic selection is not established by source publication. |
 | Parallel agents overwrote each other | Give each agent its own worktree, use separately authorized native cloud tasks only when actually supported. |
-| An overnight run moved but finished nothing | A requested native continuation needs a check that can pass or fail, not a duration. See [guide page 7](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/07-overnight.md). |
+| An overnight run moved but finished nothing | A requested native continuation needs a check that can pass or fail, not a duration. See [guide page 7](references/guide/07-overnight.md). |
 | The reply claims success from a green build | Ask for the real command, flow, stored value, or profile. That's the prove-it-works principle. |
 
-For a run that drifts, [`references/prompting.md`](references/prompting.md) has one-line steers. [Guide page 10](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/10-recipes-and-pitfalls.md) has more pitfalls and the recipes worth copying.
+For a run that drifts, [`references/prompting.md`](references/prompting.md) has one-line steers. [Guide page 10](references/guide/10-recipes-and-pitfalls.md) has more pitfalls and the recipes worth copying.
 
 ## Make pstack my own
 
@@ -133,7 +133,7 @@ For a run that drifts, [`references/prompting.md`](references/prompting.md) has 
 - `$cursor-poteto-mode write a skill for <workflow>` runs the authoring playbook. The eval playbook tests a skill change blind.
 - Fix a misbehaving skill in its own PR, not inside the feature work where it went wrong.
 
-[Guide page 9](https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/docs/guide/09-make-it-yours.md) covers each of these.
+[Guide page 9](references/guide/09-make-it-yours.md) covers each of these.
 
 ## Reply
 

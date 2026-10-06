@@ -40,6 +40,7 @@ class CursorMirrorTests(unittest.TestCase):
             "scripts/cursor_sdk_native_adapter.py",
             "scripts/cursor_orchestrate_adapters.py",
             "scripts/cursor_bot_ui_adapters.py",
+            "scripts/cursor_worktree_audit.py",
             "sources/cursor-plugins",
             "skills/mirrors-cursor",
             "skills/core/model-capability-router/assets/agents",
@@ -608,22 +609,39 @@ class CursorMirrorTests(unittest.TestCase):
                         "-qm", "fixture"], check=True)
         unchanged = self.run_build("--compare-upstream", str(upstream))
         self.assertEqual(unchanged.returncode, 0, unchanged.stderr)
-        relative = "pstack/automations/benny/templates/triage-automation-prompt.md"
-        template = upstream / relative
-        original = template.read_bytes()
-        for content in (original + b"\nChanged event instruction.\n", None):
-            with self.subTest(removed=content is None):
-                if content is None:
-                    template.unlink()
-                else:
-                    template.write_bytes(content)
+        cases = (
+            ("pstack/automations/benny/templates/triage-automation-prompt.md", "changed_support_files"),
+            ("pstack/docs/guide/02-poteto-mode.md", "changed_documentation_files"),
+        )
+        for relative, report_key in cases:
+            template = upstream / relative
+            original = template.read_bytes()
+            for content in (original + b"\nChanged workflow instruction.\n", None):
+                with self.subTest(path=relative, removed=content is None):
+                    if content is None:
+                        template.unlink()
+                    else:
+                        template.write_bytes(content)
+                    result = self.run_build("--compare-upstream", str(upstream))
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    report = json.loads(result.stdout)
+                    self.assertEqual(report[report_key], [relative])
+                    self.assertEqual(report["changed_skills"], [])
+                    self.assertEqual(report["changed_licenses"], [])
+            template.write_bytes(original)
+            self.assertEqual((self.root / "sources/cursor-plugins/snapshot" / relative).read_bytes(), original)
+        for relative, key in (
+            ("pstack/docs/guide/new-topic.md", "changed_documentation_files"),
+            ("pstack/automations/benny/templates/new-template.md", "changed_support_files"),
+        ):
+            with self.subTest(added=relative):
+                new_file = upstream / relative
+                new_file.write_text("New upstream workflow guidance")
                 result = self.run_build("--compare-upstream", str(upstream))
-                self.assertNotEqual(result.returncode, 0, result.stdout)
-                report = json.loads(result.stdout)
-                self.assertEqual(report["changed_support_files"], [relative])
-                self.assertEqual(report["changed_skills"], [])
-                self.assertEqual(report["changed_licenses"], [])
-        self.assertEqual((self.root / "sources/cursor-plugins/snapshot" / relative).read_bytes(), original)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(json.loads(result.stdout)[key], [relative])
+                self.assertFalse((self.root / "sources/cursor-plugins/snapshot" / relative).exists())
+                new_file.unlink()
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

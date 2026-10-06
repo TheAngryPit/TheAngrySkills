@@ -292,7 +292,9 @@ def render_skill(entry: dict, staging: Path, default_commit: str,
         contents = target_file.read_text()
         contents = replace_exact(contents, op["before"], op["after"], f"{name}/{relative}")
         target_file.write_text(contents)
-    support_ledger = load(LEDGER).get("support_files", {})
+    support_manifest = load(LEDGER)
+    support_ledger = {**support_manifest.get("support_files", {}),
+                      **support_manifest.get("documentation_files", {})}
     for bundle in overlay.get("bundled_support_files", []):
         source_rel = safe_relative(bundle["source_path"])
         output_rel = safe_relative(bundle["target_path"])
@@ -531,11 +533,33 @@ def refresh(upstream: Path) -> None:
         live = upstream / license_path
         if not live.is_file() or sha(live) != expected_sha:
             changed_licenses.append(license_path)
-    changed_support = []
-    for path, record in sorted(manifest.get("support_files", {}).items()):
+    support = manifest.get("support_files", {})
+    observed_support = set()
+    for path in upstream.rglob("*"):
+        if not (path.is_file() or path.is_symlink()):
+            continue
+        rel = path.relative_to(upstream)
+        if len(rel.parts) >= 3 and rel.parts[0] != ".git" and (rel.parts[1] in {"agents", "hooks", "rules"}
+                                  or rel.as_posix().startswith("pstack/automations/benny/")):
+            observed_support.add(rel.as_posix())
+    changed_support = observed_support ^ set(support)
+    for path, record in support.items():
         live = upstream / safe_relative(path)
         if not live.is_file() or live.is_symlink() or sha(live) != record["sha256"]:
-            changed_support.append(path)
+            changed_support.add(path)
+    changed_support = sorted(changed_support)
+    documents = manifest.get("documentation_files", {})
+    observed_documents = {p.relative_to(upstream).as_posix()
+                          for p in (upstream / "pstack/docs/guide").rglob("*")
+                          if p.is_file() or p.is_symlink()}
+    if (upstream / "pstack/README.md").exists():
+        observed_documents.add("pstack/README.md")
+    changed_documents = set(observed_documents) ^ set(documents)
+    for path, record in documents.items():
+        live = upstream / safe_relative(path)
+        if not live.is_file() or live.is_symlink() or sha(live) != record["sha256"]:
+            changed_documents.add(path)
+    changed_documents = sorted(changed_documents)
     head = subprocess.check_output(["git", "-C", str(upstream), "rev-parse", "HEAD"], text=True).strip()
     report = {"upstream_commit": head, "pinned_commit": manifest["upstream_commit"],
               "source_commit_overrides": {
@@ -544,9 +568,10 @@ def refresh(upstream: Path) -> None:
               },
               "new_skills": sorted(current-pinned), "removed_skills": sorted(pinned-current),
               "changed_skills": changed, "changed_licenses": changed_licenses,
-              "changed_support_files": changed_support}
+              "changed_support_files": changed_support,
+              "changed_documentation_files": changed_documents}
     print(dump(report), end="")
-    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses or changed_support:
+    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses or changed_support or changed_documents:
         raise ValueError("upstream changes require explicit per-skill review and overlay rebase")
 
 

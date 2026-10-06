@@ -390,6 +390,8 @@
     "cursor-setup-benny/SKILL.md": "178320d1e589045723f2b00fddc77b4f849bd20db4fe0cb5fdec4fb65f8a3782",
     "cursor-setup-benny/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     "cursor-setup-benny/references/benny/FOR_AGENTS.md": "26ba66b70fb9215aaec5a70c55111c4344427a24f51953f82174c20d94cf6968",
+    "cursor-setup-benny/references/benny/LICENSE.upstream": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+    "cursor-setup-benny/references/benny/MIRROR.md": "d441c6c6e5d29710ec097748d64afb51fc7c57443183741bfac0575540ec78cb",
     "cursor-setup-benny/references/benny/README.md": "7c917185a2268e7b3720ebd701b8caa4f22e9305aa4bdda0b99b75a0ec206dbb",
     "cursor-setup-benny/references/benny/skills/reproduce-and-fix-issues/instructions.md": "e19ef73c3d044eafab6567483876d7a96d6bf5985ffaf83ed84a8d652902532f",
     "cursor-setup-benny/references/benny/skills/reproduce-and-fix-issues/references/control-adapter.md": "fe1269eba92522f40fc47c1b438711caf3401e4db158fb0e7265602ab6f757d7",

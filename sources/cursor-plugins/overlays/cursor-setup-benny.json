@@ -183,5 +183,6 @@
         }
       ]
     }
-  ]
+  ],
+  "detached_pack_directory": "references/benny"
 }

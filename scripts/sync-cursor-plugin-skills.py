@@ -366,6 +366,17 @@ def render_skill(entry: dict, staging: Path, default_commit: str,
         "The decision class does not establish runtime availability.", "",
     ]
     (target / "MIRROR.md").write_text("\n".join(note))
+    detached = overlay.get("detached_pack_directory")
+    if detached is not None:
+        pack = target / safe_relative(detached)
+        if not pack.is_dir() or pack.is_symlink():
+            raise ValueError(f"missing detached pack directory: {name}/{detached}")
+        for filename in ("LICENSE.upstream", "MIRROR.md"):
+            source = target / filename
+            destination = pack / filename
+            if not source.is_file() or destination.exists():
+                raise ValueError(f"detached pack notice missing or colliding: {name}/{filename}")
+            shutil.copy2(source, destination)
     return {p.relative_to(target).as_posix(): sha(p) for p in files(target)}
 
 
@@ -520,6 +531,11 @@ def refresh(upstream: Path) -> None:
         live = upstream / license_path
         if not live.is_file() or sha(live) != expected_sha:
             changed_licenses.append(license_path)
+    changed_support = []
+    for path, record in sorted(manifest.get("support_files", {}).items()):
+        live = upstream / safe_relative(path)
+        if not live.is_file() or live.is_symlink() or sha(live) != record["sha256"]:
+            changed_support.append(path)
     head = subprocess.check_output(["git", "-C", str(upstream), "rev-parse", "HEAD"], text=True).strip()
     report = {"upstream_commit": head, "pinned_commit": manifest["upstream_commit"],
               "source_commit_overrides": {
@@ -527,9 +543,10 @@ def refresh(upstream: Path) -> None:
                   for entry in entries if entry.get("source_commit")
               },
               "new_skills": sorted(current-pinned), "removed_skills": sorted(pinned-current),
-              "changed_skills": changed, "changed_licenses": changed_licenses}
+              "changed_skills": changed, "changed_licenses": changed_licenses,
+              "changed_support_files": changed_support}
     print(dump(report), end="")
-    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses:
+    if report["new_skills"] or report["removed_skills"] or changed or changed_licenses or changed_support:
         raise ValueError("upstream changes require explicit per-skill review and overlay rebase")
 
 

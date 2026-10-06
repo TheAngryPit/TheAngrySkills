@@ -267,6 +267,11 @@ class CursorMirrorTests(unittest.TestCase):
                              "policy:\n  allow_implicit_invocation: false\n")
         project = self.root / "independent-target/.agents/automations/benny"
         shutil.copytree(output / "cursor-setup-benny/references/benny", project)
+        self.assertEqual((project / "LICENSE.upstream").read_bytes(),
+                         (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
+        provenance = (project / "MIRROR.md").read_text()
+        self.assertIn("https://github.com/cursor/plugins.git", provenance)
+        self.assertIn("Commit: df581122cde17e6e27686b5a448bde23e4ad4318", provenance)
         # The installed pack, detached from the source checkout, owns its complete links.
         for file in project.rglob("*.md"):
             for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):
@@ -593,6 +598,32 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--check")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("retained source file is not inventoried", result.stderr)
+
+    def test_pack_support_only_upstream_drift_requires_review(self):
+        upstream = self.root / "external-upstream"
+        shutil.copytree(self.root / "sources/cursor-plugins/snapshot", upstream)
+        subprocess.run(["git", "init", "-q", str(upstream)], check=True)
+        subprocess.run(["git", "-C", str(upstream), "-c", "user.name=Test",
+                        "-c", "user.email=test@example.invalid", "commit", "--allow-empty",
+                        "-qm", "fixture"], check=True)
+        unchanged = self.run_build("--compare-upstream", str(upstream))
+        self.assertEqual(unchanged.returncode, 0, unchanged.stderr)
+        relative = "pstack/automations/benny/templates/triage-automation-prompt.md"
+        template = upstream / relative
+        original = template.read_bytes()
+        for content in (original + b"\nChanged event instruction.\n", None):
+            with self.subTest(removed=content is None):
+                if content is None:
+                    template.unlink()
+                else:
+                    template.write_bytes(content)
+                result = self.run_build("--compare-upstream", str(upstream))
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+                report = json.loads(result.stdout)
+                self.assertEqual(report["changed_support_files"], [relative])
+                self.assertEqual(report["changed_skills"], [])
+                self.assertEqual(report["changed_licenses"], [])
+        self.assertEqual((self.root / "sources/cursor-plugins/snapshot" / relative).read_bytes(), original)
 
     def test_new_upstream_skill_is_reported_without_import(self):
         upstream = self.root / "sources/cursor-plugins/snapshot"

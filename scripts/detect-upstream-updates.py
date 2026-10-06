@@ -401,6 +401,31 @@ def cursor_plugin(path: str) -> str:
 
 def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     manifest = json.loads((root / "sources" / "cursor-plugins" / "manifest.json").read_text())
+    full_tree = root / "sources/cursor-plugins/full-tree.json"
+    if full_tree.is_file():
+        ledger = json.loads(full_tree.read_text())
+        result = blank_result("cursor", "pstack", CURSOR_REPOSITORY, ledger["commit"], head(checkout))
+        expected = ledger["files"]
+        current = tree_files(checkout, head(checkout))
+        known_skills = {p for p in expected if p.endswith("/SKILL.md")}
+        current_skills = {p for p in current if p.endswith("/SKILL.md")}
+        result["new_skills"] = sorted(skill_dirs(current_skills) - skill_dirs(known_skills))
+        result["removed_skills"] = sorted(skill_dirs(known_skills) - skill_dirs(current_skills))
+        result["excluded_skills"] = sorted(str(Path(e["path"]).parent) for e in manifest["skills"] if e.get("excluded_from_mirror"))
+        for path in sorted(current & expected.keys()):
+            source = checkout / path
+            if source.is_symlink():
+                raise ValueError(f"Cursor upstream symlink: {path}")
+            if not source.is_file():
+                raise ValueError(f"Cursor checkout is incomplete: {path}")
+            if sha(source) != expected[path]["sha256"]:
+                key = "changed_skills" if path.endswith("/SKILL.md") else "changed_support_files"
+                result[key].append(path)
+                if Path(path).name.upper().startswith("LICENSE"):
+                    result["changed_licenses"].append(path)
+        result["new_support_files"] = sorted((current - expected.keys()) - current_skills)
+        result["removed_support_files"] = sorted((expected.keys() - current) - known_skills)
+        return finish(result)
     baseline = manifest.get("pstack_upstream_commit", manifest["upstream_commit"])
     if not isinstance(baseline, str) or not re.fullmatch(r"[0-9a-f]{40}", baseline):
         raise ValueError("invalid pstack upstream commit")

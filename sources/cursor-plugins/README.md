@@ -1,3 +1,40 @@
+## Current source review — 6 October 2026
+
+The complete raw tree is pinned to `df581122cde17e6e27686b5a448bde23e4ad4318`, pstack0.15.15:903files,107physical skills and14agent sources. All107skills have native adapters:99are emitted and8existing operator exclusions stay dormant. The historical global/per-skill pins below retain provenance; refreshed pstack entries and the three additions carry the current per-skill pin. See [refresh evidence](../../reports/cursor-refresh-20261006.md).
+
+`cursor-poteto-help` preserves the help/prompting map using native Codex roles, invocation and requested scheduling. `cursor-origin-api` and `cursor-port-github-app-to-origin` preserve current-spec lookup and planning-only behavior. No installation or runtime activation is implied.
+
+# Complete Cursor source and Codex adapters
+
+Current full upstream pin: `e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a`.
+
+- `upstream-tree/` preserves all 890 tracked files byte for byte, including 104 skills, all 14 agents, plugin manifests, full Benny automation pack, docs, scripts, hooks, assets and licenses. `full-tree.json` records every Git blob, mode and SHA-256. These are inert source files, not registered plugins or executable instructions for Codex.
+- `snapshot/` is the reviewed input to the adapter generator. All 104 skill snapshots match the full-tree pin. Historical per-entry provenance remains explicit. It also includes the complete Pstack README and guide, with all ten chapters, index and six images hash-checked in `manifest.json`.
+- `overlays/` adapts all 104 skills. The generated catalog contains 96. `adapted-held/` contains the eight adapted but unindexed operator exclusions: four Grok Voice skills, three Benny workflows and make-bot-ui. None is installed or activated by source generation.
+- `agent-coverage.json` maps all 14 upstream agents to native TOML source profiles in `skills/core/model-capability-router/assets/agents/`. Pstack itself owns two, and Dylan owns one. Profile distribution does not prove installation, fresh-session loading, model selection or execution.
+
+Poteto retains its 23 playbooks and 24 principle leaves. Its inline index owns principle routing after that workflow is selected. The global principle router remains unchanged. Dylan layers on those exact adapted dependencies; it does not create another principles tree.
+
+The full guide is preserved as upstream reference, including Cursor-specific examples. The operational adapters govern native execution. Read the adapter and actual host capabilities before attempting any referenced setup, credential access, scheduling or external action.
+
+Run the source checks:
+
+```sh
+python3 scripts/sync-cursor-plugin-skills.py --check
+python3 scripts/check-cursor-full-tree.py --upstream /path/to/full/cursor-plugins
+python3 scripts/check-cursor-adaptations.py
+```
+
+After editing a held adapter, regenerate its review copy with `python3 scripts/check-cursor-adaptations.py --write-held`. That command never indexes the held copies. The existing `cursor/pstack` upstream-review batch now checks the whole Cursor tree against `full-tree.json`; its identity, approval and publication gates are unchanged. Historical fixtures without that ledger retain the older Pstack-only comparison.
+
+Source completeness, native adaptation, distribution, installation and runtime proof are different claims. Figma/Google/X/X Money connectors, Bugbot, authorized secrets input, Benny's Slack event trigger, voice devices/providers, and bot wake endpoints require actual host proof. Current source work performs no installs, credentials, connector operations, automated runs or external writes.
+
+The report is [Cursor full parity review](../../reports/cursor-full-parity-20261005.md).
+
+## Earlier review history
+
+The following notes document earlier increments and their proof limits. Their counts describe those increments, not the current inventory.
+
 # Cursor plugin skills mirror
 
 This is a pinned, reviewable native Codex adaptation of the skills in `cursor/plugins` at

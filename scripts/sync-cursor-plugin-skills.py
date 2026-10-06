@@ -140,6 +140,18 @@ def verify_snapshot(manifest: dict) -> None:
             actual_support[rel.as_posix()] = sha(path)
     if actual_support != expected_support:
         raise ValueError("plugin-level support inventory or hash drift")
+    documents = manifest.get("documentation_files", {})
+    for relative, record in documents.items():
+        path = safe_relative(relative)
+        if relative != "pstack/README.md" and not relative.startswith("pstack/docs/guide/"):
+            raise ValueError(f"invalid upstream documentation path: {relative}")
+        if sha(SOURCE / path) != record["sha256"]:
+            raise ValueError(f"upstream documentation drift: {relative}")
+    observed_documents = {p.relative_to(SOURCE).as_posix() for p in files(SOURCE / "pstack/docs/guide")}
+    if (SOURCE / "pstack/README.md").exists():
+        observed_documents.add("pstack/README.md")
+    if observed_documents != set(documents):
+        raise ValueError("upstream documentation inventory drift")
     native_support = manifest.get("native_support_files", {})
     if not isinstance(native_support, dict):
         raise ValueError("invalid native support ledger")

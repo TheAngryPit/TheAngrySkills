@@ -175,3 +175,7 @@ The command refuses to replace a differing existing profile unless
 `--installed-dir ~/.codex/agents` for a byte-for-byte check. This validates
 distribution and configuration, not that a newly started session has loaded or
 selected the profile; that must be checked by the host session.
+
+## Additional Cursor source profiles
+
+The profile assets also preserve Dylan, Advisor, compatibility review, continual-learning, plugin architecture, CI watching, and Thermos roles. `sources/cursor-plugins/agent-coverage.json` in the source repository records all 14 upstream agent mappings and their hashes. Source distribution is not installation or fresh-session loading. The existing checked installer above selects the two Pstack profiles; other assets remain separately selectable source profiles and must be explicitly installed and proven on the target host. Missing exact native types are reported, never claimed from these files alone.

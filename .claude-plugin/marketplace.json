@@ -257,6 +257,7 @@
         "./skills/mirrors-cursor/cursor-benchmark-checklist",
         "./skills/mirrors-cursor/cursor-blast-radius",
         "./skills/mirrors-cursor/cursor-bro",
+        "./skills/mirrors-cursor/cursor-build-figma",
         "./skills/mirrors-cursor/cursor-cancel-ralph",
         "./skills/mirrors-cursor/cursor-check-agent-compatibility",
         "./skills/mirrors-cursor/cursor-check-compiler-errors",
@@ -273,10 +274,17 @@
         "./skills/mirrors-cursor/cursor-cursor-team-kit-thermo-nuclear-code-quality-review",
         "./skills/mirrors-cursor/cursor-deslop",
         "./skills/mirrors-cursor/cursor-docs-canvas",
+        "./skills/mirrors-cursor/cursor-dyl-mode",
+        "./skills/mirrors-cursor/cursor-dyl-ready-pr",
+        "./skills/mirrors-cursor/cursor-dyl-review",
         "./skills/mirrors-cursor/cursor-figure-it-out",
         "./skills/mirrors-cursor/cursor-fix-ci",
         "./skills/mirrors-cursor/cursor-fix-merge-conflicts",
         "./skills/mirrors-cursor/cursor-get-pr-comments",
+        "./skills/mirrors-cursor/cursor-google-docs",
+        "./skills/mirrors-cursor/cursor-google-drive",
+        "./skills/mirrors-cursor/cursor-google-sheets",
+        "./skills/mirrors-cursor/cursor-google-slides",
         "./skills/mirrors-cursor/cursor-how",
         "./skills/mirrors-cursor/cursor-interrogate",
         "./skills/mirrors-cursor/cursor-loop-on-ci",
@@ -285,6 +293,9 @@
         "./skills/mirrors-cursor/cursor-new-branch-and-pr",
         "./skills/mirrors-cursor/cursor-no-comments",
         "./skills/mirrors-cursor/cursor-orchestrate",
+        "./skills/mirrors-cursor/cursor-origin-api",
+        "./skills/mirrors-cursor/cursor-port-github-app-to-origin",
+        "./skills/mirrors-cursor/cursor-poteto-help",
         "./skills/mirrors-cursor/cursor-poteto-mode",
         "./skills/mirrors-cursor/cursor-pr-review-canvas-pr-review-canvas",
         "./skills/mirrors-cursor/cursor-principle-attack-the-premise",
@@ -310,6 +321,7 @@
         "./skills/mirrors-cursor/cursor-principle-sequence-verifiable-units",
         "./skills/mirrors-cursor/cursor-principle-subtract-before-you-add",
         "./skills/mirrors-cursor/cursor-principle-test-behavior-not-implementation",
+        "./skills/mirrors-cursor/cursor-principle-the-algorithm",
         "./skills/mirrors-cursor/cursor-principle-type-system-discipline",
         "./skills/mirrors-cursor/cursor-ralph-loop",
         "./skills/mirrors-cursor/cursor-ralph-loop-help",
@@ -335,7 +347,8 @@
         "./skills/mirrors-cursor/cursor-what-did-i-get-done",
         "./skills/mirrors-cursor/cursor-why",
         "./skills/mirrors-cursor/cursor-workflow-from-chats",
-        "./skills/mirrors-cursor/cursor-x-mcp-guide"
+        "./skills/mirrors-cursor/cursor-x-mcp-guide",
+        "./skills/mirrors-cursor/cursor-x-money-guide"
       ]
     }
   ]

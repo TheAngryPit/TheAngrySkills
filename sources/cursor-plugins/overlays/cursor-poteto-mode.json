@@ -75,7 +75,7 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md",
       "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     },
     "security_review": {
@@ -122,7 +122,7 @@
       ]
     }
   },
-  "codex_note": "## Codex adaptation and security boundary\n\nThis is a per-turn native Codex guidance adapter. It preserves the 23 playbooks and their principles, but it does not create a sticky mode or claim implicit future invocation. Read the selected playbook from the project-local mirror. Map the upstream question action to the host's optional user-input surface only for a genuine product or preference choice. Map the upstream task and delegation fields to native bounded delegation when exposed, keeping scope, selected model/effort, ownership, and proof with the coordinator. If named delegation is unavailable, report the exact gap; sequential local work may continue, but it does not complete the named-role playbook step. For cleanup, use `cursor-deslop` when installed; for CLI/TUI surfaces, use `cursor-control-cli`; for browser/Electron/web surfaces, use `cursor-control-ui`. Check each concrete skill before use and record the exact gap when unavailable or not applicable. Cloud-capable task environments are conditional; if the cloud lane is unavailable, record the gap and do not claim parity. Keep model selection with model-capability-router and proof-path selection with proof-orchestrator. A heartbeat or automation is used only when explicitly requested. Ordinary playbook delegates call native `collaboration.spawn_agent` with `agent_type: \"poteto-agent\"` when that exact type is exposed; reuse an existing suitable named agent with `collaboration.followup_task` instead of spawning a sibling. The profile is distributed by `model-capability-router`; install it explicitly before a fresh Codex session can select it. If the exact type is unavailable, report the gap and leave named-role execution incomplete rather than substituting a generic agent. Read the selected `cursor-principle-*` leaf when applied. Routed workflow skills (`cursor-how`, `cursor-why`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`, `cursor-architect`, and `cursor-arena`) keep their own role-specific contracts. Reuse the same named delegate when supported. Automatic sticky routing, fresh top-level profile loading, and full live playbook execution remain unproven; native selection and bounded follow-up of a named `poteto-agent` have been observed in this task tree.\n\nThis skill is published and indexed for explicit invocation. Installing it makes the guidance, playbooks, references, and reviewed profile dependency available; it does not authorize the bundled Bun/TypeScript CLI, dependency installation, real-repository mutation, or GitHub access. Those executable surfaces remain separately gated. The detailed fixture and security evidence stays in `MIRROR.md`; it is historical proof, not an active installation prohibition.\n",
+  "codex_note": "## Codex adaptation and security boundary\n\nThis is a per-turn native Codex guidance adapter. It preserves the 23 playbooks and their principles, but it does not create a sticky mode or claim implicit future invocation. Read the selected playbook from the project-local mirror. Map the upstream question action to the host's optional user-input surface only for a genuine product or preference choice. Map the upstream task and delegation fields to native bounded delegation when exposed, keeping scope, selected model/effort, ownership, and proof with the coordinator. If named delegation is unavailable, report the exact gap; sequential local work may continue, but it does not complete the named-role playbook step. For cleanup, use `cursor-deslop` when installed; for CLI/TUI surfaces, use `cursor-control-cli`; for browser/Electron/web surfaces, use `cursor-control-ui`. Check each concrete skill before use and record the exact gap when unavailable or not applicable. Cloud-capable task environments are conditional; if the cloud lane is unavailable, record the gap and do not claim parity. Keep model selection with model-capability-router and proof-path selection with proof-orchestrator. A heartbeat or automation is used only when explicitly requested. Ordinary playbook delegates call native `collaboration.spawn_agent` with `agent_type: \"poteto-agent\"` when that exact type is exposed; reuse an existing suitable named agent with `collaboration.followup_task` instead of spawning a sibling. The profile is distributed by `model-capability-router`; install it explicitly before a fresh Codex session can select it. If the exact type is unavailable, report the gap and leave named-role execution incomplete rather than substituting a generic agent. Read the selected `cursor-principle-*` leaf when applied. Routed workflow skills (`cursor-how`, `cursor-why`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`, `cursor-architect`, and `cursor-arena`) keep their own role-specific contracts. Reuse the same named delegate when supported. Automatic sticky routing, fresh top-level profile loading, and full live playbook execution remain unproven; native selection and bounded follow-up of a named `poteto-agent` have been observed in this task tree.\n\nThis skill is published and indexed for explicit invocation. Installing it makes the guidance, playbooks, references, and reviewed profile dependency available; it does not authorize the bundled Bun/TypeScript CLI, dependency installation, real-repository mutation, or GitHub access. Those executable surfaces remain separately gated. The detailed fixture and security evidence stays in `MIRROR.md`; it is historical proof, not an active installation prohibition.\n\nPoteto owns principle selection inside its playbooks through the inline index below. Read each selected leaf in full. Do not run a second principle-selection pass through `principle-pack-router` inside this workflow; the global router remains available for choosing workflows elsewhere and operator policy remains authoritative.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
   "proof": "Pinned source hash and deterministic renderer are static provenance. Focused tests render the held candidate, verify all 23 playbook files and native-boundary metadata, structurally read the exact `bug-fix` playbook, and execute a synthetic notes app through contextual before/failure/trace/plan/local-history/prewritten-correction/after steps with independent stdout/exit evidence. The local Git fixture proves reproduction-before-fix commit ordering and a temporary local bare remote simulation, never a real PR. A negative case proves the correction is not written when the failure evidence is not exact; marker, unexpected-entry, and Git-timeout guards are also tested. Fixture-local portions of source steps 1/4/5 were exercised; 2/3/6 are partial (bounded hypothesis and structural diff record, no architect/delegation/review, and simulation only). Safe checks execute read-only `check-plan.mjs`, mocked `worktree-audit.sh`, five dependency-free `orch/store.ts` operations in scratch, and real `watch-pr/github.ts` command wiring against mocked `gh`/`git` under an outer timeout. One approved exact-lock scratch install used `--frozen-lockfile --ignore-scripts` and verified commander 14.0.0, bun-types 1.3.14, typescript 7.0.2, @types/node 26.1.2, and undici-types 8.3.0; a fresh no-`node_modules` scratch then exercised the real missing-key bootstrap install/restart from that populated cache, created the install key, and ran real `orch` and `watch-pr` CLIs. A separate authorized status-only read of real PR #64 exited 0 with empty stderr and returned raw `reviewDecision=REVIEW_REQUIRED`, `isDraft=true`, `mergeStateStatus=BLOCKED`, CI `SUCCESS` on head `f5a77fa0`; its `Review ✅` cell is explicitly not review approval because `render.ts` checks threads/automation, while the policy now blocks `REVIEW_REQUIRED` in the adapted preview. The cache run was not network-instrumented, the key does not verify package version, and mocks plus an external timeout bounded other git/GitHub subprocesses. The initial pre-population offline probe failed because those pins were absent from the original cache. The result is `FIXTURE_ONLY`; it does not prove contextual behavior on the live target, that the playbook generated the correction, polling/stack behavior, merge readiness, cloud task execution, or a live native session. The pinned poteto-agent source remains in the snapshot and the public native profile asset is byte-matched. A named native `poteto-agent` was selected and reused through follow-up in this task tree for a bounded Eval readback, but full playbook execution and exact model/effort metadata were not established. The critical-script review is static plus safe-subset/scratch proof only and the hold remains. The public native poteto-agent TOML has a source-hash-checked exact body adaptation and installed-byte check; fresh top-level session loading and automatic skill trigger remain unproven.",
@@ -170,7 +170,7 @@
     },
     {
       "file": "SKILL.md",
-      "before": " Defaults `grok-4.7-xhigh-fast` for code, `claude-opus-5-5-max` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-opus-5-5-max`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).",
+      "before": " Defaults `grok-4.7-xhigh-fast` for code, `claude-opus-5-5-xhigh` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`claude-opus-5-5-xhigh`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-pstack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).",
       "after": " Keep the bounded brief with the coordinator and do not invent a model ladder or sticky routing."
     },
     {
@@ -482,10 +482,125 @@
       "file": "scripts/check-plan.mjs",
       "before": "const PROGRAM_MARKERS = [\"git show origin/main:\", \"/loop 1h\", \"status message\"];",
       "after": "const PROGRAM_MARKERS = [\"git show origin/main:\", \"hourly audit\", \"status message\"];"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-attack-the-premise**",
+      "after": "[`cursor-principle-attack-the-premise`](../cursor-principle-attack-the-premise/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-boundary-discipline**",
+      "after": "[`cursor-principle-boundary-discipline`](../cursor-principle-boundary-discipline/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-build-the-lever**",
+      "after": "[`cursor-principle-build-the-lever`](../cursor-principle-build-the-lever/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-encode-lessons-in-structure**",
+      "after": "[`cursor-principle-encode-lessons-in-structure`](../cursor-principle-encode-lessons-in-structure/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-exhaust-the-design-space**",
+      "after": "[`cursor-principle-exhaust-the-design-space`](../cursor-principle-exhaust-the-design-space/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-experience-first**",
+      "after": "[`cursor-principle-experience-first`](../cursor-principle-experience-first/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-fix-root-causes**",
+      "after": "[`cursor-principle-fix-root-causes`](../cursor-principle-fix-root-causes/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-foundational-thinking**",
+      "after": "[`cursor-principle-foundational-thinking`](../cursor-principle-foundational-thinking/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-guard-the-context-window**",
+      "after": "[`cursor-principle-guard-the-context-window`](../cursor-principle-guard-the-context-window/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-laziness-protocol**",
+      "after": "[`cursor-principle-laziness-protocol`](../cursor-principle-laziness-protocol/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-make-operations-idempotent**",
+      "after": "[`cursor-principle-make-operations-idempotent`](../cursor-principle-make-operations-idempotent/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-migrate-callers-then-delete-legacy-apis**",
+      "after": "[`cursor-principle-migrate-callers-then-delete-legacy-apis`](../cursor-principle-migrate-callers-then-delete-legacy-apis/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-minimize-reader-load**",
+      "after": "[`cursor-principle-minimize-reader-load`](../cursor-principle-minimize-reader-load/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "- **Model the Domain** (**principle-model-the-domain**). Writing stateful logic, or code that branches a lot or repeats a shape assumption across files. Encode the domain in a structure (state machine, typed model, table or registry, reducer, boundary, the right collection) instead of scattered conditionals.",
+      "after": "- **Model the Domain** ([`cursor-principle-model-the-domain`](../cursor-principle-model-the-domain/SKILL.md)). Writing stateful logic, or code that branches a lot or repeats a shape assumption across files. Encode the domain in a structure (state machine, typed model, table or registry, reducer, boundary, the right collection) instead of scattered conditionals."
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-never-block-on-the-human**",
+      "after": "[`cursor-principle-never-block-on-the-human`](../cursor-principle-never-block-on-the-human/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-outcome-oriented-execution**",
+      "after": "[`cursor-principle-outcome-oriented-execution`](../cursor-principle-outcome-oriented-execution/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-prove-it-works**",
+      "after": "[`cursor-principle-prove-it-works`](../cursor-principle-prove-it-works/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-redesign-from-first-principles**",
+      "after": "[`cursor-principle-redesign-from-first-principles`](../cursor-principle-redesign-from-first-principles/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-separate-before-serializing-shared-state**",
+      "after": "[`cursor-principle-separate-before-serializing-shared-state`](../cursor-principle-separate-before-serializing-shared-state/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-sequence-verifiable-units**",
+      "after": "[`cursor-principle-sequence-verifiable-units`](../cursor-principle-sequence-verifiable-units/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-subtract-before-you-add**",
+      "after": "[`cursor-principle-subtract-before-you-add`](../cursor-principle-subtract-before-you-add/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-test-behavior-not-implementation**",
+      "after": "[`cursor-principle-test-behavior-not-implementation`](../cursor-principle-test-behavior-not-implementation/SKILL.md)"
+    },
+    {
+      "file": "SKILL.md",
+      "before": "**principle-type-system-discipline**",
+      "after": "[`cursor-principle-type-system-discipline`](../cursor-principle-type-system-discipline/SKILL.md)"
     }
   ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",
-  "source_sha256": "404c0ef4a78e93451b2ab555ca532e7197b5cf87de29205b6f7109dbee5d9c4d",
+  "source_sha256": "31cd02290360ce63564ef22b74d69fc6d90e62181d05a644cbed8f6c47cc9412",
   "native_agent_profiles": [
     {
       "name": "poteto-agent",

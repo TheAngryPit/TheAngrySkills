@@ -1,0 +1,40 @@
+{
+  "base": "c4be1f96a8fac6c8280bc81182cfa334109ebc4e",
+  "upstream": "df581122cde17e6e27686b5a448bde23e4ad4318",
+  "existing_changed": [],
+  "summary": {
+    "verdict_counts": {
+      "needs_human_review": 10,
+      "safe_to_install": 92
+    },
+    "finding_counts": {
+      "bundled-script-review": 30,
+      "dependency-manifest-surface": 1,
+      "executable-file": 5,
+      "mcp-plugin-hook-install": 16
+    },
+    "blocking_skill_count": 0,
+    "review_skill_count": 10
+  },
+  "new_skills": {
+    "cursor-setup-benny": {
+      "name": "cursor-setup-benny",
+      "verdict": "safe_to_install",
+      "next_action": "may_install_after_quality_gate_if_source_is_expected",
+      "finding_count": 0
+    },
+    "cursor-reproduce-and-fix-issues": {
+      "name": "cursor-reproduce-and-fix-issues",
+      "verdict": "safe_to_install",
+      "next_action": "may_install_after_quality_gate_if_source_is_expected",
+      "finding_count": 0
+    },
+    "cursor-triage-issue-reports": {
+      "name": "cursor-triage-issue-reports",
+      "verdict": "safe_to_install",
+      "next_action": "may_install_after_quality_gate_if_source_is_expected",
+      "finding_count": 0
+    }
+  },
+  "runtime_activation": "not_performed"
+}

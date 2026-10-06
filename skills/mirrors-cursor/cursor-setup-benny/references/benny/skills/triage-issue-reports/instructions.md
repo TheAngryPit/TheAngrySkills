@@ -1,13 +1,8 @@
----
-name: cursor-triage-issue-reports
-description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage automation.
----
+## Native Codex execution boundary
 
-## Dormant Codex source adaptation
+Use only an explicitly configured, authorized Benny workflow. Source distribution does not install or activate it. Resolve actual native connector schemas, permissions and control capabilities; missing event delivery remains incomplete and is never silently converted to scheduled polling. No source-repository or cache path is needed at runtime. Read configuration from the project-owned path supplied by setup.
 
-This adapter is available for source review only. It is not indexed, installed, scheduled, or activated. Existing operator exclusion remains in force. Reading this file grants no provider use, credentials, external posting, webhook exposure or automation execution. Resolve every required tool against the actual native host. Preserve the named upstream product; a local fixture proves only its stated boundary.
-
-The existing `scripts/cursor_benny_adapters.py` validates local event and marker gates. A real authorized Slack event source, tracker compensation operation, and app-control adapter remain required. No native event source is inferred from a scheduled-task tool.
+Normalize a new top-level trigger once: `source_channel_id`, `message_ts` (or upstream `ts` only when supplied aliases agree), and empty `thread_ts`. Reject conflicting timestamps and child events before any external write. Freeze the root as `SOURCE_THREAD_TS`; subsequent reads/posts revalidate that original parent. Local supplied-event fixtures cannot prove the live parent or external writes.
 
 # Triage issue reports
 
@@ -38,7 +33,7 @@ Before making a work list or delegating:
 
 1. Read `source_channel_id` from the trigger.
 2. Require it to equal the configured source channel.
-3. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
+3. Set `SOURCE_THREAD_TS` to the normalized top-level `message_ts`; require any supplied `ts` alias to agree and reject nonempty `thread_ts`.
 4. Require a nonempty `SOURCE_THREAD_TS`.
 5. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
 6. Read the thread and verify that its root has exactly those coordinates.

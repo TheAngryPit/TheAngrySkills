@@ -126,7 +126,7 @@ def verify_snapshot(manifest: dict) -> None:
     expected_support = {}
     for path, record in support.items():
         rel = safe_relative(path)
-        if len(rel.parts) < 3 or rel.parts[1] not in {"agents", "hooks", "rules"}:
+        if len(rel.parts) < 3 or (rel.parts[1] not in {"agents", "hooks", "rules"} and not rel.as_posix().startswith("pstack/automations/benny/")):
             raise ValueError(f"invalid plugin-level support path: {path}")
         related = record.get("related_skills")
         if (not isinstance(related, list) or not related
@@ -136,7 +136,7 @@ def verify_snapshot(manifest: dict) -> None:
     actual_support = {}
     for path in files(SOURCE):
         rel = path.relative_to(SOURCE)
-        if len(rel.parts) >= 3 and rel.parts[1] in {"agents", "hooks", "rules"}:
+        if len(rel.parts) >= 3 and (rel.parts[1] in {"agents", "hooks", "rules"} or rel.as_posix().startswith("pstack/automations/benny/")):
             actual_support[rel.as_posix()] = sha(path)
     if actual_support != expected_support:
         raise ValueError("plugin-level support inventory or hash drift")
@@ -483,11 +483,11 @@ def preview_candidates(destination: Path) -> None:
     manifest = load(LEDGER)
     verify_snapshot(manifest)
     entries = validate_manifest(manifest)
-    candidates = [e for e in entries if e["declared_for_distribution"] and not e.get("excluded_from_mirror")]
+    candidates = [e for e in entries if (e["declared_for_distribution"] or e["publish"]) and not e.get("excluded_from_mirror")]
     if destination.exists():
         raise ValueError(f"candidate preview destination already exists: {destination}")
     source_to_entry = {
-        (SOURCE / e["path"]).resolve(): {**e, "publish": e["declared_for_distribution"] and not e.get("excluded_from_mirror")}
+        (SOURCE / e["path"]).resolve(): {**e, "publish": (e["declared_for_distribution"] or e["publish"]) and not e.get("excluded_from_mirror")}
         for e in entries
     }
     destination.parent.mkdir(parents=True, exist_ok=True)

@@ -1,3 +1,11 @@
+## Benny native distribution — 6 October 2026
+
+The operator selected all three Benny workflows for native Codex adaptation, superseding only the prior Benny exclusion. The current catalog emits 102 of 107 source skills; the five remaining exclusions are Grok Voice and make-bot-ui. Historical notes below retain their original counts and decisions.
+
+`cursor-setup-benny`, `cursor-triage-issue-reports` and `cursor-reproduce-and-fix-issues` are explicit-only packages. Setup bundles the complete, hash-pinned 12-file pack with native intent/configuration/templates and direct `instructions.md` operational files. This avoids nested skill auto-discovery; committed project workflows read those files directly. No installation or activation is performed. The Codex schedule API does not provide Slack message-event delivery: that capability must be established separately, without silently substituting polling.
+
+The native event boundary normalizes consistent `message_ts`/`ts` aliases and rejects conflicting timestamps and child events. Local fixture results are not live Slack, tracker compensation, worker-isolation or real-UI proof. See [Benny source review](../../reports/cursor-benny-native-20261006.md).
+
 ## Current source review — 6 October 2026
 
 The complete raw tree is pinned to `df581122cde17e6e27686b5a448bde23e4ad4318`, pstack0.15.15:903files,107physical skills and14agent sources. All107skills have native adapters:99are emitted and8existing operator exclusions stay dormant. The historical global/per-skill pins below retain provenance; refreshed pstack entries and the three additions carry the current per-skill pin. See [refresh evidence](../../reports/cursor-refresh-20261006.md).

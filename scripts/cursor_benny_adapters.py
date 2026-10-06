@@ -98,9 +98,10 @@ def evaluate_intake_event(
         return _result("BLOCKED", "event channel does not match configured source channel")
     if _unsafe_request(event):
         return _result("BLOCKED", "event requests scheduling or activation")
-    message_ts = _text(event.get("message_ts"), "message_ts")
-    if not message_ts:
-        return _result("BLOCKED", "top-level report has no message timestamp")
+    timestamps = [_text(event[name], name) for name in ("message_ts", "ts") if name in event]
+    if not timestamps or any(not value or value != timestamps[0] for value in timestamps):
+        return _result("BLOCKED", "top-level report timestamp is missing or aliases disagree")
+    message_ts = timestamps[0]
     thread_ts = event.get("thread_ts")
     if thread_ts not in (None, ""):
         return _result("BLOCKED", "reply event cannot become a new source root")

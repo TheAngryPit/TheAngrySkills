@@ -12,7 +12,7 @@ Vanilla ask-matt and writing-for-agents are absent from the emitted package inve
 
 ## Verification
 
-Generator reverse proof and hashes pass for33manifest packages (32mirrors plus AskPit). Package source review and Writing for Astra decisions are code-proven; live agent invocation is not claimed. Complete repository pytest:349passed and2subtests passed; final focused43passed. Shared catalog:zeroerrors. Security comparison against exactPR100base:existinggrillingblockingfinding anddiagnosing-bugsreviewfinding unchanged byte-for-byte in detailednormalizedcomparison;0new/aggravated findings,0findings onAskPit,WritingforAstraandchief-of-staff. See matt-security-refresh-20261006.json. Git diff --check passes. Remote exact-headCI/review remain the final merge gate. Source publication is separate from manual installation.
+Generator reverse proof and hashes pass for33manifest packages (32mirrors plus AskPit). Package source review and Writing for Astra decisions are code-proven; live agent invocation is not claimed. Complete repository pytest: 353 passed and 2 subtests passed; final focused generator/watch/automation suite: 87 passed. Shared catalog:zeroerrors. Security comparison against exactPR100base:existinggrillingblockingfinding anddiagnosing-bugsreviewfinding unchanged byte-for-byte in detailednormalizedcomparison;0new/aggravated findings,0findings onAskPit,WritingforAstraandchief-of-staff. See matt-security-refresh-20261006.json. Git diff --check passes. Remote exact-headCI/review remain the final merge gate. Source publication is separate from manual installation.
 
 ## Files in this refresh
 
@@ -51,6 +51,8 @@ Generator reverse proof and hashes pass for33manifest packages (32mirrors plus A
 - `skills/mirrors-mattpocock/wait-what/UPSTREAM.json`
 - `tests/test_matt_adaptations.py`
 
-New chief-of-staff package files are included in addition to this tracked diff list. No generator script changes are needed in this final integration.
+New chief-of-staff package files are included in addition to this tracked diff list. Generator and upstream-watch changes preserve historical provenance and explicitly retained legacy packages.
 
 Remote Codex review found that Writing for Astra original integration hash had been replaced. The correction restores3cca18b368ae95cdbdebbff572ccafa662551015 as originalintegration and records4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d separately as currentreview. The added provenance regression failed before the current-review line was supplied and passed after the correction.
+
+Two further remote review findings were corrected at their owner: repeated refreshes now preserve prior reviews as history with one current revision; batch refresh validates/skips the explicitly pinned legacy package and reaches later packages. Both real regressions fail against8c390ef and pass after the fix. Read-only watchers likewise distinguish accepted source retirement from source return/license drift, without touching retained package data. Full batch refresh and reverse proofs pass; focused 87 tests pass. The native detector against the full upstream history reports changed:false at revision 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d. This proves the CLI detection path, not a scheduled execution.

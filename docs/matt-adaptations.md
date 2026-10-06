@@ -93,3 +93,7 @@ Do not silently add local policy, rename upstream skills, or copy the excluded
 `claude-handoff`, `git-guardrails-claude-code`, `migrate-to-shoehorn`,
 `setup-pre-commit`, or `setup-ts-deep-modules` sources. Do not treat a passing
 hash check as proof that an upstream update is approved.
+
+## Pinned legacy package and review history
+
+`resolving-merge-conflicts` has `refresh_policy: pinned_legacy` because its executable upstream source was retired. Batch refresh validates and retains the old package, then continues; an explicit refresh request for that package reports the legacy boundary. Read-only detectors accept the reviewed absence but still report source return or license changes. Unexpected missing sources are not skipped. Every refresh preserves original integration provenance, relabels previous current reviews as historical and records one current source review.

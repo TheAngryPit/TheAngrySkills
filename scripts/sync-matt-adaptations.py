@@ -5,6 +5,7 @@ from datetime import date
 import hashlib
 import importlib.util
 import json
+import re
 import os
 from pathlib import Path
 import shutil
@@ -121,6 +122,9 @@ def record_current_source_review(provenance, previous_commit, current_commit):
     if previous_commit == current_commit:
         return provenance
     text = text.replace('Reviewed source revision:', 'Original integration source revision:', 1)
+    text = re.sub(r'(?m)^Current upstream review: `([0-9a-f]{40})`',
+                  lambda match: match.group(0) if match.group(1) == current_commit
+                  else f'Historical upstream review: `{match.group(1)}`', text)
     marker = f'Current upstream review: `{current_commit}`'
     if marker not in text:
         line = (f'{marker} on {date.today().isoformat()}. Per-file source hashes are '
@@ -247,7 +251,14 @@ def main(single=None):
     if args.check:
         for item in items: validate(ROOT/item['destination'])
     elif args.upstream:
-        for item in items: refresh(args.upstream, item, proposal_root=args.proposals_root)
+        for item in items:
+            if item.get('refresh_policy') == 'pinned_legacy':
+                if selected:
+                    p.error(f"{item['name']} is pinned legacy; use --check to validate its retained package")
+                validate(ROOT / item['destination'])
+                print('retained pinned legacy: ' + item['name'])
+                continue
+            refresh(args.upstream, item, proposal_root=args.proposals_root)
     else:
         p.error('Use --upstream with a reviewed checkout, or --check; updates require review')
 

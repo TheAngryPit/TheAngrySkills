@@ -15,7 +15,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "075f82ef1f26b256482a8a953c532c854558a64d4a82b5320ffff41d1c2c87e5",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "635cb376a0ea7bb6a19aec413600654269d49121ab3ce7ee8a82d54b28dd7965",
+    "PROVENANCE.md": "b59b3bf54c0ca5a4cd4210ad6cbb0e56bb6168f942b19732a56945d1fbb11b75",
     "SKILL.md": "3537be8adebca9924420b4cc2313f2094ad47a42db61426a09b141de8a28d818",
     "agents/openai.yaml": "ea6f01cf1b8c06a4b0f5b649d74b1b8ce8685e72af1b38d70d877693e092af0b",
     "mocking.md": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",

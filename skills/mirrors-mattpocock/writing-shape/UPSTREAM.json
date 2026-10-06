@@ -2,7 +2,7 @@
   "name": "writing-shape",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/in-progress/writing-shape",
-  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "c4218de00ea26eea0a9e546600108e225970cbd94e1c4304e35e19dd7f81f094",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "5a0cbe6547795bf95099dc3476e9dd1dadd44de5cce827fc6bc033620c062090",
+    "PROVENANCE.md": "4b1f4afcc7531c5b04da520dc95943390433ed643221772792c698ec06e31745",
     "SKILL.md": "83f07eeee5b2ae7c1bc3787ab4f15c8fbdf19ed65d522c56507fdc8b3c0fbc72",
     "agents/openai.yaml": "56de45430e23104ff178415f5ecf7821d51a9cfabd8814b1607ebf39da2ef5cd"
   }

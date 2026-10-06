@@ -122,3 +122,49 @@ def test_astra_original_integration_is_distinct_from_current_review():
     assert 'Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015' in provenance
     assert '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d' in provenance
     assert record['commit'] == '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+
+
+def test_batch_refresh_retains_legacy_and_reaches_later_packages(tmp_path, monkeypatch, capsys):
+    item, checkout, src, dest = fixture_source(tmp_path)
+    workspace = tmp_path / 'workspace'
+    legacy = dict(item, name='retired', destination='retired-package',
+                  source_path='missing-upstream-source', refresh_policy='pinned_legacy')
+    active = dict(item, destination='active-package')
+    workspace.mkdir()
+    shutil.copytree(dest, workspace / legacy['destination'])
+    shutil.copytree(dest, workspace / active['destination'])
+    before = matt.file_map(workspace / legacy['destination'])
+    config = workspace / 'manifest.json'
+    config.write_text(json.dumps([legacy, active]))
+    monkeypatch.setattr(matt, 'ROOT', workspace)
+    monkeypatch.setattr(matt, 'CONFIG', config)
+    monkeypatch.setattr('sys.argv', ['sync', '--upstream', str(checkout)])
+    matt.main()
+    assert matt.file_map(workspace / legacy['destination']) == before
+    record = json.loads((workspace / active['destination'] / 'UPSTREAM.json').read_text())
+    assert record['commit'] == subprocess.check_output(['git', '-C', str(checkout), 'rev-parse', 'HEAD'], text=True).strip()
+    assert 'retained pinned legacy: retired' in capsys.readouterr().out
+    monkeypatch.setattr('sys.argv', ['sync', '--upstream', str(checkout), '--skill', 'retired'])
+    with pytest.raises(SystemExit) as error:
+        matt.main()
+    assert error.value.code == 2
+    assert matt.file_map(workspace / legacy['destination']) == before
+
+
+def test_two_refreshes_preserve_history_and_one_current_revision(tmp_path):
+    item, checkout, src, dest = fixture_source(tmp_path)
+    matt.refresh(checkout, item, dest)
+    first = json.loads((dest / 'UPSTREAM.json').read_text())['commit']
+    (src / 'new-support.md').write_text('second revision')
+    subprocess.run(['git', '-C', str(checkout), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(checkout), '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'second'], check=True)
+    matt.refresh(checkout, item, dest)
+    second = json.loads((dest / 'UPSTREAM.json').read_text())['commit']
+    provenance = (dest / 'PROVENANCE.md').read_text()
+    assert f'Historical upstream review: `{first}`' in provenance
+    assert f'Current upstream review: `{second}`' in provenance
+    assert provenance.count('Current upstream review:') == 1
+    assert 'Original integration source revision: 3cca18b368ae95cdbdebbff572ccafa662551015.' in provenance
+    before = matt.file_map(dest)
+    matt.refresh(checkout, item, dest)
+    assert matt.file_map(dest) == before

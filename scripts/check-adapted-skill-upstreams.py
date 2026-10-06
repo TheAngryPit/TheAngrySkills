@@ -32,9 +32,14 @@ def changed_files(baseline, current):
 def check(checkout, root=ROOT):
     head = subprocess.check_output(['git', '-C', str(checkout), 'rev-parse', 'HEAD'], text=True).strip()
     reports = []
+    config = root / 'scripts/matt-adaptations.json'
+    policies = {item['destination']: item.get('refresh_policy') for item in json.loads(config.read_text())} if config.is_file() else {}
     for package in PACKAGES:
         baseline = json.loads((root / package / 'UPSTREAM.json').read_text())
-        changed = changed_files(baseline['upstream_sha256'], snapshot(checkout, baseline['source_path']))
+        expected = baseline['upstream_sha256']
+        if policies.get(package) == 'pinned_legacy':
+            expected = {'LICENSE': expected['LICENSE']}
+        changed = changed_files(expected, snapshot(checkout, baseline['source_path']))
         if changed:
             reports.append(dict(skill=Path(package).name, package=package, source_path=baseline['source_path'],
                                 reviewed=baseline['commit'], latest=head, changed=changed))

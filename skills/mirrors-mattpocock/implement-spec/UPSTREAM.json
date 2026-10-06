@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "bef6360cff1bf08cde092c513433eac69f5eddd527ea71eea3ea76b95af2a15e",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "efcda7799ad3d0768aaef2e0d301f9cf065299697466abb3f62646afe1bbc73d",
+    "PROVENANCE.md": "e9bd2f2eef178c43be1878537d5666f89461477be3c7e581b83cc7de385e93d0",
     "SKILL.md": "b79ed4acc198467eca56cd6ad33059cc069ad8f2971c68f243029a3b383b7196",
     "agents/openai.yaml": "fd41efb42c60c96320d6531be7e4bf15cbf5518cd652d57dff27ccffa46988e9"
   }

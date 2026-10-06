@@ -21,7 +21,10 @@
     "name": "resolving-merge-conflicts",
     "destination": "skills/mirrors-mattpocock/resolving-merge-conflicts",
     "source_path": "skills/engineering/resolving-merge-conflicts",
-    "overlay": "patch"
+    "overlay": "patch",
+    "refresh_policy": "pinned_legacy",
+    "retired_source_at": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+    "retirement_reason": "Upstream removed the executable skill; retain the reviewed legacy package and validate it without selecting a missing source during batch refresh."
   },
   {
     "name": "ask-pit",

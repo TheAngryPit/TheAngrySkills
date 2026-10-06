@@ -12,7 +12,9 @@ The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch).
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 These changes preserve the selected workflow; no measured performance or allowance improvement is claimed.
 
-Current upstream review: `24fe0ef7737efae15c87225755e9f6f5965e4888` on 2026-10-05. Per-file source hashes are recorded in UPSTREAM.json.
+Historical upstream review: `24fe0ef7737efae15c87225755e9f6f5965e4888` on 2026-10-05. Per-file source hashes are recorded in UPSTREAM.json.
+
+Current upstream review: `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` on 2026-10-06. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

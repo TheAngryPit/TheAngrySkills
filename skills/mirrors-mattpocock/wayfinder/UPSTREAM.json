@@ -2,7 +2,7 @@
   "name": "wayfinder",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/wayfinder",
-  "commit": "24fe0ef7737efae15c87225755e9f6f5965e4888",
+  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "1e57096c5f4b7b6597fc0065c66b0f7c3283056d9ed0fafeaa75a08979d90139",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "3dc7dfa56f6f98b08ef91e22cb538109c74eaca6da895bcfcd4d450b798bae61",
+    "PROVENANCE.md": "b774c7837e07f6df0acf2c1297a0aa02f488de3aa958cc32d1a70c10cff6b5fc",
     "SKILL.md": "ccda0db4b2cc98891d6b5e91f3f6e3be09bd0a0e7359c73b4bdf999f9f4e8d65",
     "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
   }

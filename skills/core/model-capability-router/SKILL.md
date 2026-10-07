@@ -57,9 +57,9 @@ Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
 current agent is enough when it does not. There is no mandatory model ladder,
 failed-attempt retry, coordinator stage, automatic planning/review delegation,
-CLI resolver, receipt workflow or preset wrapper. Requested planning or review
-delegation remains available when suitable. Importance alone does not justify
-XHigh. A read-only task can still need Astra. Patch size alone does not prove
+CLI resolver, receipt workflow or mandatory preset wrapper. Requested planning
+or review delegation remains available when suitable. Importance alone does
+not justify XHigh. A read-only task can still need Astra. Patch size alone does not prove
 that Luna suits autonomous systems administration.
 
 Luna Max is available when justified by the work; it requires no repeated
@@ -75,6 +75,17 @@ Max and Ultra are outside the habitual palette. Terra and other supported
 models remain available when selected by the operator or bound to a specialist.
 Honour explicit selections and fixed bindings, including those outside this
 palette.
+
+For pstack's three role-aware presets, use the single canonical mapping in
+[references/pstack-role-presets.json](references/pstack-role-presets.json).
+Equilibrado is the default for unbound roles in a new setup with no existing
+role choices. Economia, Equilibrado and Power preserve explicit model/effort
+choices, panel lists, aliases, named specialists and the operator's selected
+main model/effort. Show a preserved binding that differs from a preset as an
+explicit override. If a requested model or effort is unavailable on its
+channel, keep it unchanged and mark it as needing a choice. Select either a
+role-aware preset or one upstream global budget; never apply the global effort
+target over a role-aware preset.
 
 ## Changing selection during work
 

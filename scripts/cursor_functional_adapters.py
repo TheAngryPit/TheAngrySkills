@@ -71,17 +71,32 @@ BUG_FIX_PARTIAL_STEPS = (2, 3, 6)
 PSTACK_FIXTURE_MARKER = ".pstack-disposable-fixture"
 PSTACK_FIXTURE_MARKER_CONTENT = "pstack-local-bug-fix-fixture-v1\n"
 PSTACK_MODEL_ALIASES = ("inherit-parent", "auto")
-PSTACK_ROLE_PRESETS_PATH = (
-    Path(__file__).resolve().parent.parent
-    / "skills/core/model-capability-router/references/pstack-role-presets.json"
+PSTACK_MODEL_ROLES = (
+    "feature, refactoring",
+    "bug-fix",
+    "perf-issue",
+    "hillclimb",
+    "judgment and prose",
+    "hardest tasks",
+    "how explorer",
+    "how explainer",
+    "why investigators",
+    "why synthesizer",
+    "reflect tooling",
+    "reflect judgment, divergent, synthesizer",
+    "arena runners",
+    "arena cross-judge pool",
+    "swarm workers",
+    "architect runners",
+    "interrogate reviewers",
 )
-PSTACK_ROLE_PRESET_POLICY = json.loads(PSTACK_ROLE_PRESETS_PATH.read_text())
-PSTACK_ROLE_METADATA = {
-    role["label"]: role for role in PSTACK_ROLE_PRESET_POLICY["roles"]
-}
-PSTACK_MODEL_ROLES = tuple(PSTACK_ROLE_METADATA)
 PSTACK_MODEL_PANEL_ROLES = frozenset(
-    role for role, metadata in PSTACK_ROLE_METADATA.items() if metadata["panel"]
+    {
+        "arena runners",
+        "arena cross-judge pool",
+        "architect runners",
+        "interrogate reviewers",
+    }
 )
 PSTACK_BUDGETS = {
     "unlimited": {"label": "unlimited — keep max", "target_effort": "max"},
@@ -1699,8 +1714,6 @@ def run_pstack_model_mapping_fixture(
     choices: Mapping[str, object],
     *,
     budget: str | None = None,
-    preset: str | None = None,
-    new_setup: bool = False,
 ) -> dict[str, object]:
     """Dry-run the pstack role mapping against a supplied channel inventory.
 
@@ -1710,9 +1723,7 @@ def run_pstack_model_mapping_fixture(
     ``budget`` is supplied, it applies the upstream budget ladder to each real
     model and picks the highest supported effort at or below the target.  The
     two pstack aliases are valid without appearing in that inventory and are
-    preserved by budget selection.  A named preset fills only missing roles;
-    ``new_setup=True`` selects the router's default preset for a new role-aware
-    setup.  Existing no-preset calls retain their complete-choice contract.
+    preserved by budget selection.
     """
 
     def fail(reason: str, details: Iterable[str] = ()) -> dict[str, object]:
@@ -1723,7 +1734,6 @@ def run_pstack_model_mapping_fixture(
             "writes_performed": False,
             "configuration_changed": False,
             "budget": budget,
-            "preset": preset,
             "reason": reason,
             "details": detail_lines,
             "dry_run": "DRY-RUN cursor-setup-pstack (fixture-only; no config write)\n"
@@ -1736,17 +1746,6 @@ def run_pstack_model_mapping_fixture(
         return fail("model inventory must be a mapping of model to efforts")
     if not isinstance(choices, Mapping):
         return fail("pstack choices must be a mapping of role to selection")
-    if not isinstance(new_setup, bool):
-        return fail("new_setup must be a boolean")
-    if budget is not None and preset is not None:
-        return fail(
-            "choose either one role-aware preset or one global budget, not both"
-        )
-    if preset is not None and preset not in PSTACK_ROLE_PRESET_POLICY["presets"]:
-        return fail(
-            "preset must be one of: "
-            + ", ".join(PSTACK_ROLE_PRESET_POLICY["presets"])
-        )
     if budget is not None and budget not in PSTACK_BUDGETS:
         return fail(
             "budget must be one of: " + ", ".join(PSTACK_BUDGETS),
@@ -1775,18 +1774,9 @@ def run_pstack_model_mapping_fixture(
         supplied_roles = set(choices)
         missing_roles = tuple(sorted(expected_roles - supplied_roles))
         extra_roles = tuple(sorted(supplied_roles - expected_roles))
-        if extra_roles or (
-            missing_roles
-            and (
-                budget is not None
-                or (preset is None and not (new_setup and not choices))
-            )
-        ):
+        if missing_roles or extra_roles:
             details = []
-            if missing_roles and (
-                budget is not None
-                or (preset is None and not (new_setup and not choices))
-            ):
+            if missing_roles:
                 details.append("missing roles: " + ", ".join(missing_roles))
             if extra_roles:
                 details.append("unknown roles: " + ", ".join(extra_roles))
@@ -1825,35 +1815,9 @@ def run_pstack_model_mapping_fixture(
             return result
 
         normalized_choices: dict[str, tuple[dict[str, object], ...]] = {}
-        choice_sources: dict[str, str] = {}
-        applied_preset = preset
-        if (
-            applied_preset is None
-            and new_setup
-            and not choices
-            and missing_roles
-            and budget is None
-        ):
-            applied_preset = PSTACK_ROLE_PRESET_POLICY["default_preset"]
-        preset_spec = PSTACK_ROLE_PRESET_POLICY["presets"].get(applied_preset)
         for role in PSTACK_MODEL_ROLES:
-            role_is_bound = role in choices
-            if role_is_bound:
-                raw = choices[role]
-                choice_sources[role] = "explicit"
-            else:
-                role_class = PSTACK_ROLE_METADATA[role]["class"]
-                recommendation = preset_spec["classes"][role_class]
-                raw = {
-                    "model": recommendation["model"],
-                    "effort": recommendation["effort"],
-                }
-                choice_sources[role] = (
-                    "preset" if preset is not None else "default-preset"
-                )
+            raw = choices[role]
             if role in PSTACK_MODEL_PANEL_ROLES:
-                if not role_is_bound:
-                    raw = [raw]
                 if not isinstance(raw, (list, tuple)) or not raw:
                     raise AdapterError(f"{role} must be a non-empty model panel list")
                 selections = tuple(
@@ -1951,16 +1915,6 @@ def run_pstack_model_mapping_fixture(
             model = selection["model"]
             effort = selection.get("effort")
             label = f"{role}[{index}]" if role in PSTACK_MODEL_PANEL_ROLES else role
-            choice_source = choice_sources[role]
-            if choice_source == "explicit" and preset_spec is not None:
-                recommendation = preset_spec["classes"][
-                    PSTACK_ROLE_METADATA[role]["class"]
-                ]
-                if dict(selection) != {
-                    "model": recommendation["model"],
-                    "effort": recommendation["effort"],
-                }:
-                    choice_source = "preserved-override"
             if (role, index) in budget_issues:
                 unavailable.append(budget_issues[(role, index)])
                 availability = "needs-choice"
@@ -1968,16 +1922,12 @@ def run_pstack_model_mapping_fixture(
                 availability = "alias-preserved"
             elif model not in normalized_inventory:
                 unavailable.append(f"{label}: unavailable model {model!r}")
-                availability = (
-                    "needs-choice" if preset_spec is not None else "unavailable-model"
-                )
+                availability = "unavailable-model"
             elif effort is not None and effort not in normalized_inventory[model]:
                 unavailable.append(
                     f"{label}: unavailable effort {effort!r} for model {model!r}"
                 )
-                availability = (
-                    "needs-choice" if preset_spec is not None else "unavailable-effort"
-                )
+                availability = "unavailable-effort"
             else:
                 availability = "available"
             selection_report.append(
@@ -1987,11 +1937,9 @@ def run_pstack_model_mapping_fixture(
                         requested_choices[role][index]
                     ),
                     "availability": availability,
-                    "source": choice_source,
                 }
             )
         mapping[role] = {
-            "class": PSTACK_ROLE_METADATA[role]["class"],
             "panel": role in PSTACK_MODEL_PANEL_ROLES,
             "count": len(selections),
             "selections": selection_report,
@@ -2005,18 +1953,6 @@ def run_pstack_model_mapping_fixture(
         lines.append(
             f"budget: {budget_spec['label']} ({budget_spec['target_effort']})"
         )
-    if preset_spec:
-        coordinator = preset_spec["coordinator"]
-        preset_source = "selected" if preset is not None else "default"
-        lines.append(
-            f"{preset_source} role-aware preset: {preset_spec['label']} "
-            "(unbound roles only; explicit bindings preserved)"
-        )
-        lines.append(
-            "coordinator recommendation: "
-            f"{coordinator['model']}/{coordinator['effort']} "
-            "(recommendation only; operator selection unchanged)"
-        )
     for role in PSTACK_MODEL_ROLES:
         entries = mapping[role]["selections"]
         rendered = ", ".join(
@@ -2027,11 +1963,6 @@ def run_pstack_model_mapping_fixture(
                     item["selection"].get("effort"),
                 )
                 if value is not None
-            )
-            + (
-                " [preserved explicit override]"
-                if item["source"] == "preserved-override"
-                else ""
             )
             for item in entries
         )
@@ -2053,15 +1984,6 @@ def run_pstack_model_mapping_fixture(
             "budget": budget,
             "budget_label": budget_spec["label"] if budget_spec else None,
             "target_effort": budget_spec["target_effort"] if budget_spec else None,
-            "preset": preset,
-            "selected_preset": preset,
-            "applied_preset": applied_preset,
-            "default_preset": PSTACK_ROLE_PRESET_POLICY["default_preset"],
-            "preset_source": preset_source if preset_spec else None,
-            "preset_label": preset_spec["label"] if preset_spec else None,
-            "coordinator_recommendation": (
-                dict(preset_spec["coordinator"]) if preset_spec else None
-            ),
             "unavailable": tuple(unavailable),
             "mapping": mapping,
             "dry_run": "\n".join(lines),
@@ -2076,15 +1998,6 @@ def run_pstack_model_mapping_fixture(
         "budget": budget,
         "budget_label": budget_spec["label"] if budget_spec else None,
         "target_effort": budget_spec["target_effort"] if budget_spec else None,
-        "preset": preset,
-        "selected_preset": preset,
-        "applied_preset": applied_preset,
-        "default_preset": PSTACK_ROLE_PRESET_POLICY["default_preset"],
-        "preset_source": preset_source if preset_spec else None,
-        "preset_label": preset_spec["label"] if preset_spec else None,
-        "coordinator_recommendation": (
-            dict(preset_spec["coordinator"]) if preset_spec else None
-        ),
         "mapping": mapping,
         "dry_run": "\n".join(lines),
     }

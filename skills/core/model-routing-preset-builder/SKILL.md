@@ -14,6 +14,13 @@ Low; Medium is the shared recommendation, not a forced configuration change.
 Do not revive retired schema-3 presets, mandatory coordinator topology or
 resolver scripts.
 
+For pstack role-aware choices, the router's
+`references/pstack-role-presets.json` is the only preset mapping. Change that
+source only when the operator asks for a durable shared-policy change. Keep a
+selected role-aware preset separate from pstack's global budget options; do not
+apply one global effort over its per-role recommendations. Equilibrado is the
+default only for a new setup with no existing role choices.
+
 1. Read the operator's requested changes and current native model/effort
    availability for each relevant channel. Preserve explicit selections.
 2. Change only the requested profile choices or task boundaries. Keep task

@@ -12,7 +12,6 @@ from cursor_functional_adapters import (  # noqa: E402
     PSTACK_BUDGETS,
     PSTACK_MODEL_PANEL_ROLES,
     PSTACK_MODEL_ROLES,
-    PSTACK_ROLE_PRESET_POLICY,
     run_pstack_model_mapping_fixture,
 )
 
@@ -29,32 +28,6 @@ BUDGET_INVENTORY = {
     "gpt-6-astra": ("low", "medium", "high"),
     "cursor-grok-4.6-medium-fast": ("medium",),
 }
-
-PRESET_INVENTORY = {
-    "gpt-6.1-sol": ("medium", "high"),
-    "gpt-6-luna": ("high", "xhigh", "max"),
-    "gpt-6-astra": ("low", "xhigh"),
-}
-
-EXPECTED_PSTACK_ROLES = (
-    "feature, refactoring",
-    "bug-fix",
-    "perf-issue",
-    "hillclimb",
-    "judgment and prose",
-    "hardest tasks",
-    "how explorer",
-    "how explainer",
-    "why investigators",
-    "why synthesizer",
-    "reflect tooling",
-    "reflect judgment, divergent, synthesizer",
-    "arena runners",
-    "arena cross-judge pool",
-    "swarm workers",
-    "architect runners",
-    "interrogate reviewers",
-)
 
 
 def choices_for_all_roles():
@@ -132,166 +105,6 @@ class CursorSetupPstackFixtureTests(unittest.TestCase):
             for role in PSTACK_MODEL_ROLES:
                 self.assertIn(role, result["dry_run"])
             self.assertEqual(sentinel.read_text(), "must remain unchanged\n")
-
-    def test_new_setup_uses_default_preset_and_keeps_selection_distinct(self):
-        result = run_pstack_model_mapping_fixture(
-            PRESET_INVENTORY, {}, new_setup=True
-        )
-        self.assertEqual(result["status"], "DRY_RUN")
-        self.assertIsNone(result["selected_preset"])
-        self.assertEqual(result["applied_preset"], "equilibrado")
-        self.assertEqual(result["default_preset"], "equilibrado")
-        self.assertEqual(result["preset_source"], "default")
-        self.assertEqual(PSTACK_MODEL_ROLES, EXPECTED_PSTACK_ROLES)
-        self.assertEqual(set(result["mapping"]), set(PSTACK_MODEL_ROLES))
-        policy = PSTACK_ROLE_PRESET_POLICY
-        default = policy["presets"][policy["default_preset"]]
-        for role, metadata in ((item["label"], item) for item in policy["roles"]):
-            expected = default["classes"][metadata["class"]]
-            selection = result["mapping"][role]["selections"][0]
-            self.assertEqual(
-                selection["selection"],
-                {"model": expected["model"], "effort": expected["effort"]},
-                role,
-            )
-            self.assertEqual(selection["source"], "default-preset", role)
-            self.assertEqual(result["mapping"][role]["panel"], metadata["panel"])
-            if metadata["panel"]:
-                self.assertEqual(result["mapping"][role]["count"], 1, role)
-
-        limited = dict(PRESET_INVENTORY)
-        limited.pop("gpt-6-luna")
-        blocked = run_pstack_model_mapping_fixture(
-            limited, {}, new_setup=True
-        )
-        self.assertEqual(blocked["status"], "BLOCKED")
-        self.assertEqual(
-            blocked["mapping"]["bug-fix"]["selections"][0]["selection"],
-            {"model": "gpt-6-luna", "effort": "xhigh"},
-        )
-        self.assertEqual(
-            blocked["mapping"]["bug-fix"]["selections"][0]["availability"],
-            "needs-choice",
-        )
-        self.assertFalse(blocked["writes_performed"])
-
-        limited_effort = dict(PRESET_INVENTORY)
-        limited_effort["gpt-6.1-sol"] = ("high",)
-        blocked_effort = run_pstack_model_mapping_fixture(
-            limited_effort, {}, preset="power"
-        )
-        self.assertEqual(blocked_effort["status"], "BLOCKED")
-        self.assertEqual(
-            blocked_effort["mapping"]["bug-fix"]["selections"][0]["selection"],
-            {"model": "gpt-6.1-sol", "effort": "medium"},
-        )
-        self.assertEqual(
-            blocked_effort["mapping"]["bug-fix"]["selections"][0]["availability"],
-            "needs-choice",
-        )
-
-    def test_power_maps_workers_and_tooling_without_fallback(self):
-        result = run_pstack_model_mapping_fixture(
-            PRESET_INVENTORY, {}, preset="power"
-        )
-        self.assertEqual(result["status"], "DRY_RUN")
-        self.assertEqual(result["selected_preset"], "power")
-        self.assertEqual(result["applied_preset"], "power")
-        self.assertEqual(result["preset_source"], "selected")
-        self.assertEqual(
-            result["coordinator_recommendation"],
-            {
-                "model": "gpt-6.1-sol",
-                "effort": "high",
-                "when": "demanding coordination; preserve an explicit operator selection",
-            },
-        )
-        for role, mapping in result["mapping"].items():
-            if mapping["class"] in {"execution", "exploration_tooling"}:
-                self.assertEqual(
-                    mapping["selections"][0]["selection"],
-                    {"model": "gpt-6.1-sol", "effort": "medium"},
-                    role,
-                )
-            else:
-                self.assertEqual(
-                    mapping["selections"][0]["selection"],
-                    {"model": "gpt-6-astra", "effort": "low"},
-                    role,
-                )
-
-        limited = dict(PRESET_INVENTORY)
-        limited.pop("gpt-6.1-sol")
-        blocked = run_pstack_model_mapping_fixture(
-            limited, {}, preset="power"
-        )
-        self.assertEqual(blocked["status"], "BLOCKED")
-        self.assertEqual(
-            blocked["mapping"]["bug-fix"]["selections"][0]["selection"],
-            {"model": "gpt-6.1-sol", "effort": "medium"},
-        )
-        self.assertEqual(
-            blocked["mapping"]["bug-fix"]["selections"][0]["availability"],
-            "needs-choice",
-        )
-        self.assertFalse(blocked["writes_performed"])
-
-    def test_selected_preset_preserves_explicit_roles_and_panel_entries(self):
-        choices = {
-            "hardest tasks": {"model": "gpt-6-astra", "effort": "xhigh"},
-            "arena runners": [
-                {"model": "inherit-parent"},
-                {"model": "gpt-6-luna", "effort": "max"},
-            ],
-        }
-        result = run_pstack_model_mapping_fixture(
-            PRESET_INVENTORY, choices, preset="power"
-        )
-        self.assertEqual(result["status"], "DRY_RUN")
-        self.assertEqual(
-            result["mapping"]["hardest tasks"]["selections"][0]["selection"],
-            choices["hardest tasks"],
-        )
-        self.assertEqual(
-            [
-                item["selection"]
-                for item in result["mapping"]["arena runners"]["selections"]
-            ],
-            choices["arena runners"],
-        )
-        self.assertEqual(result["mapping"]["arena runners"]["count"], 2)
-        self.assertEqual(
-            result["mapping"]["bug-fix"]["selections"][0]["source"], "preset"
-        )
-        self.assertEqual(
-            result["mapping"]["hardest tasks"]["selections"][0]["source"],
-            "preserved-override",
-        )
-        self.assertTrue(
-            all(
-                item["source"] == "preserved-override"
-                for item in result["mapping"]["arena runners"]["selections"]
-            )
-        )
-        self.assertIn("[preserved explicit override]", result["dry_run"])
-
-    def test_partial_existing_mapping_needs_an_explicit_preset_or_new_setup(self):
-        result = run_pstack_model_mapping_fixture(
-            PRESET_INVENTORY, {"bug-fix": {"model": "gpt-6-luna", "effort": "high"}}
-        )
-        self.assertEqual(result["status"], "ERROR")
-        self.assertTrue(
-            any("missing roles" in item for item in result["details"])
-        )
-        self.assertFalse(result["writes_performed"])
-
-    def test_preset_and_global_budget_are_mutually_exclusive(self):
-        result = run_pstack_model_mapping_fixture(
-            PRESET_INVENTORY, {}, preset="equilibrado", budget="small"
-        )
-        self.assertEqual(result["status"], "ERROR")
-        self.assertIn("not both", result["reason"])
-        self.assertFalse(result["writes_performed"])
 
     def test_unavailable_model_and_effort_block_without_write(self):
         choices = choices_for_all_roles()

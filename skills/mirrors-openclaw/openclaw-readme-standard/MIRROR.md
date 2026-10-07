@@ -5,6 +5,6 @@ Published skill: openclaw-readme-standard
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/readme-standard
 Branch: main
-Commit: 3d3034af58d4c0a137b8ffe42b4c190fcd5bdd38
+Commit: 7e733069bc6d4e4e77adddb4fb4fcaca5a15e021
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

@@ -5,6 +5,6 @@ Published skill: taste-imagegen-frontend-web
 Source: https://github.com/Leonxlnx/taste-skill.git
 Source path: skills/imagegen-frontend-web
 Branch: main
-Commit: ce26fc25c0e5e8cab638f883de62d9a86ee5e45b
+Commit: b482f7a970abb98c4108d4a9f761e458c64cefc8
 
 This skill is vendored from upstream with a `taste-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

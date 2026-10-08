@@ -5,6 +5,6 @@ Published skill: hyperframes-slideshow
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/slideshow
 Branch: main
-Commit: 5c7f6316d3646477a0f725176c00335cb8575560
+Commit: 188475aaf2cc94d05a5a641341cab3020c131f16
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

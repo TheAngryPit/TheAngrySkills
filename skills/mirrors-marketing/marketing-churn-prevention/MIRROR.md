@@ -5,6 +5,6 @@ Published skill: marketing-churn-prevention
 Source: https://github.com/coreyhaines31/marketingskills.git
 Source path: skills/churn-prevention
 Branch: main
-Commit: b9ba399dd88b082b926e261e8ccfb843d20aa066
+Commit: 1efedbc5148b54b2f0f6c6c9fe0be62e151c7fff
 
 This skill is vendored from upstream with a `marketing-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

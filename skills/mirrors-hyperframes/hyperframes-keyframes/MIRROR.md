@@ -5,6 +5,6 @@ Published skill: hyperframes-keyframes
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/hyperframes-keyframes
 Branch: main
-Commit: ba08acb1f506b06757bd77a7e7f491d412647fbd
+Commit: fbbc4e88c59c01bfec69368a9a587d3438a7d32a
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

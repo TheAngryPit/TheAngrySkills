@@ -407,7 +407,14 @@ def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     if full_tree.is_file():
         ledger = json.loads(full_tree.read_text())
         result = blank_result("cursor", "pstack", CURSOR_REPOSITORY, ledger["commit"], head(checkout))
-        expected = ledger["files"]
+        expected = dict(ledger["files"])
+        additions_file = root / "sources/cursor-plugins/additions.json"
+        if additions_file.is_file():
+            additions = json.loads(additions_file.read_text())
+            for path, record in additions["files"].items():
+                if path in expected:
+                    raise ValueError(f"Cursor addition collides with preserved baseline: {path}")
+                expected[path] = record
         current = tree_files(checkout, head(checkout))
         known_skills = {p for p in expected if p.endswith("/SKILL.md")}
         current_skills = {p for p in current if p.endswith("/SKILL.md")}

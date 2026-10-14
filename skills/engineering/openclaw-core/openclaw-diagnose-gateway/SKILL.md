@@ -16,6 +16,10 @@ Run bounded checks through that installation: `openclaw doctor --lint`, `opencla
 
 Use the packaged source playbook for condition signatures and the smallest read-only repeat/probe. Do not change config, approve devices, restart services, kill listeners or run a fix under a diagnostic request. Report observed state, causal evidence, inconclusive checks and the exact next authorized repair. Incidental diagnostic logs/cache bookkeeping are distinct from configuration or state repair.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

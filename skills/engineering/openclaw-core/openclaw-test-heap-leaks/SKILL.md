@@ -18,6 +18,10 @@ For a runtime closure fix, use the selected checkout's dedicated producer descri
 
 Report same-PID/source identities, retained families, retainer support, overhead and leak classification as proven, likely or inconclusive. A lower peak RSS alone does not establish the runtime objects were released.
 
+## Selective installation
+
+This workflow requires these installed companion skills: `$openclaw-test-performance`, `$openclaw-testing`. The installer does not resolve them automatically; select these names together or verify they are already installed.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

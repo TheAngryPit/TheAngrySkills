@@ -16,6 +16,10 @@ Confirm the exact PID and owner before attach, keep ports on loopback, and use d
 
 Before finishing, resume retained processes, remove task-added debugging statements, and rerun the normal project proof without a debugger. Report the failing frame, observed values with private data excluded, root cause and normal command result. A successful attach is not verification of the fix.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

@@ -18,6 +18,10 @@ Verify config discovery and round-trip without leaking credentials, then exercis
 
 Report artifact identity, exact command/commit, matrix coverage, fixture/live distinction, lifecycle cleanup and remaining gaps. Stop optional expansion once the changed contract and required gates are sufficiently proven.
 
+## Selective installation
+
+This workflow requires these installed companion skills: `$openclaw-testing`. The installer does not resolve them automatically; select these names together or verify they are already installed.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

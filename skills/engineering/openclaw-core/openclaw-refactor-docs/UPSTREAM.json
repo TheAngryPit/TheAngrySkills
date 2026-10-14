@@ -8,9 +8,10 @@
   "visibility": "public-promotion-approved",
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
-    "SKILL.md": "a0040e9c3f09b5f04b32d416357367e319cc5b8de322e9a140ca9cb839193235",
+    "SKILL.md": "ad0b18562c726a760d603164e5d95c7228195ac40b0a843ea9694771a48f5495",
     "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
     "agents/openai.yaml": "8ed66bb33d0305c36b073b011fcf481e7fd5394db25d3ebb9738479c3372e039",
+    "references/technical-documentation/LICENSE": "021abf1cacb291c2b0be92ab078d6c336f859f1bec9a3a3afbc039362971e31e",
     "references/technical-documentation/SKILL.source.md": "67a93dc4b2263d23de63d6d3e6fca6447f4f594fe856c1514db79d94b65d3c5a",
     "references/upstream/SKILL.source.md": "71e06f55fe8e941c4b818247b750d64e8e1cb2bccfb00c681c4840e52b8db17a",
     "references/technical-documentation/references/agent-and-contributing.md": "eb869ee39731c37298e892069b592e70d872a8dff0dd722106d3054f5b48cb68",
@@ -29,5 +30,11 @@
   "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
   "source_backup": "sources/openclaw-core",
   "adapted_resource_entrypoint": false,
-  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills"
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source",
+  "dependency_license": {
+    "source": "https://github.com/vincentkoc/dotskills/blob/main/LICENSE",
+    "blob": "a7cb85a0d651801a2d601d0b31cbbc8b417dff76",
+    "path": "references/technical-documentation/LICENSE"
+  }
 }

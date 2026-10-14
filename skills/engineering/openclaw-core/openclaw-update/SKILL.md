@@ -18,6 +18,10 @@ Use the supported managed update/Doctor path only in its authorized scope. For L
 
 After the selected update, inspect that same binary/process, `health --json`, deep status and a task-relevant real flow where available. Verify state preservation and target-version readback. Keep package/version success separate from live runtime recovery and pending plugin migrations. Report exact owner, versions, proof and remaining gaps; an update command exit alone is not completion.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

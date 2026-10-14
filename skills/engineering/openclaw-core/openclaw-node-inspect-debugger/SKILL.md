@@ -16,6 +16,10 @@ Bind inspector ports to loopback, select distinct ports for distinct targets, an
 
 After the session, resume a process that should continue, release only owned resources, remove temporary breakpoints from intended changes, and rerun the normal failing command without the debugger. Report the reproduced boundary, captured evidence, fix and normal proof; an inspector connection alone is not a repaired bug.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

@@ -10,6 +10,29 @@ Use full-depth discovery for the nested pack and select only desired names. Exam
 npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --full-depth -g -a codex -y -s openclaw-diagnose-gateway
 ```
 
+## Selective installation and companion skills
+
+The Skills CLI installs only the names explicitly selected with `-s`; it does not resolve this pack's `manifest.json`. Required companions must be selected in the same install or already be present.
+
+| Requested workflow | Required additional selections |
+|---|---|
+| openclaw-debugging | openclaw-testing |
+| openclaw-test-performance | openclaw-testing |
+| openclaw-test-heap-leaks | openclaw-test-performance, openclaw-testing |
+| openclaw-release-plugin-testing | openclaw-testing |
+
+The other eight workflows have no mandatory installed companion from this pack. Their checkout-owned prerequisites and on-demand upstream source references still apply. Documentation-refactoring includes its documentation dependency and license as packaged resources.
+
+For a complete heap-investigation install:
+
+```bash
+npx skills add https://github.com/TheAngryPit/TheAngrySkills.git --full-depth -g -a codex -y -s openclaw-test-heap-leaks openclaw-test-performance openclaw-testing
+```
+
+Conditional branches also need the relevant companion: test-performance uses openclaw-test-heap-leaks for memory investigations and openclaw-release-plugin-testing for artifact-sensitive plugin proof. A selected remote-proof route uses the separate shared openclaw-crabbox package; include it only when that route is requested and authorized. These selections do not install runtime CLIs, cloud profiles or credentials.
+
+To install the complete twelve-skill pack, list all twelve names from the manifest explicitly; this also satisfies every in-pack required companion. The manifest records required and conditional dependencies for review, not as a claim of automatic installation.
+
 `manifest.json` lists the exact twelve names and invocation policies. Diagnostics and debugger workflows use available CLIs; repository workflows resolve the selected OpenClaw checkout. Update and connection repair require explicit Codex invocation and preserve the actual target owner's authority.
 
 ## Sources and scope

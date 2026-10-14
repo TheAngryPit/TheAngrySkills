@@ -33,7 +33,7 @@ git status --short --branch
 pnpm changed:lanes --json
 ```
 
-Follow [`openclaw-testing`](../openclaw-testing/SKILL.md) for dependency
+Follow [`openclaw-testing`](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-testing/SKILL.md) for dependency
 ownership and the choice of local or remote proof.
 
 ## Runner Choice

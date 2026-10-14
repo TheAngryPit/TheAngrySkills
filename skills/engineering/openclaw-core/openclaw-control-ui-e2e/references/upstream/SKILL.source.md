@@ -131,7 +131,7 @@ scenario options/method responses.
 ## Standalone Recording
 
 - Narrated captions, eased target zooms, fast-forwarded pauses: use
-  [proof-video dev skill](../proof-video/SKILL.md). Standalone template records
+  [proof-video dev skill](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/proof-video/SKILL.md). Standalone template records
   raw evidence + cue sidecar, renders captioned MP4 with system ffmpeg.
   Keep raw capture; attach inspected polished video.
 - Already-running mocked Control UI URL: temporary Playwright script or

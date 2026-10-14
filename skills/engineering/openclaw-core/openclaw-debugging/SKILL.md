@@ -18,6 +18,12 @@ Full-redacted payload logs may still contain private prompts/messages. Use bound
 
 Do not start another live Gateway or change debug flags in a shared service implicitly. Restore task-owned temporary diagnostics after proof and report exact provider/config, observed boundary, root cause, rerun evidence and remaining gaps.
 
+## Selective installation
+
+This workflow requires these installed companion skills: `$openclaw-testing`. The installer does not resolve them automatically; select these names together or verify they are already installed.
+
+Conditional companions: `$openclaw-crabbox` for selected remote proof. Select them only for that branch.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

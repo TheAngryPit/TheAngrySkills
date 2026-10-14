@@ -15,10 +15,10 @@ Read the owner runbook and choose the matching workflow:
 
 | Installation                               | Update path                                                                                                                                                |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Canonical live main checkout and macOS app | [openclaw-live-updater](../openclaw-live-updater/SKILL.md).                                                                                                |
-| Operator-configured Team server            | [update-team-server](../update-team-server/SKILL.md).                                                                                                      |
+| Canonical live main checkout and macOS app | [openclaw-live-updater](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-live-updater/SKILL.md).                                                                                                |
+| Operator-configured Team server            | [update-team-server](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/update-team-server/SKILL.md).                                                                                                      |
 | Other managed deployments                  | Deployment-specific skill/runbook and existing owner, including containers and declarative installations.                                                  |
-| Standard package or single-user source     | [Updating](../../../docs/install/updating.md) and the [update CLI contract](../../../docs/cli/update.md), using the owning CLI on the target host/profile. |
+| Standard package or single-user source     | [Updating](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/install/updating.md) and the [update CLI contract](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/cli/update.md), using the owning CLI on the target host/profile. |
 
 Follow the selected workflow's commands, locks, backup/migration requirements, recovery, and cleanup. For the operator-configured Team server, only its designated Team Server · Night Watch owner executes live deployment, restart, cutover, rollback, and recovery through the canonical controller. Do not delegate those actions or designate an external executor through coordination/admission. Other workers may investigate, test, review, and land fixes, then hand results to Night Watch; an already-running external operation requires the linked Team skill's safe exact-transaction handback, never a duplicate controller or blind kill. The linked Team skill also owns notification timing and content; report non-action outcomes and blockers privately to the requesting user, not to Team. Do not apply standard CLI updates inside a separately managed release or running container, mutate files used by a live Gateway, or overwrite dirty checkouts.
 
@@ -28,7 +28,7 @@ Follow the selected workflow's commands, locks, backup/migration requirements, r
 
 An update request includes routine restart and bounded interruption, subject to deployment policy. **Eligible sessions resume automatically. Do not ask again solely because agents, replies, or tasks are active.** Use the owner's graceful drain and recovery-preserving interruption.
 
-Task cancellation, session aborts, and queue clearing can discard work; do not use them to manufacture idleness or manually replay recovered turns. PTYs do not survive. [Restart recovery](../../../docs/gateway/restart-recovery.md) owns recovery behavior and limits.
+Task cancellation, session aborts, and queue clearing can discard work; do not use them to manufacture idleness or manually replay recovered turns. PTYs do not survive. [Restart recovery](https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/gateway/restart-recovery.md) owns recovery behavior and limits.
 
 If the owner lacks controlled interruption, report or repair that gap within scope. Do not invent force flags, bypass persistence/compatibility gates, or repeat the interruption approval question.
 

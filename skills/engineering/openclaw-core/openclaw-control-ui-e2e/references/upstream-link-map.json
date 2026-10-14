@@ -3,9 +3,12 @@
   "source_commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
   "links": [
     {
+      "source_file": "references/upstream/SKILL.source.md",
+      "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "../proof-video/SKILL.md",
       "repository_path": ".agents/skills/proof-video/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/proof-video/SKILL.md"
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/proof-video/SKILL.md",
+      "bundled_target": null
     }
   ]
 }

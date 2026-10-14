@@ -18,6 +18,10 @@ Resolve repository docs navigation and existing generation ownership; update a g
 
 Compare old/new fact coverage and follow links into moved details. Examples involving live data, credentials, installs or service changes need their real scope. Keep public-facing copy free of private operator details. Report kept/moved/retired facts, source verification, checks and unverified claims; editing docs does not authorize publishing them.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

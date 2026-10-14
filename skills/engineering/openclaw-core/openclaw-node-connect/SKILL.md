@@ -18,6 +18,10 @@ Approve a device only when the task/confirmation authorizes that exact access ch
 
 After an authorized repair, require a new client attempt proving intended route/auth and initial browser requests or native node presence, with no immediate reconnect/auth failure. Report each transition separately. QR creation, ping, approval or a paired-device count alone is not a working connection.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

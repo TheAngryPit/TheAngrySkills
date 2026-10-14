@@ -6,84 +6,124 @@
       "path": "skills/engineering/openclaw-core/openclaw-diagnose-gateway",
       "original_name": "diagnose-gateway",
       "source_path": "custodian-skills/diagnose-gateway",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-node-inspect-debugger",
       "path": "skills/engineering/openclaw-core/openclaw-node-inspect-debugger",
       "original_name": "node-inspect-debugger",
       "source_path": "skills/node-inspect-debugger",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-python-debugpy",
       "path": "skills/engineering/openclaw-core/openclaw-python-debugpy",
       "original_name": "python-debugpy",
       "source_path": "skills/python-debugpy",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-control-ui-e2e",
       "path": "skills/engineering/openclaw-core/openclaw-control-ui-e2e",
       "original_name": "control-ui-e2e",
       "source_path": ".agents/skills/control-ui-e2e",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-debugging",
       "path": "skills/engineering/openclaw-core/openclaw-debugging",
       "original_name": "openclaw-debugging",
       "source_path": ".agents/skills/openclaw-debugging",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [
+        "openclaw-testing"
+      ],
+      "conditional_companions": {
+        "openclaw-crabbox": "selected remote proof"
+      }
     },
     {
       "name": "openclaw-testing",
       "path": "skills/engineering/openclaw-core/openclaw-testing",
       "original_name": "openclaw-testing",
       "source_path": ".agents/skills/openclaw-testing",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {
+        "openclaw-crabbox": "selected remote/platform proof"
+      }
     },
     {
       "name": "openclaw-test-performance",
       "path": "skills/engineering/openclaw-core/openclaw-test-performance",
       "original_name": "openclaw-test-performance",
       "source_path": ".agents/skills/openclaw-test-performance",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [
+        "openclaw-testing"
+      ],
+      "conditional_companions": {
+        "openclaw-test-heap-leaks": "heap/RSS investigation",
+        "openclaw-release-plugin-testing": "package-artifact-sensitive plugin work",
+        "openclaw-crabbox": "selected remote proof"
+      }
     },
     {
       "name": "openclaw-test-heap-leaks",
       "path": "skills/engineering/openclaw-core/openclaw-test-heap-leaks",
       "original_name": "openclaw-test-heap-leaks",
       "source_path": ".agents/skills/openclaw-test-heap-leaks",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [
+        "openclaw-test-performance"
+      ],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-release-plugin-testing",
       "path": "skills/engineering/openclaw-core/openclaw-release-plugin-testing",
       "original_name": "release-openclaw-plugin-testing",
       "source_path": ".agents/skills/release-openclaw-plugin-testing",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [
+        "openclaw-testing"
+      ],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-refactor-docs",
       "path": "skills/engineering/openclaw-core/openclaw-refactor-docs",
       "original_name": "openclaw-refactor-docs",
       "source_path": ".agents/skills/openclaw-refactor-docs",
-      "implicit": true
+      "implicit": true,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-update",
       "path": "skills/engineering/openclaw-core/openclaw-update",
       "original_name": "openclaw-update",
       "source_path": ".agents/skills/openclaw-update",
-      "implicit": false
+      "implicit": false,
+      "required_companions": [],
+      "conditional_companions": {}
     },
     {
       "name": "openclaw-node-connect",
       "path": "skills/engineering/openclaw-core/openclaw-node-connect",
       "original_name": "node-connect",
       "source_path": "skills/node-connect",
-      "implicit": false
+      "implicit": false,
+      "required_companions": [],
+      "conditional_companions": {}
     }
   ],
   "dependency": "technical-documentation vendored under refactor-docs references only"

@@ -18,6 +18,10 @@ Run focused Vitest/Playwright proof through existing repository commands. Separa
 
 Inspect the actual requested output and relevant wide/narrow states through an authorized surface, fix concrete defects and inspect again. If native rendering access is denied, preserve that refusal and report visual proof pending. Do not upload recordings without scoped publication authority and disclosure review.
 
+## Selective installation
+
+No mandatory installed companion from this pack is required. Checkout/runtime prerequisites and the conditional source references still apply.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

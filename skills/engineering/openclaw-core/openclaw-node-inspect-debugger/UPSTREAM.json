@@ -8,7 +8,7 @@
   "visibility": "public-promotion-approved",
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
-    "SKILL.md": "6630fc99ce664edca9e269855180fc9d67f4c9c1b78caa03f8416b2bae1ed4b7",
+    "SKILL.md": "98d234556eeb8e48e2865e1f6bd5673256a3ed2701f219c8316b2c250054658a",
     "references/upstream-link-map.json": "9bba62e6bed96c6b89ac1e5410995b067b68d47bcd15de2df18557467ad3214d",
     "agents/openai.yaml": "aeeb481b2369d32d0f7a7af41a01a4751cd9db54dd92604fb2244b8fb8ca7ee9",
     "references/upstream/SKILL.source.md": "50d2f6828eaf4bbf7ccbaec5af928f9af978e93b7c679b0f3c8afe2a80ab7d52"
@@ -16,5 +16,6 @@
   "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
   "source_backup": "sources/openclaw-core",
   "adapted_resource_entrypoint": false,
-  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills"
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
 }

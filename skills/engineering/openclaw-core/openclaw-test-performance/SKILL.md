@@ -18,6 +18,12 @@ Preserve dependency-install ownership and separate Vitest cache paths across con
 
 Report before/after seconds, CPU and peak RSS, coverage changes, exact commands/commits and residual noise. A gain measured under different machine/load/worker conditions is not a proven optimization. Commit/push only when the task authorizes them.
 
+## Selective installation
+
+This workflow requires these installed companion skills: `$openclaw-testing`. The installer does not resolve them automatically; select these names together or verify they are already installed.
+
+Conditional companions: `$openclaw-test-heap-leaks` for heap/RSS investigation; `$openclaw-release-plugin-testing` for package-artifact-sensitive plugin work; `$openclaw-crabbox` for selected remote proof. Select them only for that branch.
+
 ## Source procedures and boundary
 
 Read [the packaged upstream entrypoint](references/upstream/SKILL.source.md) when using this workflow; its supporting files remain beside it. This root owns Codex invocation, target resolution and authorization. Upstream examples are reference procedures, not grants of access, installation, deployment, publication or another model/provider. Use native Codex tools where capable and preserve an actual refusal. The operator's chosen model, project instructions and source-trust policy remain authoritative.

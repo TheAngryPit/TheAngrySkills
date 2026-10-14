@@ -67,7 +67,7 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(f"107 physical, {published_count()} published", result.stdout)
+        self.assertIn(f"110 physical, {published_count()} published", result.stdout)
 
     def test_reviewed_pstack_source_overrides_preserve_the_global_baseline(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
@@ -107,6 +107,8 @@ class CursorMirrorTests(unittest.TestCase):
                      "cursor-origin-api", "cursor-port-github-app-to-origin",
                      "cursor-setup-benny", "cursor-triage-issue-reports", "cursor-reproduce-and-fix-issues"}
         expected_names |= refreshed
+        additions = {"cursor-in-your-own-words", "cursor-ketchup", "cursor-sharpen"}
+        expected_names |= additions
         self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
         entries = {entry["published_name"]: entry for entry in manifest["skills"]}
         overrides = {
@@ -117,7 +119,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertEqual(set(overrides), expected_names)
         self.assertEqual(set(state["source_commit_overrides"]), expected_names)
         self.assertEqual(state["source_commit_overrides"], overrides)
-        self.assertEqual(set(overrides.values()), {previous, reported})
+        self.assertEqual(set(overrides.values()), {previous, reported, "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8"})
 
         for name in sorted(expected_names):
             entry = entries[name]
@@ -127,7 +129,7 @@ class CursorMirrorTests(unittest.TestCase):
             mirror_root = REPO / ("skills/mirrors-cursor" if entry["publish"] else "sources/cursor-plugins/adapted-held")
             mirror = (mirror_root / name / "MIRROR.md").read_text()
             self.assertIn(entry["family"], {"pstack", "dyl-stack", "third_party/google-docs", "third_party/google-drive", "third_party/google-sheets", "third_party/google-slides", "third_party/x-money", "third_party/x", "grok-voice", "origin-apps"})
-            pin = reported if name in refreshed else previous
+            pin = "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8" if name in additions else (reported if name in refreshed else previous)
             self.assertEqual(entry["source_commit"], pin)
             self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
             self.assertIn(f"Commit: {pin}\n", mirror)

@@ -2558,6 +2558,75 @@
       "upstream_purpose": "Plan an existing GitHub App port from repository evidence and the current Origin API spec; no implementation or external feedback submission.",
       "promotion_reason": "Operator requested complete Cursor source parity and native Codex adaptations; no installation.",
       "validation_requirement": "Full source census, deterministic rendering, namespaced dependency references, source/license hashes and runtime capability boundaries."
+    },
+    {
+      "availability": "source and distribution validated; native runtime unproven",
+      "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação nominal",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/in-your-own-words/SKILL.md",
+      "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
+      "promotion_reason": "Operator approved selected Workbench PR41 adaptation, excluding Tailscale",
+      "publish": true,
+      "published_name": "cursor-in-your-own-words",
+      "upstream_purpose": "in-your-own-words explicit user command",
+      "upstream_skill": "in-your-own-words",
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8"
+    },
+    {
+      "availability": "source and distribution validated; native runtime unproven",
+      "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação nominal",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "d9704b154081af306b6583b2752498d454f9d761e9989ff1f037efd414f86bb4"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/ketchup/SKILL.md",
+      "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
+      "promotion_reason": "Operator approved selected Workbench PR41 adaptation, excluding Tailscale",
+      "publish": true,
+      "published_name": "cursor-ketchup",
+      "upstream_purpose": "ketchup explicit user command",
+      "upstream_skill": "ketchup",
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8"
+    },
+    {
+      "availability": "source and distribution validated; native runtime unproven",
+      "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
+      "baseline_security_verdict": "safe_docs_only",
+      "decision_classification": "adaptação nominal",
+      "declared_for_distribution": true,
+      "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
+      "family": "pstack",
+      "files": {
+        "SKILL.md": "6bcd73916696eb9c5b79b6f960983760c34bcc28937c11142dd8d86b5107aa46"
+      },
+      "license_path": "pstack/LICENSE",
+      "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "path": "pstack/skills/sharpen/SKILL.md",
+      "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
+      "promotion_reason": "Operator approved selected Workbench PR41 adaptation, excluding Tailscale",
+      "publish": true,
+      "published_name": "cursor-sharpen",
+      "upstream_purpose": "sharpen explicit user command",
+      "upstream_skill": "sharpen",
+      "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8"
     }
   ],
   "snapshot_scope": "104 physical skills, their in-skill support and licenses; 28 agent/hook/rule files; 18 hash-checked Pstack README/guide/image files. Eight operator exclusions retained. Source distribution does not activate runtimes.",

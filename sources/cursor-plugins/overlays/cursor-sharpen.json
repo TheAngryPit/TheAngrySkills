@@ -1,0 +1,41 @@
+{
+  "source_path": "pstack/skills/sharpen/SKILL.md",
+  "source_sha256": "6bcd73916696eb9c5b79b6f960983760c34bcc28937c11142dd8d86b5107aa46",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "description: \"Sharpen a task before starting: the expert approach, what the user is really after, and the right level of specification. Use for /sharpen.\"",
+      "after": "description: \"Use when the user explicitly requests /sharpen to frame a task through expert methods, intended outcome and appropriate constraints, then execute the authorized work.\""
+    }
+  ],
+  "codex_native_body": "Before starting, ask how a top expert would approach this task (their raw sources, their real methods, an outside check that the result is right), what the user is really after, and whether the task is over- or underspecified. Loosen constraints that don't serve the goal as readily as you add ones that do, and leave choices that are the user's to make open instead of deciding them. Fold in only what makes the work better, not bigger, but always keep one outside check that the result is right, without narrating the framing, then do the work. Don't hand back a rewritten prompt.\n\n## Codex boundaries\n\nRespect explicit operator constraints and the requested tool or outcome. Loosening a proposed implementation detail does not authorize changing scope, access, cost, privacy or security. The outside check must be supported evidence (for example a focused test, source comparison or rendered inspection), not automatic external contact or delegation. Use native agents only when the task or governing workflow authorizes delegation, with model selection owned by `model-capability-router`.",
+  "reason": "Reviewed Workbench PR41 source adapted to Codex; explicit-only preserved.",
+  "preserved_requirement": "sharpen explicit user command",
+  "proof": "Exact source SHA, deterministic mirror generation and selected checks; fresh runtime unproven",
+  "codex_rule": "Preserve native permissions and explicit invocation.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "sharpen",
+      "published_name": "cursor-sharpen",
+      "source_path": "pstack/skills/sharpen/SKILL.md"
+    },
+    "preserved_semantics": "sharpen explicit user command",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native explicit skill discovery"
+      ],
+      "fallback": "Report unavailable capability rather than inventing execution."
+    },
+    "permission_gates": [
+      "Operator authorization and native refusals remain binding."
+    ],
+    "behavioral_proof": {
+      "positive": "Source and distribution checked; fresh native execution unproven.",
+      "missing_tool_or_input": "Report exact gap.",
+      "error": "Preserve refusal and report unfinished outcome."
+    }
+  }
+}

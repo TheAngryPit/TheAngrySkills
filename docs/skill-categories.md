@@ -37,6 +37,8 @@ OpenClaw builds using OCM-managed local environments and conditional Crabbox
 proof. It is owned workflow guidance, not an upstream mirror, despite sharing
 the OpenClaw namespace. Official release campaigns remain separate.
 
+`openclaw-core/` contains twelve selected Codex adaptations of OpenClaw core workflows. It is separate from the shared prefix-only mirrors, preserves upstream provenance/resources, and makes update/connection workflows explicit-only. See [the pack manifest](../skills/engineering/openclaw-core/manifest.json) and [install guidance](../skills/engineering/openclaw-core/README.md).
+
 Use this category when the work is about shaping or executing code-facing workflow, not when you only need reference docs.
 
 ## Design

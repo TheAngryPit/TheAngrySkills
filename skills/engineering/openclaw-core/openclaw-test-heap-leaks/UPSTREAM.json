@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": ".agents/skills/openclaw-test-heap-leaks",
+  "original_name": "openclaw-test-heap-leaks",
+  "installed_name": "openclaw-test-heap-leaks",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "f74f8d1e8f396ad0869df79a460affcae53f87ab745a1ad9d89dc64f783bf9c0",
+    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "agents/openai.yaml": "019e2318a4f8437fa5e57cd3b6632c8145650237d4052d7ef7740e1b8794bcd5",
+    "references/upstream/SKILL.source.md": "d955a63a222c920a2055df33fda5cf4684f9334f135ac29deb0754178d11f9d5",
+    "references/upstream/agents/openai.yaml": "962df17a109525d5c1b7273c630b604e4c606f2d3c85d45c3b819cfea33b6955",
+    "references/upstream/scripts/heapsnapshot-delta.mjs": "5b39918d616908181f33ecedd16325326d03abda7b810318160d2ca0bd68ddbd"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": false,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
+}

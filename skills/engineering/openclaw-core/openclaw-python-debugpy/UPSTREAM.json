@@ -1,0 +1,21 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": "skills/python-debugpy",
+  "original_name": "python-debugpy",
+  "installed_name": "openclaw-python-debugpy",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "dbc2b1c1f5be81a3b3d733fc84c388f20edb1a058d14a4ce9a584a8f8dac8d4e",
+    "references/upstream-link-map.json": "9bba62e6bed96c6b89ac1e5410995b067b68d47bcd15de2df18557467ad3214d",
+    "agents/openai.yaml": "3031c93362c13f3c82401dc1dbffdd17f990c50301ce44508592ef3c6d6c2d13",
+    "references/upstream/SKILL.source.md": "23e3aa1fefe519d773a05c42799e58fddaf167ac8249d33050da88ae5027a339"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": true,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
+}

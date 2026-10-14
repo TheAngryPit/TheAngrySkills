@@ -1,0 +1,6 @@
+interface:
+  display_name: "Node Inspect Debugger"
+  short_description: "Use when debugging Node.js breakpoints, async hangs, hidden loca"
+  default_prompt: "Use $openclaw-node-inspect-debugger for the requested workflow; resolve the target and report actual proof."
+policy:
+  allow_implicit_invocation: true

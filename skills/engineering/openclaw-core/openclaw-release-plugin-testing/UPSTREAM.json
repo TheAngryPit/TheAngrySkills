@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": ".agents/skills/release-openclaw-plugin-testing",
+  "original_name": "release-openclaw-plugin-testing",
+  "installed_name": "openclaw-release-plugin-testing",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "027f58fb397ea1ca1635b73d5065cf3f5b15b84c11d4513de2e0650bd1284746",
+    "references/upstream-link-map.json": "07b52a886d98ac130771f2322b064590f05d0e6007faeaef35be501ebc819389",
+    "agents/openai.yaml": "c9cd095f6db8d326c54cacdf1acb4a7f98103aaa22c09c3bcd7218b7d1f52734",
+    "references/upstream/SKILL.source.md": "e1929851859519738b627a149980ed4cb12c10ff76fbef93d41992090276aa07",
+    "references/upstream/agents/openai.yaml": "98640f15c81293fdbbb8911dc34fb31b2326c45a3a6f2bd9e8caa56392286b40"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": false,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
+}

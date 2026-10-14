@@ -1,0 +1,41 @@
+{
+  "source_path": "pstack/skills/in-your-own-words/SKILL.md",
+  "source_sha256": "fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "description: \"Restate in your own words what you think the user's goals are and what problem they're trying to solve. Use for /in-your-own-words.\"",
+      "after": "description: \"Use when the user explicitly requests /in-your-own-words or asks you to restate your understanding of their goals and the problem they are trying to solve.\""
+    }
+  ],
+  "codex_native_body": "Restate in your own words what you think the user's goals are and what problem they're trying to solve.",
+  "reason": "Reviewed Workbench PR41 source adapted to Codex; explicit-only preserved.",
+  "preserved_requirement": "in-your-own-words explicit user command",
+  "proof": "Exact source SHA, deterministic mirror generation and selected checks; fresh runtime unproven",
+  "codex_rule": "Preserve native permissions and explicit invocation.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "in-your-own-words",
+      "published_name": "cursor-in-your-own-words",
+      "source_path": "pstack/skills/in-your-own-words/SKILL.md"
+    },
+    "preserved_semantics": "in-your-own-words explicit user command",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native explicit skill discovery"
+      ],
+      "fallback": "Report unavailable capability rather than inventing execution."
+    },
+    "permission_gates": [
+      "Operator authorization and native refusals remain binding."
+    ],
+    "behavioral_proof": {
+      "positive": "Source and distribution checked; fresh native execution unproven.",
+      "missing_tool_or_input": "Report exact gap.",
+      "error": "Preserve refusal and report unfinished outcome."
+    }
+  }
+}

@@ -20,6 +20,21 @@ spec.loader.exec_module(sync)
 def verify(write_held=False):
     manifest = json.loads((BASE / 'manifest.json').read_text())
     full = json.loads((BASE / 'full-tree.json').read_text())
+    additions_path = BASE / 'additions.json'
+    if additions_path.exists():
+        additions = json.loads(additions_path.read_text())
+        for path, record in additions['files'].items():
+            if path in full['files']:
+                raise ValueError('addition collides with preserved baseline: ' + path)
+            source = sync.SOURCE / path
+            data = source.read_bytes()
+            blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+            if hashlib.sha256(data).hexdigest() != record['sha256'] or blob != record['git_blob']:
+                raise ValueError('addition source drift: ' + path)
+            entry = next((e for e in manifest['skills'] if e['path'] == path), None)
+            if entry is None or entry.get('source_commit') != record['source_commit']:
+                raise ValueError('addition pin drift: ' + path)
+            full['files'][path] = record
     entries = manifest['skills']
     if {e['path'] for e in entries} != {p for p in full['files'] if p.endswith('/SKILL.md')}:
         raise ValueError('skill adapter coverage is incomplete')

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "reason": "Three operator-selected additions preserve the original full-tree baseline and existing per-skill adaptations.",
+  "files": {
+    "pstack/skills/in-your-own-words/SKILL.md": {
+      "sha256": "fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8",
+      "mode": "100644",
+      "git_blob": "4b2a476a9017863032c8dba9d12f0a2026943292"
+    },
+    "pstack/skills/ketchup/SKILL.md": {
+      "sha256": "d9704b154081af306b6583b2752498d454f9d761e9989ff1f037efd414f86bb4",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8",
+      "mode": "100644",
+      "git_blob": "b206a42f38c4c63d3be54f073a9771a6f9ab41e8"
+    },
+    "pstack/skills/sharpen/SKILL.md": {
+      "sha256": "6bcd73916696eb9c5b79b6f960983760c34bcc28937c11142dd8d86b5107aa46",
+      "source_commit": "1e5c90a4b6f249917bd21fe361b3a2a7deb741b8",
+      "mode": "100644",
+      "git_blob": "4f9bb4ab50fd760285dd6c4cbbfa7fe20e2d2466"
+    }
+  }
+}

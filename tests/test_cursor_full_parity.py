@@ -19,7 +19,7 @@ def load(name):
 def test_every_upstream_file_skill_and_agent_is_preserved():
     assert load('check-cursor-full-tree').verify()['files'] == 903
     result = load('check-cursor-adaptations').verify()
-    assert result == dict(skills=107, published=102, held_adapted=5, agents_mapped=14,
+    assert result == dict(skills=110, published=105, held_adapted=5, agents_mapped=14,
                           unresolved_links=0, runtime_proof='not claimed')
 
 
@@ -70,3 +70,35 @@ def test_detector_notices_new_non_pstack_plugin_and_dormant_pack_change(tmp_path
     assert 'new-plugin/skills/new' in report['new_skills']
     assert 'pstack/automations/benny/FOR_AGENTS.md' in report['changed_support_files']
     assert report['batch'] == 'pstack'
+
+
+def test_selected_additions_are_pinned_and_tailscale_is_not_published():
+    check = load('check-cursor-adaptations')
+    assert check.verify()['published'] == 105
+    ledger = json.loads((ROOT / 'sources/cursor-plugins/additions.json').read_text())
+    assert set(ledger['files']) == {
+        'pstack/skills/in-your-own-words/SKILL.md',
+        'pstack/skills/ketchup/SKILL.md',
+        'pstack/skills/sharpen/SKILL.md',
+    }
+    assert not (ROOT / 'skills/mirrors-cursor/cursor-tailscale-setup').exists()
+    for name in ['in-your-own-words', 'ketchup', 'sharpen']:
+        policy = (ROOT / f'skills/mirrors-cursor/cursor-{name}/agents/openai.yaml').read_text()
+        assert 'allow_implicit_invocation: false' in policy
+
+
+def test_addition_content_drift_is_rejected(tmp_path):
+    check = load('check-cursor-adaptations')
+    sync = check.sync
+    original = sync.SOURCE
+    source = original / 'pstack/skills/sharpen/SKILL.md'
+    target = tmp_path / 'pstack/skills/sharpen/SKILL.md'
+    target.parent.mkdir(parents=True)
+    target.write_bytes(source.read_bytes() + b'altered')
+    for name in ['in-your-own-words', 'ketchup']:
+        dest = tmp_path / f'pstack/skills/{name}/SKILL.md'
+        dest.parent.mkdir(parents=True)
+        dest.write_bytes((original / f'pstack/skills/{name}/SKILL.md').read_bytes())
+    sync.SOURCE = tmp_path
+    with pytest.raises(ValueError, match='addition source drift'):
+        check.verify()

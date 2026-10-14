@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": "skills/node-connect",
+  "original_name": "node-connect",
+  "installed_name": "openclaw-node-connect",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "7724ebc2ecaead50f1261fc61f08d53da97c909b5f4f75f8652577efbf5ca0d4",
+    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "agents/openai.yaml": "c65e6d03bd2f31725762a331b1328fe6190717aecb59c5c0ece6cb1019206205",
+    "references/upstream/SKILL.source.md": "334c20d3973238ba44a8b5885f0f6adf50342f5324940e1880bd75f61b86bfda"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": false,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills"
+}

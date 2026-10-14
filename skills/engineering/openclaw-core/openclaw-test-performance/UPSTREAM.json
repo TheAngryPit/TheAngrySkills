@@ -1,0 +1,21 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": ".agents/skills/openclaw-test-performance",
+  "original_name": "openclaw-test-performance",
+  "installed_name": "openclaw-test-performance",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "52fe532ae591855e5b8e6cfd8c74d01a0bdf871b4293f67848e0e414f41f2fdb",
+    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "agents/openai.yaml": "2e610b345eaec2056411019dd197e68d6803b45cf4c20611279337f11f15cf4c",
+    "references/upstream/SKILL.source.md": "ea9b96fdb4cd7330ccf5566530d4007504799abf36b334931b3bd5c567fa389a",
+    "references/upstream/agents/openai.yaml": "068736f5f68ab510d8b39925892ee8692b3bbdea670a25cc6a725988a3abf2de"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": false,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills"
+}

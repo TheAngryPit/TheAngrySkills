@@ -31,6 +31,10 @@ The folder structure is part of the product. It keeps my owned workflow skills,
 design/operator skills, knowledge packs, generated docs, and external mirrors
 separate so they can be installed, reviewed, and updated without collisions.
 
+## OpenClaw core workflows
+
+The [selected core adaptation pack](skills/engineering/openclaw-core/README.md) adds Gateway diagnosis, Node/Python debugging and repository-specific OpenClaw proof workflows. It preserves the existing nine shared OpenClaw mirrors; select package names with full-depth discovery.
+
 ## Why This Exists
 
 Agents get better when useful workflow knowledge becomes durable:

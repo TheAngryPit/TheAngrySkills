@@ -1,0 +1,33 @@
+{
+  "repository": "https://github.com/openclaw/openclaw",
+  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "path": ".agents/skills/openclaw-refactor-docs",
+  "original_name": "openclaw-refactor-docs",
+  "installed_name": "openclaw-refactor-docs",
+  "kind": "codex-adaptation",
+  "visibility": "public-promotion-approved",
+  "resources": {
+    "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
+    "SKILL.md": "a0040e9c3f09b5f04b32d416357367e319cc5b8de322e9a140ca9cb839193235",
+    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "agents/openai.yaml": "8ed66bb33d0305c36b073b011fcf481e7fd5394db25d3ebb9738479c3372e039",
+    "references/technical-documentation/SKILL.source.md": "67a93dc4b2263d23de63d6d3e6fca6447f4f594fe856c1514db79d94b65d3c5a",
+    "references/upstream/SKILL.source.md": "71e06f55fe8e941c4b818247b750d64e8e1cb2bccfb00c681c4840e52b8db17a",
+    "references/technical-documentation/references/agent-and-contributing.md": "eb869ee39731c37298e892069b592e70d872a8dff0dd722106d3054f5b48cb68",
+    "references/technical-documentation/references/principles.md": "d93092dcd3c2538b3bad148cda91a05e59e7520c5370088003dfb932d509b693",
+    "references/technical-documentation/references/tooling.md": "f937aa4ee596ccbc117f1bc7b03ca9a2e619accf01b28d1c88f92a359835b311",
+    "references/technical-documentation/references/openclaw.md": "95b24362b40aff46b9b584459b7af41240ab42d6ae5558e124df7cf4928447ab",
+    "references/technical-documentation/references/build.md": "2fe24c5bb36eb3effbcb1613faf46f41a89417c70ce811a7a3c9fdb52432396b",
+    "references/technical-documentation/references/review.md": "ff91137f75d7403e260b88155005f0b0e6464d20d56aaf0fe8efa09841683cbf",
+    "references/technical-documentation/agents/openai.yaml": "d2fa2febf8a213fbe5e5b976e46a8f04fa04c53d9759287d261e27c41ac061e3",
+    "references/technical-documentation/agents/docs-framework-agent.md": "ec4ad621db91695130d848f3a2ed292843fc7200c9933f0f79aadab05ae1ecf1",
+    "references/technical-documentation/agents/synthesis-agent.md": "b84046b1a8b2ede7eb268e0b83b0b784f95ab8f8041ce44934ec0de2b02e7b35",
+    "references/technical-documentation/agents/governance-agent.md": "2236ddba4855ba1fa369eb00af73f6f548d31e8457a73bd5a5f264e48a14194f",
+    "references/technical-documentation/agents/inventory-agent.md": "58a3d915a7581da840e577b732c46f261b331d0e0ae5fad3520937163160e9cb",
+    "references/technical-documentation/assets/icon.jpg": "e7236a15dd5260b5b809d3d6e4fce601107ae2add39999bfff8f1eb5093ad819"
+  },
+  "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",
+  "source_backup": "sources/openclaw-core",
+  "adapted_resource_entrypoint": false,
+  "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills"
+}

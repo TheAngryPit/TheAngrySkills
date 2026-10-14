@@ -1,0 +1,90 @@
+{
+  "source_commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "skills": [
+    {
+      "name": "openclaw-diagnose-gateway",
+      "path": "skills/engineering/openclaw-core/openclaw-diagnose-gateway",
+      "original_name": "diagnose-gateway",
+      "source_path": "custodian-skills/diagnose-gateway",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-node-inspect-debugger",
+      "path": "skills/engineering/openclaw-core/openclaw-node-inspect-debugger",
+      "original_name": "node-inspect-debugger",
+      "source_path": "skills/node-inspect-debugger",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-python-debugpy",
+      "path": "skills/engineering/openclaw-core/openclaw-python-debugpy",
+      "original_name": "python-debugpy",
+      "source_path": "skills/python-debugpy",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-control-ui-e2e",
+      "path": "skills/engineering/openclaw-core/openclaw-control-ui-e2e",
+      "original_name": "control-ui-e2e",
+      "source_path": ".agents/skills/control-ui-e2e",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-debugging",
+      "path": "skills/engineering/openclaw-core/openclaw-debugging",
+      "original_name": "openclaw-debugging",
+      "source_path": ".agents/skills/openclaw-debugging",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-testing",
+      "path": "skills/engineering/openclaw-core/openclaw-testing",
+      "original_name": "openclaw-testing",
+      "source_path": ".agents/skills/openclaw-testing",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-test-performance",
+      "path": "skills/engineering/openclaw-core/openclaw-test-performance",
+      "original_name": "openclaw-test-performance",
+      "source_path": ".agents/skills/openclaw-test-performance",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-test-heap-leaks",
+      "path": "skills/engineering/openclaw-core/openclaw-test-heap-leaks",
+      "original_name": "openclaw-test-heap-leaks",
+      "source_path": ".agents/skills/openclaw-test-heap-leaks",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-release-plugin-testing",
+      "path": "skills/engineering/openclaw-core/openclaw-release-plugin-testing",
+      "original_name": "release-openclaw-plugin-testing",
+      "source_path": ".agents/skills/release-openclaw-plugin-testing",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-refactor-docs",
+      "path": "skills/engineering/openclaw-core/openclaw-refactor-docs",
+      "original_name": "openclaw-refactor-docs",
+      "source_path": ".agents/skills/openclaw-refactor-docs",
+      "implicit": true
+    },
+    {
+      "name": "openclaw-update",
+      "path": "skills/engineering/openclaw-core/openclaw-update",
+      "original_name": "openclaw-update",
+      "source_path": ".agents/skills/openclaw-update",
+      "implicit": false
+    },
+    {
+      "name": "openclaw-node-connect",
+      "path": "skills/engineering/openclaw-core/openclaw-node-connect",
+      "original_name": "node-connect",
+      "source_path": "skills/node-connect",
+      "implicit": false
+    }
+  ],
+  "dependency": "technical-documentation vendored under refactor-docs references only"
+}

@@ -5,6 +5,6 @@ Published skill: marketing-video
 Source: https://github.com/coreyhaines31/marketingskills.git
 Source path: skills/video
 Branch: main
-Commit: 28e4a81a3464475cbccc3c2bbcfe414bcabae32b
+Commit: c7d7dfb6b460fc376b4b2204b78a9c9fd5ca6467
 
 This skill is vendored from upstream with a `marketing-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

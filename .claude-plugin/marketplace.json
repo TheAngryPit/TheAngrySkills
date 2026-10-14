@@ -356,6 +356,23 @@
         "./skills/mirrors-cursor/cursor-x-mcp-guide",
         "./skills/mirrors-cursor/cursor-x-money-guide"
       ]
+    },
+    {
+      "name": "openclaw-core-adaptations",
+      "skills": [
+        "./skills/engineering/openclaw-core/openclaw-control-ui-e2e",
+        "./skills/engineering/openclaw-core/openclaw-debugging",
+        "./skills/engineering/openclaw-core/openclaw-diagnose-gateway",
+        "./skills/engineering/openclaw-core/openclaw-node-connect",
+        "./skills/engineering/openclaw-core/openclaw-node-inspect-debugger",
+        "./skills/engineering/openclaw-core/openclaw-python-debugpy",
+        "./skills/engineering/openclaw-core/openclaw-refactor-docs",
+        "./skills/engineering/openclaw-core/openclaw-release-plugin-testing",
+        "./skills/engineering/openclaw-core/openclaw-test-heap-leaks",
+        "./skills/engineering/openclaw-core/openclaw-test-performance",
+        "./skills/engineering/openclaw-core/openclaw-testing",
+        "./skills/engineering/openclaw-core/openclaw-update"
+      ]
     }
   ]
 }

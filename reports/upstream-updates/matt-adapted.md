@@ -4,16 +4,15 @@
 This is a detector report for a reviewable proposal. It does not promote upstream content.
 
 - Repository: `https://github.com/mattpocock/skills.git`
-- Reviewed baseline: `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`
+- Reviewed baseline: `49dd158d1076134a641b33efb035946536778336`
 - Baseline mode: `per-package`
-- Reviewed baseline commits: `3cca18b368ae95cdbdebbff572ccafa662551015, 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`
+- Reviewed baseline commits: `3cca18b368ae95cdbdebbff572ccafa662551015, 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d, 49dd158d1076134a641b33efb035946536778336`
 - Observed upstream HEAD: `49dd158d1076134a641b33efb035946536778336`
 - Candidate content promoted: `false`
 - Existing pins, hashes, provenance, patches, exclusions, global installs and homes: unchanged
 
 ## Changed skills
 
-- <code>&quot;skills/engineering/ask-matt/SKILL.md&quot;</code>
 - <code>&quot;skills/engineering/code-review/SKILL.md&quot;</code>
 - <code>&quot;skills/engineering/diagnosing-bugs/SKILL.md&quot;</code>
 - <code>&quot;skills/engineering/implement/SKILL.md&quot;</code>

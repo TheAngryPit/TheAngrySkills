@@ -22,6 +22,7 @@
         "./skills/engineering/continuity-handoff",
         "./skills/engineering/docs-skill-builder",
         "./skills/engineering/openclaw-custom-build-validation",
+        "./skills/engineering/vanilla-first",
         "./skills/engineering/theangry-ai-code-audit",
         "./skills/engineering/writing-ticks",
         "./skills/engineering/writing-for-astra"

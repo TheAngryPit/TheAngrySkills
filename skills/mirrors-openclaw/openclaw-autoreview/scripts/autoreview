@@ -1098,10 +1098,13 @@ def safe_engine_env(
         "claude": claude_allowed_exact,
         "codex": codex_allowed_exact,
         "pi": pi_allowed_exact,
+        "openclaw": multi_provider_allowed_exact | MULTI_PROVIDER_CREDENTIAL_ENV_KEYS | {
+            "OPENCLAW_PROFILE", "OPENCLAW_CONFIG_READONLY", "OPENCLAW_NIX_MODE",
+        },
     }.get(engine or "", set())
     allowed_prefixes = ("AUTOREVIEW_FAKE_",)
     custom_provider_env_keys: set[str] = set()
-    if engine == "pi":
+    if engine in {"pi", "openclaw"}:
         for raw_key in os.environ.get("AUTOREVIEW_PROVIDER_ENV_ALLOW", "").split(","):
             key = raw_key.strip()
             if not key:
@@ -1120,7 +1123,7 @@ def safe_engine_env(
             or key in engine_allowed_exact
             or any(key.startswith(prefix) for prefix in allowed_prefixes)
             or (
-                engine == "pi"
+                engine in {"pi", "openclaw"}
                 and (
                     key in MULTI_PROVIDER_CREDENTIAL_ENV_KEYS
                     or key in MULTI_PROVIDER_ENV_KEYS
@@ -1144,6 +1147,7 @@ def safe_engine_env(
         "claude": ("CLAUDE_CONFIG_DIR",),
         "codex": ("CODEX_HOME",),
         "pi": ("PI_CODING_AGENT_DIR",),
+        "openclaw": ("OPENCLAW_HOME", "OPENCLAW_STATE_DIR", "OPENCLAW_CONFIG_PATH", "OPENCLAW_OAUTH_DIR"),
     }
     for key in engine_config_paths.get(engine or "", ()):
         value = os.environ.get(key)
@@ -7179,7 +7183,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base", help="Branch base, or explicit commit to compare with the index in local mode.")
     parser.add_argument("--commit", default="HEAD")
     parser.add_argument("--engine", choices=ENGINES, default=os.environ.get("AUTOREVIEW_ENGINE", "codex"))
-    parser.add_argument("--native-handoff", help="Fresh private directory outside the repo for the OpenClaw collector consumer. Requires --engine openclaw and --engine-timeout-seconds; see references/openclaw.md.")
+    parser.add_argument("--native-handoff", help="Fresh private directory outside the repo for bound OpenClaw execution. Requires --engine openclaw; see references/openclaw.md.")
     parser.add_argument("--native-submit", action=NativeSubmitAction, nargs=2, metavar=("HANDOFF", "RESPONSE"), help="Commit a complete native response to an existing live exchange, remove its spool, and exit. No Git or reviewer startup.")
     parser.add_argument(
         "--model",
@@ -7202,8 +7206,10 @@ def parse_args() -> argparse.Namespace:
         "--engine-timeout-seconds",
         type=positive_float,
         default=os.environ.get("AUTOREVIEW_ENGINE_TIMEOUT_SECONDS"),
-        help="Wall-clock limit per CLI attempt or native pass. Disabled by default for CLIs; required for native handoff. Env: AUTOREVIEW_ENGINE_TIMEOUT_SECONDS.",
+        help="Optional wall-clock limit per CLI attempt or native pass. Env: AUTOREVIEW_ENGINE_TIMEOUT_SECONDS.",
     )
+    parser.add_argument("--openclaw-bin", default=os.environ.get("OPENCLAW_BIN", "openclaw"), help="Trusted host OpenClaw executable; never selected by a sandbox request.")
+    parser.add_argument("--openclaw-config", help="Optional external operator config for direct OpenClaw execution. Omit to inherit normal native configuration and authentication.")
     parser.add_argument("--codex-bin", default=os.environ.get("CODEX_BIN", "codex"))
     parser.add_argument(
         "--codex-config",
@@ -7255,6 +7261,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expect-findings", action="store_true", help="Treat findings as success; for harness acceptance tests.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    if args.engine == "openclaw" and not args.native_handoff and args.openclaw_config is None:
+        args.openclaw_config = os.environ.get("AUTOREVIEW_OPENCLAW_CONFIG")
     if args.engine not in ENGINES:
         raise SystemExit(f"invalid --engine/AUTOREVIEW_ENGINE: {args.engine}")
     if args.max_priority not in ("P0", "P1", "P2", "P3"):
@@ -7262,12 +7270,14 @@ def parse_args() -> argparse.Namespace:
     if args.engine == "openclaw":
         if os.name != "posix":
             parser.error("native handoff currently requires a POSIX host with private directory permissions")
-        if not args.native_handoff or args.engine_timeout_seconds is None:
-            parser.error("--engine openclaw requires --native-handoff and --engine-timeout-seconds")
-        if args.dry_run:
-            parser.error("native handoff has no CLI startup probe; qualify the collector before running")
+        if args.native_handoff and args.openclaw_config:
+            parser.error("--openclaw-config belongs to direct host execution, not native handoff")
+        if args.native_handoff and args.dry_run:
+            parser.error("native handoff has no CLI startup probe; qualify the bound integration before running")
         if args.codex_config or args.codex_speed or args.engine_stage_dir or args.stream_engine_output:
-            parser.error("CLI configuration/diagnostics cannot be applied to an OpenClaw child")
+            parser.error("other engine configuration/diagnostics cannot be applied to OpenClaw execution")
+    elif args.openclaw_config:
+        parser.error("--openclaw-config requires --engine openclaw")
     elif args.native_handoff:
         parser.error("--native-handoff requires --engine openclaw; it never switches an explicit engine")
     if bool(args.preflight_output) != bool(args.preflight_repo):
@@ -7281,9 +7291,192 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
+
+OPENCLAW_REVIEW_AGENT_OVERRIDE = {"nativeRuntimeConsent": []}
+
+
+def openclaw_review_overrides(agents: dict[str, Any] | None = None,
+                             tools: dict[str, Any] | None = None) -> dict[str, Any]:
+    # Apply review policy without selecting an owner or reconstructing inference
+    # configuration. A string primary already disables native model fallbacks.
+    agents = agents or {}
+
+    def restrictions(entry: dict[str, Any], *, defaults: bool = False) -> dict[str, Any]:
+        result: dict[str, Any] = {"skills": [], "contextInjection": "never"}
+        if isinstance(entry.get("model"), dict) or (defaults and entry.get("model") is None):
+            result["model"] = {"fallbacks": []}
+        return result
+
+    def tool_restrictions(policy: dict[str, Any]) -> dict[str, Any]:
+        # Deny-all owns enforcement; empty grants remove the native guard's
+        # expectation that an inherited explicit allowlist must yield a tool.
+        result: dict[str, Any] = {"allow": [], "alsoAllow": [],
+                                  "sandbox": {"tools": {"allow": [], "alsoAllow": []}}}
+        if providers := policy.get("byProvider"):
+            result["byProvider"] = {key: {"allow": [], "alsoAllow": []} for key in providers}
+        return result
+
+    override: dict[str, Any] = {"defaults": restrictions(agents.get("defaults", {}), defaults=True)}
+    if entries := agents.get("entries"):
+        override["entries"] = {
+            key: restrictions(value) | OPENCLAW_REVIEW_AGENT_OVERRIDE
+                 | {"tools": tool_restrictions(value.get("tools", {}))}
+            for key, value in entries.items()
+        }
+    return {"agents": override, "tools": tool_restrictions(tools or {}) | {
+        "deny": ["*"], "toolSearch": False, "codeMode": {"enabled": False},
+    }}
+
+
+def openclaw_config_file(args: argparse.Namespace, repo: Path) -> str | None:
+    if not args.openclaw_config:
+        return None
+    source = Path(args.openclaw_config).expanduser()
+    if not source.is_absolute() or not external_env_path(repo, str(source)):
+        raise SystemExit("--openclaw-config must be an absolute file outside the reviewed repository")
+    return str(source)
+
+
+def openclaw_review_config(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
+    binary = resolve_command(args.openclaw_bin, repo)
+    with tempfile.TemporaryDirectory(prefix="autoreview-openclaw-config.", dir=safe_temp_root(repo)) as directory:
+        root = Path(directory)
+        env = openclaw_runtime_env(repo, binary, root)
+        if source := openclaw_config_file(args, repo):
+            env["OPENCLAW_CONFIG_PATH"] = source
+        sections: dict[str, dict[str, Any]] = {}
+        for section in ("agents", "tools"):
+            result = run_with_heartbeat([binary, "config", "get", section, "--json"], root,
+                                        label="openclaw configuration", env=env,
+                                        max_runtime_seconds=args.engine_timeout_seconds)
+            try:
+                value = json.loads(result.stdout)
+                if not isinstance(value, dict):
+                    raise ValueError("invalid configuration section")
+                if result.returncode:
+                    error = value.get("error")
+                    if (value.get("ok") is False and isinstance(error, dict)
+                            and error.get("type") == "cli_error"
+                            and isinstance(error.get("message"), str)
+                            and error["message"].startswith(f"Config path is valid but unset: {section}.")):
+                        value = {}
+                    else:
+                        raise ValueError("native configuration read failed")
+                sections[section] = value
+            except (ValueError, TypeError, AttributeError, RecursionError):
+                raise SystemExit(f"OpenClaw configuration could not be read; run openclaw config get {section} --json with the selected config") from None
+        return openclaw_review_overrides(sections["agents"], sections["tools"])
+
+
+def openclaw_final_output(output: Any, model: str | None, effective_models: list[str]) -> str:
+    try:
+        if not isinstance(output, str) or utf8_size(output) > 2_000_000:
+            raise ValueError("missing or oversized completion")
+        envelope = json.loads(output)
+        if not isinstance(envelope, dict):
+            raise ValueError("expected one terminal JSON envelope")
+        if envelope.get("ok") is not True or envelope.get("status") != "ok":
+            raise ValueError("execution did not succeed")
+        final = envelope.get("final")
+        if not isinstance(final, str) or not final.strip():
+            raise ValueError("missing final completion")
+        if model:
+            actual = (f"{envelope.get('provider')}/{envelope.get('model')}"
+                      if "/" in model else envelope.get("model"))
+            if actual != model:
+                raise ValueError("completion model differs from selected model")
+        if all(isinstance(envelope.get(key), str) and envelope[key].strip()
+               for key in ("provider", "model")):
+            actual = f"{envelope['provider']}/{envelope['model']}"
+            if actual not in effective_models:
+                effective_models.append(actual)
+            print("effective model: " + display_escape(actual, 500), flush=True)
+        return final
+    except (ValueError, RecursionError):
+        # Provider output can contain credentials or prompt content. Only fixed
+        # diagnostics leave this boundary; the report parser receives final alone.
+        raise ReviewerUnavailable("invalid OpenClaw terminal completion", reason="invalid_report") from None
+
+
+def openclaw_runtime_env(repo: Path, binary: str, root: Path) -> dict[str, str]:
+    for name in ("workspace", "tmp"):
+        (root / name).mkdir(mode=0o700)
+    # Native configuration owns arbitrary environment references. Keep those
+    # inputs on the trusted host without admitting interpreter startup hooks or
+    # replacing the helper's checked executable/configuration paths.
+    path_keys = {
+        "HOME", "USERPROFILE", "SHELL", "OPENCLAW_HOME", "OPENCLAW_STATE_DIR",
+        "OPENCLAW_CONFIG_PATH", "OPENCLAW_OAUTH_DIR", "OPENCLAW_INCLUDE_ROOTS",
+        "CODEX_HOME", "CLAUDE_CONFIG_DIR", "PI_CODING_AGENT_DIR",
+        "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_RUNTIME_DIR",
+    } | TRANSPORT_TRUST_PATH_ENV_KEYS | CODEX_TRUST_PATH_ENV_KEYS | PROVIDER_CREDENTIAL_PATH_ENV_KEYS
+    startup_keys = {
+        "ENV", "BASH_ENV", "KSH_ENV", "BASHOPTS", "SHELLOPTS", "IFS", "CDPATH",
+        "ZDOTDIR", "FPATH", "PS4", "PROMPT_COMMAND", "GCONV_PATH", "GLIBC_TUNABLES",
+        "JAVA_TOOL_OPTIONS", "JDK_JAVA_OPTIONS", "_JAVA_OPTIONS", "JAVA_OPTS",
+        "DOTNET_STARTUP_HOOKS", "DOTNET_ADDITIONAL_DEPS", "SSLKEYLOGFILE",
+        "OPENCODE_CONFIG", "OPENCODE_PERMISSION", "OPENCODE_AUTO_SHARE", "COPILOT_ALLOW_ALL",
+    }
+    startup_prefixes = ("LD_", "DYLD_", "NODE_", "BUN_", "PYTHON", "RUBY", "PERL",
+                        "GIT_", "BASH_FUNC_", "NPM_CONFIG_", "PNPM_")
+    env = {key: value for key, value in os.environ.items()
+           if key not in path_keys | startup_keys | {"PATH", "TMPDIR", "TMP", "TEMP"}
+           and not key.upper().startswith(startup_prefixes)}
+    env.update(safe_engine_env(repo, [Path(binary).parent], engine="openclaw"))
+    for key in path_keys:
+        env.pop(key, None)
+        if value := os.environ.get(key):
+            normalized = normalize_external_env_path_value(
+                repo, "SSL_CERT_DIR" if key == "OPENCLAW_INCLUDE_ROOTS" else key, value)
+            if normalized:
+                env[key] = normalized
+    env.update({
+        "TMPDIR": str(root / "tmp"),
+        "TMP": str(root / "tmp"), "TEMP": str(root / "tmp"),
+    })
+    return env
+
+
+def ensure_openclaw_supported(args: argparse.Namespace, repo: Path) -> str:
+    binary = resolve_command(args.openclaw_bin, repo)
+    openclaw_review_config(args, repo)
+    with tempfile.TemporaryDirectory(prefix="autoreview-openclaw-probe.", dir=safe_temp_root(repo)) as directory:
+        root = Path(directory)
+        result = run([binary, "agent", "exec", "--help"], root, check=False,
+                     env=openclaw_runtime_env(repo, binary, root))
+    if result.returncode or any(flag not in result.stdout for flag in ("--message-file", "--config-override", "--cwd", "--model", "--thinking", "--json")):
+        raise SystemExit("OpenClaw agent exec with private input, --config-override and JSON output is required")
+    return binary
+
+
+def run_openclaw(args: argparse.Namespace, repo: Path, prompt: str) -> str:
+    binary = resolve_command(args.openclaw_bin, repo)
+    config = args._openclaw_override
+    with tempfile.TemporaryDirectory(prefix="autoreview-openclaw.", dir=safe_temp_root(repo)) as directory:
+        root = Path(directory)
+        env = openclaw_runtime_env(repo, binary, root)
+        command = [binary, "agent", "exec", "--message-file", "-",
+                   "--config-override", json.dumps(config),
+                   "--cwd", str(root / "workspace"), "--code-mode", "direct", "--json"]
+        if source := openclaw_config_file(args, repo):
+            command += ["--config", source]
+        if args.model:
+            command += ["--model", args.model]
+        if args.thinking:
+            command += ["--thinking", args.thinking]
+        if args.engine_timeout_seconds is not None:
+            command += ["--timeout", str(math.ceil(args.engine_timeout_seconds))]
+        result = run_with_heartbeat(command, root / "workspace", input_text=prompt,
+                                    label="openclaw", env=env,
+                                    max_runtime_seconds=args.engine_timeout_seconds)
+    if result.returncode:
+        raise ReviewerUnavailable(f"OpenClaw review execution failed ({result.returncode}); no route retry", result=result)
+    return openclaw_final_output(result.stdout, args.model, args.openclaw_models)
+
+
 def run_engine(args: argparse.Namespace, repo: Path, prompt: str) -> str:
     if args.engine == "openclaw":
-        return args._native_handoff.run(prompt)
+        return args._native_handoff.run(prompt) if args.native_handoff else run_openclaw(args, repo, prompt)
     if args.engine == "codex":
         return run_codex(args, repo, prompt)
     if args.engine == "claude":
@@ -7429,6 +7622,7 @@ ENGINE_ISOLATION_PROBES: dict[str, Callable[[argparse.Namespace, Path], object]]
     "claude": ensure_claude_isolation_supported,
     "amp": ensure_amp_isolation_supported,
     "pi": ensure_pi_isolation_supported,
+    "openclaw": ensure_openclaw_supported,
 }
 
 
@@ -7486,6 +7680,7 @@ def resolve_engine_binary(reviewer: argparse.Namespace, repo: Path) -> tuple[boo
         "claude": getattr(reviewer, "claude_bin", None),
         "amp": getattr(reviewer, "amp_bin", None),
         "pi": getattr(reviewer, "pi_bin", None),
+        "openclaw": getattr(reviewer, "openclaw_bin", None),
     }
     bin_name = bin_by_engine.get(engine)
     if bin_name is None:
@@ -7878,6 +8073,7 @@ class NativeHandoff:
         self.timeout = args.engine_timeout_seconds
         self.model = reviewer.model
         self.thinking = reviewer.thinking
+        self.effective_models = reviewer.openclaw_models
         parent = self.root.parent.stat()
         if parent.st_uid != os.getuid() or stat.S_IMODE(parent.st_mode) & 0o077:
             raise SystemExit("native handoff requires an owned private parent directory")
@@ -7930,23 +8126,25 @@ class NativeHandoff:
         number = self.pass_number
         digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         request = {
-            "protocol": "autoreview-native-v1", "run_id": self.run_id,
+            "protocol": "autoreview-exec-v1", "run_id": self.run_id,
+            "admitted_model": True,
             "pass": number, "passes": self.pass_count,
             "prompt": prompt, "prompt_bytes": utf8_size(prompt), "prompt_sha256": digest,
-            "output_schema": PROVIDER_SCHEMA, "model": self.model, "thinking": self.thinking,
+            "model": self.model, "thinking": self.thinking,
+            "engine_timeout_seconds": self.timeout,
             "max_result_bytes": self.MAX_RESULT_BYTES,
         }
         atomic_write_text(self.root / f"{number}.request.json", json.dumps(request))
         print(f"native pass ready: {number}/{self.pass_count}", flush=True)
-        deadline = time.monotonic() + self.timeout
+        deadline = time.monotonic() + self.timeout if self.timeout is not None else None
         ready_path = self.root / f"{number}.ready"
         try:
             while not ready_path.exists():
-                if time.monotonic() >= deadline:
-                    failure = ReviewerUnavailable("native collector result timed out", reason="timeout")
+                if deadline is not None and time.monotonic() >= deadline:
+                    failure = ReviewerUnavailable("OpenClaw execution result timed out", reason="timeout")
                     failure.timed_out = True
                     raise failure
-                time.sleep(min(0.1, max(0, deadline - time.monotonic())))
+                time.sleep(0.1 if deadline is None else min(0.1, max(0, deadline - time.monotonic())))
             ready = json.loads(self.read_file(ready_path, 1024))
             raw = self.read_file(self.root / f"{number}.result.json", self.MAX_RESULT_BYTES)
             if (not isinstance(ready, dict) or set(ready) != {"run_id", "pass", "bytes"}
@@ -7956,15 +8154,17 @@ class NativeHandoff:
                 raise ValueError("native result commit does not match the complete response")
             result = json.loads(raw)
             if (not isinstance(result, dict)
-                    or set(result) != {"run_id", "pass", "prompt_sha256", "status", "report"}
+                    or set(result) - {"model"} != {"run_id", "pass", "prompt_sha256", "status", "output"}
                     or result["run_id"] != self.run_id or type(result["pass"]) is not int
                     or result["pass"] != number or result["prompt_sha256"] != digest):
                 raise ValueError("native result does not match the prepared pass")
             if result["status"] != "done":
-                raise ReviewerUnavailable("native collector failed; no route retry", reason="execution_failed")
-            if not isinstance(result["report"], dict):
-                raise ValueError("native collector did not return a structured report")
-            return json.dumps(result["report"])
+                raise ReviewerUnavailable("OpenClaw execution failed; no route retry", reason="execution_failed")
+            model = result.get("model", self.model)
+            if "model" in result and (not isinstance(model, str) or "/" not in model
+                                      or not all(part.strip() for part in model.split("/", 1))):
+                raise ValueError("native result has no admitted model")
+            return openclaw_final_output(result["output"], model, self.effective_models)
         except (OSError, ValueError, RecursionError) as exc:
             raise ReviewerUnavailable(f"invalid native result: {exc}", reason="invalid_report") from None
 
@@ -8057,6 +8257,8 @@ def write_review_status(args: argparse.Namespace, status: str, exit_code: int,
     }
     if usage := review_usage_summary(args):
         envelope["usage"] = usage
+    if args.engine == "openclaw" and (models := getattr(args, "openclaw_models", None)):
+        envelope["effective_models"] = models
     atomic_write_text(Path(args.status_output), json.dumps(envelope, indent=2) + "\n")
 
 
@@ -8141,6 +8343,8 @@ def main_with_args(args: argparse.Namespace) -> int:
     print(f"autoreview target: {target}", flush=True)
     print(f"branch: {branch}", flush=True)
     reviewer = reviewers[0]
+    if reviewer.engine == "openclaw":
+        args.openclaw_models = reviewer.openclaw_models = []
     print(f"engine: {reviewer.engine}", flush=True)
     if reviewer.model:
         print(f"model: {reviewer.model}", flush=True)
@@ -8200,10 +8404,13 @@ def main_with_args(args: argparse.Namespace) -> int:
                 "rerun autoreview against the updated tree"
             )
     try:
-        if reviewer.engine == "openclaw":
+        if reviewer.engine == "openclaw" and args.native_handoff:
             with deferred_owned_process_signals():
                 args._native_handoff = NativeHandoff(args, reviewer, prompts)
                 reviewer._native_handoff = args._native_handoff
+        elif reviewer.engine == "openclaw":
+            with PreparationProgress("reviewer configuration"):
+                reviewer._openclaw_override = openclaw_review_config(reviewer, repo)
         pass_results = run_review_passes(
             args,
             reviewers,

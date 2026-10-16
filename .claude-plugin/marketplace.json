@@ -161,6 +161,7 @@
     {
       "name": "mirrors-effective-html",
       "skills": [
+        "./skills/mirrors-effective-html/effective-big-pics-little-words",
         "./skills/mirrors-effective-html/effective-design-artifact",
         "./skills/mirrors-effective-html/effective-html",
         "./skills/mirrors-effective-html/effective-html-diagram",

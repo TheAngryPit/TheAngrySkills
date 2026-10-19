@@ -23,9 +23,11 @@
 
 ## Security comparison
 
-The exact base and candidate trees were scanned with the same scanner and options. Both have zero blocking skills and the same ten skills requiring human review. Findings were compared by skill, file, rule, severity and evidence, rather than totals alone.
+The exact base and candidate trees were scanned with the same scanner and options. The Cursor mirror has zero blocking skills and the same ten skills requiring human review. Findings were compared by skill, file, rule, severity and evidence, rather than totals alone.
 
 The only added finding is `bundled-script-review` for `cursor-poteto-mode/scripts/check-plan.test.ts`. It is an exact upstream Bun test file. Inspection found bounded temporary fixture creation, invocation of the adjacent plan checker and cleanup of its own temporary directory. It does not add install-time execution, network calls or credentials. No findings were removed or suppressed. Both new formal-verification skills scan as safe to install after quality review.
+
+The complete source catalog comparison also retains 21 pre-existing blocking scanner classifications and 59 review-signal skills, all unchanged by identity and evidence. None is in the touched Cursor mirror or native-router skill. This bounded refresh neither resolves those findings nor authorizes installing that unrelated content. The only new catalog-wide finding is the upstream test file described above.
 
 ## Independent review
 

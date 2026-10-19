@@ -286,3 +286,47 @@ def test_family_refresh_checks_preserved_baseline_git_tree(tmp_path, baseline_ca
     else:
         with pytest.raises((ValueError, subprocess.CalledProcessError)):
             check.verify(upstream)
+
+
+@pytest.mark.parametrize('mutation', ['valid', 'unreviewed-path', 'wrong-pin', 'changed-bytes', 'symlink'])
+def test_reviewed_file_updates_preserve_baseline_and_verify_git_provenance(tmp_path, mutation):
+    family = load('cursor_pstack_family')
+    upstream = tmp_path / 'source'
+    upstream.mkdir()
+    relative = 'other-plugin/skills/example/SKILL.md'
+    target = upstream / relative
+    target.parent.mkdir(parents=True)
+    target.write_text('historical source')
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    def commit():
+        subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+        subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'source'], check=True)
+        return subprocess.check_output(['git', '-C', str(upstream), 'rev-parse', 'HEAD'], text=True).strip()
+    before = commit()
+    baseline_record = family.record(target, '100644')
+    target.write_text('reviewed source update')
+    after = commit()
+    base = tmp_path / 'ledger'
+    snapshot = base / 'upstream-tree' / relative
+    snapshot.parent.mkdir(parents=True)
+    shutil.copy2(target, snapshot)
+    baseline = dict(commit=before, files={relative: baseline_record})
+    (base / 'full-tree.json').write_text(json.dumps(baseline))
+    record = {**family.record(target, '100644'), 'source_commit': after}
+    records = {relative: record}
+    if mutation == 'unreviewed-path':
+        records = {'../outside.txt': record}
+    elif mutation == 'wrong-pin':
+        record['source_commit'] = before
+    elif mutation == 'changed-bytes':
+        snapshot.write_text('unreviewed bytes')
+    elif mutation == 'symlink':
+        snapshot.unlink()
+        snapshot.symlink_to(target)
+    (base / 'reviewed-file-updates.json').write_text(json.dumps(dict(schema_version=1, baseline_commit=before, files=records)))
+    if mutation == 'valid':
+        assert family.reviewed_file_updates(base, upstream) == records
+        assert json.loads((base / 'full-tree.json').read_text()) == baseline
+    else:
+        with pytest.raises(ValueError, match='reviewed file'):
+            family.reviewed_file_updates(base, upstream)

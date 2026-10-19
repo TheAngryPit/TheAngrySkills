@@ -121,6 +121,8 @@ class CursorMirrorTests(unittest.TestCase):
             name = entry["published_name"]
             if entry["family"] == "pstack":
                 pin = latest_pstack
+            elif name == "cursor-x-mcp-guide":
+                pin = latest_pstack
             elif name in historical_refresh:
                 pin = "df581122cde17e6e27686b5a448bde23e4ad4318"
             elif name in expected_names:

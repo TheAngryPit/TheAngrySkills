@@ -526,9 +526,9 @@
     "cursor-workflow-from-chats/SKILL.md": "53883cd93fb0058fe64d15bf90647b6d0b841425b08adbc2206acaee0b334009",
     "cursor-workflow-from-chats/scripts/cursor_canvas_adapters.py": "b9b40959fd78e5ad1d2f037d5c293d92d79318ac1ed5c54e2276d98a6d3cbeaa",
     "cursor-x-mcp-guide/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
-    "cursor-x-mcp-guide/MIRROR.md": "80f8e58181d1cba2415c747ed8a4a84fb0480ce561131d9cd06d9857c3bc4db3",
-    "cursor-x-mcp-guide/SKILL.md": "b83fbafb04dc977e50e2affbb1722f81a4b9dba2073c3e038e318ff85b40d92b",
-    "cursor-x-mcp-guide/references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279",
+    "cursor-x-mcp-guide/MIRROR.md": "f170dafc175083cf3b94f8022c8e4132591b26825cc667da358ed86f73d915a3",
+    "cursor-x-mcp-guide/SKILL.md": "7b3b9f4e2268c6a8705ce70765d80966af751b74771f741d116ecbc9575b405d",
+    "cursor-x-mcp-guide/references/pricing.md": "ec9a7c798ca5195b73f09ed9e0478ac89cd8fb6645cd30b21ecb225f8a8cd068",
     "cursor-x-money-guide/LICENSE.upstream": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
     "cursor-x-money-guide/MIRROR.md": "0e787068664b1678a8858a5fbd0d618fffaaecae3d8d14fcda469207d9b8e2b1",
     "cursor-x-money-guide/SKILL.md": "b601a69b1cd4cdde942ef24558c37b73f2726f17844b178fbd5ad7d4815a9abd"
@@ -609,7 +609,7 @@
     "cursor-typescript-best-practices": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
     "cursor-unslop": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
     "cursor-why": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
-    "cursor-x-mcp-guide": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a",
+    "cursor-x-mcp-guide": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
     "cursor-x-money-guide": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
   },
   "source_dormant_skills": 3,

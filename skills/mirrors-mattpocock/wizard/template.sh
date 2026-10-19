@@ -89,11 +89,34 @@ confirm() {
   [[ "$reply" =~ ^[Yy] ]]
 }
 
-# _existing KEY: current value of KEY in ENV_FILE, if any, decoded using the
-# dotenv quoting rules used by write_env. A variable result preserves trailing
-# newlines, which command substitution would remove.
+_dotenv_quoted_value() {
+  local text="$1" quote="$2" char suffix legacy_escape="'\\''" index=0
+  _DOTENV_QUOTED_VALUE=""
+  _DOTENV_QUOTE_STATE="open"
+  while (( index < ${#text} )); do
+    char="${text:index:1}"
+    if [[ "$char" == "$quote" ]]; then
+      if [[ "$quote" == "'" && "${text:index:4}" == "$legacy_escape" ]]; then
+        _DOTENV_QUOTED_VALUE+="'"
+        index=$((index + 4))
+        continue
+      fi
+      suffix="${text:index+1}"
+      if [[ "$suffix" =~ ^[[:space:]]*(#.*)?$ ]]; then
+        _DOTENV_QUOTE_STATE="closed"
+      else
+        _DOTENV_QUOTE_STATE="invalid"
+      fi
+      return 0
+    fi
+    _DOTENV_QUOTED_VALUE+="$char"
+    index=$((index + 1))
+  done
+  return 0
+}
+
 _existing() {
-  local key="$1" line raw quote value legacy_escape apostrophe found=0
+  local key="$1" line raw quote value found=0
   [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ && -f "$ENV_FILE" ]] || return 1
   _EXISTING_ENV_VALUE=""
   while IFS= read -r line || [[ -n "$line" ]]; do
@@ -102,18 +125,19 @@ _existing() {
     if [[ "$raw" == \'* || "$raw" == \"* || "$raw" == \`* ]]; then
       quote="${raw:0:1}"
       value="${raw:1}"
-      while [[ "${value: -1}" != "$quote" ]]; do
+      while :; do
+        _dotenv_quoted_value "$value" "$quote"
+        if [[ "$_DOTENV_QUOTE_STATE" == "closed" ]]; then
+          break
+        fi
+        if [[ "$_DOTENV_QUOTE_STATE" == "invalid" ]]; then
+          return 1
+        fi
         IFS= read -r line || return 1
         value+=$'\n'$line
       done
-      value="${value:0:${#value}-1}"
-      # Older generated wizards used shell's '\'' sequence for apostrophes.
-      # Read that legacy form so the next write can normalize it to dotenv.
-      if [[ "$quote" == "'" ]]; then
-        legacy_escape="'\\''"
-        apostrophe="'"
-        value="${value//"$legacy_escape"/$apostrophe}"
-      elif [[ "$quote" == '"' ]]; then
+      value="$_DOTENV_QUOTED_VALUE"
+      if [[ "$quote" == '"' ]]; then
         value="${value//\\n/$'\n'}"
         value="${value//\\r/$'\r'}"
       fi
@@ -160,9 +184,8 @@ ask_secret() {
 }
 
 # write_env KEY VALUE upserts a dotenv-quoted value in ENV_FILE and sets $KEY.
-# It uses a quote delimiter absent from VALUE so quotes, dollar signs, backslashes
-# and multiline values stay literal to dotenv readers. Creates ENV_FILE at mode
-# 0600; writes through a symlink and keeps an existing file's mode.
+# Creates ENV_FILE at mode 0600; writes through a symlink and keeps an existing
+# file's mode.
 write_env() {
   local key="$1" value="$2" tmp quote line current_quote current_value skipping=0
   [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || { warn "couldn't write an invalid environment variable name"; return 1; }
@@ -173,21 +196,24 @@ write_env() {
   elif [[ "$value" != *'"'* && "$value" != *'\n'* && "$value" != *'\r'* ]]; then
     quote='"'
   else
-    warn "couldn't encode $key as a dotenv value because it contains every supported quote delimiter"
+    warn "couldn't encode $key without changing its value under dotenv quoting"
     return 1
   fi
   [[ -e "$ENV_FILE" ]] || (umask 077 && : > "$ENV_FILE")
   tmp=$(mktemp)
   while IFS= read -r line || [[ -n "$line" ]]; do
     if (( skipping )); then
-      [[ "${line: -1}" == "$current_quote" ]] && skipping=0
+      _dotenv_quoted_value "$line" "$current_quote"
+      if [[ "$_DOTENV_QUOTE_STATE" == "closed" ]]; then skipping=0; fi
       continue
     fi
     if [[ "$line" == "$key="* ]]; then
       current_value="${line#*=}"
       if [[ "$current_value" == \'* || "$current_value" == \"* || "$current_value" == \`* ]]; then
         current_quote="${current_value:0:1}"
-        [[ "${current_value: -1}" == "$current_quote" ]] || skipping=1
+        current_value="${current_value:1}"
+        _dotenv_quoted_value "$current_value" "$current_quote"
+        if [[ "$_DOTENV_QUOTE_STATE" == "open" ]]; then skipping=1; fi
       fi
       continue
     fi

@@ -212,6 +212,30 @@ write_env VALUE "$VALUE" >/dev/null'''
     assert_node_dotenv_value(node, env_file, env)
 
 
+@pytest.mark.parametrize(('existing', 'expected'), [
+    ("VALUE='old' # trailing comment\nKEEP=keep\n", 'old'),
+    ("VALUE='old'   \nKEEP=keep\n", 'old'),
+    ("VALUE='first line\nsecond line' # trailing comment\nKEEP=keep\n", 'first line\nsecond line'),
+])
+def test_wizard_reuses_quoted_values_with_suffixes_and_preserves_later_entries(tmp_path, existing, expected):
+    node = shutil.which('node')
+    if node is None:
+        pytest.skip('Node is required for dotenv parser proof')
+    library = wizard_library(tmp_path)
+    env_file = tmp_path / '.env'
+    env_file.write_text(existing)
+    env = os.environ.copy()
+    env.update(WIZARD_LIBRARY=str(library), ENV_FILE=str(env_file), EXPECTED_VALUE=expected)
+    shell = r'''source "$WIZARD_LIBRARY"
+unset VALUE
+ask_secret VALUE "existing value" <<< ""
+[[ "$VALUE" == "$EXPECTED_VALUE" ]]
+write_env VALUE "$VALUE" >/dev/null'''
+    subprocess.run(['bash', '-c', shell], env=env, check=True, capture_output=True, text=True)
+    assert env_file.read_text().count('VALUE=') == 1
+    assert_node_dotenv_value(node, env_file, env)
+
+
 def test_wizard_rejects_value_without_a_dotenv_quote_delimiter(tmp_path):
     library = wizard_library(tmp_path)
     env_file = tmp_path / '.env'

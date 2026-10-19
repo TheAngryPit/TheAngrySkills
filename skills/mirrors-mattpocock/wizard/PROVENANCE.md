@@ -6,9 +6,9 @@ Operator approved the final Matt Pocock integration on 2026-09-12. MIT attributi
 
 ## What changed and why
 
-No content adaptation is approved for this package. The upstream files are preserved verbatim behind an explicit empty overlay.
+The approved overlay corrects dotenv value handling in the generated shell template. It writes values with a dotenv-supported quote delimiter, reads multiline values without stripping trailing newlines, and migrates the prior shell-escaped apostrophe form when a wizard is rerun. Values that no supported dotenv quote form can preserve fail without changing the file. The raw upstream template and its recorded source hash remain intact.
 
-The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The empty file is intentional for a maintained copy.
+The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The patch file contains only this behavior correction.
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 No additional behavior was invented during integration.
 

@@ -4,7 +4,7 @@
   "source_path": "skills/engineering/wizard",
   "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
-  "overlay": "empty",
+  "overlay": "patch",
   "upstream_sha256": {
     "SKILL.md": "bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1",
     "agents/openai.yaml": "98f44d682d58e262f160dc59a8befc365e0aa65820dd0261864af26aa8e59d83",
@@ -12,11 +12,11 @@
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ADAPTATIONS.patch": "19d69674e5801d727d11c894a6330b59deae49c4b7a60e201bf8d3cc9d15161f",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "7d27aa337bc307025d3a76f28a2f90367bae515cd16e97167862eb92e7d42bc6",
+    "PROVENANCE.md": "9de60192e4335585f41af248f7e4b60150da5c87aa3759277dd663c75d713112",
     "SKILL.md": "bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1",
     "agents/openai.yaml": "98f44d682d58e262f160dc59a8befc365e0aa65820dd0261864af26aa8e59d83",
-    "template.sh": "6566f147299bc6f1d941e64591ed04385416d543e11f96f564c7228f5018d0ed"
+    "template.sh": "a6d9db10c555160cfda887fb9243e5bc5ff3eb3fc67cdb0df6b13b0a36ccf870"
   }
 }

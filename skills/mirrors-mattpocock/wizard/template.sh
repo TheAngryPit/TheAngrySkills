@@ -89,18 +89,41 @@ confirm() {
   [[ "$reply" =~ ^[Yy] ]]
 }
 
-# _existing KEY: current value of KEY in ENV_FILE, if any, with write_env's single
-# quotes or a plain dotenv double-quoted value undone.
+# _existing KEY: current value of KEY in ENV_FILE, if any, decoded using the
+# dotenv quoting rules used by write_env. A variable result preserves trailing
+# newlines, which command substitution would remove.
 _existing() {
-  [[ -f "$ENV_FILE" ]] || return 1
-  local line value sq="'\\''"; line=$(grep -E "^${1}=" "$ENV_FILE" | tail -n1) || return 1
-  value="${line#*=}"
-  if [[ "$value" == \'*\' ]]; then value="${value:1:${#value}-2}"; value="${value//"$sq"/\'}"
-  elif [[ "$value" == \"*\" ]]; then
-    value="${value:1:${#value}-2}"
-    [[ "$value" == *[\\\$\"]* ]] && return 1   # escapes, $ or ": can't decode safely; ask again
-  fi
-  printf '%s' "$value"
+  local key="$1" line raw quote value legacy_escape apostrophe found=0
+  [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ && -f "$ENV_FILE" ]] || return 1
+  _EXISTING_ENV_VALUE=""
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ "$line" == "$key="* ]] || continue
+    raw="${line#*=}"
+    if [[ "$raw" == \'* || "$raw" == \"* || "$raw" == \`* ]]; then
+      quote="${raw:0:1}"
+      value="${raw:1}"
+      while [[ "${value: -1}" != "$quote" ]]; do
+        IFS= read -r line || return 1
+        value+=$'\n'$line
+      done
+      value="${value:0:${#value}-1}"
+      # Older generated wizards used shell's '\'' sequence for apostrophes.
+      # Read that legacy form so the next write can normalize it to dotenv.
+      if [[ "$quote" == "'" ]]; then
+        legacy_escape="'\\''"
+        apostrophe="'"
+        value="${value//"$legacy_escape"/$apostrophe}"
+      elif [[ "$quote" == '"' ]]; then
+        value="${value//\\n/$'\n'}"
+        value="${value//\\r/$'\r'}"
+      fi
+      _EXISTING_ENV_VALUE="$value"
+    else
+      _EXISTING_ENV_VALUE="$raw"
+    fi
+    found=1
+  done < "$ENV_FILE"
+  (( found ))
 }
 
 # ask KEY "Prompt" reads a value into $KEY. Offers the existing .env value as
@@ -108,7 +131,8 @@ _existing() {
 # with Readline. Fails at EOF with no input.
 ask() {
   local key="$1" prompt="$2" current input s=$'\001' e=$'\002' p rc=0
-  current=$(_existing "$key" || true)
+  current=""
+  _existing "$key" && current="$_EXISTING_ENV_VALUE" || true
   # Readline needs the colour codes wrapped in \001..\002 to place the cursor.
   p="  $s$BOLD$e$prompt$s$RESET$e "
   [[ -n "$current" ]] && p+="$s$DIM$e[Enter keeps current]$s$RESET$e "
@@ -121,7 +145,8 @@ ask() {
 # ask_secret KEY "Prompt" is like ask, but input is hidden.
 ask_secret() {
   local key="$1" prompt="$2" current input rc=0
-  current=$(_existing "$key" || true)
+  current=""
+  _existing "$key" && current="$_EXISTING_ENV_VALUE" || true
   if [[ -n "$current" ]]; then
     printf '  %s%s%s %s[Enter keeps current]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
   else
@@ -134,15 +159,41 @@ ask_secret() {
   printf -v "$key" '%s' "$input"
 }
 
-# write_env KEY VALUE upserts KEY='VALUE' into ENV_FILE (replaces any existing
-# line) and sets $KEY. Idempotent. Creates ENV_FILE at mode 0600; writes through
-# a symlink and keeps an existing file's mode.
+# write_env KEY VALUE upserts a dotenv-quoted value in ENV_FILE and sets $KEY.
+# It uses a quote delimiter absent from VALUE so quotes, dollar signs, backslashes
+# and multiline values stay literal to dotenv readers. Creates ENV_FILE at mode
+# 0600; writes through a symlink and keeps an existing file's mode.
 write_env() {
-  local key="$1" value="$2" tmp sq="'\\''"
+  local key="$1" value="$2" tmp quote line current_quote current_value skipping=0
+  [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || { warn "couldn't write an invalid environment variable name"; return 1; }
+  if [[ "$value" != *"'"* ]]; then
+    quote="'"
+  elif [[ "$value" != *'`'* ]]; then
+    quote='`'
+  elif [[ "$value" != *'"'* && "$value" != *'\n'* && "$value" != *'\r'* ]]; then
+    quote='"'
+  else
+    warn "couldn't encode $key as a dotenv value because it contains every supported quote delimiter"
+    return 1
+  fi
   [[ -e "$ENV_FILE" ]] || (umask 077 && : > "$ENV_FILE")
   tmp=$(mktemp)
-  grep -vE "^${key}=" "$ENV_FILE" > "$tmp" || true
-  printf "%s='%s'\n" "$key" "${value//\'/$sq}" >> "$tmp"
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    if (( skipping )); then
+      [[ "${line: -1}" == "$current_quote" ]] && skipping=0
+      continue
+    fi
+    if [[ "$line" == "$key="* ]]; then
+      current_value="${line#*=}"
+      if [[ "$current_value" == \'* || "$current_value" == \"* || "$current_value" == \`* ]]; then
+        current_quote="${current_value:0:1}"
+        [[ "${current_value: -1}" == "$current_quote" ]] || skipping=1
+      fi
+      continue
+    fi
+    printf '%s\n' "$line" >> "$tmp"
+  done < "$ENV_FILE"
+  printf '%s=%s%s%s\n' "$key" "$quote" "$value" "$quote" >> "$tmp"
   cat "$tmp" > "$ENV_FILE"
   rm -f "$tmp"
   printf -v "$key" '%s' "$value"

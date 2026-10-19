@@ -129,7 +129,7 @@
     "name": "wizard",
     "destination": "skills/mirrors-mattpocock/wizard",
     "source_path": "skills/engineering/wizard",
-    "overlay": "empty"
+    "overlay": "patch"
   },
   {
     "name": "implement-spec",

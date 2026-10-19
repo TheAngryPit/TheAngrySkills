@@ -26,8 +26,9 @@ The `chief-of-staff` package now has a narrow overlay: explicit invocation
 remains required; suitable independent work may use bounded native delegation
 when advertised by the host, with coordinator ownership retained. Its
 environment-improvement guidance stays inside the invoked goal and authority.
-The refreshed catalog therefore has 20 patched mirror packages and 12
-intentional empty overlays, plus AskPit's separate patch.
+The Wizard package now carries a narrow dotenv encoding correction, with raw
+upstream hashes preserved. The refreshed catalog has 21 patched mirror packages
+and 11 intentional empty overlays, plus AskPit's separate patch.
 
 # Matt Pocock skill integrations
 

@@ -12,7 +12,6 @@ from cursor_pstack_family import current_inventory, same_content
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "sources/cursor-plugins"
-MANIFEST_PATH = BASE / "manifest.json"
 
 
 def git(upstream: Path, *args: str) -> str:
@@ -30,6 +29,8 @@ def write_json(path: Path, value: dict) -> None:
 
 
 def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
+    if git(upstream, "status", "--porcelain", "--untracked-files=all", "--ignored", "--", "pstack"):
+        raise ValueError("pstack upstream checkout is dirty; refresh requires committed source")
     source_commit = git(upstream, "rev-parse", "HEAD")
     full = json.loads((base / "full-tree.json").read_text())
     baseline_commit = full["commit"]
@@ -70,7 +71,8 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
     }
     write_json(base / "family-refresh.json", ledger)
 
-    manifest = json.loads(MANIFEST_PATH.read_text())
+    manifest_path = base / "manifest.json"
+    manifest = json.loads(manifest_path.read_text())
     entries = [entry for entry in manifest["skills"] if entry.get("family") == "pstack"]
     source_refresh_note = "0.15.28 source refresh; prior runtime and fixture evidence predates this refresh. "
     for entry in entries:
@@ -92,8 +94,8 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
         if path not in {
             "pstack/skills/create-formal-verification-skill/SKILL.md",
             "pstack/skills/maintain-formal-verification-skill/SKILL.md",
-        } and not entry.get("availability", "").startswith(source_refresh_note):
-            entry["availability"] = source_refresh_note + entry.get("availability", "")
+        } and source_refresh_note.strip() not in entry.get("availability", ""):
+            entry["availability"] = (entry.get("availability", "") + " " + source_refresh_note.strip()).strip()
         license_path = entry.get("license_path")
         if license_path:
             license_source = upstream / license_path
@@ -129,7 +131,7 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
             record["sha256"] = current[path]["sha256"]
             record["source_commit"] = source_commit
     manifest["pstack_upstream_commit"] = source_commit
-    write_json(MANIFEST_PATH, manifest)
+    write_json(manifest_path, manifest)
 
     additions_path = base / "additions.json"
     if additions_path.exists():

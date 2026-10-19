@@ -19,9 +19,9 @@ A prompt states the intent and the check for done. The playbook supplies the ste
 ## Load the context first
 
 - For a noisy report, ask the agent to restate the underlying issue in its own words and in plain English before it does anything else. A misreading shows up before any code exists.
-- In a fresh chat, `/recall` earlier work on the topic. Old chats hold context that the new agent lacks.
-- Before a change to unfamiliar code, ask `/how` for the mechanics and `/why` for the reasons. An agent with no traced model fixes the symptom at the first plausible spot.
-- Ask `/teach` to make the case for a choice, as in "convince me it fixes the cause and not the symptom". A case is easier to check than a summary.
+- In a fresh chat, `$cursor-recall` earlier work on the topic. Old chats hold context that the new agent lacks.
+- Before a change to unfamiliar code, ask `$cursor-how` for the mechanics and `$cursor-why` for the reasons. An agent with no traced model fixes the symptom at the first plausible spot.
+- Ask `$cursor-teach` to make the case for a choice, as in "convince me it fixes the cause and not the symptom". A case is easier to check than a summary.
 
 ## Design before the plan
 
@@ -35,10 +35,14 @@ A prompt states the intent and the check for done. The playbook supplies the ste
 - "do it", "continue", and "keep going until done" are whole prompts once the chat holds the task.
 - Start with "new task" when the subject changes. Otherwise the mode treats the message as the next step.
 
+## Before stepping away in Cursor
+
+The `/loop` examples below describe Cursor only. In Codex, set up a native heartbeat or scheduled automation only when the user explicitly requests recurring work; the native automation carries its own finish check.
+
 ## Before stepping away
 
 - Say "im going to bed" or "im stepping away" so the agent stops asking.
-- Write done as checks every iteration can run, and give `/loop` that predicate.
+- Write done as checks every iteration can run. In Codex, request a native heartbeat or scheduled automation explicitly and give it that predicate.
 - Ask for a fresh worktree off a named base.
 - Pre-answer what the agent would stop for, such as "don't ask me before committing".
 - Ask for a decision log to audit later.

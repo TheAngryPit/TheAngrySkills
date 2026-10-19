@@ -13,7 +13,7 @@
 ## Fresh validation
 
 - Untouched base: 374 tests passed, 2 skipped, 11 subtests passed.
-- Candidate: 382 tests passed, 2 skipped, 11 subtests passed.
+- Candidate: 386 tests passed, 2 skipped, 11 subtests passed.
 - Focused compatibility checks: 61 tests passed, 6 subtests passed.
 - Deterministic generation, full source-family tree comparison, adaptation coverage and cross-skill links passed; zero unresolved links.
 - Both named profiles match exact normalized current source bodies; no live-session load is claimed.
@@ -26,6 +26,12 @@
 The exact base and candidate trees were scanned with the same scanner and options. Both have zero blocking skills and the same ten skills requiring human review. Findings were compared by skill, file, rule, severity and evidence, rather than totals alone.
 
 The only added finding is `bundled-script-review` for `cursor-poteto-mode/scripts/check-plan.test.ts`. It is an exact upstream Bun test file. Inspection found bounded temporary fixture creation, invocation of the adjacent plan checker and cleanup of its own temporary directory. It does not add install-time execution, network calls or credentials. No findings were removed or suppressed. Both new formal-verification skills scan as safe to install after quality review.
+
+## Independent review
+
+The initial seven-pass Codex review found five distinct defects: duplicated native/upstream workflows, non-native guide prompts, an upstream-checkout provenance hazard, conflicting model routing and duplicated How control flow. All were corrected. The helper now refuses tracked, untracked and ignored pstack changes before any output writes; regression tests also cover classification preservation and repeated-run stability.
+
+A focused independent Codex review of those fixes returned scoped-clean through P2. This is static review; the automated-test results above are separate evidence.
 
 ## Proof limits
 

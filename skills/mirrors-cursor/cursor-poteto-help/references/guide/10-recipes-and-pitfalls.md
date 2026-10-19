@@ -4,7 +4,7 @@
 
 Prompts worth copying, then the mistakes everyone makes once. Swap in your own paths and finish conditions. The recipes are deliberately informal. That's how they get typed in practice, and the skills read intent fine.
 
-![She tastes a finished dish while robots cook from a recipe box, with pinned cards reading $cursor-how, $cursor-tdd, and /loop above the counter.](./images/recipes.jpg)
+![She tastes a finished dish while robots cook from a recipe box, with pinned cards reading $cursor-how, $cursor-tdd, and Cursor /loop above the counter.](./images/recipes.jpg)
 
 ## Understand an unfamiliar subsystem
 
@@ -81,7 +81,7 @@ $cursor-poteto-mode repro the duplicate write first. if there's a cheap test pat
 ## Repro and fix a report with proof
 
 ```text
-$cursor-poteto-mode repro this with /verify-<app>. if it repros on main, fix it and show me a video as proof.
+$cursor-poteto-mode repro this with $cursor-verify-<app>. if it repros on main, fix it and show me a video as proof.
 ```
 
 "if it repros on main" lets the run stop early when the bug is already gone. The video lets you check the fix before you read the diff.
@@ -168,7 +168,7 @@ $cursor-ketchup
 - **Taking the first design.** One attempt locks in the first shape the model thought of. Ask for prototypes or `$cursor-architect` and pick from evidence.
 - **Polishing an abstract plan.** Adversarial review of a plan with no code behind it invents risks that will never happen. Settle the open questions with prototypes, then review what got built.
 - **Parallel agents in one worktree.** They overwrite each other, and nobody can tell which agent changed what. Run them as cloud agents, or say "own worktree per attempt".
-- **Looping before you trust the loop.** A loop that can't verify its own work only makes unchecked work faster. Get the verification skill working first.
+- **Looping before you trust the automation.** A loop that can't verify its own work only makes unchecked work faster. Get the verification skill working first.
 - **Trusting an unvetted number.** A warm cache or a skipped code path can fake a speedup. Run `$cursor-benchmark-checklist` before the number goes anywhere.
 - **Correcting the same mistake by hand.** A correction in chat helps one run. `$cursor-correct` fixes the repo so no later run repeats it.
 - **Using `$cursor-arena` for coverage.** `$cursor-arena` repeats one design or code brief, then picks a base and grafts the best parts. `$cursor-swarm` partitions slices or declared race arms and aggregates one report.

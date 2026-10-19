@@ -167,3 +167,57 @@ def test_addition_content_drift_is_rejected(tmp_path):
     sync.SOURCE = tmp_path
     with pytest.raises(ValueError, match='addition source drift'):
         check.verify()
+
+
+@pytest.mark.parametrize('mutation', ['tracked', 'untracked', 'ignored'])
+def test_refresh_rejects_uncommitted_source_before_writing(tmp_path, monkeypatch, mutation):
+    monkeypatch.syspath_prepend(str(ROOT / 'scripts'))
+    refresh = load('refresh-cursor-pstack-family')
+    upstream = tmp_path / 'upstream'
+    source = upstream / 'pstack/SKILL.md'
+    source.parent.mkdir(parents=True)
+    source.write_text('committed')
+    (upstream / '.gitignore').write_text('pstack/ignored.txt\n')
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture',
+                    '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'fixture'], check=True)
+    if mutation == 'tracked':
+        source.write_text('modified')
+    else:
+        (source.parent / f'{mutation}.txt').write_text('uncommitted')
+    output = tmp_path / 'output'
+    output.mkdir()
+    sentinel = output / 'manifest.json'
+    sentinel.write_text('preserve')
+    with pytest.raises(ValueError, match='checkout is dirty'):
+        refresh.refresh(upstream, base=output, root=tmp_path)
+    assert sentinel.read_text() == 'preserve'
+    assert sorted(path.name for path in output.iterdir()) == ['manifest.json']
+
+
+def test_refresh_preserves_availability_classification_and_is_idempotent(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / 'scripts'))
+    refresh = load('refresh-cursor-pstack-family')
+    upstream = tmp_path / 'upstream'
+    source = upstream / 'pstack/skills/example/SKILL.md'
+    source.parent.mkdir(parents=True)
+    source.write_text('---\nname: example\ndescription: example\n---\n')
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture',
+                    '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'fixture'], check=True)
+    output = tmp_path / 'output'
+    output.mkdir()
+    (output / 'full-tree.json').write_text(json.dumps({'commit': '0' * 40, 'files': {}}))
+    manifest = output / 'manifest.json'
+    manifest.write_text(json.dumps({'skills': [{'family': 'pstack',
+        'path': 'pstack/skills/example/SKILL.md', 'availability': 'guide-only; no runtime proof'}]}))
+    (output / 'agent-coverage.json').write_text(json.dumps({'agents': {}}))
+    refresh.refresh(upstream, base=output, root=tmp_path)
+    first = manifest.read_text()
+    availability = json.loads(first)['skills'][0]['availability']
+    assert availability.startswith('guide-only; no runtime proof')
+    assert availability.count('prior runtime and fixture evidence predates this refresh') == 1
+    refresh.refresh(upstream, base=output, root=tmp_path)
+    assert manifest.read_text() == first

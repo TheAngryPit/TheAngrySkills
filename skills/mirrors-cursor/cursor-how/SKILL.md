@@ -9,41 +9,27 @@ Use native read-only subagents only when authorized; the standing `model-capabil
 
 # How
 
-Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
+Explore the codebase to answer how a subsystem works. Give a senior engineer enough of a mental model to start changing it without turning the explanation into annotated source.
 
-For each delegation, choose the model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report the exact gap; do not invent a replacement slug.
+Choose model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report that exact gap without substituting another model.
 
 ## 1. Assess complexity
 
-If the scope is ambiguous, state your interpretation and explore. The user can redirect.
+If scope is ambiguous, state the interpretation and explore. The user can redirect.
 
-- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. Spawn one explainer that explores and explains in one pass, built from `references/explainer-prompt.md` without the explorer-findings section. Go to step 4.
-- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): go to step 2.
+- **Simple:** one module, small utility, or narrow question. Do not spawn explorers. If native delegation is authorized and useful, use one read-only explainer with `references/explainer-prompt.md`; otherwise inspect and explain directly. Then go to step 4.
+- **Complex:** a subsystem spanning files or services, a cross-cutting feature, or a full architecture overview. Continue to step 2.
 
 When in doubt, take the simple path.
 
-## 2. Explore (complex only)
+## 2. Explore complex questions
 
-Delegate the 2 to 4 distinct angles to read-only Codex subagents in parallel when the task permits delegation. Select available model and effort under the standing `model-capability-router` policy. If delegation is unavailable, investigate the same angles sequentially and keep the evidence separate.
+When native delegation is authorized, investigate two to four distinct angles in parallel with read-only delegates. Choose model and effort through `model-capability-router`. Give each delegate a bounded angle and the explorer prompt in `references/explorer-prompt.md`. If delegation is unavailable, investigate the same angles sequentially and keep their evidence separate. Do not ask one explainer to repeat exploration after these findings exist.
 
-Once all explorers have returned, spawn one explainer with `references/explainer-prompt.md` and every explorer's findings filled in.
+## 3. Synthesize complex questions
+
+After explorers return, combine their cited findings in the coordinator or one read-only native synthesizer selected through `model-capability-router`. Give it every finding and `references/explainer-prompt.md`. Resolve contradictions by checking the source. The coordinator owns the explanation and verifies its source paths. Simple questions skip this synthesis step because their one explainer already produced the account.
 
 ## 4. Present
 
-Use one read-only Codex subagent when delegation is authorized and useful; choose model and effort under the standing `model-capability-router` policy. Otherwise explore and explain directly in one pass.
-
-Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
-
-## Step 3. Synthesize (complex questions only)
-
-After all explorers return, synthesize their cited findings in the coordinator or one read-only Codex subagent chosen under the standing `model-capability-router` policy. The coordinator checks the source paths and owns the final explanation.
-
-Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
-
-## Step 4. Present
-
-Check the cited source paths and explain the result to the user in the requested scope. Correct factual errors before presenting it; the coordinator owns the final answer.
-
-## Output Format
-
-The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.
+Check the cited source paths and explain the result in the requested scope. Correct factual errors before presenting it. Use only the applicable sections from `references/explainer-prompt.md`: Overview, Key Concepts, How It Works, Where Things Live, and Gotchas.

@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "path": ".agents/skills/openclaw-refactor-docs",
   "original_name": "openclaw-refactor-docs",
   "installed_name": "openclaw-refactor-docs",
@@ -9,7 +9,7 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "ad0b18562c726a760d603164e5d95c7228195ac40b0a843ea9694771a48f5495",
-    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "references/upstream-link-map.json": "c4ac30f24f2b4723b1f948cfa1d96829dbe4b0360168cc38571de3671ff3aef6",
     "agents/openai.yaml": "8ed66bb33d0305c36b073b011fcf481e7fd5394db25d3ebb9738479c3372e039",
     "references/technical-documentation/LICENSE": "021abf1cacb291c2b0be92ab078d6c336f859f1bec9a3a3afbc039362971e31e",
     "references/technical-documentation/SKILL.source.md": "67a93dc4b2263d23de63d6d3e6fca6447f4f594fe856c1514db79d94b65d3c5a",

@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "path": "skills/node-inspect-debugger",
   "original_name": "node-inspect-debugger",
   "installed_name": "openclaw-node-inspect-debugger",
@@ -9,7 +9,7 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "98d234556eeb8e48e2865e1f6bd5673256a3ed2701f219c8316b2c250054658a",
-    "references/upstream-link-map.json": "9bba62e6bed96c6b89ac1e5410995b067b68d47bcd15de2df18557467ad3214d",
+    "references/upstream-link-map.json": "c4ac30f24f2b4723b1f948cfa1d96829dbe4b0360168cc38571de3671ff3aef6",
     "agents/openai.yaml": "aeeb481b2369d32d0f7a7af41a01a4751cd9db54dd92604fb2244b8fb8ca7ee9",
     "references/upstream/SKILL.source.md": "50d2f6828eaf4bbf7ccbaec5af928f9af978e93b7c679b0f3c8afe2a80ab7d52"
   },

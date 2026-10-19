@@ -10,7 +10,7 @@ Codex adaptation of the pinned OpenClaw source. Repository-specific commands app
 ## Measure the real suite shape
 Resolve the selected checkout and scoped agent/plugin/channel/Gateway test instructions. Read the packaged source for grouped reports, extension batches, import-duration flags, profiling and package-boundary commands. Verify these entrypoints exist in the current checkout before running them.
 
-Record a like-for-like baseline: command/config, exact commit, worker budget, machine/load, wall time, test/import time and peak RSS. Start with the smallest relevant file or plugin batch; collect broader ranking only for an explicit performance question that needs it. Distinguish harness noise and shared-worker module retention from a test body hotspot or app-object leak.
+Record a like-for-like baseline: command/config, exact commit, worker budget, machine/load, wall time, test/import time and peak RSS. Start with the smallest relevant file or plugin batch; for bundled plugin breadth, prefer the narrowest `pnpm test:extensions:batch <plugin[,plugin...]>` or plugin-inspector command before a full extension sweep. Collect broader ranking only for an explicit performance question that needs it. Distinguish harness noise and shared-worker module retention from a test body hotspot or app-object leak.
 
 Repair the owning metadata/import/lifecycle/fixture cause, preserve the contract coverage and rerun the same workload. Do not delete expensive proof merely for speed. For growing memory read `$openclaw-test-heap-leaks`; for packaging-sensitive plugin changes read `$openclaw-release-plugin-testing`. Use `$openclaw-testing` and existing `$openclaw-crabbox` for runner choice.
 

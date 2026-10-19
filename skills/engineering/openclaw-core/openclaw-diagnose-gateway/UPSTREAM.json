@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "path": "custodian-skills/diagnose-gateway",
   "original_name": "diagnose-gateway",
   "installed_name": "openclaw-diagnose-gateway",
@@ -9,7 +9,7 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "80f5017d943776caae277e0e68a21c33727516b3e4d0ac3a16fb5a3698b75b8d",
-    "references/upstream-link-map.json": "9bba62e6bed96c6b89ac1e5410995b067b68d47bcd15de2df18557467ad3214d",
+    "references/upstream-link-map.json": "c4ac30f24f2b4723b1f948cfa1d96829dbe4b0360168cc38571de3671ff3aef6",
     "agents/openai.yaml": "719b8ab90c756098b2b0efef49435a327b1ae551712af9171fd22423f2f4bef1",
     "references/upstream/SKILL.source.md": "e0448d96d55cb459ada8a1f475a6f1fb62e6d75dcaa63aee08e15360b8ca1a7d"
   },

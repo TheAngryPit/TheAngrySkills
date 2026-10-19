@@ -2,7 +2,7 @@
   "name": "teach",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/productivity/teach",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -10,7 +10,7 @@
     "LEARNING-RECORD-FORMAT.md": "701fa34b6748aa89e6c960ffb815257f481a7d77fb2900f9028f7edf3fdd6052",
     "MISSION-FORMAT.md": "8cacbb3c0644d3ae0ea4965564797099401a6930a23f7cf462918576587f2418",
     "RESOURCES-FORMAT.md": "e9cacf34026e11a8d1c8f9de88abe5bcbf654f4ebdb25cae8c0de0d5f48f44ec",
-    "SKILL.md": "a32df9dcdfc0c4fdc1c98e1ed3940c5f56b84c1aa90ff60346f32b8b53915b43",
+    "SKILL.md": "550482c2d674b085c9043b87bfdc14a8f2ec453c736119e7fcbb1e9332bffeba",
     "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
@@ -20,9 +20,9 @@
     "LEARNING-RECORD-FORMAT.md": "701fa34b6748aa89e6c960ffb815257f481a7d77fb2900f9028f7edf3fdd6052",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
     "MISSION-FORMAT.md": "8cacbb3c0644d3ae0ea4965564797099401a6930a23f7cf462918576587f2418",
-    "PROVENANCE.md": "76d693061618d5144047de63aa0bf1b2a657723a8808b25873aecb55c193fda6",
+    "PROVENANCE.md": "0994f18df667837a603bfac3c529a68103d0bc1c3a872f839c6a8c9866e82cc1",
     "RESOURCES-FORMAT.md": "e9cacf34026e11a8d1c8f9de88abe5bcbf654f4ebdb25cae8c0de0d5f48f44ec",
-    "SKILL.md": "7b758620a84297d6bc679000e85866f44bd69e62990a7c27af265e901ce5649f",
+    "SKILL.md": "8237772faf9b59357cf19d2cef709b2264b1eb7a3adbb1d52d6e2d0083fdabd1",
     "agents/openai.yaml": "5856f3ae8aec742f1499c640aecdd5f1d6af5fa210a7c6ec794de8263a6f733f"
   }
 }

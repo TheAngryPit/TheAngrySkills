@@ -59,6 +59,16 @@ previous source revision's commit history was unavailable. The recorded file
 hashes match the current source inventory. No measured performance claim is
 made.
 
+## 2026-10-19 upstream review
+
+Current reviewed source revision: 49dd158d1076134a641b33efb035946536778336.
+
+The upstream `writing-for-agents` source files and license are byte-identical
+to the 2026-10-06 reviewed baseline. No content change was needed in Writing
+for Astra. The review confirmed the existing outcome-led rationale, conditional
+Codex mechanics reference, and model-relative evaluation guidance remain
+appropriate; the source pin advances to record the completed review.
+
 ## Update review
 
 UPSTREAM.json stores the reviewed Writing for Agents files and license hashes.

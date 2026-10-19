@@ -2,21 +2,21 @@
   "name": "wizard",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/wizard",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "empty",
   "upstream_sha256": {
     "SKILL.md": "bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1",
     "agents/openai.yaml": "98f44d682d58e262f160dc59a8befc365e0aa65820dd0261864af26aa8e59d83",
-    "template.sh": "33cbe9dfb1d0e9185b60248a52aabed14bc64785a00cac695e302e739dd6c153",
+    "template.sh": "6566f147299bc6f1d941e64591ed04385416d543e11f96f564c7228f5018d0ed",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
     "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "246eff46a219d8a74999acc00881104df8ab9b35a6d14caf320aa9637dbe7714",
+    "PROVENANCE.md": "7d27aa337bc307025d3a76f28a2f90367bae515cd16e97167862eb92e7d42bc6",
     "SKILL.md": "bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1",
     "agents/openai.yaml": "98f44d682d58e262f160dc59a8befc365e0aa65820dd0261864af26aa8e59d83",
-    "template.sh": "33cbe9dfb1d0e9185b60248a52aabed14bc64785a00cac695e302e739dd6c153"
+    "template.sh": "6566f147299bc6f1d941e64591ed04385416d543e11f96f564c7228f5018d0ed"
   }
 }

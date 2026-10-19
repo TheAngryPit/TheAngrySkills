@@ -16,14 +16,22 @@ def test_manifest_contains_the_approved_surface_only():
     names={item['name'] for item in ITEMS}
     assert len(ITEMS)==33
     assert len(names-{ 'ask-pit' })==32
-    assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==19
-    assert sum(item['overlay']=='empty' for item in ITEMS)==13
+    assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==20
+    assert sum(item['overlay']=='empty' for item in ITEMS)==12
     assert not names & {'ask-matt','writing-for-agents','claude-handoff','git-guardrails-claude-code',
                         'migrate-to-shoehorn','setup-pre-commit','setup-ts-deep-modules'}
     assert all(item['destination'].startswith('skills/mirrors-mattpocock/')
                for item in ITEMS if item['name']!='ask-pit')
     assert next(item for item in ITEMS if item['name']=='retro')['source_path']=='skills/engineering/retro'
     assert next(item for item in ITEMS if item['name']=='implement-spec')['source_path']=='skills/engineering/implement-spec'
+
+
+def test_chief_of_staff_stays_explicit_only():
+    item=next(i for i in ITEMS if i['name']=='chief-of-staff')
+    package=ROOT/item['destination']
+    assert item['overlay']=='patch'
+    frontmatter=(package/'SKILL.md').read_text().split('---',2)[1]
+    assert 'disable-model-invocation: true' in frontmatter
 
 
 def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
@@ -33,7 +41,7 @@ def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
     provenance=(package/'PROVENANCE.md').read_text()
     assert item['source_path']=='skills/engineering/pr'
     assert item['overlay']=='empty'
-    assert record['commit']=='4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+    assert record['commit']=='49dd158d1076134a641b33efb035946536778336'
     assert record['overlay']=='empty'
     assert (package/'ADAPTATIONS.patch').read_bytes()==b''
     assert 'Original integration source revision: 24fe0ef7737efae15c87225755e9f6f5965e4888.' in provenance
@@ -120,8 +128,8 @@ def test_astra_original_integration_is_distinct_from_current_review():
     provenance = (package / 'PROVENANCE.md').read_text()
     record = json.loads((package / 'UPSTREAM.json').read_text())
     assert 'Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015' in provenance
-    assert '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d' in provenance
-    assert record['commit'] == '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+    assert '49dd158d1076134a641b33efb035946536778336' in provenance
+    assert record['commit'] == '49dd158d1076134a641b33efb035946536778336'
 
 
 def test_batch_refresh_retains_legacy_and_reaches_later_packages(tmp_path, monkeypatch, capsys):

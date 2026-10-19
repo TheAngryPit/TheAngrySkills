@@ -2,7 +2,7 @@
   "name": "domain-modeling",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/domain-modeling",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "empty",
   "upstream_sha256": {
@@ -17,7 +17,7 @@
     "ADR-FORMAT.md": "944c92aa790e8fbdc9199640b170979abb8a34ba8d0fe18c2a01a63bce140ca0",
     "GLOSSARY-FORMAT.md": "21dcc40cdec8e151a829b98ab1517c1867bc444e3665134a98c6983411996801",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "f1b1bfa524cdae1dddb9abec1fa23ff499c409a4f04fd496c5d5447306b401bb",
+    "PROVENANCE.md": "ed53e4e48a192d483b741086a85b42284b80ae8e39aa3a2c182db65fbfd33bb4",
     "SKILL.md": "7b925d7b1e341a2eeae33ad68a8a8c0ab889a38ddd22a7598e4c240e5a7556a3",
     "agents/openai.yaml": "f6bf2aa996c6e6f53fdd0708e18a0d16a56aed8322cca59fedbe3c0d2c75f06b"
   }

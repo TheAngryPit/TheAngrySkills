@@ -2,7 +2,7 @@
   "name": "triage",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/triage",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "empty",
   "upstream_sha256": {
@@ -17,7 +17,7 @@
     "AGENT-BRIEF.md": "7f5f87fed3033df1b06e083c480f3e847b1fbb0647746b8a4c6a50f9f26ef44f",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
     "OUT-OF-SCOPE.md": "1fbf9b432130c6380aa65813b55553cfda150309b27c595e183f8e335b8a190d",
-    "PROVENANCE.md": "7f824479ec915909a70d579578ee2b374af789e6442d0536290d65061503da75",
+    "PROVENANCE.md": "37237feba6724c039d8e64b8a41f86d25ac14f24fc80416dd2c5ef2f2871d4b3",
     "SKILL.md": "917b0baf74be583e74f110857ed45df2766617f75c00baf61fd136d7af515edf",
     "agents/openai.yaml": "2e683717720cf456d165d0bb1a68bb600d0b6a8ccb61841c172e50d26f95351c"
   }

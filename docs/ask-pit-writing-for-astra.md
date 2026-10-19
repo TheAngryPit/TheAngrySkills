@@ -1,6 +1,20 @@
 ## Refresh — 6 October 2026
 
-The current Matt source has been reviewed at4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d. Incorporate upstream updates underneath the local adaptations: do not freeze the custom packages and do not publish their vanilla counterparts. AskPit now includes the updated implementation graph, PR and retrospective routes; Writing for Astra incorporates current useful information-structure guidance with explicit adaptation rationale. Package publication and manual installation remain separate.
+The Matt source was reviewed at `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d`.
+Incorporate upstream updates underneath the local adaptations: do not freeze
+the custom packages and do not publish their vanilla counterparts. AskPit now
+includes the updated implementation graph, PR and retrospective routes; Writing
+for Astra incorporates current useful information-structure guidance with
+explicit adaptation rationale. Package publication and manual installation
+remain separate.
+
+## Refresh — 19 October 2026
+
+The current Matt source review is `49dd158d1076134a641b33efb035946536778336`.
+AskPit already matched this revision. Writing for Astra's upstream files and
+license are unchanged since the prior review, so its content remains unchanged
+and its reviewed source pin advances. The 12 changed mirror packages and
+preserved adaptation decisions are listed in `matt-adaptations.md`.
 
 # AskPit and Writing for Astra
 

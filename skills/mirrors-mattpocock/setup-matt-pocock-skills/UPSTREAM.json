@@ -2,29 +2,29 @@
   "name": "setup-matt-pocock-skills",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/setup-matt-pocock-skills",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
-    "SKILL.md": "9a0c21694be19fa3eefc39343355d3af7414716ba364882c7432c2f821eac3e9",
+    "SKILL.md": "f148858ffb7f63c03c06fca06e6fdb1d91a35c6b293244b8fdfacd5f4cc028c4",
     "agents/openai.yaml": "9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939",
     "domain.md": "593a7042218689f1d24df89df14eaf0a20e19e0d0a7d479a01947ac78f0784b9",
-    "issue-tracker-github.md": "afd6852a80185217bd28aa5cbe456bef1e85be25be7bd1fba382d5b8ee428325",
-    "issue-tracker-gitlab.md": "ea175f73d193b3f55819c0ed9bbccf6ee0e70ad8f928e3d7607596c53380acd6",
+    "issue-tracker-github.md": "f0653fe106dd8ee7b33be27bd7fe3104b40555896cb45f61997aed20467020c3",
+    "issue-tracker-gitlab.md": "591a9e7057382aaccdfbed3f7ea3f2ad07e0cd29f012d18b82ee4e485fd81e24",
     "issue-tracker-local.md": "7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e",
-    "triage-labels.md": "4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d",
+    "triage-labels.md": "ae512af838c78b8750471c42cd2b20fa32319553e61d84c9a23d171b40ce14aa",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
     "ADAPTATIONS.patch": "aa39bf0a03ce817cc3e72089debfc1a7e91cae822e61869664fdeb5e999d2a52",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "7163bccf57d62d0a75624ce567f2d763033db68352a06c9cd0ac7a5da39db14f",
-    "SKILL.md": "a16948c6909b41ef88e318719245d930d1e4debb640c52c6c455d470cc511b3b",
+    "PROVENANCE.md": "d0fbb6394a62ece369a43309196727e473910e5fb507b83ebb04417a6c45638a",
+    "SKILL.md": "fc165073050b6fa2056068d21c02189172bc27cdad16b6d00429b2dc3daaf081",
     "agents/openai.yaml": "9527de0110541c45712319025155aeab8dc7d77c6ed6e5e83271bab1851ab939",
     "domain.md": "593a7042218689f1d24df89df14eaf0a20e19e0d0a7d479a01947ac78f0784b9",
-    "issue-tracker-github.md": "afd6852a80185217bd28aa5cbe456bef1e85be25be7bd1fba382d5b8ee428325",
-    "issue-tracker-gitlab.md": "ea175f73d193b3f55819c0ed9bbccf6ee0e70ad8f928e3d7607596c53380acd6",
+    "issue-tracker-github.md": "f0653fe106dd8ee7b33be27bd7fe3104b40555896cb45f61997aed20467020c3",
+    "issue-tracker-gitlab.md": "591a9e7057382aaccdfbed3f7ea3f2ad07e0cd29f012d18b82ee4e485fd81e24",
     "issue-tracker-local.md": "7dcda20a2eb4bdc89b95d1143423c0691309921cadae3132e6424f371030506e",
-    "triage-labels.md": "4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d"
+    "triage-labels.md": "ae512af838c78b8750471c42cd2b20fa32319553e61d84c9a23d171b40ce14aa"
   }
 }

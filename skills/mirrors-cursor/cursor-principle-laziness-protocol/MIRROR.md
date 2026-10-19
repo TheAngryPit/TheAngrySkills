@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/principle-laziness-protocol/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: 9006579e9e3f33955d17569733db688ae65f22577dc3b21803d219a5a8445aff
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 1be6e7a435f26a75a76eb848b9c3d611b9977d0f5822361753244da25ca3ca45
 Published name: cursor-principle-laziness-protocol
 Decision class: adaptação funcional
-Availability: guide-only content proven; native runtime not claimed
+Availability: guide-only content proven; native runtime not claimed 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

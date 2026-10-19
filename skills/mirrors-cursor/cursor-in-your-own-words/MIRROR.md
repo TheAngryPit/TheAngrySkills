@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 1e5c90a4b6f249917bd21fe361b3a2a7deb741b8
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/in-your-own-words/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/1e5c90a4b6f249917bd21fe361b3a2a7deb741b8/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
 Source SHA-256: fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad
 Published name: cursor-in-your-own-words
 Decision class: adaptação nominal
-Availability: source and distribution validated; native runtime unproven
+Availability: source and distribution validated; native runtime unproven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

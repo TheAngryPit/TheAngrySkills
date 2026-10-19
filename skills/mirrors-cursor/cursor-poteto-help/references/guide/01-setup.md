@@ -8,6 +8,8 @@ This page covers native skill availability, model roles and the first task. Inst
 
 Use the operator's approved source and native Codex skill discovery. Installation is a separate operator action; this guide does not install the Cursor plugin. Verify the selected skills and named agent profiles in a fresh session before claiming availability.
 
+The upstream guide includes a separate [Claude Code setup reference](https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/docs/harness/claude-code.md). Those commands and model settings apply only to Claude Code. They are not Codex installation steps or runtime defaults.
+
 ## Pick your models
 
 Run:
@@ -24,11 +26,13 @@ Choose or revise native roles only within the requested setup scope. Do not writ
 
 When supported by the native call, omitted model overrides inherit the parent selection. Verify supported models, effort, context inheritance and concurrency on that channel. Preserve independent reviewer roles without inventing Cursor model slugs.
 
-## Accept the verification offer, or don't
+## Accept the verification offers, or don't
 
 At the end of setup, `$cursor-setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`$cursor-create-verification-skill`](../../../cursor-create-verification-skill/SKILL.md).
 
 Say yes and it writes the authorized source-controlled `verify-<app>/` directory, with installation and native discovery verified separately, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `$cursor-create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers it in depth.
+
+If there is no formal verification skill and the project has a costly invariant, concurrent path, retry loop, state machine or parser, setup may also offer once to create one with `$cursor-create-formal-verification-skill`. It checks one stated property within explicit model or proof bounds. It does not prove the whole product. See [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill).
 
 If you're new to pstack, say yes. An agent that can check its own work keeps going until the check passes. An agent that can't hands every result back to you to check by hand. Of everything in this guide, the verification skill pays off the most.
 

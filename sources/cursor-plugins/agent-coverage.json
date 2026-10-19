@@ -82,20 +82,22 @@
       "runtime": "not exercised in this source-only update"
     },
     "pstack/agents/comment-sicko.md": {
-      "source_sha256": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
+      "source_sha256": "3e239e40b7b4b9beb2cf7f3ccc57f2388eb8b69bd1ba8ae888ef87ef6e0e2116",
       "native_name": "comment-sicko",
       "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
       "asset_sha256": "e32fb192894e2cf1d390d41a3421c0ade52fbfbdce16f3472f85afa6d95d4057",
       "distribution": "source profile; installation separate",
-      "runtime": "not exercised in this source-only update"
+      "runtime": "not exercised in this source-only update",
+      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
     },
     "pstack/agents/poteto-agent.md": {
-      "source_sha256": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201",
+      "source_sha256": "979f18abd000d185a0b4c41a2a4111c0910596a7f5c81cbb571885bc721b2bf7",
       "native_name": "poteto-agent",
       "asset_path": "skills/core/model-capability-router/assets/agents/poteto-agent.toml",
-      "asset_sha256": "50712f8f35fff5ac2677d953c59a83ce0e6c6458643f47ad9957e197a94b249c",
+      "asset_sha256": "e3cefb24151506dafdc90db6e7d3c0984061049986a1d84bc33f36929d4afb55",
       "distribution": "source profile; installation separate",
-      "runtime": "not exercised in this source-only update"
+      "runtime": "not exercised in this source-only update",
+      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
     },
     "thermos/agents/thermo-nuclear-code-quality-review-subagent.md": {
       "source_sha256": "636800f1e5acf501f339779a8867b95d633396930b3356a2b0c9a0018343f02d",

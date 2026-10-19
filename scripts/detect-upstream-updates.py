@@ -21,6 +21,9 @@ import tempfile
 from pathlib import Path
 from typing import Any, Iterable
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import cursor_pstack_family
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MIRROR_CONFIG = ROOT / "config" / "mirror-sources.json"
@@ -407,14 +410,26 @@ def detect_cursor(checkout: Path, root: Path = ROOT) -> dict[str, Any]:
     if full_tree.is_file():
         ledger = json.loads(full_tree.read_text())
         result = blank_result("cursor", "pstack", CURSOR_REPOSITORY, ledger["commit"], head(checkout))
-        expected = dict(ledger["files"])
+        historical = dict(ledger["files"])
+        expected = dict(historical)
+        family_path = root / "sources/cursor-plugins/family-refresh.json"
+        family: dict[str, Any] = {}
+        if family_path.is_file():
+            family = cursor_pstack_family.load(family_path.parent)
+            if family["baseline_commit"] != ledger["commit"]:
+                raise ValueError("pstack family refresh does not match the full-tree baseline")
+            expected = cursor_pstack_family.merged_inventory(family_path.parent)
         additions_file = root / "sources/cursor-plugins/additions.json"
         if additions_file.is_file():
             additions = json.loads(additions_file.read_text())
             for path, record in additions["files"].items():
-                if path in expected:
+                if path in historical:
                     raise ValueError(f"Cursor addition collides with preserved baseline: {path}")
-                expected[path] = record
+                if path in expected:
+                    if path not in family.get("files", {}) or any(expected[path].get(key) != record.get(key) for key in ("mode", "git_blob", "sha256")):
+                        raise ValueError(f"Cursor addition differs from pstack family refresh: {path}")
+                else:
+                    expected[path] = record
         current = tree_files(checkout, head(checkout))
         known_skills = {p for p in expected if p.endswith("/SKILL.md")}
         current_skills = {p for p in current if p.endswith("/SKILL.md")}

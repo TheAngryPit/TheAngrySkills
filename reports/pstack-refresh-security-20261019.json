@@ -1,0 +1,75 @@
+{
+  "summaries": {
+    "base": {
+      "verdict_counts": {
+        "blocked_malicious": 21,
+        "needs_human_review": 59,
+        "safe_docs_only": 13,
+        "safe_to_install": 212
+      },
+      "finding_counts": {
+        "broad-filesystem-scan": 6,
+        "bundled-script-review": 270,
+        "concealment-instruction": 6,
+        "credential-path-read": 7,
+        "dependency-manifest-surface": 9,
+        "executable-file": 31,
+        "global-package-install": 10,
+        "inline-runtime-exec": 23,
+        "inline-shell-exec": 1,
+        "mcp-plugin-hook-install": 96,
+        "nested-active-instructions": 6,
+        "network-exfiltration": 2,
+        "persistence-mutation": 16,
+        "policy-bypass-instruction": 12,
+        "privilege-escalation": 20,
+        "remote-download-exec": 3
+      },
+      "blocking_skill_count": 21,
+      "review_skill_count": 59
+    },
+    "candidate": {
+      "verdict_counts": {
+        "blocked_malicious": 21,
+        "needs_human_review": 59,
+        "safe_docs_only": 13,
+        "safe_to_install": 214
+      },
+      "finding_counts": {
+        "broad-filesystem-scan": 6,
+        "bundled-script-review": 271,
+        "concealment-instruction": 6,
+        "credential-path-read": 7,
+        "dependency-manifest-surface": 9,
+        "executable-file": 31,
+        "global-package-install": 10,
+        "inline-runtime-exec": 23,
+        "inline-shell-exec": 1,
+        "mcp-plugin-hook-install": 96,
+        "nested-active-instructions": 6,
+        "network-exfiltration": 2,
+        "persistence-mutation": 16,
+        "policy-bypass-instruction": 12,
+        "privilege-escalation": 20,
+        "remote-download-exec": 3
+      },
+      "blocking_skill_count": 21,
+      "review_skill_count": 59
+    }
+  },
+  "added": [
+    {
+      "line": null,
+      "path": "scripts/check-plan.test.ts",
+      "rule_id": "bundled-script-review",
+      "sample": null,
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-poteto-mode",
+      "summary": "Bundled script present; review required before global admission."
+    }
+  ],
+  "removed": [],
+  "base_commit": "7d4dd0098a07d8a879ba2ea2c29cd83aae7027d3",
+  "candidate_code_commit": "7484dff",
+  "method": "Same unchanged scanner, exact Git archives, compare skill/file/rule/severity/evidence; bytecode generation disabled."
+}

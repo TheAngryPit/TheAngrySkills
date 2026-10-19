@@ -66,3 +66,18 @@ class AdditionDetectorTests(unittest.TestCase):
         file.write_text(json.dumps({"files": {self.paths[0]: {"sha256": "altered"}}}))
         with self.assertRaisesRegex(ValueError, "collides with preserved baseline"):
             detector.detect_cursor(self.upstream, self.root)
+
+    def test_malformed_family_refresh_is_rejected_before_detector_uses_it(self):
+        directory = self.root / "sources/cursor-plugins"
+        (directory / "family-refresh.json").write_text(json.dumps({
+            "family": "pstack",
+            "baseline_commit": self.baseline,
+            "source_commit": self.baseline,
+            "files": {"other-plugin/README.md": {
+                "mode": "100644", "git_blob": "0" * 40,
+                "sha256": "0" * 64, "source_commit": self.baseline,
+            }},
+            "overrides": {},
+        }))
+        with self.assertRaisesRegex(ValueError, "unsafe pstack family path"):
+            detector.detect_cursor(self.upstream, self.root)

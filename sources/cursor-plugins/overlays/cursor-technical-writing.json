@@ -32,8 +32,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd"
     },
     "security_review": {
       "scanner_verdict": "safe_docs_only",
@@ -49,15 +50,15 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "the **unslop** skill",
-      "after": "the **cursor-unslop** skill"
+      "before": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n",
+      "after": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n"
     },
     {
       "file": "SKILL.md",
-      "before": "to `unslop`'s abstract-metaphor rule",
-      "after": "to `cursor-unslop`'s abstract-metaphor rule"
+      "before": "## Voice and repo specifics\n\n- Apply the **unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n",
+      "after": "## Voice and repo specifics\n\n- Apply the **cursor-unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n"
     }
   ],
   "source_path": "pstack/skills/technical-writing/SKILL.md",
-  "source_sha256": "f5c512ffeec70bc4e0dee50f7bb4c26742e1be77967a6e8b15d1921e1c209ceb"
+  "source_sha256": "61fe9c424a798ebf36ad94941f87be049cb8827bdf86d21474a0dde37b513c43"
 }

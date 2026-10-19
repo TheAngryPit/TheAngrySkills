@@ -26,7 +26,7 @@ Say two parallel attempts are about to write to the same branch:
 separate before serializing shared state. give each attempt its own worktree, no locks.
 ```
 
-Each phrase lands because the rule behind it is specific. The agent still has to say, in its reply, which decision the rule changed. A principle citation with no decision behind it is the tell that it name-dropped instead of applying.
+Each phrase lands because the rule behind it is specific. The agent still has to say, in its reply, which decision the rule changed. A principle citation with no decision behind it means the agent named the rule without applying it.
 
 ## The 24, briefly
 
@@ -57,7 +57,7 @@ The verification principles define what counts as proof:
 - [Prove It Works](../../../cursor-principle-prove-it-works/SKILL.md) verifies the real artifact, not a proxy.
 - [Fix Root Causes](../../../cursor-principle-fix-root-causes/SKILL.md) reproduces and traces to the cause before changing code.
 - [Sequence Work into Verifiable Units](../../../cursor-principle-sequence-verifiable-units/SKILL.md) ends each small unit in a check before starting the next.
-- [Test Behavior, Not Implementation](../../../cursor-principle-test-behavior-not-implementation/SKILL.md) calls the code the way its users do and asserts a literal expected value, and deletes a test that would still pass if every imported function returned `undefined`.
+- [Test Behavior, Not Implementation](../../../cursor-principle-test-behavior-not-implementation/SKILL.md) calls the code the way its users do and asserts observable user behavior against a literal expected value.
 - [Explain the Number](../../../cursor-principle-explain-the-number/SKILL.md) names what limits a measured number and rules out that it measured something else, before anyone trusts or reports it. [`$cursor-benchmark-checklist`](../../../cursor-benchmark-checklist/SKILL.md) turns it into seven questions you answer from real runs.
 
 The delegation principles keep parallel work sane:

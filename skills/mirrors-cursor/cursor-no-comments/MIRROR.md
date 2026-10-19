@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/no-comments/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: 5c5b0882297d704c3a9720c52b7a793c68b013eaf717989f0945624efdfe2b05
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 078ecfe224eafbb017f6476870612838bf6dbe38c0b697e12f0c887d0313f17e
 Published name: cursor-no-comments
 Decision class: adaptação funcional
-Availability: bounded explicit-only native named comment-sicko reviewer selected from the rendered skill; the reviewer removed one redundant comment, preserved SPDX, changed no application code, and coordinator verification passed; complex finding/rerun branches, fresh top-level loading and automatic selection remain unproven
+Availability: bounded explicit-only native named comment-sicko reviewer selected from the rendered skill; the reviewer removed one redundant comment, preserved SPDX, changed no application code, and coordinator verification passed; complex finding/rerun branches, fresh top-level loading and automatic selection remain unproven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

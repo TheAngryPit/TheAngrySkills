@@ -35,10 +35,14 @@ A prompt states the intent and the check for done. The playbook supplies the ste
 - "do it", "continue", and "keep going until done" are whole prompts once the chat holds the task.
 - Start with "new task" when the subject changes. Otherwise the mode treats the message as the next step.
 
+## Before stepping away in Cursor
+
+The `/loop` examples below describe Cursor only. In Codex, set up a native heartbeat or scheduled automation only when the user explicitly requests recurring work; the native automation carries its own finish check.
+
 ## Before stepping away
 
 - Say "im going to bed" or "im stepping away" so the agent stops asking.
-- Write done as checks every iteration can run, and use that predicate with native continuation; a scheduled follow-up requires an explicit request.
+- Write done as checks every iteration can run. In Codex, request a native heartbeat or scheduled automation explicitly and give it that predicate.
 - Ask for a fresh worktree off a named base.
 - Pre-answer what the agent would stop for, such as "don't ask me before committing".
 - Ask for a decision log to audit later.

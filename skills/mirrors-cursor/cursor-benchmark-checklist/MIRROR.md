@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/benchmark-checklist/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
-Source SHA-256: 6a767e788a60428fa14e645ee10fe2e49896e514ff654f668b1d824deb9038e8
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: ba109e96c8f6c1c391baccf19e5d11e14370df7b3f2605e1572cd565a6c0fca0
 Published name: cursor-benchmark-checklist
 Decision class: adaptação funcional
-Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven
+Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

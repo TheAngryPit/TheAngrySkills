@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/automate-me/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: 1510979b0b71b54284427a19c09918f8b1fdfc168f9b7f9e30098793a5ec88ef
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 30b35f3628c4fd8c11af0ada06d14cdc3b28901810caca2480f627d4d21acfbe
 Published name: cursor-automate-me
 Decision class: adaptação funcional
-Availability: bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven
+Availability: bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

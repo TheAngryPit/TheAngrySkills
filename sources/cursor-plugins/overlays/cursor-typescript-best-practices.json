@@ -7,17 +7,17 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "the **type-system-discipline** principle skill",
-      "after": "the **cursor-principle-type-system-discipline** skill"
+      "before": "# TypeScript best practices\n\nApply the **type-system-discipline** principle skill first.\n\n| Rule | Summary |\n",
+      "after": "# TypeScript best practices\n\nApply the **cursor-principle-type-system-discipline** skill first.\n\n| Rule | Summary |\n"
     },
     {
       "file": "SKILL.md",
-      "before": "the **boundary-discipline** principle skill",
-      "after": "the **cursor-principle-boundary-discipline** skill"
+      "before": "| Exhaustiveness | Inline `const _exhaustive: never = x;` in default arms so the compiler errors when a new variant is added. |\n| `satisfies` over `as` | Validates the value without widening literal types. |\n| Boundary validation | Parse where data crosses in, into a named domain type. `Record<string, unknown>` (however spelled) stops at that parse. Trust types inside. See the **boundary-discipline** principle skill. |\n| Schema-derived types | Reach for `Pick`/`Omit`/`Parameters`/`ReturnType`/`Awaited`/`typeof` before declaring a new interface. |\n| Object args | Pass objects, not positional, so argument order is self-documenting. Skip on hot paths (per-frame render, tokenizers, parsers). |\n",
+      "after": "| Exhaustiveness | Inline `const _exhaustive: never = x;` in default arms so the compiler errors when a new variant is added. |\n| `satisfies` over `as` | Validates the value without widening literal types. |\n| Boundary validation | Parse where data crosses in, into a named domain type. `Record<string, unknown>` (however spelled) stops at that parse. Trust types inside. See the **cursor-principle-boundary-discipline** skill. |\n| Schema-derived types | Reach for `Pick`/`Omit`/`Parameters`/`ReturnType`/`Awaited`/`typeof` before declaring a new interface. |\n| Object args | Pass objects, not positional, so argument order is self-documenting. Skip on hot paths (per-frame render, tokenizers, parsers). |\n"
     }
   ],
   "source_path": "pstack/skills/typescript-best-practices/SKILL.md",
-  "source_sha256": "28f9e61710e205f6f3c5476f333483cff0e988f6a5b639e2faad536344b40c5e",
+  "source_sha256": "ec1dac086d3708e5940d45d250c30a37dd953b4e3cb2ca0692f5851d7a039e27",
   "codex_contract": {
     "schema_version": 1,
     "adapter_mode": "native-guidance",
@@ -43,6 +43,13 @@
       "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
       "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
       "error": "Native permissions and refusal remain binding; live error path not executed."
+    },
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     }
   }
 }

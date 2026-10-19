@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/principle-model-the-domain/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: bbadbb9a723fac3f76e782ae45665eb94058ec10993e4bae36d4dc6b0e4eac07
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 52c0d85e0c3827c41c18299b642657d7b47eaf77b7b31609e42e0df42b84c75f
 Published name: cursor-principle-model-the-domain
 Decision class: intacta
-Availability: content available; live selection not demonstrated
+Availability: content available; live selection not demonstrated 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

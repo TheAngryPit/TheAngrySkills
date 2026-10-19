@@ -2,7 +2,7 @@
 
 # Make it yours
 
-poteto-mode is one person's style. The machinery underneath, playbooks, routing, model roles, works just as well wearing yours. This page covers generating a personal mode, capturing lessons from a session, fixing the repo so agents stop repeating mistakes, authoring a focused skill, and testing a skill change before you trust it.
+poteto-mode is one person's style. The playbooks, routing, and model roles underneath it work just as well with yours. This page covers generating a personal mode, capturing lessons from a session, fixing the repo so agents stop repeating mistakes, authoring a focused skill, and testing a skill change before you trust it.
 
 Start smaller than you think. You don't need many skills on day one, or even this whole plugin. Prompt plainly, watch where agents fail, and add a skill or a check when the same failure shows up twice.
 
@@ -20,7 +20,7 @@ Run it again whenever your habits drift:
 $cursor-automate-me update my mode skill with everything since its last edit
 ```
 
-Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for genuinely new patterns.
+Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for new patterns.
 
 ## Capture a session's lessons with `$cursor-reflect`
 
@@ -62,6 +62,8 @@ $cursor-poteto-mode write a skill for verifying database migrations in this repo
 Writing a skill matches the [Authoring or modifying a skill playbook](../../../cursor-poteto-mode/playbooks/authoring-a-skill.md), which routes through the native skill-authoring workflow, validates the frontmatter and links, and ships the result through the Opening a PR playbook. Agent-facing prose has a higher bar than human prose, because an unhelpful sentence becomes an instruction some future agent follows. Let the playbook hold that bar rather than writing a `SKILL.md` freehand.
 
 One special case has its own generator. A skill that must drive your app and prove behavior is a verification skill, so use [`$cursor-create-verification-skill`](../../../cursor-create-verification-skill/SKILL.md) and [`$cursor-maintain-verification-skill`](../../../cursor-maintain-verification-skill/SKILL.md) instead. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers both.
+
+Formal checks use `$cursor-create-formal-verification-skill` and `$cursor-maintain-formal-verification-skill`; see [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill).
 
 ## Write docs to a standard with `$cursor-technical-writing`
 

@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/principle-guard-the-context-window/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
-Source SHA-256: d2cef147862576e3d709b7afc149d85196245e8338b9c7eef337c95fba412b3e
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: af0b9dd70b43628ce4a59a4d332e9d9ad055084e460f430e7a757495c627e81a
 Published name: cursor-principle-guard-the-context-window
 Decision class: adaptação funcional
-Availability: guide-only content proven; native runtime not claimed
+Availability: guide-only content proven; native runtime not claimed 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

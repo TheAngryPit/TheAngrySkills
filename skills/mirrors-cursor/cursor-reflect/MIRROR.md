@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: df581122cde17e6e27686b5a448bde23e4ad4318
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/reflect/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md
-Source SHA-256: 31b8fb866ebe084e7fb7f16dc0ea46ab84ffdc838d54f948edc78556f301a497
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 1f5a8c246cdee8251f8667d85bd5d97f6c2801f505843c26ddbd6c621632519b
 Published name: cursor-reflect
 Decision class: adaptação funcional
-Availability: Bounded explicit-only native three-lens review and synthesis on scoped disposable transcript observed; live native transcript selection and effective backend readback unproven.
+Availability: Bounded explicit-only native three-lens review and synthesis on scoped disposable transcript observed; live native transcript selection and effective backend readback unproven. 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

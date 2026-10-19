@@ -17,8 +17,8 @@ REPO_ROOT = SKILL_ROOT.parents[2]
 ASSET_ROOT = SKILL_ROOT / "assets/agents"
 SOURCE_ROOT = REPO_ROOT / "sources/cursor-plugins/snapshot/pstack/agents"
 PINNED_SOURCE_SHA256 = {
-    "comment-sicko": "c0fd0383008da45fc78cfac17b9007d62c42f87ad1c8d5c2fb658b1fd01f7c82",
-    "poteto-agent": "abe41c169ecbfe65641f1725f4188d568e046c0dec7fd2dc271abb594c299201",
+    "comment-sicko": "3e239e40b7b4b9beb2cf7f3ccc57f2388eb8b69bd1ba8ae888ef87ef6e0e2116",
+    "poteto-agent": "979f18abd000d185a0b4c41a2a4111c0910596a7f5c81cbb571885bc721b2bf7",
 }
 
 PROFILES = {
@@ -40,7 +40,7 @@ PROFILES = {
             "cursor-poteto-mode",
             "cursor-principle-",
             "native Codex subagent delegation",
-            "reuse the existing poteto-agent",
+            "Reuse the existing poteto-agent",
             "required adapted skill",
         ),
     },
@@ -66,9 +66,15 @@ def adapted_body(name: str, source_text: str) -> str:
             "I run `cursor-how`, `cursor-why`, or both from the adapted **cursor-how** and **cursor-why** skills",
         )
         return body + "\nIf a required adapted skill is unavailable, report the exact missing dependency to the coordinator; do not silently substitute a different workflow.\n"
+    body = body.replace("The chat that receives `/poteto-mode` owns the playbook, the todo list, and every Task spawn.",
+                        "The Codex task that receives `cursor-poteto-mode` owns the playbook, the todo list, and every native subagent spawn.")
     body = body.replace("Read the `poteto-mode` skill's", "Read the `cursor-poteto-mode` skill's")
     body = body.replace("leaf `principle-*` skill", "leaf `cursor-principle-*` skill")
-    return body + "\nUse native Codex subagent delegation. The coordinator follows the operator delegation policy: reuse the existing poteto-agent while it remains suitable and its context is relevant, otherwise spawn this named agent with a consolidated brief containing the original request, later steering, prior report and branch. Native asynchronous delegation replaces Cursor is_background.\n\nIf a required adapted skill is unavailable, report the exact missing dependency to the coordinator; do not silently substitute a different workflow.\n"
+    body = body.replace(
+        "With no path, before any other work, search `~/.cursor/plugins/` for a file whose path ends in `skills/poteto-mode/SKILL.md`. If more than one file matches, use the copy whose `.cursor-plugin/plugin.json` has the highest `version`. Your skill catalog hides this skill, so a missing catalog entry does not mean pstack is absent. If no such file exists, stop and tell your parent.",
+        "With no path, search the installed Codex skills for `cursor-poteto-mode/SKILL.md`. If several copies match, use the one your parent named. If none exists, stop and tell your parent.",
+    )
+    return body + "\nUse native Codex subagent delegation. Follow the operator's delegation policy. Reuse the existing poteto-agent while its context remains relevant; start a fresh named agent when the context does not fit. Keep model and reasoning choices with the coordinator. Include the original request, later direction, prior report, and branch in a fresh assignment. Native asynchronous completion replaces Cursor's `is_background`.\n\nIf a required adapted skill is unavailable, report the exact missing dependency to the coordinator; do not silently substitute a different workflow.\n"
 
 
 def validate_profile(

@@ -143,12 +143,13 @@ def verify_snapshot(manifest: dict) -> None:
     documents = manifest.get("documentation_files", {})
     for relative, record in documents.items():
         path = safe_relative(relative)
-        if relative != "pstack/README.md" and not relative.startswith("pstack/docs/guide/"):
+        if relative != "pstack/README.md" and not relative.startswith("pstack/docs/"):
             raise ValueError(f"invalid upstream documentation path: {relative}")
-        if sha(SOURCE / path) != record["sha256"]:
+        source = SOURCE / path
+        if not source.is_file() or source.is_symlink() or sha(source) != record["sha256"]:
             raise ValueError(f"upstream documentation drift: {relative}")
-    observed_documents = {p.relative_to(SOURCE).as_posix() for p in files(SOURCE / "pstack/docs/guide")}
-    if (SOURCE / "pstack/README.md").exists():
+    observed_documents = {p.relative_to(SOURCE).as_posix() for p in files(SOURCE / "pstack/docs")}
+    if (SOURCE / "pstack/README.md").is_file() and not (SOURCE / "pstack/README.md").is_symlink():
         observed_documents.add("pstack/README.md")
     if observed_documents != set(documents):
         raise ValueError("upstream documentation inventory drift")
@@ -550,9 +551,9 @@ def refresh(upstream: Path) -> None:
     changed_support = sorted(changed_support)
     documents = manifest.get("documentation_files", {})
     observed_documents = {p.relative_to(upstream).as_posix()
-                          for p in (upstream / "pstack/docs/guide").rglob("*")
-                          if p.is_file() or p.is_symlink()}
-    if (upstream / "pstack/README.md").exists():
+                          for p in (upstream / "pstack/docs").rglob("*")
+                          if p.is_file() and not p.is_symlink()}
+    if (upstream / "pstack/README.md").is_file() and not (upstream / "pstack/README.md").is_symlink():
         observed_documents.add("pstack/README.md")
     changed_documents = set(observed_documents) ^ set(documents)
     for path, record in documents.items():

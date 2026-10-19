@@ -1243,7 +1243,7 @@ esac
             shutil.copytree(source, scripts / "watch-pr")
             driver = root / "reader-driver.ts"
             driver.write_text(
-                '''import { GhGitHubReader } from "./scripts/watch-pr/github.ts";
+                '''import { GhGitHubReader, resolveReviewThreads } from "./scripts/watch-pr/github.ts";
 import { parsePrNumber } from "./scripts/watch-pr/types.ts";
 
 const reader = new GhGitHubReader();
@@ -1255,7 +1255,7 @@ console.log(JSON.stringify({
   openPullRequests: await reader.openPullRequests({ owner: "owner", repo: "repo" }),
   checks: await reader.checksFastPath(context),
   rollup: await reader.checkRollupPage(context, null),
-  threads: await reader.reviewThreads(context),
+  threads: await resolveReviewThreads(reader, context),
   commits: await reader.commitRollups(context),
 }));
 '''
@@ -1289,7 +1289,7 @@ case "$*" in
     printf '[{"name":"ci","state":"SUCCESS","description":"ok","link":"","workflow":"ci","bucket":"pass"}]\\n'
     ;;
   *ReviewThreads*)
-    printf '{"data":{"repository":{"pullRequest":{"reviewThreads":{"nodes":[]}}}}}\\n'
+    printf '{"data":{"repository":{"pullRequest":{"reviewThreads":{"nodes":[],"pageInfo":{"hasNextPage":false,"endCursor":null}}}}}}\\n'
     ;;
   *PrCommitStatuses*)
     printf '{"data":{"repository":{"pullRequest":{"commits":{"nodes":[{"commit":{"oid":"abc123","statusCheckRollup":{"state":"SUCCESS"}}}]}}}}}\\n'
@@ -1328,6 +1328,7 @@ esac
             self.assertEqual(payload["openPullRequests"][0]["headRefName"], "fix/mock")
             self.assertEqual(payload["checks"]["checks"][0]["kind"], "passed")
             self.assertEqual(payload["rollup"]["checks"], [])
+            self.assertEqual(payload["threads"], [])
             self.assertEqual(payload["commits"], [{"oid": "abc123", "state": "SUCCESS"}])
 
     def test_watch_pr_mocked_command_is_bounded_by_outer_timeout(self):
@@ -1345,7 +1346,7 @@ esac
             shutil.copytree(source, scripts / "watch-pr")
             driver = root / "slow-reader-driver.ts"
             driver.write_text(
-                '''import { GhGitHubReader } from "./scripts/watch-pr/github.ts";
+                '''import { GhGitHubReader, resolveReviewThreads } from "./scripts/watch-pr/github.ts";
 import { parsePrNumber } from "./scripts/watch-pr/types.ts";
 await new GhGitHubReader().checksFastPath({
   owner: "owner",

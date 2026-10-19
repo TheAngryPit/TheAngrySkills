@@ -48,6 +48,7 @@ def verify(upstream=None):
         expected_tree = {name: (record['mode'], record['git_blob']) for name, record in ledger['files'].items()}
         if observed != expected_tree:
             raise ValueError('upstream Git tree inventory differs from preserved tree')
+        family.reviewed_file_updates(BASE, upstream)
     family_updates = {}
     if (BASE / family.LEDGER_NAME).exists():
         family_updates = {"pstack": json.loads((BASE / family.LEDGER_NAME).read_text())["source_commit"]}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+  "files": {
+    "third_party/x/skills/x-api-mcp-guide/SKILL.md": {
+      "mode": "100644",
+      "git_blob": "adea1fcb4f10cb2af99eefcfdb29177b12ae42b7",
+      "sha256": "f4daff50781a0be04c90d1d54bbc373ac984e3a99cfb9304f8d955235cdc0fe9",
+      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
+    },
+    "third_party/x/skills/x-api-mcp-guide/references/pricing.md": {
+      "mode": "100644",
+      "git_blob": "5c813bea0db1772e11b65ae92cb4520736482cb1",
+      "sha256": "ec9a7c798ca5195b73f09ed9e0478ac89cd8fb6645cd30b21ecb225f8a8cd068",
+      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
+    }
+  }
+}

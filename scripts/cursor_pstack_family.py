@@ -99,6 +99,51 @@ def merged_inventory(base: Path) -> dict[str, dict[str, str]]:
         raise ValueError("pstack family baseline differs from full-tree pin")
     files = {path: record.copy() for path, record in full["files"].items() if not path.startswith("pstack/")}
     files.update(ledger.get("files", {}))
+    for path, value in reviewed_file_updates(base).items():
+        files[path] = value
+    return files
+
+
+def reviewed_file_updates(base: Path, upstream: Path | None = None) -> dict:
+    path = base / "reviewed-file-updates.json"
+    if not path.exists():
+        return {}
+    ledger = json.loads(path.read_text())
+    baseline = json.loads((base / "full-tree.json").read_text())
+    if ledger.get("schema_version") != 1:
+        raise ValueError("unsupported reviewed file ledger schema")
+    if ledger.get("baseline_commit") != baseline["commit"]:
+        raise ValueError("reviewed file baseline differs from full-tree pin")
+    files = ledger.get("files")
+    if not isinstance(files, dict) or not files:
+        raise ValueError("reviewed file inventory is empty")
+    for name, item in files.items():
+        value = PurePosixPath(name)
+        if (name not in baseline["files"] or name.startswith("pstack/")
+                or value.as_posix() != name or "\\" in name
+                or value.is_absolute() or ".." in value.parts):
+            raise ValueError(f"unsafe reviewed file path: {name}")
+        if (not COMMIT.fullmatch(str(item.get("source_commit", "")))
+                or item.get("mode") not in ("100644", "100755")
+                or not COMMIT.fullmatch(str(item.get("git_blob", "")))
+                or not HASH.fullmatch(str(item.get("sha256", "")))):
+            raise ValueError(f"invalid reviewed file record: {name}")
+        source = base / "upstream-tree" / name
+        if any(parent.is_symlink() for parent in [source, *source.parents]):
+            raise ValueError(f"reviewed file symlink: {name}")
+        if not source.is_file() or not same_content(record(source, item["mode"]), item):
+            raise ValueError(f"reviewed file content drift: {name}")
+        if upstream is not None:
+            revision = item["source_commit"]
+            tree = subprocess.check_output(
+                ["git", "-C", str(upstream), "ls-tree", revision, "--", name], text=True
+            ).strip()
+            expected = f"{item['mode']} blob {item['git_blob']}\t{name}"
+            if tree != expected:
+                raise ValueError(f"reviewed file Git provenance drift: {name}")
+            data = subprocess.check_output(["git", "-C", str(upstream), "show", f"{revision}:{name}"])
+            if not same_content(record_from_bytes(data, item["mode"]), item):
+                raise ValueError(f"reviewed file Git content drift: {name}")
     return files
 
 

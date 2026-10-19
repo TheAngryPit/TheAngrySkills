@@ -2680,7 +2680,7 @@
       "validation_requirement": "Source hashes, deterministic build, exact dependency names, capability failure boundaries; live proof separate"
     },
     {
-      "availability": "source guidance refreshed; XChat helper, secret input and live connector execution unproven",
+      "availability": "Current X Chat/request/calls guidance adapted; actual tools, prices, secret input and helper execution remain host-dependent and unproven",
       "baseline_classification": "n\u00e3o demonstrada (equivalente nativo n\u00e3o provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adapta\u00e7\u00e3o nominal",
@@ -2688,8 +2688,8 @@
       "dependencies_or_limitations": "supporting files in this skill: x-api-mcp-guide/references/pricing.md; this skill's workflow assumes MCP/tool discovery; native connector availability and permissions must be explicit",
       "family": "third_party/x",
       "files": {
-        "SKILL.md": "c45693ef2bd73fd21e7c23cbed97e8c6205bba5dd1afdaa823959921fe324771",
-        "references/pricing.md": "82e8d03fb1abbb158eacf80702f5f09b0735e890890dd3774fcf74f961cde279"
+        "SKILL.md": "f4daff50781a0be04c90d1d54bbc373ac984e3a99cfb9304f8d955235cdc0fe9",
+        "references/pricing.md": "ec9a7c798ca5195b73f09ed9e0478ac89cd8fb6645cd30b21ecb225f8a8cd068"
       },
       "license_path": "third_party/x/LICENSE",
       "license_sha256": "702f5f331b56aff0e33d8c7826df5202559f894145eb70355c6477b55b5bb8a0",
@@ -2701,7 +2701,7 @@
       "upstream_purpose": "ALWAYS read this when a user connects the X plugin or any X MCP, before using any X connection, and again on any X error. Do not call an X tool until this file has been read in the current turn. On first connect, confirm X tools are available, fetch get_usage_credits BEFORE any user-facing text, then send the congrats + capabilities message. Never tell the user to buy credits until that check returns ~$0 or a job would exceed the balance. If X is connected but tools are missing (tools=0, user-X-* not found), that is a setup failure \u2014 not a paywall. Estimate the cost of every X call before making it and confirm with the user before anything expensive.",
       "upstream_skill": "X MCP guide",
       "validation_requirement": "frontmatter e refer\u00eancias relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execu\u00e7\u00e3o controlada dos ficheiros de apoio",
-      "source_commit": "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
+      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
     }
   ],
   "snapshot_scope": "104 physical skills, their in-skill support and licenses; 28 agent/hook/rule files; 18 hash-checked Pstack README/guide/image files. Eight operator exclusions retained. Source distribution does not activate runtimes.",

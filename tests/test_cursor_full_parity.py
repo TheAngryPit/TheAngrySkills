@@ -2,6 +2,7 @@ import importlib.util
 import json
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -17,9 +18,12 @@ def load(name):
 
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
-    assert load('check-cursor-full-tree').verify()['files'] == 903
+    tree = load('check-cursor-full-tree').verify()
+    assert tree['files'] == 911
+    assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
+    assert tree['family_updates'] == {'pstack': 'd457567332aa6989e753ea289f30ea2bfbc80bc0'}
     result = load('check-cursor-adaptations').verify()
-    assert result == dict(skills=110, published=105, held_adapted=5, agents_mapped=14,
+    assert result == dict(skills=112, published=107, held_adapted=5, agents_mapped=14,
                           unresolved_links=0, runtime_proof='not claimed')
 
 
@@ -28,6 +32,7 @@ def test_full_tree_rejects_missing_changed_and_untracked_files(tmp_path, mutatio
     check = load('check-cursor-full-tree')
     shutil.copytree(check.BASE / 'upstream-tree', tmp_path / 'upstream-tree')
     shutil.copy2(check.BASE / 'full-tree.json', tmp_path / 'full-tree.json')
+    shutil.copy2(check.BASE / 'family-refresh.json', tmp_path / 'family-refresh.json')
     check.BASE = tmp_path
     target = tmp_path / 'upstream-tree/pstack/automations/benny/FOR_AGENTS.md'
     if mutation == 'missing':
@@ -74,7 +79,7 @@ def test_detector_notices_new_non_pstack_plugin_and_dormant_pack_change(tmp_path
 
 def test_selected_additions_are_pinned_and_tailscale_is_not_published():
     check = load('check-cursor-adaptations')
-    assert check.verify()['published'] == 105
+    assert check.verify()['published'] == 107
     ledger = json.loads((ROOT / 'sources/cursor-plugins/additions.json').read_text())
     assert set(ledger['files']) == {
         'pstack/skills/in-your-own-words/SKILL.md',
@@ -85,6 +90,66 @@ def test_selected_additions_are_pinned_and_tailscale_is_not_published():
     for name in ['in-your-own-words', 'ketchup', 'sharpen']:
         policy = (ROOT / f'skills/mirrors-cursor/cursor-{name}/agents/openai.yaml').read_text()
         assert 'allow_implicit_invocation: false' in policy
+
+
+def test_family_refresh_cannot_rewrite_a_non_pstack_path():
+    family = load('cursor_pstack_family')
+    source = ROOT / 'sources/cursor-plugins'
+    with tempfile.TemporaryDirectory() as directory:
+        target = Path(directory)
+        shutil.copy2(source / 'full-tree.json', target / 'full-tree.json')
+        shutil.copy2(source / 'family-refresh.json', target / 'family-refresh.json')
+        shutil.copytree(source / 'upstream-tree/pstack', target / 'upstream-tree/pstack')
+        ledger_path = target / 'family-refresh.json'
+        ledger = json.loads(ledger_path.read_text())
+        ledger['files']['other-plugin/README.md'] = next(iter(ledger['files'].values()))
+        ledger_path.write_text(json.dumps(ledger))
+        with pytest.raises(ValueError, match='unsafe pstack family path'):
+            family.verify(target)
+
+
+def test_family_override_must_name_the_historical_hash():
+    family = load('cursor_pstack_family')
+    source = ROOT / 'sources/cursor-plugins'
+    with tempfile.TemporaryDirectory() as directory:
+        target = Path(directory)
+        shutil.copy2(source / 'full-tree.json', target / 'full-tree.json')
+        shutil.copy2(source / 'family-refresh.json', target / 'family-refresh.json')
+        shutil.copytree(source / 'upstream-tree/pstack', target / 'upstream-tree/pstack')
+        ledger_path = target / 'family-refresh.json'
+        ledger = json.loads(ledger_path.read_text())
+        path = next(iter(ledger['overrides']))
+        ledger['overrides'][path]['baseline']['sha256'] = '0' * 64
+        ledger_path.write_text(json.dumps(ledger))
+        with pytest.raises(ValueError, match='historical baseline'):
+            family.verify(target)
+
+
+@pytest.mark.parametrize('mutation, message', [
+    ('path', 'unsafe pstack family path'),
+    ('mode', 'invalid pstack family file record'),
+    ('sha256', 'invalid pstack family file record'),
+    ('source_commit', 'source commit mismatch'),
+    ('baseline_commit', 'baseline differs from full-tree pin'),
+])
+def test_family_ledger_rejects_malformed_provenance(tmp_path, mutation, message):
+    family = load('cursor_pstack_family')
+    source = ROOT / 'sources/cursor-plugins'
+    shutil.copy2(source / 'full-tree.json', tmp_path / 'full-tree.json')
+    shutil.copy2(source / 'family-refresh.json', tmp_path / 'family-refresh.json')
+    shutil.copytree(source / 'upstream-tree/pstack', tmp_path / 'upstream-tree/pstack')
+    ledger_path = tmp_path / 'family-refresh.json'
+    ledger = json.loads(ledger_path.read_text())
+    path = next(iter(ledger['files']))
+    if mutation == 'path':
+        ledger['files']['pstack/../escape'] = ledger['files'].pop(path)
+    elif mutation in ('mode', 'sha256', 'source_commit'):
+        ledger['files'][path][mutation] = 'invalid'
+    else:
+        ledger[mutation] = '0' * 40
+    ledger_path.write_text(json.dumps(ledger))
+    with pytest.raises(ValueError, match=message):
+        family.verify(tmp_path)
 
 
 def test_addition_content_drift_is_rejected(tmp_path):

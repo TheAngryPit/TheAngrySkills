@@ -1,52 +1,53 @@
 {
   "codex_contract": {
-    "schema_version": 1,
     "adapter_mode": "delegated-native",
-    "name_mapping": {
-      "upstream_skill": "architect",
-      "published_name": "cursor-architect",
-      "source_path": "pstack/skills/architect/SKILL.md"
+    "behavioral_proof": {
+      "error": "Malformed input, failed candidate, failed cross-judge, or a fallen design hypothesis is reported explicitly; review returns to redesign and does not widen scope or promote a static fixture.",
+      "missing_tool_or_input": "If the native candidate or review delegate is unavailable, record the exact missing capability and labeled fallback; one sequential design is not two-candidate or cross-judge proof.",
+      "positive": "Native bounded proof: two independent general-worker design delegates produced caller-first architect packages in separate paths; independent reviewers scored the candidate sets, selected bases and named grafts, and a planner reviewed a failed hypothesis and wrote a redesign. The generated cursor-how/cursor-why mirrors and relevant prompt/epistemic/source-control references were read explicitly, and bounded native how/why role-flow receipts were recorded. A disposable runtime implementation exposed and corrected revision-only drift, then passed the existing single-export probe and a prospective one-source-read/ordered-partial/foreign-target/duplicate/alias/source-failure/retry/drift/single batch probe. This supports only bounded explicit-only local design publication; automatic trigger, external why connector coverage, production implementation, and upstream Cursor runner equivalence remain unproven."
     },
-    "preserved_semantics": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
+    "external_dependencies": [
+      "native delegated reviewer if exposed"
+    ],
+    "name_mapping": {
+      "published_name": "cursor-architect",
+      "source_path": "pstack/skills/architect/SKILL.md",
+      "upstream_skill": "architect"
+    },
     "native_mapping": {
+      "availability": "bounded_native_two_candidate_architect_pass_disposable_runtime_and_prospective_batch_contract_observed; published for bounded explicit-only local design after Sol review; automatic trigger, external why connector coverage, and exact upstream Cursor runner slugs remain unproven",
       "capabilities": [
         "collaboration.spawn_agent native design delegates (agent_type general-worker)",
         "collaboration.spawn_agent native review/redesign delegate (agent_type planner)",
         "local file reader"
       ],
+      "fallback": "Missing native candidate or review delegate triggers a labeled sequential fallback; a sequential fallback is not arena competition proof.",
       "required_tools": [
         "native bounded design delegates",
         "native review/redesign delegate",
         "local file reader"
-      ],
-      "fallback": "Missing native candidate or review delegate triggers a labeled sequential fallback; a sequential fallback is not arena competition proof.",
-      "availability": "bounded_native_two_candidate_architect_pass_disposable_runtime_and_prospective_batch_contract_observed; published for bounded explicit-only local design after Sol review; automatic trigger, external why connector coverage, and exact upstream Cursor runner slugs remain unproven"
+      ]
     },
-    "external_dependencies": [
-      "native delegated reviewer if exposed"
-    ],
     "permission_gates": [
       "Keep planning separate from implementation; do not invent a model or arena result.",
       "Use separate native output paths for candidate designs and read every candidate before synthesis.",
       "Missing delegate triggers a labeled sequential fallback; do not fabricate a winner or promote a fixture result.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
-    "behavioral_proof": {
-      "positive": "Native bounded proof: two independent general-worker design delegates produced caller-first architect packages in separate paths; independent reviewers scored the candidate sets, selected bases and named grafts, and a planner reviewed a failed hypothesis and wrote a redesign. The generated cursor-how/cursor-why mirrors and relevant prompt/epistemic/source-control references were read explicitly, and bounded native how/why role-flow receipts were recorded. A disposable runtime implementation exposed and corrected revision-only drift, then passed the existing single-export probe and a prospective one-source-read/ordered-partial/foreign-target/duplicate/alias/source-failure/retry/drift/single batch probe. This supports only bounded explicit-only local design publication; automatic trigger, external why connector coverage, production implementation, and upstream Cursor runner equivalence remain unproven.",
-      "missing_tool_or_input": "If the native candidate or review delegate is unavailable, record the exact missing capability and labeled fallback; one sequential design is not two-candidate or cross-judge proof.",
-      "error": "Malformed input, failed candidate, failed cross-judge, or a fallen design hypothesis is reported explicitly; review returns to redesign and does not widen scope or promote a static fixture."
-    },
+    "preserved_semantics": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
     "promotion_status": "promoted_bounded_native_local_architect_explicit_only_trigger_unobserved",
-    "upstream_readme": {
-      "status": "verified_in_pinned_upstream_clone",
-      "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
-    },
+    "schema_version": 1,
     "security_review": {
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
       "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained"
+    },
+    "upstream_readme": {
+      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "path": "pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "status": "verified_in_supplied_upstream_clone",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md"
     }
   },
   "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml` and bounded to local design work with observable source grounding, at least two structurally distinct candidates, an independent judge, and disposable verification. If the grounding or competition gate cannot be met, report PARTIAL or unavailable rather than a completed Architect result. This workflow depends on `cursor-how`, `cursor-why` when rationale matters, and `cursor-arena` for structural alternatives. The generated `cursor-how`/`cursor-why` mirrors and their relevant references have been read in a bounded native follow-up; the receipts preserve paths, outputs, nulls and gaps. Resolve exact installed names before invocation; a published mirror and an observed read/role-flow are not proof of automatic availability or triggering. In the observed native path, candidate delegates used `collaboration.spawn_agent` with `agent_type=general-worker`, the cross-judge used `agent_type=reviewer`, and the failed-hypothesis redesign used `agent_type=planner`; these native roles are capability mappings, not proof of the upstream Cursor runner slugs or automatic trigger. Native model and effort selection follows the standing `model-capability-router`; invocation metadata and worker self-report must be recorded separately. The coordinator owns design synthesis, implementation and re-design when the sketch fails.\n",
@@ -56,36 +57,11 @@
   "reason": "Resolve pstack sibling names and native Codex model/delegation while retaining the architecture and experiment loop.",
   "replacements": [
     {
-      "file": "SKILL.md",
-      "before": "Run the **how** skill over the relevant subsystems.",
-      "after": "Run **cursor-how** over the relevant subsystems."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Produce the traced model `how` prescribes. If the design redefines ownership or layering, also run the **why** skill",
-      "after": "Produce the traced model `cursor-how` prescribes. If the design redefines ownership or layering, also run **cursor-why**"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Run the **arena** skill with the design-sketch task",
-      "after": "Run **cursor-arena** with the design-sketch task"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Take the runners from the `architect runners` line in the `pstack-models.mdc` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.",
-      "after": "Choose available native Codex runners under the standing `model-capability-router` policy and explicit operator selection; record the actual models and effort."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "run the **interrogate** skill on the synthesized sketch.",
-      "after": "run **cursor-interrogate** on the synthesized sketch."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Re-run the **how** skill over what's been built.",
-      "after": "Re-run **cursor-how** over what has been built."
+      "after": "---\nname: cursor-architect\ndescription: \"Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.\"\ndisable-model-invocation: true\n---\n\n# Architect\n\nSketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch.\n\n## Start\n\nOpen a todolist with one entry per phase before starting.\n\n1. Ground\n2. Sketch\n3. Agree\n4. Implement\n5. Scrap\n\n## Phase A: Ground the problem\n\nBuild a real mental model of every system the new code touches. Run **cursor-how** over the relevant subsystems.\n\nNaming a file isn't grounding. Produce the traced model `cursor-how` prescribes. If the design redefines ownership or layering, also run **cursor-why** on the existing shape so the rationale becomes a constraint, not a guess.\n\nSkip Phase A only when the work is genuinely greenfield with no surrounding system to integrate.\n\n## Phase B: Sketch\n\nRun **cursor-arena** with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.\n\nChoose available native Codex runners under the standing `model-capability-router` policy and explicit operator selection; record the actual models and effort.\n\nDesign it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.\n\nScreen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Assume the next contributor is an agent that sees only the files it opened, copies the nearest example, and takes the shortest path that compiles. Prefer the design where a change that looks right from one file is right for the whole repo.\n\nCompare viable candidates on interface depth. Prefer the design that hides more complexity behind a smaller, simpler public surface. A rich interface can keep call chains short by concentrating capability instead of scattering it across layers.\n\nArena returns one synthesized design package. Its synthesis decision fills the rationale's \"Synthesis decision\" section.\n\n## Phase C: Agree (opt-in)\n\nDefault: proceed directly to implementation with the synthesized design. No human checkpoint.\n\nOpt in to a checkpoint when the invoker explicitly asks: \"/architect with checkpoint,\" \"stop and show me before implementing,\" or similar. Then surface the synthesized design and pause for sign-off.\n\nThe synthesis can ship as its own commit either way, as the \"scaffold first\" mode of the **foundational-thinking** principle skill. Planned and scoped breakage during fill-in is fine, per the **outcome-oriented-execution** principle skill. For adversarial pressure on the design before implementing, run **cursor-interrogate** on the synthesized sketch.\n\nIf the human pushes back on the shape (in a checkpoint or after the fact), treat that as Phase A evidence. Re-ground and re-run Phase B before writing more code.\n\n## Phase D: Implement against the sketch\n\nReplace `not implemented` bodies with code, pseudocode with logic. The synthesized sketch is the contract. Deviations from it are signal to surface, not friction to absorb silently. If a function needs a parameter the sketch didn't anticipate, ask whether the sketch was wrong, the requirement was missed, or the implementation is overreaching.\n\n## Phase E: Scrap when the architecture is wrong\n\nIf implementation keeps producing friction the sketch can't absorb, throw the sketch out. Don't bolt fixes onto a wrong design, per the **redesign-from-first-principles** and **fix-root-causes** principle skills.\n\nThe signal is a *pattern*, not single instances. Tells:\n\n- The same shape of workaround appearing repeatedly across unrelated code.\n- Multiple unrelated edge cases that all need special-case branches.\n- Types that need escape hatches (`any`, casts, optional fields always set in practice) to compile.\n- The \"we need a lock\" reflex when the sketch said the state wasn't shared.\n- Callers having to know the abstraction's internal rules to use it.\n- Two or more independent Phase D deviations of the same shape across the implementation.\n\nUse judgment. A few edge cases don't condemn an architecture. Some problems are legitimately complex. Complexity in the data is not complexity in the design.\n\nWhen you scrap:\n\n1. Re-run **cursor-how** over what has been built.\n2. Redesign as if the new constraints had been day-one assumptions, per redesign-from-first-principles.\n3. Subtract before adding, per the **subtract-before-you-add** principle skill. The new sketch should be smaller than the old one before it grows.\n4. Return to Phase B and re-run arena.\n\n## Outputs\n\nThe caller's usage is written first and the type sketch derived from it. One file with new types and signatures for small changes. Module map plus type definitions for larger work. The rationale ships alongside, shaped per `references/rationale-template.md`, including the usage sketch and the synthesis decision.\n",
+      "before": "---\nname: cursor-architect\ndescription: \"Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.\"\ndisable-model-invocation: true\n---\n\n# Architect\n\nSketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch.\n\n## Start\n\nOpen a todolist with one entry per phase before starting.\n\n1. Ground\n2. Sketch\n3. Agree\n4. Implement\n5. Scrap\n\n## Phase A: Ground the problem\n\nBuild a real mental model of every system the new code touches. Run the **how** skill over the relevant subsystems. Naming a file isn't grounding. Produce the architectural explanation `how` prescribes. If the design redefines ownership or layering, also run the **why** skill on the existing shape so the rationale becomes a constraint, not a guess.\n\nSkip Phase A only when the work is genuinely greenfield with no surrounding system to integrate.\n\n## Phase B: Sketch\n\nRun the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt.\n\nTake the runners from the `architect runners` line in the `pstack-models.mdc` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.\n\nDesign it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.\n\nScreen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Assume the next contributor is an agent that sees only the files it opened, copies the nearest example, and takes the shortest path that compiles. Prefer the design where a change that looks right from one file is right for the whole repo.\n\nCompare viable candidates on interface depth. Prefer the design that hides more complexity behind a smaller, simpler public surface. A rich interface can keep call chains short by concentrating capability instead of scattering it across layers.\n\nArena returns one synthesized design package. Its synthesis decision fills the rationale's \"Synthesis decision\" section.\n\n## Phase C: Agree (opt-in)\n\nDefault: proceed directly to implementation with the synthesized design. No human checkpoint.\n\nOpt in to a checkpoint when the invoker explicitly asks: \"/architect with checkpoint,\" \"stop and show me before implementing,\" or similar. Then surface the synthesized design and pause for sign-off.\n\nThe synthesis can ship as its own commit either way, as the \"scaffold first\" mode of the **foundational-thinking** principle skill. Planned and scoped breakage during fill-in is fine, per the **outcome-oriented-execution** principle skill. For adversarial pressure on the design before implementing, run the **interrogate** skill on the synthesized sketch.\n\nIf the human pushes back on the shape (in a checkpoint or after the fact), treat that as Phase A evidence. Re-ground and re-run Phase B before writing more code.\n\n## Phase D: Implement against the sketch\n\nReplace `not implemented` bodies with code, pseudocode with logic. The synthesized sketch is the contract. Deviations from it are signal to surface, not friction to absorb silently. If a function needs a parameter the sketch didn't anticipate, ask whether the sketch was wrong, the requirement was missed, or the implementation is overreaching.\n\n## Phase E: Scrap when the architecture is wrong\n\nIf implementation keeps producing friction the sketch can't absorb, throw the sketch out. Don't bolt fixes onto a wrong design, per the **redesign-from-first-principles** and **fix-root-causes** principle skills.\n\nThe signal is a *pattern*, not single instances. Tells:\n\n- The same shape of workaround appearing repeatedly across unrelated code.\n- Multiple unrelated edge cases that all need special-case branches.\n- Types that need escape hatches (`any`, casts, optional fields always set in practice) to compile.\n- The \"we need a lock\" reflex when the sketch said the state wasn't shared.\n- Callers having to know the abstraction's internal rules to use it.\n- Two or more independent Phase D deviations of the same shape across the implementation.\n\nUse judgment. A few edge cases don't condemn an architecture. Some problems are legitimately complex. Complexity in the data is not complexity in the design.\n\nWhen you scrap:\n\n1. Re-run the **how** skill over what's been built.\n2. Redesign as if the new constraints had been day-one assumptions, per redesign-from-first-principles.\n3. Subtract before adding, per the **subtract-before-you-add** principle skill. The new sketch should be smaller than the old one before it grows.\n4. Return to Phase B and re-run arena.\n\n## Outputs\n\nThe caller's usage is written first and the type sketch derived from it. One file with new types and signatures for small changes. Module map plus type definitions for larger work. The rationale ships alongside, shaped per `references/rationale-template.md`, including the usage sketch and the synthesis decision.\n",
+      "file": "SKILL.md"
     }
   ],
   "source_path": "pstack/skills/architect/SKILL.md",
-  "source_sha256": "922238947195f2fb825e90688bb6cfa520b81a35a7bee12223c73a6cf96ae64b"
+  "source_sha256": "31f8e97a52bfa5432edd61f68ade2a8632ef0bacbc2d2a6802d7a0e6821944ac"
 }

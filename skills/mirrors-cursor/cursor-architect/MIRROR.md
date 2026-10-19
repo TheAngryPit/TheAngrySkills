@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: df581122cde17e6e27686b5a448bde23e4ad4318
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/architect/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md
-Source SHA-256: 922238947195f2fb825e90688bb6cfa520b81a35a7bee12223c73a6cf96ae64b
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: 31f8e97a52bfa5432edd61f68ade2a8632ef0bacbc2d2a6802d7a0e6821944ac
 Published name: cursor-architect
 Decision class: adaptação funcional
-Availability: Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven.
+Availability: Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven. 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

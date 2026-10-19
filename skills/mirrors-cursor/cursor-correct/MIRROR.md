@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/correct/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md
-Source SHA-256: bf482bacc972b3f124a4af8bf9364b4b3e280cb5845e44c326ea4f4565e5c904
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: e347045d00c967a0b831ef883cc6ac79d21329aa10b5968637df95de7febf0ba
 Published name: cursor-correct
 Decision class: adaptação funcional
-Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven
+Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

@@ -32,6 +32,13 @@
       "positive": "Source coverage and deterministic rendering checked; live operation not executed.",
       "missing_tool_or_input": "Instructions require an exact capability gap and incomplete step; live failure path not executed.",
       "error": "Native permissions and refusal remain binding; live error path not executed."
+    },
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
     }
   }
 }

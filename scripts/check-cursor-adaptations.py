@@ -15,11 +15,16 @@ BASE = ROOT / 'sources/cursor-plugins'
 spec = importlib.util.spec_from_file_location('cursor_sync', ROOT / 'scripts/sync-cursor-plugin-skills.py')
 sync = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sync)
+family_spec = importlib.util.spec_from_file_location('cursor_pstack_family', ROOT / 'scripts/cursor_pstack_family.py')
+family = importlib.util.module_from_spec(family_spec)
+family_spec.loader.exec_module(family)
 
 
 def verify(write_held=False):
     manifest = json.loads((BASE / 'manifest.json').read_text())
     full = json.loads((BASE / 'full-tree.json').read_text())
+    if (BASE / family.LEDGER_NAME).exists():
+        family.verify(BASE)
     additions_path = BASE / 'additions.json'
     if additions_path.exists():
         additions = json.loads(additions_path.read_text())
@@ -35,6 +40,8 @@ def verify(write_held=False):
             if entry is None or entry.get('source_commit') != record['source_commit']:
                 raise ValueError('addition pin drift: ' + path)
             full['files'][path] = record
+    if (BASE / family.LEDGER_NAME).exists():
+        full['files'] = family.merged_inventory(BASE)
     entries = manifest['skills']
     if {e['path'] for e in entries} != {p for p in full['files'] if p.endswith('/SKILL.md')}:
         raise ValueError('skill adapter coverage is incomplete')

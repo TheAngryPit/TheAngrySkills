@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/principle-test-behavior-not-implementation/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: 87e40efe4e486f7ea639d2ed1fc0abe6c93b8fd0e89a81218086909d2470a52e
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: f7223698623b6a26fea49c751e466b38e6691b1f32ce841d3983e7ffbe2b74a6
 Published name: cursor-principle-test-behavior-not-implementation
 Decision class: intacta
-Availability: content available; live selection not demonstrated
+Availability: content available; live selection not demonstrated 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

@@ -2,7 +2,7 @@
 
 # Verify the result and open a PR
 
-"It compiles" is not evidence. The [Prove It Works principle](../../../cursor-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, vetting a measured number, generating a verification skill for your app, opening the PR, and driving it to merged.
+"It compiles" is not evidence. The [Prove It Works principle](../../../cursor-principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, vetting a measured number, generating a verification skill for your app, formally checking a bounded property, opening the PR, and driving it to merged.
 
 Verification is the slowest step in most agent work, because it's the step that usually waits on a human. Make the agent able to do it, and you stop being the bottleneck. Skip it, and running more agents only gets you more unchecked work to review.
 
@@ -16,7 +16,7 @@ Put what done means in the first prompt, in whatever words fit:
 $cursor-poteto-mode add json output to this command. text output stays byte-identical, the json parses, both run against the sample project. show me the evidence.
 ```
 
-Now the agent has three checks it can run, not a mood to satisfy. When the reply comes back, it should carry the exact commands and outputs. If a check couldn't run, a good reply says "inconclusive", and you should treat a confident reply without evidence as a red flag.
+Now the agent has three checks it can run, not a mood to satisfy. When the reply comes back, it should carry the exact commands and outputs. If a check couldn't run, a good reply says "inconclusive". A confident reply without evidence is a warning sign.
 
 Match the check to the change:
 
@@ -87,13 +87,19 @@ While you're there, make the dev setup repeatable too: seeded data, test users, 
 
 ## Keep the verification skill honest
 
-Apps change and feature maps rot. Run this at least once a day, ideally from a scheduled automation so nobody has to remember:
+Apps change, and feature maps go out of date. Run this at least once a day, ideally from a scheduled automation so nobody has to remember:
 
 ```text
 $cursor-maintain-verification-skill
 ```
 
 [`$cursor-maintain-verification-skill`](../../../cursor-maintain-verification-skill/SKILL.md) audits the generated skill: one read-only source reader per feature in parallel, then one live pass that drives every mapped feature. It ends in exactly one of three outcomes. `clean` means full coverage and nothing to ship. `changed` means one PR of proven corrections, confined to the verification skill's own directory. `blocked` names the blocker. It never edits product code. If the live pass catches a product regression, it reports the regression instead of papering over it in docs.
+
+## Prove a property with a formal verification skill
+
+Use `$cursor-create-formal-verification-skill` to create a project-local skill for one important property, such as mutual exclusion, parser invariants, or retry behavior. It selects a suitable checker or proof tool, states scope and bounds, and tests the check against a deliberately broken variant. A passing bounded or model-based check proves only the modeled property within those bounds. It does not prove the whole product.
+
+After relevant code changes, use `$cursor-maintain-formal-verification-skill` to reconcile the model with current code and rerun it. The maintenance pass distinguishes verification drift from a product defect. It does not edit product code unless the user asks.
 
 ## Open the PR
 
@@ -111,7 +117,7 @@ An open PR starts collecting blockers immediately. Checks fail, reviewers commen
 $cursor-poteto-mode babysit this pr. get it green.
 ```
 
-Babysit watches the PR with a bundled watcher and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push, so the checks restart once instead of after every fix. The comment triage is skeptical, because humans and bots file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. When all you want is status, ask smaller and Babysit answers without starting the loop:
+Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when it's available, and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push, so the checks restart once instead of after every fix. The comment triage is skeptical, because humans and bots file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. When all you want is status, ask smaller and Babysit answers without starting the loop:
 
 ```text
 $cursor-poteto-mode check on pr 123. anything outstanding?

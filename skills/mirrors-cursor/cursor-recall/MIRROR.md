@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
 Physical source path: pstack/skills/recall/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md
-Source SHA-256: d265b0e5b6dc5b89c0407f3387d24462c988e1990a37d5359735137908128c5a
+Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Source SHA-256: b0ceb996259c3404532f61e4b010df4e3d80d7ddbed85b3c302895723eb62a89
 Published name: cursor-recall
 Decision class: adaptação funcional
-Availability: bounded scoped history/shared-record fixture observed; native task-history selection remains unproven
+Availability: bounded scoped history/shared-record fixture observed; native task-history selection remains unproven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

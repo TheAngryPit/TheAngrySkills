@@ -1,6 +1,6 @@
 ---
 name: cursor-setup-pstack
-description: Use when setting up pstack native Codex model choices for the current task or an explicitly requested persistent policy, including /setup-pstack or pstack budget changes.
+description: Configure model and effort choices for pstack roles through the native Codex routing policy. Use for $cursor-setup-pstack, pstack model setup, reasoning budget, or changing the configured role choices.
 ---
 
 # Setup pstack for Codex
@@ -37,4 +37,11 @@ Keep task-local choices in this task's brief and handoffs; project-only choices 
 
 Run the focused source checks, review the diff and read back any installed copy after an authorized update. Check native config or runtime metadata only where exposed. Source edits, dry-run fixtures, installed files and future-session behavior are distinct proof levels. Report what was actually verified, unresolved channel limits and current owner. Do not infer lower Codex allowance use from API prices, cache assumptions or faster parallel work; compare complete outcomes when observed usage is available.
 
-For implementation work, use the project's existing verification skill. If it lacks a way to drive the real app, propose `cursor-create-verification-skill` once and invoke it only when available and requested; do not call a fixture full runtime proof.
+
+### 7. Offer a verification skill (optional)
+
+Check whether the project has a way to drive the real app for proof. If it lacks one, offer `$cursor-create-verification-skill` once. Generate it only if the user agrees.
+
+### 8. Offer a formal verification skill (optional)
+
+Check whether the project has a formal verification skill that runs a model checker, proof, or other verifier against its code. If it lacks one, offer `$cursor-create-formal-verification-skill` once for a race, invariant, or other property tests may not reach. Generate it only if the user agrees. Do not claim the skill exists or that a property is proved until its actual artifact and proof path are checked.

@@ -66,6 +66,7 @@ class NativeAgentProfileTests(unittest.TestCase):
             source = ROOT / "sources/cursor-plugins/snapshot" / expected_source
             digest = hashlib.sha256(source.read_bytes()).hexdigest()
             self.assertEqual(manifest_profile["pinned_source_sha256"], digest)
+            self.assertEqual(overlay_profile["pinned_source_sha256"], digest)
             self.assertTrue((ROOT / expected_asset).is_file())
 
     def test_assets_are_native_toml_and_source_grounded(self):
@@ -75,7 +76,7 @@ class NativeAgentProfileTests(unittest.TestCase):
                 "cursor-poteto-mode",
                 "cursor-principle-",
                 "native Codex subagent delegation",
-                "reuse the existing poteto-agent",
+                "Reuse the existing poteto-agent",
             ),
         }
         for name in PROFILE_NAMES:

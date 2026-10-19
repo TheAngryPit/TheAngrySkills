@@ -1,52 +1,53 @@
 {
   "codex_contract": {
-    "schema_version": 1,
     "adapter_mode": "native-procedure",
-    "name_mapping": {
-      "upstream_skill": "figure-it-out",
-      "published_name": "cursor-figure-it-out",
-      "source_path": "pstack/skills/figure-it-out/SKILL.md"
-    },
-    "preserved_semantics": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
-    "native_mapping": {
-      "capabilities": [
-        "local repository reader",
-        "check runner",
-        "decision log"
-      ],
-      "required_tools": [
-        "local repository reader",
-        "check runner",
-        "decision log"
-      ],
-      "fallback": "Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
-      "availability": "bounded_isolated_bug_fix_playbook_observed; prospective native trigger and production-target parity remain unproven"
+    "behavioral_proof": {
+      "error": "Error fixture for cursor-figure-it-out: a malformed input or failed dependency is reported explicitly and does not widen scope.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-figure-it-out: Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
+      "positive": "Positive fixture for cursor-figure-it-out: the bounded path produces its documented result without unrelated side effects."
     },
     "external_dependencies": [
       "bounded delegate if exposed",
       "local decision log"
     ],
+    "name_mapping": {
+      "published_name": "cursor-figure-it-out",
+      "source_path": "pstack/skills/figure-it-out/SKILL.md",
+      "upstream_skill": "figure-it-out"
+    },
+    "native_mapping": {
+      "availability": "bounded_isolated_bug_fix_playbook_observed; prospective native trigger and production-target parity remain unproven",
+      "capabilities": [
+        "local repository reader",
+        "check runner",
+        "decision log"
+      ],
+      "fallback": "Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
+      "required_tools": [
+        "local repository reader",
+        "check runner",
+        "decision log"
+      ]
+    },
     "permission_gates": [
       "Design the auditable playbook before code and keep hypotheses falsifiable.",
       "Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
-    "behavioral_proof": {
-      "positive": "Positive fixture for cursor-figure-it-out: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-figure-it-out: Ungrounded scope or failed check is INCONCLUSIVE and blocks done.",
-      "error": "Error fixture for cursor-figure-it-out: a malformed input or failed dependency is reported explicitly and does not widen scope."
-    },
+    "preserved_semantics": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
     "promotion_status": "promoted_bounded_explicit_only_native_trigger_and_production_parity_unproven",
-    "upstream_readme": {
-      "status": "verified_in_pinned_upstream_clone",
-      "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
-    },
+    "schema_version": 1,
     "security_review": {
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
       "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained"
+    },
+    "upstream_readme": {
+      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "path": "pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "status": "verified_in_supplied_upstream_clone",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md"
     }
   },
   "codex_note": "## Codex runtime mapping\n\nResolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.\n",
@@ -56,26 +57,11 @@
   "reason": "Resolve pstack sibling names and native Codex model/delegation while retaining the architecture and experiment loop.",
   "replacements": [
     {
-      "file": "SKILL.md",
-      "before": "read the Principles section of the **poteto-mode** skill",
-      "after": "read the Principles section of **cursor-poteto-mode**"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "run the **architect** skill (it runs **arena**)",
-      "after": "run **cursor-architect** (which uses **cursor-arena**)"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Log the run via the **show-me-your-work** skill",
-      "after": "Log the run via **cursor-show-me-your-work**"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Present the framing and tradeoffs before committing to a long run. Reversible work proceeds (the **never-block-on-the-human** principle skill), but a multi-hour run earns one checkpoint.",
-      "after": "Present framing and tradeoffs when they materially affect the approved outcome. Continue already authorized reversible work through the run; ask for a checkpoint only when an unresolved product decision or authority gate changes the result."
+      "after": "---\nname: cursor-figure-it-out\ndescription: \"Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'.\"\ndisable-model-invocation: true\n---\n\n# Figure it out\n\nWhen the task matches no playbook, design one. The deliverable before any code is the workflow itself: a sequence of phases that scales rigor to the task, runs the scientific method, and leaves a decision trail a human can audit after stepping away.\n\n## Start\n\nOpen a todolist whose first item is to read the Principles section of **cursor-poteto-mode**. Then add the phases below as todos.\n\n## Phase A: Frame\n\nGround first, then commit. Don't start the run until you can state:\n\n- The definition of done as a falsifiable predicate (the **prove-it-works** principle skill).\n- Scope, quantified: rough units and effort, plus the blockers grounding surfaced.\n- The rigor level, biased high. One-way doors and high blast radius get more. Reversible low-stakes steps get less. Rigor is gates and artifacts, not \"try harder\".\n\nPresent framing and tradeoffs when they materially affect the approved outcome. Continue already authorized reversible work through the run; ask for a checkpoint only when an unresolved product decision or authority gate changes the result.\n\n## Phase B: Design the workflow\n\nDecompose into atomic, independently-landable units. Sequence riskiest-unknown-first. Scaffold and verification come before features (the **foundational-thinking** principle skill).\n\n- Build the verification harness before the work, with the baseline captured from the pre-change state, so the check reads as \"old value vs new value\".\n- For one-way-door design decisions, run **cursor-architect** (which uses **cursor-arena**). Skip it for mechanical work whose shape is already concrete. A second arena over a settled design is over-engineering (the **laziness-protocol** principle skill).\n- Decide what fans out. Parallelize only across seams, and give each worker its own worktree or branch (the **separate-before-serializing-shared-state** principle skill). Don't over-fan.\n- Write the designed phase list down. That list is what the human reviews.\n\nThen execute the design. Add its steps to the todolist as concrete items between the Phase C and Phase D entries. Run each under the Phase C loop discipline, and weave the Phase D log through them, a row as each step lands, rather than saving the whole trail for the end.\n\n## Phase C: Run the loop\n\nEach unit is an experiment. State the hypothesis, make the smallest change, measure against the predicate on the real artifact, keep it if it advanced, revert it if it didn't. Apply the **sequence-verifiable-units** principle skill, verifying each unit before starting the next instead of batching checks at the end.\n\n- Verify by inspecting the artifact, never a self-report. When something passes too easily, suspect the observation method before the system.\n- Pair delegated work with a judge. If a worker games the gate, reset and harden the contract. If the gate itself is wrong, fix the gate in its own change rather than routing around it.\n- A verdict is VERIFIED, NOT VERIFIED, or INCONCLUSIVE. Inconclusive is not a pass. Don't hide a negative.\n\n## Phase D: Keep the audit trail\n\nLog the run via **cursor-show-me-your-work**. figure-it-out's work is usually ambitious enough to commit the trail so the reviewer can read it in the PR. The trail plus the diff is what lets the human come back and trust the work.\n\n## Phase E: Verify and hand back\n\nCheck the whole against the Phase A predicate on the real product, not just the harness. Encode any recurring correction as a gate, a lint rule, a check, or a script (the **encode-lessons-in-structure** principle skill).\n\n**Reply:** the playbook you designed, the rigor level and why, the decision-trail path, what's verified against the predicate, and what's still open.\n",
+      "before": "---\nname: cursor-figure-it-out\ndescription: \"Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'.\"\ndisable-model-invocation: true\n---\n\n# Figure it out\n\nWhen the task matches no playbook, design one. The deliverable before any code is the workflow itself: a sequence of phases that scales rigor to the task, runs the scientific method, and leaves a decision trail a human can audit after stepping away.\n\n## Start\n\nOpen a todolist whose first item is to read the Principles section of the **poteto-mode** skill. Then add the phases below as todos.\n\n## Phase A: Frame\n\nGround first, then commit. Don't start the run until you can state:\n\n- The definition of done as a falsifiable predicate (the **prove-it-works** principle skill).\n- Scope, quantified: rough units and effort, plus the blockers grounding surfaced.\n- The rigor level, biased high. One-way doors and high blast radius get more. Reversible low-stakes steps get less. Rigor is gates and artifacts, not \"try harder\".\n\nPresent the framing and tradeoffs before committing to a long run. Reversible work proceeds (the **never-block-on-the-human** principle skill), but a multi-hour run earns one checkpoint.\n\n## Phase B: Design the workflow\n\nDecompose into atomic, independently-landable units. Sequence riskiest-unknown-first. Scaffold and verification come before features (the **foundational-thinking** principle skill).\n\n- Build the verification harness before the work, with the baseline captured from the pre-change state, so the check reads as \"old value vs new value\".\n- For one-way-door design decisions, run the **architect** skill (it runs **arena**). Skip it for mechanical work whose shape is already concrete. A second arena over a settled design is over-engineering (the **laziness-protocol** principle skill).\n- Decide what fans out. Parallelize only across seams, and give each worker its own worktree or branch (the **separate-before-serializing-shared-state** principle skill). Don't over-fan. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.\n- Write the designed phase list down. That list is what the human reviews.\n\nThen execute the design. Add its steps to the todolist as concrete items between the Phase C and Phase D entries. Run each under the Phase C loop discipline, and weave the Phase D log through them, a row as each step lands, rather than saving the whole trail for the end.\n\n## Phase C: Run the loop\n\nEach unit is an experiment. State the hypothesis, make the smallest change, measure against the predicate on the real artifact, keep it if it advanced, revert it if it didn't. Apply the **sequence-verifiable-units** principle skill, verifying each unit before starting the next instead of batching checks at the end.\n\n- Verify by inspecting the artifact, never a self-report. When something passes too easily, suspect the observation method before the system.\n- Pair delegated work with a judge. If a worker games the gate, reset and harden the contract. If the gate itself is wrong, fix the gate in its own change rather than routing around it.\n- A verdict is VERIFIED, NOT VERIFIED, or INCONCLUSIVE. Inconclusive is not a pass. Don't hide a negative.\n\n## Phase D: Keep the audit trail\n\nLog the run via the **show-me-your-work** skill. figure-it-out's work is usually ambitious enough to commit the trail so the reviewer can read it in the PR. The trail plus the diff is what lets the human come back and trust the work.\n\n## Phase E: Verify and hand back\n\nCheck the whole against the Phase A predicate on the real product, not just the harness. Encode any recurring correction as a gate, a lint rule, a check, or a script (the **encode-lessons-in-structure** principle skill).\n\n**Reply:** the playbook you designed, the rigor level and why, the decision-trail path, what's verified against the predicate, and what's still open.\n",
+      "file": "SKILL.md"
     }
   ],
   "source_path": "pstack/skills/figure-it-out/SKILL.md",
-  "source_sha256": "0eb9485f0e7d84fee56b5d0f0af0faf4635e3ca87c8cba3970c01293b76ecc19"
+  "source_sha256": "bdb23cdbd82a1e6af094b495691c832a6f7f3ab9706ba9edbeb664ef51a726e1"
 }

@@ -1,13 +1,13 @@
 ---
 name: cursor-poteto-help
-description: Guides explicit questions about pstack setup, $cursor-poteto-mode, and choosing a skill, playbook or principle; answer with source links and a native Codex prompt without starting help-only work.
+description: "Use when the user explicitly asks for help with pstack, its skills, playbooks, setup, or the right prompt to start a task."
 ---
 
 # Poteto help
 
 Answer the user's question about pstack, hand them a prompt they can send, and link the file the answer came from. For a help question, don't start the work. The user asked how, and a pstack run spends real tokens, so let them send the prompt.
 
-A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`poteto-mode`](../cursor-poteto-mode/SKILL.md), do the work under it, and keep the distinction between answering a help question and executing an action request.
+A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`$cursor-poteto-mode`](../cursor-poteto-mode/SKILL.md), do the work under it, and keep the distinction between answering a help question and executing an action request.
 
 This file maps questions to the skills and guide pages that hold the answers. Read the native skill or bundled [Codex guide](references/guide/README.md) before answering. The pinned upstream guide remains provenance; its Cursor setup and runtime commands do not override native guidance. Use reviewed public mirror links when sharing these adapted files.
 
@@ -25,6 +25,8 @@ Check the state that changes the answer, and mention it only when it does:
 
 - Read the standing `model-capability-router` and native task metadata when model selection changes the answer; absence of a Cursor rule says nothing about Codex setup.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `$cursor-create-verification-skill` when the question is about proving a change works.
+- No formal verification skill in the project means no property is checked beyond the cases tests reach. Mention `$cursor-create-formal-verification-skill` for races, invariants, or cases tests rarely hit. When one exists and covered code changed after its last synced commit, mention `$cursor-maintain-formal-verification-skill` if relevant.
+- No formal verification skill in the project means no property is checked beyond the cases tests reach. Mention `$cursor-create-formal-verification-skill` for races, invariants, or cases tests rarely hit. When one exists and covered code changed after its last synced commit, mention `$cursor-maintain-formal-verification-skill` if relevant.
 
 When the model rule is missing and it matters, ask whether the user wants to pick a model for each role and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
@@ -33,7 +35,7 @@ When the model rule is missing and it matters, ask whether the user wants to pic
 
 ## Get set up
 
-Use the existing Codex adaptation and verified installed skill names; source publication is separate from installation. Installing or altering live skills requires operator authorization. Run `$cursor-setup-pstack` when model-role setup is requested; it follows `model-capability-router` and actual native capabilities. State the goal and a pass/fail completion check when invoking `$cursor-poteto-mode`.
+Use the existing Codex adaptation and verified installed skill names; source publication is separate from installation. Installing or altering live skills requires operator authorization. Run `$cursor-setup-pstack` when model-role setup is requested; it follows `model-capability-router` and actual native capabilities. State the goal and a pass/fail completion check when invoking `$cursor-poteto-mode`. After setup, offer once each to generate a verification skill and a formal verification skill when the project lacks them; invoke either only if the user agrees. After setup, offer once each to generate a verification skill and a formal verification skill when the project lacks them; invoke either only if the user agrees.
 
 Native roles and configured defaults are not proof of a running model. Keep review independence and panel responsibilities; choose available models and effort from native routing rather than Cursor slugs. Smaller panels and suitable effort can reduce work, but no measured token saving is claimed. Cursor cloud agents, Custom Modes and `/loop` are not available merely because these skills are mirrored.
 
@@ -50,10 +52,13 @@ The default answer is `$cursor-poteto-mode`, which runs most of the others when 
 | The user wants to | Skill |
 |---|---|
 | Do any non-trivial task with rigor | [`$cursor-poteto-mode`](../cursor-poteto-mode/SKILL.md) |
+| Check that the agent understood the goal before it starts | [`$cursor-in-your-own-words`](../cursor-in-your-own-words/SKILL.md) |
+| Aim a task higher before starting | [`$cursor-sharpen`](../cursor-sharpen/SKILL.md) |
 | Know how code works now, or where new code should live | [`$cursor-how`](../cursor-how/SKILL.md) |
 | Know why code is shaped this way, or where a number came from | [`$cursor-why`](../cursor-why/SKILL.md) |
 | Understand a change or subsystem, explained plainly | [`$cursor-teach`](../cursor-teach/SKILL.md) |
 | Catch up on their own recent work on a topic | [`$cursor-recall`](../cursor-recall/SKILL.md) |
+| Catch up on changes in this chat and pending decisions | [`$cursor-ketchup`](../cursor-ketchup/SKILL.md) |
 | Know what a small diff could break outside itself | [`$cursor-blast-radius`](../cursor-blast-radius/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`$cursor-architect`](../cursor-architect/SKILL.md) |
 | Get several attempts at one brief, merged into the best one | [`$cursor-arena`](../cursor-arena/SKILL.md) |
@@ -66,7 +71,10 @@ The default answer is `$cursor-poteto-mode`, which runs most of the others when 
 | Write docs, an RFC, a README, a PR description, or a commit message to a standard | [`$cursor-technical-writing`](../cursor-technical-writing/SKILL.md) |
 | Hear the last reply again in plain words | [`$cursor-bro`](../cursor-bro/SKILL.md) |
 | Give agents a scripted way to drive the app and prove behavior | [`$cursor-create-verification-skill`](../cursor-create-verification-skill/SKILL.md) |
+| Write a personal mode skill from the user's habits | [`$cursor-automate-me`](../cursor-automate-me/SKILL.md) |
 | Bring a verification skill and its feature map back in line with the app | [`$cursor-maintain-verification-skill`](../cursor-maintain-verification-skill/SKILL.md) |
+| Formally verify a race, invariant, or property tests rarely reach | [`$cursor-create-formal-verification-skill`](../cursor-create-formal-verification-skill/SKILL.md) |
+| Bring formal verification back in line after covered code changes | [`$cursor-maintain-formal-verification-skill`](../cursor-maintain-formal-verification-skill/SKILL.md) |
 | Vet a performance number before reporting or acting on it | [`$cursor-benchmark-checklist`](../cursor-benchmark-checklist/SKILL.md) |
 | Run a large or cross-cutting change, or one to review after stepping away | [`$cursor-figure-it-out`](../cursor-figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`$cursor-show-me-your-work`](../cursor-show-me-your-work/SKILL.md) |
@@ -74,7 +82,7 @@ The default answer is `$cursor-poteto-mode`, which runs most of the others when 
 | Turn their own working habits into a personal mode skill | [`$cursor-automate-me`](../cursor-automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`$cursor-reflect`](../cursor-reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`$cursor-correct`](../cursor-correct/SKILL.md) |
-| Build a page whose buttons wake a Grok Bot over a webhook | [`/make-bot-ui`](https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/skills/make-bot-ui/SKILL.md) |
+| Build a page whose buttons wake a Grok Bot over a webhook | [`$cursor-make-bot-ui`](https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/skills/make-bot-ui/SKILL.md) |
 | Find their way around pstack | `$cursor-poteto-help` |
 
 If a skill directory next to this one is missing from the table, read its frontmatter and route by its description. The `principle-*` directories are covered under principles below.
@@ -105,7 +113,7 @@ Playbooks are step lists inside `$cursor-poteto-mode`, not skills, so they have 
 - "full autopilot on this queue" runs Autopilot-full. "stack them, don't ship" runs Autopilot-stack.
 - "run the eval playbook" runs Eval.
 
-Without `$cursor-poteto-mode`, a phrase such as "babysit this pr" can start the host's own workflow for the same job instead. The Playbooks section of [`poteto-mode`](../cursor-poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](references/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
+Without `$cursor-poteto-mode`, a phrase such as "babysit this pr" can start the host's own workflow for the same job instead. The Playbooks section of [`$cursor-poteto-mode`](../cursor-poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](references/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
 
 pstack has no planning skill. Native Codex planning works alongside it. For work that spans phases or stacked PRs, asking `$cursor-poteto-mode` for a plan runs the [Multi-phase plan playbook](../cursor-poteto-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `$cursor-architect` settles it in code first.
 
@@ -114,7 +122,6 @@ Principles are one-rule skills that `$cursor-poteto-mode` reads and cites in its
 ## Fix a run that went wrong
 
 | Symptom | Fix |
-|---|---|
 | The mode stopped applying after a few turns | Explicitly invoke `$cursor-poteto-mode` for the selected task; Cursor Custom Mode persistence is not a Codex guarantee. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
 | A new model choice had no effect | Check the actual native session selection; a changed default is not proof an existing task switched. |

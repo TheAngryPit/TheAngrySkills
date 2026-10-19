@@ -1,53 +1,54 @@
 {
   "codex_contract": {
-    "schema_version": 1,
     "adapter_mode": "history-review-gated",
-    "name_mapping": {
-      "upstream_skill": "recall",
-      "published_name": "cursor-recall",
-      "source_path": "pstack/skills/recall/SKILL.md"
-    },
-    "preserved_semantics": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
-    "native_mapping": {
-      "capabilities": [
-        "scoped task history",
-        "live repository state",
-        "shared record"
-      ],
-      "required_tools": [
-        "scoped task history",
-        "live repository state",
-        "shared record"
-      ],
-      "fallback": "Mismatched workspace/export is partial and does not alter state.",
-      "availability": "bounded_scoped_history_shared_record_fixture_observed; native task-history selection remains unproven"
+    "behavioral_proof": {
+      "error": "Error fixture for cursor-recall: a malformed input or failed dependency is reported explicitly and does not widen scope.",
+      "missing_tool_or_input": "Missing-capability fixture for cursor-recall: Mismatched workspace/export is partial and does not alter state.",
+      "positive": "Positive fixture for cursor-recall: the bounded path produces its documented result without unrelated side effects."
     },
     "external_dependencies": [
       "Cursor transcript history or supplied Codex record",
       "cursor-why or an equivalent bounded shared-record reader",
       "GitHub read-only metadata if requested"
     ],
+    "name_mapping": {
+      "published_name": "cursor-recall",
+      "source_path": "pstack/skills/recall/SKILL.md",
+      "upstream_skill": "recall"
+    },
+    "native_mapping": {
+      "availability": "bounded_scoped_history_shared_record_fixture_observed; native task-history selection remains unproven",
+      "capabilities": [
+        "scoped task history",
+        "live repository state",
+        "shared record"
+      ],
+      "fallback": "Mismatched workspace/export is partial and does not alter state.",
+      "required_tools": [
+        "scoped task history",
+        "live repository state",
+        "shared record"
+      ]
+    },
     "permission_gates": [
       "Use the exact workspace/topic/time scope and preserve missing exports.",
       "Mismatched workspace/export is partial and does not alter state.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
-    "behavioral_proof": {
-      "positive": "Positive fixture for cursor-recall: the bounded path produces its documented result without unrelated side effects.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-recall: Mismatched workspace/export is partial and does not alter state.",
-      "error": "Error fixture for cursor-recall: a malformed input or failed dependency is reported explicitly and does not widen scope."
-    },
+    "preserved_semantics": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
     "promotion_status": "promoted_bounded_explicit_only_native_history_selection_unproven",
-    "upstream_readme": {
-      "status": "verified_in_pinned_upstream_clone",
-      "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
-    },
+    "schema_version": 1,
     "security_review": {
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
       "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained"
+    },
+    "upstream_readme": {
+      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "path": "pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "status": "verified_in_supplied_upstream_clone",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md"
     }
   },
   "codex_note": "## Codex runtime mapping\n\nUse native task history and verified rollout paths, not `~/.cursor/projects`. Preserve the scope window, distinct own-history/shared-record sweep, citations, live-state readback and capsule format. Apply the standing model router to optional read-only delegation.\n",
@@ -57,41 +58,11 @@
   "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
   "replacements": [
     {
-      "file": "SKILL.md",
-      "before": "Transcripts live at `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, where `<slug>` is the workspace path with the leading slash dropped and each \"/\" turned into \"-\" (so `/Users/you/proj` becomes `Users-you-proj`). Every line is one chat message.",
-      "after": "In Codex, discover accessible prior tasks with the native thread list/read tools. Local rollout JSONL may provide full tool history when a verified rollout path is available; its filesystem layout varies by host. Do not infer a Cursor transcript path or read a different project without the user’s scope."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Spawn parallel subagents on a fast, cheap model, each taking a slice of the corpus.",
-      "after": "For a large in-scope corpus, delegate independent slices to read-only Codex subagents under the standing `model-capability-router` policy."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Tell every subagent to order candidates by real modification time (`ls -t`) and never by UUID name, grep the topic first and then read only the matching chats and only their relevant regions, and skip the current chat plus obvious noise (subagent, eval, and test chats).",
-      "after": "Tell each investigator to order accessible tasks by verified update time, search the topic before opening a transcript, read only relevant regions, and skip the current task plus obvious eval/test noise. Do not assume a filename UUID encodes recency."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "One specific prior chat to resume is the `session-pickup` playbook, not this. Turning habits into a durable skill is `automate-me`.",
-      "after": "One specific prior chat to resume uses the [session-pickup playbook](../cursor-poteto-mode/playbooks/session-pickup.md) from `cursor-poteto-mode`, not this skill. Turning habits into a durable skill is `cursor-automate-me`."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "That second record is what the **why** skill searches",
-      "after": "That second record is what `cursor-why` searches"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Hand it to the **why** skill's source investigators",
-      "after": "Hand it to `cursor-why` source investigators"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Write the brief through the **unslop** skill",
-      "after": "Write the brief through `cursor-unslop`"
+      "after": "---\nname: cursor-recall\ndescription: \"Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.\"\ndisable-model-invocation: true\n---\n\n# Recall\n\n**Before you start or resume work, you rebuild the user's recent working context and hand back a tight capsule of where things stand now and what to do next.**\n\nKeep it tight and on-topic. Read only what the in-scope threads need, then stop.\n\nYour context lives in two records. Your own chat history holds what you did and decided. The shared record holds everything that happened around the same code under other names: the symptoms users keep reporting, the fixes that shipped and got reverted, the errors still firing in prod. That second record is what `cursor-why` searches, across source control, the issue tracker, chat and issue channels, long-form docs, and error tracking. A feature with a long bug tail keeps most of its story there, so don't reconstruct it from your transcripts alone.\n\nIn Codex, discover accessible prior tasks with the native thread list/read tools. Local rollout JSONL may provide full tool history when a verified rollout path is available; its filesystem layout varies by host. Do not infer a Cursor transcript path or read a different project without the user’s scope.\n\n1. Classify, then route. One specific prior chat to resume uses the [session-pickup playbook](../cursor-poteto-mode/playbooks/session-pickup.md) from `cursor-poteto-mode`, not this skill. Turning habits into a durable skill is `cursor-automate-me`. A human-readable summary of your work is a different task. Recall loads working context across recent chats before you act. If the user already gave you a full state capsule (paths, branch, the change), use it and skip the mining.\n2. Lock the scope before searching. Pin the window (\"recent\" is a real range, default the last 7 days), the topic if named, and the workspace (default the active one. Never read another project's transcripts without being asked). State the scope back. Never quietly turn \"all\" into \"recent N\".\n3. Fan out across your chat history. For a large in-scope corpus, delegate independent slices to read-only Codex subagents under the standing `model-capability-router` policy. Tell each investigator to order accessible tasks by verified update time, search the topic before opening a transcript, read only relevant regions, and skip the current task plus obvious eval/test noise. Do not assume a filename UUID encodes recency. Each returns the same schema, one block per chat: topic, the user's goal, decisions, open threads, struggles and corrections, and artifacts (PRs, tickets, branches), each citing the chat UUID. For one or two chats, skip the fan-out and search directly. The raw transcripts stay in the subagents. The main thread gets only their findings.\n4. Sweep the shared record whenever the topic names a feature, file, subsystem, area, or bug. This is the default, not a judgment call, and \"my work on X\" does not exempt it. Hand it to `cursor-why` source investigators, but steer their question from \"why was this built this way\" to \"what's the current state, what's been tried and didn't hold, and what are users still reporting\". Reuse its per-source playbooks, run the investigators in parallel with the chat-history mining, and inherit its posture: one investigator per source, null results are findings, skip an unavailable MCP and say so. Fold what comes back into the brief. Skip this step only for pure activity recall with no named target (\"what did I do this week\"), where your own history and live state are the entire answer.\n5. Verify against live state. Take the PRs, branches, and tickets that the mining and the sweep surfaced and check them with `git` and `gh`. When the answer hinges on what an agent actually did (the tools it ran, files it read, errors it hit), read the full transcript, not just a trimmed local copy.\n6. Write the brief to the contract below. Group by thread. Stay on the named topic.\n\n## Output contract\n\nLead with the capsule, then the thread status, then the problems, then the next move. Deeper detail goes below or gets cut.\n\n- **Capsule.** At most 5 bullets. What this work is and where it stands overall.\n- **Threads.** One line each, prefixed with exactly one status tag: `[merged #N]`, `[open PR #N]`, `[in flight <branch>]`, `[verified, uncommitted]`, `[reverted #N]`, or `[planned, not started]`. A thread with no tag is not done yet, so tag it.\n- **Problems.** At most 5, the recurring ones. Include the symptoms users keep reporting and any fix that shipped and was reverted, so the next attempt starts where the last one failed.\n- **Next move.** The single most useful next action, concrete.\n\nAn adjacent feature or ticket stays out unless it blocks this one. When the capsule and thread lines outgrow a screen, cut detail before you cut threads. Write the brief through `cursor-unslop`, cite chat findings by UUID and shared-record findings by their source (PR #, ticket ID, chat permalink, error-tracker issue), and sanitize private context before any public output.\n\n**Reply:** the brief, to the contract above.\n",
+      "before": "---\nname: cursor-recall\ndescription: \"Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.\"\ndisable-model-invocation: true\n---\n\n# Recall\n\n**Before you start or resume work, you rebuild the user's recent working context and hand back a tight capsule of where things stand now and what to do next.**\n\nKeep it tight and on-topic. Read only what the in-scope threads need, then stop.\n\nYour context lives in two records. Your own chat history holds what you did and decided. The shared record holds everything that happened around the same code under other names: the symptoms users keep reporting, the fixes that shipped and got reverted, the errors still firing in prod. That second record is what the **why** skill searches, across source control, the issue tracker, chat and issue channels, long-form docs, and error tracking. A feature with a long bug tail keeps most of its story there, so don't reconstruct it from your transcripts alone.\n\nTranscripts live at `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, where `<slug>` is the workspace path with the leading slash dropped and each \"/\" turned into \"-\" (so `/Users/you/proj` becomes `Users-you-proj`). Every line is one chat message.\n\n1. Classify, then route. One specific prior chat to resume is the `session-pickup` playbook, not this. Turning habits into a durable skill is `automate-me`. A human-readable summary of your work is a different task. Recall loads working context across recent chats before you act. If the user already gave you a full state capsule (paths, branch, the change), use it and skip the mining.\n2. Lock the scope before searching. Pin the window (\"recent\" is a real range, default the last 7 days), the topic if named, and the workspace (default the active one. Never read another project's transcripts without being asked). State the scope back. Never quietly turn \"all\" into \"recent N\".\n3. Fan out across your chat history. Spawn parallel subagents on a fast, cheap model, each taking a slice of the corpus. Tell every subagent to order candidates by real modification time (`ls -t`) and never by UUID name, grep the topic first and then read only the matching chats and only their relevant regions, and skip the current chat plus obvious noise (subagent, eval, and test chats). Each returns the same schema, one block per chat: topic, the user's goal, decisions, open threads, struggles and corrections, and artifacts (PRs, tickets, branches), each citing the chat UUID. For one or two chats, skip the fan-out and search directly. The raw transcripts stay in the subagents. The main thread gets only their findings. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.\n4. Sweep the shared record whenever the topic names a feature, file, subsystem, area, or bug. This is the default, not a judgment call, and \"my work on X\" does not exempt it. Hand it to the **why** skill's source investigators, but steer their question from \"why was this built this way\" to \"what's the current state, what's been tried and didn't hold, and what are users still reporting\". Reuse its per-source playbooks, run the investigators in parallel with the chat-history mining, and inherit its posture: one investigator per source, null results are findings, skip an unavailable MCP and say so. Fold what comes back into the brief. Skip this step only for pure activity recall with no named target (\"what did I do this week\"), where your own history and live state are the entire answer.\n5. Verify against live state. Take the PRs, branches, and tickets that the mining and the sweep surfaced and check them with `git` and `gh`. When the answer hinges on what an agent actually did (the tools it ran, files it read, errors it hit), read the full transcript, not just a trimmed local copy.\n6. Write the brief to the contract below. Group by thread. Stay on the named topic.\n\n## Output contract\n\nLead with the capsule, then the thread status, then the problems, then the next move. Deeper detail goes below or gets cut.\n\n- **Capsule.** At most 5 bullets. What this work is and where it stands overall.\n- **Threads.** One line each, prefixed with exactly one status tag: `[merged #N]`, `[open PR #N]`, `[in flight <branch>]`, `[verified, uncommitted]`, `[reverted #N]`, or `[planned, not started]`. A thread with no tag is not done yet, so tag it.\n- **Problems.** At most 5, the recurring ones. Include the symptoms users keep reporting and any fix that shipped and was reverted, so the next attempt starts where the last one failed.\n- **Next move.** The single most useful next action, concrete.\n\nAn adjacent feature or ticket stays out unless it blocks this one. When the capsule and thread lines outgrow a screen, cut detail before you cut threads. Write the brief through the **unslop** skill, cite chat findings by UUID and shared-record findings by their source (PR #, ticket ID, chat permalink, error-tracker issue), and sanitize private context before any public output.\n\n**Reply:** the brief, to the contract above.\n",
+      "file": "SKILL.md"
     }
   ],
   "source_path": "pstack/skills/recall/SKILL.md",
-  "source_sha256": "d265b0e5b6dc5b89c0407f3387d24462c988e1990a37d5359735137908128c5a"
+  "source_sha256": "b0ceb996259c3404532f61e4b010df4e3d80d7ddbed85b3c302895723eb62a89"
 }

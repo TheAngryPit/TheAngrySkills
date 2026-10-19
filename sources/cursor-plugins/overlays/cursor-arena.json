@@ -1,52 +1,53 @@
 {
   "codex_contract": {
-    "schema_version": 1,
     "adapter_mode": "delegated-native",
-    "name_mapping": {
-      "upstream_skill": "arena",
-      "published_name": "cursor-arena",
-      "source_path": "pstack/skills/arena/SKILL.md"
+    "behavioral_proof": {
+      "error": "Malformed input, failed candidate, failed judge, or synthesis verification failure is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope.",
+      "missing_tool_or_input": "If a candidate or judge is unavailable, record the exact dropout and mark the aggregate partial; one fallback candidate is not an arena and no winner is fabricated.",
+      "positive": "Native bounded proof: N=2 disjoint general-worker candidates were written and read end to end; an independent reviewer cross-judge scored 19/24 versus 17/24, selected Candidate 1, named Candidate 2 grafts/rejections, and the coordinator applied the grafts. A failed hypothesis triggered a planner redesign; the synthesized contract was implemented in a disposable runtime, a revision-only drift failure forced correction, and disposable runtime checks then passed create/retry-unchanged/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset. This is fixture-only workflow proof."
     },
-    "preserved_semantics": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
+    "external_dependencies": [
+      "native parallel delegates if exposed"
+    ],
+    "name_mapping": {
+      "published_name": "cursor-arena",
+      "source_path": "pstack/skills/arena/SKILL.md",
+      "upstream_skill": "arena"
+    },
     "native_mapping": {
+      "availability": "bounded_native_n2_candidates_cross_judge_graft_verify_and_runtime_contract_observed; Work cloud, exact upstream Cursor roles, and automatic trigger remain unproven",
       "capabilities": [
         "collaboration.spawn_agent native candidate delegates (agent_type general-worker)",
         "collaboration.spawn_agent native cross-judge (agent_type reviewer)",
         "local candidate artifacts"
       ],
+      "fallback": "An unavailable candidate or judge is recorded as missing/partial, not a fabricated winner or full arena result.",
       "required_tools": [
         "native bounded candidate delegates",
         "native independent cross-judge",
         "local candidate artifacts"
-      ],
-      "fallback": "An unavailable candidate or judge is recorded as missing/partial, not a fabricated winner or full arena result.",
-      "availability": "bounded_native_n2_candidates_cross_judge_graft_verify_and_runtime_contract_observed; Work cloud, exact upstream Cursor roles, and automatic trigger remain unproven"
+      ]
     },
-    "external_dependencies": [
-      "native parallel delegates if exposed"
-    ],
     "permission_gates": [
       "Do not use Work cloud or hidden cloud workers without explicit authorization; this observed path used native local subagents.",
       "Launch candidates with the same contract into separate writable paths, then read every artifact before judging.",
       "An unavailable candidate or judge is recorded as missing/partial, not a fabricated winner.",
       "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
     ],
-    "behavioral_proof": {
-      "positive": "Native bounded proof: N=2 disjoint general-worker candidates were written and read end to end; an independent reviewer cross-judge scored 19/24 versus 17/24, selected Candidate 1, named Candidate 2 grafts/rejections, and the coordinator applied the grafts. A failed hypothesis triggered a planner redesign; the synthesized contract was implemented in a disposable runtime, a revision-only drift failure forced correction, and disposable runtime checks then passed create/retry-unchanged/changed-replace/query-filter/malformed-conflict/source-conflict/source-read-error/reset. This is fixture-only workflow proof.",
-      "missing_tool_or_input": "If a candidate or judge is unavailable, record the exact dropout and mark the aggregate partial; one fallback candidate is not an arena and no winner is fabricated.",
-      "error": "Malformed input, failed candidate, failed judge, or synthesis verification failure is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope."
-    },
+    "preserved_semantics": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
     "promotion_status": "promoted_bounded_native_local_arena_explicit_only_trigger_unobserved",
-    "upstream_readme": {
-      "status": "verified_in_pinned_upstream_clone",
-      "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/df581122cde17e6e27686b5a448bde23e4ad4318/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
-    },
+    "schema_version": 1,
     "security_review": {
+      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
       "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "retained"
+    },
+    "upstream_readme": {
+      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "path": "pstack/README.md",
+      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "status": "verified_in_supplied_upstream_clone",
+      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md"
     }
   },
   "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a bounded local design Arena. Before starting, require at least two authorized, isolated candidates and an available independent judge; retain the same rubric and verification contract. Outside that proven scope, report the workflow as unavailable unless a separate task-specific proof supports it. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.\n",
@@ -56,46 +57,11 @@
   "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
   "replacements": [
     {
-      "file": "SKILL.md",
-      "before": "3. Pick the runners. Use the `arena runners` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, default to one each on `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. An `auto` or `inherit-parent` entry in this line or the cross-judge line means the parent model, so omit `model` for it. If the Task tool rejects a configured entry, run that seat on its family's default and say so. Families go by prefix: `claude-*` and `grok-*`. With no family match, use `claude-opus-5-5-xhigh`. If it rejects a default, use the closest valid slug of the same family from its error message. Spawn more when the arena covers multiple design directions. Same model N times when the work is generation-bound rather than judgment-sensitive.",
-      "after": "Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "Spawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce both the artifact and a short rationale.",
-      "after": "Launch N independent Codex subagents in parallel when authorized, each with the same task contract, the shared grounding path, its own isolated output path, and a short rationale. Keep one writer per path and wait for each artifact before judging."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record.",
-      "after": "If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record. Mark the aggregate PARTIAL. If fewer than two candidates completed, do not select a winner or claim Arena competition; report the surviving artifact as a single attempt."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "After all Phase B candidates complete, choose one model from the `arena cross-judge pool` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, choose from `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with the parent's reading in Phase D, not with the candidates themselves. Don't spawn the judge while candidates are still writing.",
-      "after": "choose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict."
-    },
-    {
-      "file": "SKILL.md",
-      "before": "per the **separate-before-serializing-shared-state** principle skill",
-      "after": "per `cursor-principle-separate-before-serializing-shared-state`"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "per the **redesign-from-first-principles** principle skill",
-      "after": "per `cursor-principle-redesign-from-first-principles`"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "per the **prove-it-works** principle skill",
-      "after": "per `cursor-principle-prove-it-works`"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "One synthesized artifact. One short synthesis note alongside, naming the base, the grafts (with source candidate), the rejections, the dropouts if any, and the verification result.",
-      "after": "One synthesized artifact when competition and independent judgment completed; otherwise label the result PARTIAL and state which phase was missing. One short synthesis note alongside, naming the base if selected, the grafts (with source candidate), the rejections, the dropouts if any, the actual judge or coordinator assessment, and the verification result."
+      "after": "---\nname: cursor-arena\ndescription: \"Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.\"\ndisable-model-invocation: true\n---\n\n# Arena\n\nOpen a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.\n\n## Phase A: Frame\n\nEvery candidate gets the same prompt, so the prompt is the contract.\n\n1. State the artifact each candidate is producing.\n2. Derive the rubric. State what success looks like for *this* task, then turn it into 3-6 concrete gradeable criteria. The rubric is the picker's tool in Phase D. Candidates only see the task.\nChoose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners.\n4. Assign output paths. Each candidate writes to its own location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per `cursor-principle-separate-before-serializing-shared-state`.\n\n## Phase B: Fan out\n\nLaunch N independent Codex subagents in parallel when authorized, each with the same task contract, the shared grounding path, its own isolated output path, and a short rationale. Keep one writer per path and wait for each artifact before judging.\n\nEach rationale names the alternatives the candidate considered and what it rejected.\n\nIf a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record. Mark the aggregate PARTIAL. If fewer than two candidates completed, do not select a winner or claim Arena competition; report the surviving artifact as a single attempt.\n\n## Phase C: Cross-judge\n\nchoose an available native Codex judge under the standing `model-capability-router` policy, preferably with an independent model perspective when available. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict.\n\n## Phase D: Pick a base\n\nRead every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judge. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read both rationales before deciding.\n\nPick the base a future maintainer can extend most easily without breaking invariants. When two feel tied, prefer the cleaner boundary or smaller API, per the Laziness Protocol.\n\n## Phase E: Graft\n\nWalk each losing candidate once more and identify what is worth porting into the base. The signal is usually one or two things per candidate, not most of it.\n\nFold each graft in by hand, per `cursor-principle-redesign-from-first-principles`. Don't paste mechanically. The result has to remain coherent under one mental model.\n\nIf the candidates converge on one shape, that is strong agreement. Note it and ship the consensus shape. No graft is needed. If they wildly diverge, Phase A was under-specified. Reframe and re-run rather than averaging the divergence.\n\n## Phase F: Verify\n\nThe synthesized artifact has to hold up under the same scrutiny as any other output, per `cursor-principle-prove-it-works`.\n\nIf verification surfaces a problem the arena did not catch, either Phase A was wrong (re-frame and re-run) or one candidate caught it and you missed the graft (go back to Phase E). Don't paper over.\n\n## Outputs\n\nOne synthesized artifact when competition and independent judgment completed; otherwise label the result PARTIAL and state which phase was missing. One short synthesis note alongside, naming the base if selected, the grafts (with source candidate), the rejections, the dropouts if any, the actual judge or coordinator assessment, and the verification result.\n",
+      "before": "---\nname: cursor-arena\ndescription: \"Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.\"\ndisable-model-invocation: true\n---\n\n# Arena\n\nOpen a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.\n\n## Phase A: Frame\n\nEvery candidate gets the same prompt, so the prompt is the contract.\n\n1. State the artifact each candidate is producing.\n2. Derive the rubric, 3-6 concrete gradeable criteria for what success looks like on *this* task. It is the picker's tool in Phase D. Candidates only see the task.\n3. Pick the runners. Use the `arena runners` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, default to one each on `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. An `auto` or `inherit-parent` entry in this line or the cross-judge line means the parent model, so omit `model` for it. If the Task tool rejects a configured entry, run that seat on its family's default and say so. Families go by prefix: `claude-*`, and `grok-*` with `cursor-grok-*` and `composer-*`. A refused `composer-*` entry runs on `grok-4.7-xhigh-fast`. With no family match, use `claude-opus-5-5-xhigh`. If it rejects a default, use the closest valid slug of the same family from its error message. Spawn more runners when the arena covers multiple design directions. Use the same model N times when the work is generation-bound rather than judgment-sensitive. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.\n4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.\n\n## Phase B: Fan out\n\nSpawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce the artifact and a short rationale naming the alternatives it considered and what it rejected.\n\nIf a candidate produces no output, proceed with N-1 and note the dropout.\n\n## Phase C: Cross-judge\n\nAfter all Phase B candidates complete, choose one model from the `arena cross-judge pool` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, choose from `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. Prefer a different model family from the parent's. Spawn one readonly judge subagent on that model. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.\n\n## Phase D: Pick a base\n\nRead every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judge. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read both rationales before deciding.\n\nPick the base a future maintainer can extend most easily without breaking invariants. When two feel tied, prefer the cleaner boundary or smaller API, per the Laziness Protocol.\n\n## Phase E: Graft\n\nWalk each losing candidate once more for what is worth porting into the base, usually one or two things per candidate, not most of it. Fold each graft in by hand, per the **redesign-from-first-principles** principle skill, so the result stays coherent under one mental model. Don't paste mechanically.\n\nIf the candidates converge on one shape, that is strong agreement. Note it and ship the consensus shape. No graft is needed. If they wildly diverge, Phase A was under-specified. Reframe and re-run rather than averaging the divergence.\n\n## Phase F: Verify\n\nVerify the synthesized artifact like any other output, per the **prove-it-works** principle skill. If verification finds a problem the arena missed, either Phase A was wrong (re-frame and re-run) or a candidate caught it and you missed the graft (go back to Phase E). Don't paper over it.\n\n## Outputs\n\nOne synthesized artifact, with a short synthesis note alongside naming the base and why, the cross-judge's verdict, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.\n",
+      "file": "SKILL.md"
     }
   ],
   "source_path": "pstack/skills/arena/SKILL.md",
-  "source_sha256": "6e17736b5228b661569c3af054f8302c55cf9bf1649447652d53705cce38bed6"
+  "source_sha256": "ed72f6c132b1ce3974d949581d0adc5dade424fe20793ac3b4c4fae22ecb9354"
 }

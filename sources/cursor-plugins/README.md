@@ -1,3 +1,27 @@
+## Pstack 0.15.28 source refresh, 19 October 2026
+
+The pstack family is pinned to `d457567332aa6989e753ea289f30ea2bfbc80bc0`.
+`family-refresh.json` records its complete source tree independently of the
+historical full Cursor baseline. Other plugin families retain their accepted
+revisions. The prior sections below are dated history.
+
+The two new explicit-only Codex skills are
+`cursor-create-formal-verification-skill` and
+`cursor-maintain-formal-verification-skill`. They preserve tool selection,
+code-to-model traceability, bounds, broken-variant checks, and the distinction
+between verification drift and a product defect. They use project-local Codex
+skill discovery and namespaced sibling calls. Packaging checks do not establish
+that a generated verification workflow ran on a real project.
+
+The family contains 59 physical skill sources, including the three Benny
+workflows. Across the complete curated Cursor catalog, 107 of 112 sources are
+published and the same five operator exclusions remain held. Source generation
+never installs a skill, activates a hook, or selects an agent profile.
+
+The daily upstream workflow produces a review proposal. It does not accept a
+release or update installed homes. The validated remote source must pass review
+before the existing `npx skills` install route can deploy it.
+
 ## Current supporting-file audit (6 October 2026)
 
 The current pin is pstack 0.15.15 at `df581122cde17e6e27686b5a448bde23e4ad4318`.

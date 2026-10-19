@@ -1,13 +1,13 @@
 {
   "checkout_required": true,
-  "source_commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "source_commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "links": [
     {
       "source_file": "references/upstream/SKILL.source.md",
       "source_repository_file": ".agents/skills/release-openclaw-plugin-testing/SKILL.md",
       "original": "../openclaw-testing/SKILL.md",
       "repository_path": ".agents/skills/openclaw-testing/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-testing/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/SKILL.md",
       "bundled_target": null
     }
   ]

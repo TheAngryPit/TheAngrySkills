@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "path": ".agents/skills/openclaw-debugging",
   "original_name": "openclaw-debugging",
   "installed_name": "openclaw-debugging",
@@ -9,7 +9,7 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "748900b7802c46b17d4a31ff45e4b1d9ea936ea94c61609483f0b75b4dc0a452",
-    "references/upstream-link-map.json": "dbdee38b9ea420486dda6f5cbda49eb966f04cb43419b1affcf61e9ca2c63f16",
+    "references/upstream-link-map.json": "c4ac30f24f2b4723b1f948cfa1d96829dbe4b0360168cc38571de3671ff3aef6",
     "agents/openai.yaml": "2e38328677d4bbc44efa0f5f77f49c75a4d1d01d7ee43e01e70fa593b09cb9d6",
     "references/upstream/SKILL.source.md": "b2d5aaf195c77c33a76b1bbb76f1e571eba4c978904e68d8b90f9ba85d3ecb6c",
     "references/upstream/agents/openai.yaml": "0d1581e258bd536cbdef389449130e75e893e89a336947a88e1df44a2a8ab5a0"

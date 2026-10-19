@@ -1,13 +1,13 @@
 {
   "checkout_required": true,
-  "source_commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "source_commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "links": [
     {
       "source_file": "references/upstream/SKILL.source.md",
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../../../docs/help/testing/writing-tests.md#prove-behavior-at-the-owning-boundary",
       "repository_path": "docs/help/testing/writing-tests.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/help/testing/writing-tests.md#prove-behavior-at-the-owning-boundary",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/help/testing/writing-tests.md#prove-behavior-at-the-owning-boundary",
       "bundled_target": null
     },
     {
@@ -15,7 +15,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../test-audit/SKILL.md",
       "repository_path": ".agents/skills/test-audit/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/test-audit/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/test-audit/SKILL.md",
       "bundled_target": null
     },
     {
@@ -23,7 +23,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../../../docs/reference/test.md",
       "repository_path": "docs/reference/test.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/reference/test.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/reference/test.md",
       "bundled_target": null
     },
     {
@@ -31,7 +31,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../crabbox/SKILL.md",
       "repository_path": ".agents/skills/crabbox/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/crabbox/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/crabbox/SKILL.md",
       "bundled_target": null
     },
     {
@@ -39,7 +39,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../../../docs/reference/test/remote-proof.md",
       "repository_path": "docs/reference/test/remote-proof.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/reference/test/remote-proof.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/reference/test/remote-proof.md",
       "bundled_target": null
     },
     {
@@ -47,7 +47,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "references/package-and-docker.md",
       "repository_path": ".agents/skills/openclaw-testing/references/package-and-docker.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-testing/references/package-and-docker.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/references/package-and-docker.md",
       "bundled_target": "references/upstream/references/package-and-docker.md"
     },
     {
@@ -55,7 +55,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../release-openclaw-ci/SKILL.md",
       "repository_path": ".agents/skills/release-openclaw-ci/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/release-openclaw-ci/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/release-openclaw-ci/SKILL.md",
       "bundled_target": null
     },
     {
@@ -63,7 +63,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../release-openclaw-plugin-testing/SKILL.md",
       "repository_path": ".agents/skills/release-openclaw-plugin-testing/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/release-openclaw-plugin-testing/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/release-openclaw-plugin-testing/SKILL.md",
       "bundled_target": null
     },
     {
@@ -71,7 +71,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../openclaw-docker-e2e-authoring/SKILL.md",
       "repository_path": ".agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
       "bundled_target": null
     },
     {
@@ -79,7 +79,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../control-ui-e2e/SKILL.md",
       "repository_path": ".agents/skills/control-ui-e2e/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/control-ui-e2e/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/SKILL.md",
       "bundled_target": null
     },
     {
@@ -87,7 +87,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../telegram-e2e-userbot/SKILL.md",
       "repository_path": ".agents/skills/telegram-e2e-userbot/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/telegram-e2e-userbot/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/telegram-e2e-userbot/SKILL.md",
       "bundled_target": null
     },
     {
@@ -95,7 +95,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../../../docs/platforms/mac/signing.md#permission-evidence",
       "repository_path": "docs/platforms/mac/signing.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/platforms/mac/signing.md#permission-evidence",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/platforms/mac/signing.md#permission-evidence",
       "bundled_target": null
     },
     {
@@ -103,7 +103,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/SKILL.md",
       "original": "../openclaw-pr-maintainer/references/landing.md#red-main-and-inherited-failures",
       "repository_path": ".agents/skills/openclaw-pr-maintainer/references/landing.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-pr-maintainer/references/landing.md#red-main-and-inherited-failures",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-pr-maintainer/references/landing.md#red-main-and-inherited-failures",
       "bundled_target": null
     },
     {
@@ -111,7 +111,7 @@
       "source_repository_file": ".agents/skills/openclaw-testing/references/package-and-docker.md",
       "original": "../../openclaw-docker-e2e-authoring/SKILL.md",
       "repository_path": ".agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
       "bundled_target": null
     }
   ]

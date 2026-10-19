@@ -2,7 +2,7 @@
   "name": "implement-spec",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/implement-spec",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "bef6360cff1bf08cde092c513433eac69f5eddd527ea71eea3ea76b95af2a15e",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "e9bd2f2eef178c43be1878537d5666f89461477be3c7e581b83cc7de385e93d0",
+    "PROVENANCE.md": "c0a57c3d92ba96579f6e155137e3d7120be6527436282803638939d2582c6916",
     "SKILL.md": "b79ed4acc198467eca56cd6ad33059cc069ad8f2971c68f243029a3b383b7196",
     "agents/openai.yaml": "fd41efb42c60c96320d6531be7e4bf15cbf5518cd652d57dff27ccffa46988e9"
   }

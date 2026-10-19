@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import os
 from datetime import date
 from pathlib import Path
 import shutil
@@ -16,14 +17,22 @@ def test_manifest_contains_the_approved_surface_only():
     names={item['name'] for item in ITEMS}
     assert len(ITEMS)==33
     assert len(names-{ 'ask-pit' })==32
-    assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==19
-    assert sum(item['overlay']=='empty' for item in ITEMS)==13
+    assert sum(item['overlay']=='patch' for item in ITEMS if item['name']!='ask-pit')==21
+    assert sum(item['overlay']=='empty' for item in ITEMS)==11
     assert not names & {'ask-matt','writing-for-agents','claude-handoff','git-guardrails-claude-code',
                         'migrate-to-shoehorn','setup-pre-commit','setup-ts-deep-modules'}
     assert all(item['destination'].startswith('skills/mirrors-mattpocock/')
                for item in ITEMS if item['name']!='ask-pit')
     assert next(item for item in ITEMS if item['name']=='retro')['source_path']=='skills/engineering/retro'
     assert next(item for item in ITEMS if item['name']=='implement-spec')['source_path']=='skills/engineering/implement-spec'
+
+
+def test_chief_of_staff_stays_explicit_only():
+    item=next(i for i in ITEMS if i['name']=='chief-of-staff')
+    package=ROOT/item['destination']
+    assert item['overlay']=='patch'
+    frontmatter=(package/'SKILL.md').read_text().split('---',2)[1]
+    assert 'disable-model-invocation: true' in frontmatter
 
 
 def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
@@ -33,7 +42,7 @@ def test_new_pr_source_is_verbatim_and_provenance_uses_first_review():
     provenance=(package/'PROVENANCE.md').read_text()
     assert item['source_path']=='skills/engineering/pr'
     assert item['overlay']=='empty'
-    assert record['commit']=='4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+    assert record['commit']=='49dd158d1076134a641b33efb035946536778336'
     assert record['overlay']=='empty'
     assert (package/'ADAPTATIONS.patch').read_bytes()==b''
     assert 'Original integration source revision: 24fe0ef7737efae15c87225755e9f6f5965e4888.' in provenance
@@ -120,8 +129,123 @@ def test_astra_original_integration_is_distinct_from_current_review():
     provenance = (package / 'PROVENANCE.md').read_text()
     record = json.loads((package / 'UPSTREAM.json').read_text())
     assert 'Original integration revision: 3cca18b368ae95cdbdebbff572ccafa662551015' in provenance
-    assert '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d' in provenance
-    assert record['commit'] == '4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d'
+    assert '49dd158d1076134a641b33efb035946536778336' in provenance
+    assert record['commit'] == '49dd158d1076134a641b33efb035946536778336'
+
+
+def wizard_library(tmp_path):
+    template = (ROOT / 'skills/mirrors-mattpocock/wizard/template.sh').read_text()
+    library, marker, _ = template.partition('# STAGES: author this section.')
+    assert marker, 'wizard template library marker is missing'
+    path = tmp_path / 'wizard-library.sh'
+    path.write_text(library)
+    return path
+
+
+def assert_node_dotenv_value(node, env_file, env):
+    parser_check = subprocess.run(
+        [node, '-e', "require('node:util').parseEnv('')"], capture_output=True, text=True
+    )
+    if parser_check.returncode:
+        pytest.skip('Node util.parseEnv is unavailable')
+    parser = r'''const fs = require('node:fs');
+const { parseEnv } = require('node:util');
+const parsed = parseEnv(fs.readFileSync(process.argv[1], 'utf8'));
+if (parsed.VALUE !== process.env.EXPECTED_VALUE || parsed.KEEP !== 'keep') {
+  console.error(JSON.stringify({ parsed, expected: process.env.EXPECTED_VALUE }));
+  process.exit(1);
+}'''
+    result = subprocess.run([node, '-e', parser, str(env_file)], env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize('reader', ['ask', 'ask_secret'])
+@pytest.mark.parametrize('value', [
+    "O'Brien",
+    '$HOME ${TOKEN} $$',
+    r'C:\temp\path\file',
+    r'literal backslash-n: \n and backslash-r: \r',
+    'first line\nsecond line\n',
+    'a "double-quoted" value',
+    'O\'Brien says "hello"',
+    "O'Brien uses `command`",
+], ids=['apostrophe', 'dollar', 'backslash', 'literal-escapes', 'multiline', 'double-quote', 'mixed-quotes', 'double-fallback'])
+def test_wizard_env_round_trips_through_node_dotenv(tmp_path, value, reader):
+    node = shutil.which('node')
+    if node is None:
+        pytest.skip('Node is required for dotenv parser proof')
+    library = wizard_library(tmp_path)
+    env_file = tmp_path / '.env'
+    env = os.environ.copy()
+    env.update(WIZARD_LIBRARY=str(library), ENV_FILE=str(env_file), EXPECTED_VALUE=value, READER=reader)
+    shell = r'''source "$WIZARD_LIBRARY"
+write_env KEEP keep >/dev/null
+write_env VALUE "$EXPECTED_VALUE" >/dev/null
+unset VALUE
+if [[ "$READER" == "ask" ]]; then
+  ask VALUE "round-trip test" <<< ""
+else
+  ask_secret VALUE "round-trip test" <<< ""
+fi
+[[ "$VALUE" == "$EXPECTED_VALUE" ]]
+write_env VALUE "$EXPECTED_VALUE" >/dev/null'''
+    subprocess.run(['bash', '-c', shell], env=env, check=True, capture_output=True, text=True)
+    assert env_file.read_text().count('VALUE=') == 1
+    assert_node_dotenv_value(node, env_file, env)
+
+
+def test_wizard_reuses_legacy_shell_quoted_apostrophe_and_rewrites_it(tmp_path):
+    node = shutil.which('node')
+    if node is None:
+        pytest.skip('Node is required for dotenv parser proof')
+    library = wizard_library(tmp_path)
+    env_file = tmp_path / '.env'
+    env_file.write_text("VALUE='O'\\''Brien'\nKEEP=keep\n")
+    env = os.environ.copy()
+    env.update(WIZARD_LIBRARY=str(library), ENV_FILE=str(env_file), EXPECTED_VALUE="O'Brien")
+    shell = r'''source "$WIZARD_LIBRARY"
+unset VALUE
+ask_secret VALUE "legacy value" <<< ""
+[[ "$VALUE" == "$EXPECTED_VALUE" ]]
+write_env VALUE "$VALUE" >/dev/null'''
+    subprocess.run(['bash', '-c', shell], env=env, check=True, capture_output=True, text=True)
+    assert_node_dotenv_value(node, env_file, env)
+
+
+@pytest.mark.parametrize(('existing', 'expected'), [
+    ("VALUE='old' # trailing comment\nKEEP=keep\n", 'old'),
+    ("VALUE='old'   \nKEEP=keep\n", 'old'),
+    ("VALUE='first line\nsecond line' # trailing comment\nKEEP=keep\n", 'first line\nsecond line'),
+])
+def test_wizard_reuses_quoted_values_with_suffixes_and_preserves_later_entries(tmp_path, existing, expected):
+    node = shutil.which('node')
+    if node is None:
+        pytest.skip('Node is required for dotenv parser proof')
+    library = wizard_library(tmp_path)
+    env_file = tmp_path / '.env'
+    env_file.write_text(existing)
+    env = os.environ.copy()
+    env.update(WIZARD_LIBRARY=str(library), ENV_FILE=str(env_file), EXPECTED_VALUE=expected)
+    shell = r'''source "$WIZARD_LIBRARY"
+unset VALUE
+ask_secret VALUE "existing value" <<< ""
+[[ "$VALUE" == "$EXPECTED_VALUE" ]]
+write_env VALUE "$VALUE" >/dev/null'''
+    subprocess.run(['bash', '-c', shell], env=env, check=True, capture_output=True, text=True)
+    assert env_file.read_text().count('VALUE=') == 1
+    assert_node_dotenv_value(node, env_file, env)
+
+
+def test_wizard_rejects_value_without_a_dotenv_quote_delimiter(tmp_path):
+    library = wizard_library(tmp_path)
+    env_file = tmp_path / '.env'
+    env_file.write_text('KEEP=keep\n')
+    env = os.environ.copy()
+    env.update(WIZARD_LIBRARY=str(library), ENV_FILE=str(env_file), EXPECTED_VALUE="single' double\" backtick`")
+    shell = r'''source "$WIZARD_LIBRARY"
+if write_env VALUE "$EXPECTED_VALUE" >/dev/null 2>&1; then exit 2; fi'''
+    subprocess.run(['bash', '-c', shell], env=env, check=True, capture_output=True, text=True)
+    assert env_file.read_text() == 'KEEP=keep\n'
 
 
 def test_batch_refresh_retains_legacy_and_reaches_later_packages(tmp_path, monkeypatch, capsys):

@@ -129,7 +129,7 @@
     "name": "wizard",
     "destination": "skills/mirrors-mattpocock/wizard",
     "source_path": "skills/engineering/wizard",
-    "overlay": "empty"
+    "overlay": "patch"
   },
   {
     "name": "implement-spec",
@@ -201,9 +201,10 @@
     "name": "chief-of-staff",
     "destination": "skills/mirrors-mattpocock/chief-of-staff",
     "source_path": "skills/in-progress/chief-of-staff",
-    "overlay": "empty",
+    "overlay": "patch",
     "reviewed_source_revision": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
-    "provenance_approval_notice": "Operator authorized this source refresh and merge on 2026-10-06. This is the first inclusion of the portable source package; no installation or activation is authorized by publication. MIT attribution is retained in LICENSE.",
-    "provenance_basis": null
+    "provenance_approval_notice": "Operator authorized first inclusion on 2026-10-06. The bounded host-specific adaptation was approved during the 2026-10-19 refresh. Publication does not authorize installation or activation. MIT attribution is retained in LICENSE.",
+    "provenance_basis": null,
+    "provenance_summary": "Preserve coordinator ownership and the upstream coordination intent through bounded native delegation for suitable work. Keep environment improvements within the explicitly invoked goal and its authority."
   }
 ]

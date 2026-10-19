@@ -6,15 +6,17 @@ Operator approved the final Matt Pocock integration on 2026-09-12. MIT attributi
 
 ## What changed and why
 
-No content adaptation is approved for this package. The upstream files are preserved verbatim behind an explicit empty overlay.
+The approved overlay corrects dotenv value handling in the generated shell template. It writes values with a dotenv-supported quote delimiter, reads multiline values without stripping trailing newlines, and migrates the prior shell-escaped apostrophe form when a wizard is rerun. Values that no supported dotenv quote form can preserve fail without changing the file. The raw upstream template and its recorded source hash remain intact.
 
-The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The empty file is intentional for a maintained copy.
+The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The patch file contains only this behavior correction.
 Basis: [OpenAI Astra guidance](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
 No additional behavior was invented during integration.
 
 Historical upstream review: `24fe0ef7737efae15c87225755e9f6f5965e4888` on 2026-10-05. Per-file source hashes are recorded in UPSTREAM.json.
 
-Current upstream review: `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` on 2026-10-06. Per-file source hashes are recorded in UPSTREAM.json.
+Historical upstream review: `4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d` on 2026-10-06. Per-file source hashes are recorded in UPSTREAM.json.
+
+Current upstream review: `49dd158d1076134a641b33efb035946536778336` on 2026-10-19. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

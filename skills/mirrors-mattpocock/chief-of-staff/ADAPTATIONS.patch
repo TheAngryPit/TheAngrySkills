@@ -1,0 +1,39 @@
+--- a/chief-of-staff/SKILL.md
++++ b/chief-of-staff/SKILL.md
+@@ -17,15 +17,15 @@
+-
++
+ ## Subagents
+-
++
+-All work should be done in subagents. Protect your context window.
++When this explicitly invoked skill coordinates a goal, delegate suitable independent work to bounded subagents through the native mechanism advertised by the current host. Keep strategic ownership, decisions and integration with the coordinator; continue locally when work is tightly coupled or delegation does not justify its coordination cost. This does not turn unrelated ordinary conversation into a delegated workstream. Delegation does not authorize new costs, credentials, publication or external actions.
+-
++
+-Use background agents so you can stay in active dialogue with the user.
++Use the host's advertised native asynchronous completion and return path when suitable delegated work can proceed while you stay in dialogue with the user. Do not assume background execution or invent an unsupported mechanism.
+-
++
+ Communication to and from subagents should be sparse. Communicate primarily through **context pointers**: research notes, previous commits, and others. Don't duplicate information already available via pointers.
+-
++
+ ## Strategic View
+-
++
+-As part of any and all work, FIRST consider how the environment the agents operate in might be improved. Agents thrive in the **pit of success**:
++As part of the explicitly invoked goal, consider whether improving the agents’ environment would materially improve this goal’s next step. Agents thrive in the **pit of success**:
+-
++
+ - API's and functions which are extremely constrained and limited
+ - Lint rules which force correctness
+@@ -40,6 +40,6 @@
+ Finally, create environments (and codebases) that obey the **"no workarounds"** rule:
+-
++
+ - No one-off workarounds, or hacks that bypass established processes
+-- Any deviations from conventions must be fixed proactively, before feature work is done
++- Address deviations that block or materially weaken the current goal; keep other issues visible as suggestions for the coordinator to decide.
+-
++
+-Be relentless in improving the environment. Use every user message as an excuse to search for these improvements.
++Pursue concrete environment improvements when they directly support the current goal and fit its authority. Keep unrelated ideas optional: do not start a separate improvement campaign from each user message.

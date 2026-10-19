@@ -2,7 +2,7 @@
   "name": "wait-what",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/productivity/wait-what",
-  "commit": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "empty",
   "upstream_sha256": {
@@ -13,7 +13,7 @@
   "generated_sha256": {
     "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "a10ea6dd462f683efe54b0a3585385ec0ec13f98cb3d1d25e942f36edc028992",
+    "PROVENANCE.md": "520d76e9a8ee4b07a010d3e6f6057db82783e7eead43072d354fb78b394e8ff7",
     "SKILL.md": "d961bb37defd975c539427edb8f450cdbccdcdd552e213c1ece46676a7970905",
     "agents/openai.yaml": "b41faadf741d51e4ea184148b2d1854d93f947aaf754c7844f70a00f04194999"
   }

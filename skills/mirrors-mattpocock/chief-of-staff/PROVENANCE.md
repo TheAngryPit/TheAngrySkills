@@ -1,8 +1,8 @@
 # chief-of-staff: approved adaptation
 
 Source: [https://github.com/mattpocock/skills.git](https://github.com/mattpocock/skills.git).
-Reviewed source revision: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d.
-Operator authorized this source refresh and merge on 2026-10-06. This is the first inclusion of the portable source package; no installation or activation is authorized by publication. MIT attribution is retained in LICENSE.
+Original integration source revision: 4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d.
+Operator authorized first inclusion on 2026-10-06. The bounded host-specific adaptation was approved during the 2026-10-19 refresh. Publication does not authorize installation or activation. MIT attribution is retained in LICENSE.
 
 ## What changed and why
 
@@ -10,6 +10,8 @@ No content adaptation is approved for this package. The upstream files are prese
 
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The empty file is intentional for a maintained copy.
 No additional behavior was invented during integration.
+
+Current upstream review: `49dd158d1076134a641b33efb035946536778336` on 2026-10-19. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

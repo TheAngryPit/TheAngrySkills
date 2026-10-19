@@ -38,16 +38,16 @@ def verify(upstream=None):
             head = subprocess.check_output(['git', '-C', str(upstream), 'rev-parse', 'HEAD'], text=True).strip()
             if head != ledger['commit']:
                 raise ValueError('upstream commit differs from full-tree pin')
-            observed = {}
-            for line in subprocess.check_output(['git', '-C', str(upstream), 'ls-tree', '-r', 'HEAD'], text=True).splitlines():
-                meta, name = line.split('\t')
-                mode, kind, blob = meta.split()
-                observed[name] = (mode, blob)
-                if kind != 'blob':
-                    raise ValueError(f'unsupported upstream entry: {name}')
-            expected_tree = {name: (record['mode'], record['git_blob']) for name, record in ledger['files'].items()}
-            if observed != expected_tree:
-                raise ValueError('upstream Git tree inventory differs from preserved tree')
+        observed = {}
+        for line in subprocess.check_output(['git', '-C', str(upstream), 'ls-tree', '-r', ledger['commit']], text=True).splitlines():
+            meta, name = line.split('\t')
+            mode, kind, blob = meta.split()
+            observed[name] = (mode, blob)
+            if kind != 'blob':
+                raise ValueError(f'unsupported upstream entry: {name}')
+        expected_tree = {name: (record['mode'], record['git_blob']) for name, record in ledger['files'].items()}
+        if observed != expected_tree:
+            raise ValueError('upstream Git tree inventory differs from preserved tree')
     family_updates = {}
     if (BASE / family.LEDGER_NAME).exists():
         family_updates = {"pstack": json.loads((BASE / family.LEDGER_NAME).read_text())["source_commit"]}

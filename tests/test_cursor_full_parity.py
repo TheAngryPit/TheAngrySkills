@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import shutil
 import subprocess
@@ -221,3 +222,67 @@ def test_refresh_preserves_availability_classification_and_is_idempotent(tmp_pat
     assert availability.count('prior runtime and fixture evidence predates this refresh') == 1
     refresh.refresh(upstream, base=output, root=tmp_path)
     assert manifest.read_text() == first
+
+
+@pytest.mark.parametrize('baseline_case', ['valid', 'missing_commit', 'content', 'missing_file', 'mode'])
+def test_family_refresh_checks_preserved_baseline_git_tree(tmp_path, baseline_case):
+    check = load('check-cursor-full-tree')
+    upstream = tmp_path / 'upstream'
+    upstream.mkdir()
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    pstack = upstream / 'pstack/SKILL.md'
+    pstack.parent.mkdir()
+    pstack.write_text('old pstack')
+    other = upstream / 'other-plugin.txt'
+    other.write_text('baseline other plugin')
+
+    def commit():
+        subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+        subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture',
+                        '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'fixture'], check=True)
+        return subprocess.check_output(['git', '-C', str(upstream), 'rev-parse', 'HEAD'], text=True).strip()
+
+    def record(text, source_commit):
+        data = text.encode()
+        return {'mode': '100644', 'git_blob': hashlib.sha1(
+            b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest(),
+            'sha256': hashlib.sha256(data).hexdigest(), 'source_commit': source_commit}
+
+    baseline = commit()
+    pstack.write_text('new pstack')
+    other.write_text('later upstream other plugin')
+    head = commit()
+    base = tmp_path / 'preserved'
+    tree = base / 'upstream-tree'
+    (tree / 'pstack').mkdir(parents=True)
+    (tree / 'pstack/SKILL.md').write_text('new pstack')
+    (tree / 'other-plugin.txt').write_text('baseline other plugin')
+    old_pstack = record('old pstack', baseline)
+    other_record = record('baseline other plugin', baseline)
+    current = record('new pstack', head)
+    files = {'pstack/SKILL.md': old_pstack, 'other-plugin.txt': other_record}
+    if baseline_case == 'content':
+        files['other-plugin.txt'] = record('unrelated content', baseline)
+        (tree / 'other-plugin.txt').write_text('unrelated content')
+    elif baseline_case == 'missing_file':
+        del files['other-plugin.txt']
+        (tree / 'other-plugin.txt').unlink()
+    elif baseline_case == 'mode':
+        files['other-plugin.txt']['mode'] = '100755'
+        (tree / 'other-plugin.txt').chmod(0o755)
+    elif baseline_case == 'missing_commit':
+        shallow = tmp_path / 'shallow'
+        subprocess.run(['git', 'clone', '-q', '--depth=1', upstream.as_uri(), str(shallow)], check=True)
+        upstream = shallow
+    (base / 'full-tree.json').write_text(json.dumps({'commit': baseline, 'files': files}))
+    (base / 'family-refresh.json').write_text(json.dumps({
+        'family': 'pstack', 'baseline_commit': baseline, 'source_commit': head,
+        'files': {'pstack/SKILL.md': current},
+        'overrides': {'pstack/SKILL.md': {'baseline': old_pstack, 'current': current}},
+    }))
+    check.BASE = base
+    if baseline_case == 'valid':
+        assert check.verify(upstream)['family_updates'] == {'pstack': head}
+    else:
+        with pytest.raises((ValueError, subprocess.CalledProcessError)):
+            check.verify(upstream)

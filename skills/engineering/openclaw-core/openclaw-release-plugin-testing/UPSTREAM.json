@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "path": ".agents/skills/release-openclaw-plugin-testing",
   "original_name": "release-openclaw-plugin-testing",
   "installed_name": "openclaw-release-plugin-testing",
@@ -9,9 +9,9 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "027f58fb397ea1ca1635b73d5065cf3f5b15b84c11d4513de2e0650bd1284746",
-    "references/upstream-link-map.json": "07b52a886d98ac130771f2322b064590f05d0e6007faeaef35be501ebc819389",
+    "references/upstream-link-map.json": "8aff6e990fb74a0d33f65b7f17af6254dc6cd34bb94a598d8c3cd54192bc3c7d",
     "agents/openai.yaml": "c9cd095f6db8d326c54cacdf1acb4a7f98103aaa22c09c3bcd7218b7d1f52734",
-    "references/upstream/SKILL.source.md": "e1929851859519738b627a149980ed4cb12c10ff76fbef93d41992090276aa07",
+    "references/upstream/SKILL.source.md": "6144f8a063eeb3c8595a38de81cc3247c514a21c182ccc5703a70c6273368183",
     "references/upstream/agents/openai.yaml": "98640f15c81293fdbbb8911dc34fb31b2326c45a3a6f2bd9e8caa56392286b40"
   },
   "automatic_refresh": "not enabled; reconcile upstream changes against the adaptations before update",

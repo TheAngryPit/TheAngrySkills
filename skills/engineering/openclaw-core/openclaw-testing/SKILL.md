@@ -14,7 +14,7 @@ Start with touched tests, targeted typecheck/lint/format and required build proo
 
 Use the existing `$openclaw-crabbox` for a deliberate capacity/platform/live-service gap. Do not wait on queues, chain providers or force broad tests onto a busy host. Preserve source-trust, budget, credentials and live Gateway boundaries. Contributor-controlled code must use the repository's approved untrusted-source route, not a credentialed local run.
 
-Run repo wrappers, not guessed raw Vitest calls. Separate concurrent Vitest caches or serialize. Reuse valid unaffected evidence; repeat for changed inputs, concrete failures or a named missing risk. For CI, bind logs to the exact SHA/job and classify product, harness, infrastructure, auth and superseded runs before repairing. Do not rerun merely to chase green.
+Run repo wrappers, not guessed raw Vitest calls. Separate concurrent Vitest caches or serialize. In prepared linked worktrees, run `node scripts/run-vitest.mjs <file> --maxWorkers=1`; use PR CI for broad checks. Reuse valid unaffected evidence; repeat for changed inputs, concrete failures or a named missing risk. For CI, bind logs to the exact SHA/job and classify product, harness, infrastructure, auth and superseded runs before repairing. Do not rerun merely to chase green.
 
 Read source test-audit guidance for independent behavioral assertions; use the installed test-audit workflow as its Codex owner. Sibling upstream release/channel/maintainer references are on-demand source documentation, not installed skills or permissions. Their publication, landing, expected-failure and install policies remain subject to the owning repository and operator authorization; unresolved failures must be reported, not silently declared acceptable.
 

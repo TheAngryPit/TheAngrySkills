@@ -1,13 +1,13 @@
 {
   "checkout_required": true,
-  "source_commit": "24567afc232dfbcd8da3f1eb4e1b1466925d1352",
+  "source_commit": "aea75db8e4cf3397749cc51011dea696777de02d",
   "links": [
     {
       "source_file": "references/upstream/SKILL.source.md",
       "source_repository_file": ".agents/skills/openclaw-update/SKILL.md",
       "original": "../openclaw-live-updater/SKILL.md",
       "repository_path": ".agents/skills/openclaw-live-updater/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/openclaw-live-updater/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-live-updater/SKILL.md",
       "bundled_target": null
     },
     {
@@ -15,7 +15,7 @@
       "source_repository_file": ".agents/skills/openclaw-update/SKILL.md",
       "original": "../update-team-server/SKILL.md",
       "repository_path": ".agents/skills/update-team-server/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/.agents/skills/update-team-server/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/update-team-server/SKILL.md",
       "bundled_target": null
     },
     {
@@ -23,7 +23,7 @@
       "source_repository_file": ".agents/skills/openclaw-update/SKILL.md",
       "original": "../../../docs/install/updating.md",
       "repository_path": "docs/install/updating.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/install/updating.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/install/updating.md",
       "bundled_target": null
     },
     {
@@ -31,7 +31,7 @@
       "source_repository_file": ".agents/skills/openclaw-update/SKILL.md",
       "original": "../../../docs/cli/update.md",
       "repository_path": "docs/cli/update.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/cli/update.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/cli/update.md",
       "bundled_target": null
     },
     {
@@ -39,7 +39,7 @@
       "source_repository_file": ".agents/skills/openclaw-update/SKILL.md",
       "original": "../../../docs/gateway/restart-recovery.md",
       "repository_path": "docs/gateway/restart-recovery.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/24567afc232dfbcd8da3f1eb4e1b1466925d1352/docs/gateway/restart-recovery.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/gateway/restart-recovery.md",
       "bundled_target": null
     }
   ]

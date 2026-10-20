@@ -66,19 +66,7 @@
     {
       "name": "mirrors-taste",
       "skills": [
-        "./skills/mirrors-taste/taste-brandkit",
-        "./skills/mirrors-taste/taste-design-taste-frontend",
-        "./skills/mirrors-taste/taste-design-taste-frontend-v1",
-        "./skills/mirrors-taste/taste-design-taste-frontend-v2-experimental",
-        "./skills/mirrors-taste/taste-gpt-taste",
-        "./skills/mirrors-taste/taste-high-end-visual-design",
-        "./skills/mirrors-taste/taste-image-to-code",
-        "./skills/mirrors-taste/taste-imagegen-frontend-mobile",
-        "./skills/mirrors-taste/taste-imagegen-frontend-web",
-        "./skills/mirrors-taste/taste-industrial-brutalist-ui",
-        "./skills/mirrors-taste/taste-minimalist-ui",
-        "./skills/mirrors-taste/taste-redesign-existing-projects",
-        "./skills/mirrors-taste/taste-stitch-design-taste"
+        "./skills/mirrors-taste/taste-design-taste-frontend"
       ]
     },
     {
@@ -112,6 +100,7 @@
         "./skills/mirrors-marketing/marketing-competitor-profiling",
         "./skills/mirrors-marketing/marketing-competitors",
         "./skills/mirrors-marketing/marketing-content-strategy",
+        "./skills/mirrors-marketing/marketing-conversion-tracking",
         "./skills/mirrors-marketing/marketing-copy-editing",
         "./skills/mirrors-marketing/marketing-copywriting",
         "./skills/mirrors-marketing/marketing-council",
@@ -126,6 +115,7 @@
         "./skills/mirrors-marketing/marketing-influencer-marketing",
         "./skills/mirrors-marketing/marketing-launch",
         "./skills/mirrors-marketing/marketing-lead-magnets",
+        "./skills/mirrors-marketing/marketing-link-building",
         "./skills/mirrors-marketing/marketing-loops",
         "./skills/mirrors-marketing/marketing-offers",
         "./skills/mirrors-marketing/marketing-onboarding",

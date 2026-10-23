@@ -5,6 +5,6 @@ Published skill: openclaw-crabbox
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/crabbox
 Branch: main
-Commit: 4f587b6fe5fc7d9acaa72c3b653261afc35fb6bf
+Commit: fcb6a8de9836105d90f3f44b20f6204457f930f2
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

@@ -6,11 +6,11 @@ description: "Use when the operator explicitly wants to customise the native Cod
 # Native Routing Policy Builder
 
 Read the installed `model-capability-router` as the single baseline. It
-recommends GPT-6.1 Sol Medium for coordination, GPT-6 Astra Low with XHigh
+recommends GPT-6.1 Sol High for coordination, GPT-6 Astra Medium with XHigh
 reserved for exceptional reasoning, and GPT-6 Luna High/XHigh/Max. These are
 policy recommendations; they do not establish or change the actual home
 configuration. Preserve an explicit native effort selection, including Sol
-Low; Medium is the shared recommendation, not a forced configuration change.
+Low; High is the shared recommendation, not a forced configuration change.
 Do not revive retired schema-3 presets, mandatory coordinator topology or
 resolver scripts.
 

@@ -10,23 +10,23 @@
   "presets": {
     "economia": {
       "label": "Economia",
-      "coordinator": {"model": "gpt-6.1-sol", "effort": "medium"},
+      "coordinator": {"model": "gpt-6.1-sol", "effort": "high"},
       "classes": {
         "execution": {"model": "gpt-6-luna", "effort": "high"},
-        "judgment_planning": {"model": "gpt-6-astra", "effort": "low"},
+        "judgment_planning": {"model": "gpt-6-astra", "effort": "medium"},
         "exploration_tooling": {"model": "gpt-6-luna", "effort": "high"}
       }
     },
     "equilibrado": {
       "label": "Equilibrado",
-      "coordinator": {"model": "gpt-6.1-sol", "effort": "medium"},
+      "coordinator": {"model": "gpt-6.1-sol", "effort": "high"},
       "classes": {
         "execution": {
           "model": "gpt-6-luna",
           "effort": "xhigh",
           "bounded_small_effort": "high"
         },
-        "judgment_planning": {"model": "gpt-6-astra", "effort": "low"},
+        "judgment_planning": {"model": "gpt-6-astra", "effort": "medium"},
         "exploration_tooling": {"model": "gpt-6-luna", "effort": "high"}
       }
     },
@@ -41,7 +41,7 @@
         "execution": {"model": "gpt-6.1-sol", "effort": "medium"},
         "judgment_planning": {
           "model": "gpt-6-astra",
-          "effort": "low",
+          "effort": "medium",
           "exceptional_effort": "xhigh"
         },
         "exploration_tooling": {"model": "gpt-6.1-sol", "effort": "medium"}

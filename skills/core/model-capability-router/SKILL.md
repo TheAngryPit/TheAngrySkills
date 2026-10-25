@@ -42,16 +42,15 @@ or a required host/cloud boundary.
 
 | Profile | Model | Effort | Use |
 |---|---|---|---|
-| Recommended coordination profile | `gpt-6.1-sol` | `medium` | Recommended for sustained coordination, integration and open-ended execution when available; verify the actual host selection separately. |
-| Planning, review and difficult decisions | `gpt-6-astra` | `low` | Habitual Astra setting when its judgment helps. |
+| Recommended coordination profile | `gpt-6.1-sol` | `high` | Recommended for sustained coordination, integration and open-ended execution when available; verify the actual host selection separately. |
+| Planning, review and difficult decisions | `gpt-6-astra` | `medium` | Habitual Astra setting when its judgment helps. |
 | Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
 | Bounded subtask | `gpt-6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
 | Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
 | Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
 
-For demanding coding, GPT-6.1 Sol high is an available task-specific override
-when medium is insufficient; choose it for the work rather than forcing an Astra
-escalation. It does not replace the recommended medium coordination profile.
+GPT-6.1 Sol high is also available for demanding coding. Choose directly for
+the work rather than forcing an Astra escalation.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
@@ -89,7 +88,7 @@ target over a role-aware preset.
 
 ## Changing selection during work
 
-Keep GPT-6.1 Sol medium as the recommended policy default and choose
+Keep GPT-6.1 Sol high as the recommended policy default and choose
 task-specific overrides through the native surface that actually supports them.
 Honor an explicit native effort selection, including low; this recommendation
 does not require changing a home configuration or an active thread. In CLI,

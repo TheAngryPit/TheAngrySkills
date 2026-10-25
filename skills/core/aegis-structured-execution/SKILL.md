@@ -14,12 +14,25 @@ Use this skill for broad, risky, multi-phase, or proof-heavy work where executio
 2. Split work into phases only when trust boundaries, proof modes, or execution surfaces differ.
 3. Keep final synthesis in the coordinator; helper agents may gather evidence but do not define final truth.
 4. Separate current state, target state, validated proof, unresolved gaps, and drift.
-5. Update the active checkpoint surface after meaningful state changes.
-6. Report completion only at the strongest proven level: `implemented`, `code_proven`, `test_proven`, `runtime_proven`, or `end_to_end_proven`.
+5. Follow `aegis-html-ledger` throughout execution: record the active work before it begins, keep its actual state and plan changes current, and maintain the project ledger with its iCloud copy. Preserve an exact resume point even while work is in progress.
+6. Use completion messages through the established coordination route alongside the ledger to report the outcome and remaining work.
+7. Report completion only at the strongest proven level: `implemented`, `code_proven`, `test_proven`, `runtime_proven`, or `end_to_end_proven`.
+
+## Issue and PR structure
+
+Establish whether the reported problem is real before creating its issue.
+Determine early whether the fix needs one PR or several.
+
+For a simple change, create the issue and PR in the same delivery phase and
+link the PR to the issue, so discussion can also happen on the issue.
+
+For a complex change, create an umbrella issue and the first PR, linked in the
+same way. Organize the remaining PRs as a dependent stack for a multilayer
+problem, or as parallel PRs when the work can proceed independently.
 
 ## Completion Criteria
 
-The execution pass is complete only when the deliverable, proof level, unresolved gaps, and next safe action are explicit and do not contradict repo truth.
+The execution pass is complete only when the deliverable, proof level, unresolved gaps, and next safe action are explicit and do not contradict repo truth. The active ledger must preserve the current work and plan changes needed for another session to continue. When a handoff is selected, use this state as input while preserving the selected handoff skill's format, disclosure, delivery, and acceptance requirements.
 
 ## Red Flags
 
@@ -30,4 +43,4 @@ The execution pass is complete only when the deliverable, proof level, unresolve
 
 ## Boundary
 
-Do not use this as a heavy wrapper for tiny one-shot tasks. Prefer `aegis-communication-discipline` plus `aegis-html-ledger` for ordinary project execution.
+Do not use this as a heavy wrapper for tiny one-shot tasks. Use `aegis-html-ledger` for ongoing project state. Add `aegis-communication-discipline` when its communication contract is relevant; it is not a mandatory companion for every task.

@@ -1,16 +1,18 @@
 #!/bin/bash
 set -e
 
-# Generate agent skill from __TOOL_NAME__ documentation.
+# Generate an agent skill from the selected documentation.
 # Mirrors selected documentation paths from the latest default branch into
-# skills/__SKILL_NAME__/references/ without content conversion.
+# the generated skill's references/ without content conversion.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-SOURCE_URL='__SOURCE_URL_RAW__'
-SKILL_DIR="$ROOT_DIR/skills/__SKILL_NAME__"
+SKILL_NAME=__SKILL_NAME_SHELL__
+TOOL_NAME=__TOOL_NAME_SHELL__
+SOURCE_URL=__SOURCE_URL_SHELL__
+SKILL_DIR="$ROOT_DIR/skills/$SKILL_NAME"
 REFS_DIR="$SKILL_DIR/references"
-DOC_PATHS=(__DOC_PATHS__)
+DOC_PATHS=(__DOC_PATHS_SHELL__)
 
 for rel in "${DOC_PATHS[@]}"; do
     case "$rel" in
@@ -35,7 +37,7 @@ print_warn() {
     echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
-print_info "Generating __TOOL_NAME__ documentation skill..."
+print_info "Generating $TOOL_NAME documentation skill..."
 
 TMP_DIR="$(mktemp -d)"
 cleanup() {
@@ -415,7 +417,7 @@ if [ "$mirrored_source_count" = "0" ]; then
 fi
 
 cat > "$REFS_DIR/INDEX.md" <<EOF
-# __TOOL_NAME__ Documentation References
+# $TOOL_NAME Documentation References
 
 Source: $SOURCE_URL
 Default branch: $DEFAULT_BRANCH
@@ -436,7 +438,7 @@ print_info "Generating SKILL.md..."
 cat > "$SKILL_DIR/SKILL.md" <<'EOF'
 ---
 name: __SKILL_NAME__
-description: Complete __TOOL_NAME__ documentation for AI agents. Use this to learn about __TOOL_NAME__ architecture, APIs, configuration, and best practices.
+description: __DESCRIPTION_YAML__
 ---
 
 # __TOOL_NAME__ Documentation Skill
@@ -506,6 +508,25 @@ references/README.md
 
 **Auto-generated** from `__SOURCE_URL_RAW__`. Run `./scripts/generate-docs-skill.sh` to update.
 EOF
+
+python3 - "$SKILL_DIR/SKILL.md" "$SKILL_NAME" "$TOOL_NAME" "$SOURCE_URL" <<'PY'
+import json
+import re
+import sys
+from pathlib import Path
+
+target, skill, tool, source = sys.argv[1:]
+description = f'Complete {tool} documentation for AI agents. Use this to learn about {tool} architecture, APIs, configuration, and best practices.'
+values = {
+    '__SKILL_NAME__': skill,
+    '__TOOL_NAME__': tool,
+    '__SOURCE_URL_RAW__': source,
+    '__DESCRIPTION_YAML__': json.dumps(description),
+}
+path = Path(target)
+pattern = '|'.join(re.escape(token) for token in values)
+path.write_text(re.sub(pattern, lambda match: values[match.group()], path.read_text(encoding='utf-8')), encoding='utf-8')
+PY
 
 print_info "✓ Generated skill at: $SKILL_DIR"
 print_info "✓ Documentation source files: $mirrored_source_count"

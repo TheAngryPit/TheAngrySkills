@@ -46,6 +46,13 @@ The 1.0.0 ClawHub reviews identified two concrete source problems:
   names containing TSV control characters are now refused before output changes;
   enumeration uses NUL delimiters and every copy input must belong to the source
   root.
+- The 1.0.2 scan then identified metadata inserted directly into Bash source.
+  Tool-name command substitution and URL quote breakouts were reproduced with
+  harmless temporary marker files. The scaffold now quotes constants with
+  `shlex.quote` in one substitution pass; generated Markdown is rendered as data
+  with a separately JSON-quoted YAML description. Regressions verify neither
+  metadata field executes commands and that punctuation, Unicode, literal
+  placeholder text and documentation paths still round-trip.
 
 The offline generator regressions exercise the actual scaffold and generator:
 ordinary document bytes and upstream index preservation, an external-file

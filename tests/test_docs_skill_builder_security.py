@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import subprocess
@@ -25,9 +26,9 @@ class DocsSkillBuilderSecurityTests(unittest.TestCase):
                         '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'fixture'], check=True)
         self.output = self.root / 'generated'
 
-    def scaffold(self, paths):
-        command = ['bash', str(CREATE), '--name', 'fixture-docs', '--tool-name', 'Fixture',
-                   '--source-url', 'https://example.invalid/fixture.git', '--output', str(self.output)]
+    def scaffold(self, paths, tool_name='Fixture', source_url='https://example.invalid/fixture.git'):
+        command = ['bash', str(CREATE), '--name', 'fixture-docs', '--tool-name', tool_name,
+                   '--source-url', source_url, '--output', str(self.output)]
         for path in paths:
             command.extend(['--doc-path', path])
         result = subprocess.run(command, capture_output=True, text=True)
@@ -91,6 +92,37 @@ class DocsSkillBuilderSecurityTests(unittest.TestCase):
         copied_private_files = [p for p in references.rglob('*') if p.is_file() and p.read_bytes() == private_bytes]
         self.assertEqual(copied_private_files, [])
         self.assertNotEqual(result.returncode, 0)
+
+    def test_supplied_metadata_cannot_execute_shell_commands(self):
+        for field in ['tool_name', 'source_url']:
+            with self.subTest(field=field):
+                self.output = self.root / f'generated-{field}'
+                marker = self.root / f'executed-{field}'
+                payload = (f'Fixture $(touch "{marker}")' if field == 'tool_name'
+                           else f'https://example.invalid/\'; touch "{marker}"; #.git')
+                self.scaffold(['README.md'], **{field: payload})
+                self.assertFalse(marker.exists())
+                result = self.generate()
+                self.assertFalse(marker.exists())
+                self.assertEqual(result.returncode, 0, result.stderr)
+                generated = self.output / 'skills/fixture-docs/SKILL.md'
+                self.assertIn(payload, generated.read_text())
+
+    def test_metadata_and_document_paths_preserve_punctuation_and_literal_tokens(self):
+        tool_name = 'O\'Reilly "$SDK" & __SOURCE_URL_RAW__ — 工具'
+        source_url = 'https://example.invalid/a&b.git'
+        doc = self.source / 'guide & examples.md'
+        doc.write_bytes(b'Punctuation in a documentation path.\n')
+        self.scaffold([doc.name], tool_name=tool_name, source_url=source_url)
+        result = self.generate()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        skill = self.output / 'skills/fixture-docs'
+        text = (skill / 'SKILL.md').read_text(encoding='utf-8')
+        self.assertIn(tool_name, text)
+        self.assertIn(source_url, text)
+        description = next(line for line in text.splitlines() if line.startswith('description: '))
+        self.assertIn(tool_name, json.loads(description.removeprefix('description: ')))
+        self.assertEqual((skill / 'references' / doc.name).read_bytes(), doc.read_bytes())
 
 
 if __name__ == '__main__':

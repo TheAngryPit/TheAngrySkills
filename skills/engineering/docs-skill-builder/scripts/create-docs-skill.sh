@@ -39,18 +39,6 @@ slug() {
         | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
 }
 
-quote_doc_paths() {
-    local first=1
-    local rel
-    for rel in "${DOC_PATHS[@]}"; do
-        if [ "$first" -eq 0 ]; then
-            printf ' '
-        fi
-        first=0
-        printf '%q' "$rel"
-    done
-}
-
 write_file() {
     local path="$1"
     local content="$2"
@@ -112,13 +100,24 @@ if [ -e "$OUTPUT_DIR" ] && [ "$(find "$OUTPUT_DIR" -mindepth 1 -maxdepth 1 2>/de
     exit 1
 fi
 
-DOC_PATHS_LITERAL="$(quote_doc_paths)"
-GENERATOR="$(cat "$TEMPLATE")"
-GENERATOR="${GENERATOR//__SKILL_NAME__/$SKILL_NAME}"
-GENERATOR="${GENERATOR//__TOOL_NAME__/$TOOL_NAME}"
-GENERATOR="${GENERATOR//__SOURCE_URL_RAW__/$SOURCE_URL}"
-GENERATOR="${GENERATOR//__SOURCE_URL__/$SOURCE_URL}"
-GENERATOR="${GENERATOR//__DOC_PATHS__/$DOC_PATHS_LITERAL}"
+GENERATOR="$(python3 - "$TEMPLATE" "$SKILL_NAME" "$TOOL_NAME" "$SOURCE_URL" "${DOC_PATHS[@]}" <<'PY'
+import re
+import shlex
+import sys
+from pathlib import Path
+
+template, skill, tool, source, *paths = sys.argv[1:]
+values = {
+    '__SKILL_NAME_SHELL__': shlex.quote(skill),
+    '__TOOL_NAME_SHELL__': shlex.quote(tool),
+    '__SOURCE_URL_SHELL__': shlex.quote(source),
+    '__DOC_PATHS_SHELL__': ' '.join(shlex.quote(path) for path in paths),
+}
+pattern = '|'.join(re.escape(token) for token in values)
+rendered = re.sub(pattern, lambda match: values[match.group()], Path(template).read_text(encoding='utf-8'))
+sys.stdout.buffer.write(rendered.encode('utf-8'))
+PY
+)"
 
 README="# $TOOL_NAME Docs Skill Source
 

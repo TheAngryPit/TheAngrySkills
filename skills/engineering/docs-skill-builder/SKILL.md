@@ -83,6 +83,9 @@ tool-skills/
 
 Use `scripts/create-docs-skill.sh` after mapping the target repo docs layout:
 
+The scaffold and generator require Bash and Python 3. Supplied names, URLs and
+documentation paths are rendered as data; never evaluate metadata as shell code.
+
 ```bash
 scripts/create-docs-skill.sh \
   --name gbrain-docs \

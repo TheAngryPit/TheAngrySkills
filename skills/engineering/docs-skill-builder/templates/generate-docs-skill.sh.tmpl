@@ -1,16 +1,28 @@
 #!/bin/bash
 set -e
 
-# Generate agent skill from __TOOL_NAME__ documentation.
+# Generate an agent skill from the selected documentation.
 # Mirrors selected documentation paths from the latest default branch into
-# skills/__SKILL_NAME__/references/ without content conversion.
+# the generated skill's references/ without content conversion.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-SOURCE_URL='__SOURCE_URL_RAW__'
-SKILL_DIR="$ROOT_DIR/skills/__SKILL_NAME__"
+SKILL_NAME=__SKILL_NAME_SHELL__
+TOOL_NAME=__TOOL_NAME_SHELL__
+SOURCE_URL=__SOURCE_URL_SHELL__
+SKILL_DIR="$ROOT_DIR/skills/$SKILL_NAME"
 REFS_DIR="$SKILL_DIR/references"
-DOC_PATHS=(__DOC_PATHS__)
+DOC_PATHS=(__DOC_PATHS_SHELL__)
+
+for rel in "${DOC_PATHS[@]}"; do
+    case "$rel" in
+        ""|/*|..|../*|*/../*|*/..) echo "unsafe_doc_path: $rel" >&2; exit 1 ;;
+    esac
+done
+if [ -L "$ROOT_DIR/skills" ] || [ -L "$SKILL_DIR" ]; then
+    echo "symlinked_output_directory" >&2
+    exit 1
+fi
 
 # Colors
 GREEN='\033[0;32m'
@@ -25,7 +37,7 @@ print_warn() {
     echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
-print_info "Generating __TOOL_NAME__ documentation skill..."
+print_info "Generating $TOOL_NAME documentation skill..."
 
 TMP_DIR="$(mktemp -d)"
 cleanup() {
@@ -146,6 +158,28 @@ else
     HEAD_COMMIT="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
 fi
 
+python3 - "$SOURCE_DIR" "${DOC_PATHS[@]}" <<'PY'
+import os
+import sys
+from pathlib import Path
+
+source = Path(sys.argv[1]).resolve(strict=True)
+for relative in sys.argv[2:]:
+    if any(character in relative for character in '\t\r\n'):
+        sys.exit("unsupported_documentation_path")
+    selected = source
+    for part in Path(relative).parts:
+        selected = selected / part
+        if selected.is_symlink():
+            sys.exit(f"symlinked_documentation_source: {relative}")
+    if selected.is_dir():
+        for directory, directories, files in os.walk(selected, followlinks=False):
+            if any(character in name for name in directories + files for character in '\t\r\n'):
+                sys.exit(f"unsupported_documentation_filename: {relative}")
+            if any((Path(directory) / name).is_symlink() for name in directories + files):
+                sys.exit(f"symlinked_documentation_source: {relative}")
+PY
+
 # Clean and recreate skill directory so removed upstream pages cannot survive
 # as stale local references after a moved or reduced documentation tree.
 rm -rf "$SKILL_DIR"
@@ -158,10 +192,6 @@ VERIFY_MANIFEST="$REFS_DIR/MIRROR-VERIFY.tsv"
 
 sha256_file() {
     shasum -a 256 "$1" | awk '{print $1}'
-}
-
-sha256_text() {
-    printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
 }
 
 should_mirror_file() {
@@ -254,7 +284,7 @@ neutralized_mirror_path() {
     # Keep their source bytes, but neutralize the mirror path so references
     # cannot become active configuration by recursive discovery.
     case "$basename_part" in
-        SKILL.md|AGENTS.md|CLAUDE.md|GEMINI.md|QWEN.md|CONTEXT.md|COPILOT_INSTRUCTIONS.md|INSTRUCTIONS.md|RULES.md)
+        SKILL.md|AGENTS.md|CLAUDE.md|GEMINI.md|QWEN.md|CONTEXT.md|COPILOT_INSTRUCTIONS.md|INSTRUCTIONS.md|RULES.md|INDEX.md|SOURCE-MANIFEST.tsv|MIRROR-VERIFY.tsv)
             mirror_path="$(mark_source_path "$mirror_path")"
             ;;
         package.json|skillpack.json|manifest.json|*.plugin.json|mcp.json|claude_desktop_config.json)
@@ -286,6 +316,15 @@ process_file() {
     local dest_hash
     local size
 
+    case "$src_file" in
+        "$SOURCE_DIR"/*) ;;
+        *) echo "documentation_source_outside_root" >&2; exit 1 ;;
+    esac
+    if [ -L "$src_file" ]; then
+        echo "symlinked_documentation_source: $rel_path" >&2
+        exit 1
+    fi
+
     if ! should_mirror_file "$src_file" "$rel_path"; then
         print_warn "Skipping non-documentation file: $rel_path"
         return
@@ -301,17 +340,13 @@ process_file() {
     print_info "Copying verbatim: $rel_path -> $mirror_path"
     cp -P "$src_file" "$dest_file"
 
-    if [ -L "$src_file" ]; then
-        src_target="$(readlink "$src_file")"
-        dest_target="$(readlink "$dest_file")"
-        src_hash="$(sha256_text "symlink:$src_target")"
-        dest_hash="$(sha256_text "symlink:$dest_target")"
-        size="$(printf '%s' "$src_target" | wc -c | tr -d ' ')"
-    else
-        src_hash="$(sha256_file "$src_file")"
-        dest_hash="$(sha256_file "$dest_file")"
-        size="$(wc -c < "$src_file" | tr -d ' ')"
+    if [ -L "$dest_file" ]; then
+        echo "symlinked_documentation_copy: $rel_path" >&2
+        exit 1
     fi
+    src_hash="$(sha256_file "$src_file")"
+    dest_hash="$(sha256_file "$dest_file")"
+    size="$(wc -c < "$src_file" | tr -d ' ')"
 
     printf '%s\t%s\t%s\t%s\n' "$src_hash" "$size" "$rel_path" "$mirror_path" >> "$SOURCE_MANIFEST"
     if [ "$src_hash" = "$dest_hash" ]; then
@@ -326,6 +361,7 @@ process_file() {
 copy_path() {
     local rel="$1"
     local src="$SOURCE_DIR/$rel"
+    local file_list="$TMP_DIR/documentation-files"
 
     if [ ! -e "$src" ] && [ ! -L "$src" ]; then
         print_warn "Missing docs path: $rel"
@@ -351,10 +387,19 @@ copy_path() {
             ! -path "*/videos/*" \
             ! -path "*/screenshots/*" \
             ! -path "*/previews/*" \
-            ! -path "*/static/*" | sort | while read -r file; do
+            ! -path "*/static/*" -print0 > "$file_list"
+        python3 - "$file_list" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+entries = sorted(entry for entry in path.read_bytes().split(b'\0') if entry)
+path.write_bytes(b''.join(entry + b'\0' for entry in entries))
+PY
+        while IFS= read -r -d '' file; do
             rel_file="${file#$SOURCE_DIR/}"
             process_file "$file" "$rel_file"
-        done
+        done < "$file_list"
     else
         process_file "$src" "$rel"
     fi
@@ -372,7 +417,7 @@ if [ "$mirrored_source_count" = "0" ]; then
 fi
 
 cat > "$REFS_DIR/INDEX.md" <<EOF
-# __TOOL_NAME__ Documentation References
+# $TOOL_NAME Documentation References
 
 Source: $SOURCE_URL
 Default branch: $DEFAULT_BRANCH
@@ -393,7 +438,7 @@ print_info "Generating SKILL.md..."
 cat > "$SKILL_DIR/SKILL.md" <<'EOF'
 ---
 name: __SKILL_NAME__
-description: Complete __TOOL_NAME__ documentation for AI agents. Use this to learn about __TOOL_NAME__ architecture, APIs, configuration, and best practices.
+description: __DESCRIPTION_YAML__
 ---
 
 # __TOOL_NAME__ Documentation Skill
@@ -463,6 +508,25 @@ references/README.md
 
 **Auto-generated** from `__SOURCE_URL_RAW__`. Run `./scripts/generate-docs-skill.sh` to update.
 EOF
+
+python3 - "$SKILL_DIR/SKILL.md" "$SKILL_NAME" "$TOOL_NAME" "$SOURCE_URL" <<'PY'
+import json
+import re
+import sys
+from pathlib import Path
+
+target, skill, tool, source = sys.argv[1:]
+description = f'Complete {tool} documentation for AI agents. Use this to learn about {tool} architecture, APIs, configuration, and best practices.'
+values = {
+    '__SKILL_NAME__': skill,
+    '__TOOL_NAME__': tool,
+    '__SOURCE_URL_RAW__': source,
+    '__DESCRIPTION_YAML__': json.dumps(description),
+}
+path = Path(target)
+pattern = '|'.join(re.escape(token) for token in values)
+path.write_text(re.sub(pattern, lambda match: values[match.group()], path.read_text(encoding='utf-8')), encoding='utf-8')
+PY
 
 print_info "✓ Generated skill at: $SKILL_DIR"
 print_info "✓ Documentation source files: $mirrored_source_count"

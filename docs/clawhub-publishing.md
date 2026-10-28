@@ -40,12 +40,20 @@ The 1.0.0 ClawHub reviews identified two concrete source problems:
   paths, preserves upstream reserved filenames under a `.source` name, and
   makes GitHub publication dependent on the operator's destination, visibility,
   and exact-file authorization.
+- The subsequent 1.0.1 scan identified newline-containing source filenames
+  splitting into separate copy inputs, allowing an unrelated local file to be
+  included. A fourth actual-generator regression reproduced that leak. Source
+  names containing TSV control characters are now refused before output changes;
+  enumeration uses NUL delimiters and every copy input must belong to the source
+  root.
 
 The offline generator regressions exercise the actual scaffold and generator:
 ordinary document bytes and upstream index preservation, an external-file
 sentinel behind a source-index symlink, and an external-directory sentinel
 behind a symlinked output parent. They failed against the old Git blobs and
-passed against the corrected source. Run them on POSIX with:
+passed against the corrected source.
+The additional newline-path case failed against 1.0.1 while the earlier three
+passed; all four pass after the follow-up repair. Run them on POSIX with:
 
 ```bash
 python3 tests/test_docs_skill_builder_security.py

@@ -163,6 +163,8 @@ from pathlib import Path
 
 source = Path(sys.argv[1]).resolve(strict=True)
 for relative in sys.argv[2:]:
+    if any(character in relative for character in '\t\r\n'):
+        sys.exit("unsupported_documentation_path")
     selected = source
     for part in Path(relative).parts:
         selected = selected / part
@@ -170,6 +172,8 @@ for relative in sys.argv[2:]:
             sys.exit(f"symlinked_documentation_source: {relative}")
     if selected.is_dir():
         for directory, directories, files in os.walk(selected, followlinks=False):
+            if any(character in name for name in directories + files for character in '\t\r\n'):
+                sys.exit(f"unsupported_documentation_filename: {relative}")
             if any((Path(directory) / name).is_symlink() for name in directories + files):
                 sys.exit(f"symlinked_documentation_source: {relative}")
 PY
@@ -310,6 +314,10 @@ process_file() {
     local dest_hash
     local size
 
+    case "$src_file" in
+        "$SOURCE_DIR"/*) ;;
+        *) echo "documentation_source_outside_root" >&2; exit 1 ;;
+    esac
     if [ -L "$src_file" ]; then
         echo "symlinked_documentation_source: $rel_path" >&2
         exit 1
@@ -351,6 +359,7 @@ process_file() {
 copy_path() {
     local rel="$1"
     local src="$SOURCE_DIR/$rel"
+    local file_list="$TMP_DIR/documentation-files"
 
     if [ ! -e "$src" ] && [ ! -L "$src" ]; then
         print_warn "Missing docs path: $rel"
@@ -376,10 +385,19 @@ copy_path() {
             ! -path "*/videos/*" \
             ! -path "*/screenshots/*" \
             ! -path "*/previews/*" \
-            ! -path "*/static/*" | sort | while read -r file; do
+            ! -path "*/static/*" -print0 > "$file_list"
+        python3 - "$file_list" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+entries = sorted(entry for entry in path.read_bytes().split(b'\0') if entry)
+path.write_bytes(b''.join(entry + b'\0' for entry in entries))
+PY
+        while IFS= read -r -d '' file; do
             rel_file="${file#$SOURCE_DIR/}"
             process_file "$file" "$rel_file"
-        done
+        done < "$file_list"
     else
         process_file "$src" "$rel"
     fi

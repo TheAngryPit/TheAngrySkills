@@ -49,6 +49,7 @@ For arbitrary repositories, the only intended difference from Hindsight is a req
 - Do not install globally outside Codex unless explicitly requested.
 - Keep generated source and documentation local unless the operator authorizes publication covering the destination repository, its visibility, and the exact reviewed files. Portable installation does not by itself authorize creating a repository or uploading its contents. Reuse existing authorization within that scope.
 - Reject selected source symlinks and paths that escape the source tree. Refuse symlinked output directories before replacing generated files; source hashes alone do not enforce containment.
+- Reject source names containing tabs or line breaks before generation because they cannot be represented in the TSV manifests. Enumerate selected files with NUL delimiters, preserving ordinary spaces and backslashes without splitting paths into unrelated inputs.
 
 ## Target Shape
 

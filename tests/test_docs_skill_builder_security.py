@@ -41,12 +41,16 @@ class DocsSkillBuilderSecurityTests(unittest.TestCase):
     def test_regular_documents_and_reserved_index_preserve_original_bytes(self):
         original = b'Original upstream index.\n'
         (self.source / 'INDEX.md').write_bytes(original)
-        self.scaffold(['README.md', 'INDEX.md'])
+        docs = self.source / 'docs'
+        docs.mkdir()
+        (docs / 'guide with spaces.md').write_bytes(b'Nested documentation.\n')
+        self.scaffold(['README.md', 'INDEX.md', 'docs'])
         result = self.generate()
         self.assertEqual(result.returncode, 0, result.stderr)
         references = self.output / 'skills/fixture-docs/references'
         self.assertEqual((references / 'README.md').read_bytes(), b'Synthetic documentation.\n')
         self.assertEqual((references / 'INDEX.source.md').read_bytes(), original)
+        self.assertEqual((references / 'docs/guide with spaces.md').read_bytes(), b'Nested documentation.\n')
         self.assertIn('Documentation References', (references / 'INDEX.md').read_text())
 
     def test_symlinked_index_cannot_overwrite_an_external_file(self):
@@ -69,6 +73,23 @@ class DocsSkillBuilderSecurityTests(unittest.TestCase):
         result = self.generate()
         self.assertTrue(protected.is_file())
         self.assertEqual(protected.read_bytes(), b'Preserve existing outside state.\n')
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_newline_in_a_source_filename_cannot_import_an_external_file(self):
+        docs = self.source / 'docs'
+        docs.mkdir()
+        (docs / 'innocent.md').write_text('Ordinary selected documentation.\n')
+        private = self.root / 'private.txt'
+        private_bytes = b'Synthetic private file outside the source.\n'
+        private.write_bytes(private_bytes)
+        crafted = docs / ('innocent.md\n' + str(private))
+        crafted.parent.mkdir(parents=True)
+        crafted.write_text('Selected file with a deceptive name.\n')
+        self.scaffold(['docs'])
+        result = self.generate()
+        references = self.output / 'skills/fixture-docs/references'
+        copied_private_files = [p for p in references.rglob('*') if p.is_file() and p.read_bytes() == private_bytes]
+        self.assertEqual(copied_private_files, [])
         self.assertNotEqual(result.returncode, 0)
 
 

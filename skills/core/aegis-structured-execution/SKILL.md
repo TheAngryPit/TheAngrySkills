@@ -14,7 +14,7 @@ Use this skill for broad, risky, multi-phase, or proof-heavy work where executio
 2. Split work into phases only when trust boundaries, proof modes, or execution surfaces differ.
 3. Keep final synthesis in the coordinator; helper agents may gather evidence but do not define final truth.
 4. Separate current state, target state, validated proof, unresolved gaps, and drift.
-5. Follow `aegis-html-ledger` throughout execution: record the active work before it begins, keep its actual state and plan changes current, and maintain the project ledger with its iCloud copy. Preserve an exact resume point even while work is in progress.
+5. Follow `aegis-html-ledger` throughout execution: record the active work before it begins and keep its actual state, plan changes, and exact resume point current in the local project ledger. Cloud copying is optional and requires authorization covering this project's records, the destination account and folder, and the content scope. Reuse valid existing authorization; selecting this skill alone does not grant it. With no such authorization, keep the ledger local, mark cloud sync as not enabled, and continue the work. Never copy credentials, private conversations, personal records, or restricted project content by implication.
 6. Use completion messages through the established coordination route alongside the ledger to report the outcome and remaining work.
 7. Report completion only at the strongest proven level: `implemented`, `code_proven`, `test_proven`, `runtime_proven`, or `end_to_end_proven`.
 

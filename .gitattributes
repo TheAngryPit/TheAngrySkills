@@ -1,3 +1,5 @@
 # Upstream Markdown hard line breaks are part of the hash-checked source.
 sources/cursor-plugins/upstream-tree/** whitespace=-blank-at-eol,-blank-at-eof
 sources/cursor-plugins/snapshot/** whitespace=-blank-at-eol,-blank-at-eof
+skills/engineering/docs-skill-builder/scripts/*.sh text eol=lf
+skills/engineering/docs-skill-builder/templates/*.sh.tmpl text eol=lf

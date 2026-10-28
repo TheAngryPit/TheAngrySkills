@@ -12,6 +12,16 @@ SKILL_DIR="$ROOT_DIR/skills/__SKILL_NAME__"
 REFS_DIR="$SKILL_DIR/references"
 DOC_PATHS=(__DOC_PATHS__)
 
+for rel in "${DOC_PATHS[@]}"; do
+    case "$rel" in
+        ""|/*|..|../*|*/../*|*/..) echo "unsafe_doc_path: $rel" >&2; exit 1 ;;
+    esac
+done
+if [ -L "$ROOT_DIR/skills" ] || [ -L "$SKILL_DIR" ]; then
+    echo "symlinked_output_directory" >&2
+    exit 1
+fi
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -146,6 +156,24 @@ else
     HEAD_COMMIT="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
 fi
 
+python3 - "$SOURCE_DIR" "${DOC_PATHS[@]}" <<'PY'
+import os
+import sys
+from pathlib import Path
+
+source = Path(sys.argv[1]).resolve(strict=True)
+for relative in sys.argv[2:]:
+    selected = source
+    for part in Path(relative).parts:
+        selected = selected / part
+        if selected.is_symlink():
+            sys.exit(f"symlinked_documentation_source: {relative}")
+    if selected.is_dir():
+        for directory, directories, files in os.walk(selected, followlinks=False):
+            if any((Path(directory) / name).is_symlink() for name in directories + files):
+                sys.exit(f"symlinked_documentation_source: {relative}")
+PY
+
 # Clean and recreate skill directory so removed upstream pages cannot survive
 # as stale local references after a moved or reduced documentation tree.
 rm -rf "$SKILL_DIR"
@@ -158,10 +186,6 @@ VERIFY_MANIFEST="$REFS_DIR/MIRROR-VERIFY.tsv"
 
 sha256_file() {
     shasum -a 256 "$1" | awk '{print $1}'
-}
-
-sha256_text() {
-    printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
 }
 
 should_mirror_file() {
@@ -254,7 +278,7 @@ neutralized_mirror_path() {
     # Keep their source bytes, but neutralize the mirror path so references
     # cannot become active configuration by recursive discovery.
     case "$basename_part" in
-        SKILL.md|AGENTS.md|CLAUDE.md|GEMINI.md|QWEN.md|CONTEXT.md|COPILOT_INSTRUCTIONS.md|INSTRUCTIONS.md|RULES.md)
+        SKILL.md|AGENTS.md|CLAUDE.md|GEMINI.md|QWEN.md|CONTEXT.md|COPILOT_INSTRUCTIONS.md|INSTRUCTIONS.md|RULES.md|INDEX.md|SOURCE-MANIFEST.tsv|MIRROR-VERIFY.tsv)
             mirror_path="$(mark_source_path "$mirror_path")"
             ;;
         package.json|skillpack.json|manifest.json|*.plugin.json|mcp.json|claude_desktop_config.json)
@@ -286,6 +310,11 @@ process_file() {
     local dest_hash
     local size
 
+    if [ -L "$src_file" ]; then
+        echo "symlinked_documentation_source: $rel_path" >&2
+        exit 1
+    fi
+
     if ! should_mirror_file "$src_file" "$rel_path"; then
         print_warn "Skipping non-documentation file: $rel_path"
         return
@@ -301,17 +330,13 @@ process_file() {
     print_info "Copying verbatim: $rel_path -> $mirror_path"
     cp -P "$src_file" "$dest_file"
 
-    if [ -L "$src_file" ]; then
-        src_target="$(readlink "$src_file")"
-        dest_target="$(readlink "$dest_file")"
-        src_hash="$(sha256_text "symlink:$src_target")"
-        dest_hash="$(sha256_text "symlink:$dest_target")"
-        size="$(printf '%s' "$src_target" | wc -c | tr -d ' ')"
-    else
-        src_hash="$(sha256_file "$src_file")"
-        dest_hash="$(sha256_file "$dest_file")"
-        size="$(wc -c < "$src_file" | tr -d ' ')"
+    if [ -L "$dest_file" ]; then
+        echo "symlinked_documentation_copy: $rel_path" >&2
+        exit 1
     fi
+    src_hash="$(sha256_file "$src_file")"
+    dest_hash="$(sha256_file "$dest_file")"
+    size="$(wc -c < "$src_file" | tr -d ' ')"
 
     printf '%s\t%s\t%s\t%s\n' "$src_hash" "$size" "$rel_path" "$mirror_path" >> "$SOURCE_MANIFEST"
     if [ "$src_hash" = "$dest_hash" ]; then

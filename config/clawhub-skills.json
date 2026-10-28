@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "publisher": "theangrypit",
+  "sourceRepository": "TheAngryPit/TheAngrySkills",
+  "skills": [
+    {"name":"continuity-handoff","path":"skills/engineering/continuity-handoff","slug":"continuity-handoff","categories":["agents","knowledge"]},
+    {"name":"docs-skill-builder","path":"skills/engineering/docs-skill-builder","slug":"docs-skill-builder","categories":["development","knowledge"]},
+    {"name":"openclaw-custom-build-validation","path":"skills/engineering/openclaw-custom-build-validation","slug":"custom-build-validation","categories":["development","operations"]},
+    {"name":"vanilla-first","path":"skills/engineering/vanilla-first","slug":"vanilla-first","categories":["development"]},
+    {"name":"writing-for-astra","path":"skills/engineering/writing-for-astra","slug":"writing-for-astra","categories":["agents","communication"]},
+    {"name":"writing-ticks","path":"skills/engineering/writing-ticks","slug":"writing-ticks","categories":["communication"]},
+    {"name":"aegis-communication-discipline","path":"skills/core/aegis-communication-discipline","slug":"aegis-communication-discipline","categories":["communication"]},
+    {"name":"aegis-html-ledger","path":"skills/core/aegis-html-ledger","slug":"aegis-html-ledger","categories":["operations","knowledge"]},
+    {"name":"aegis-structured-execution","path":"skills/core/aegis-structured-execution","slug":"aegis-structured-execution","categories":["operations","agents"]},
+    {"name":"karpathy-agentic-guidelines-q8","path":"skills/core/karpathy-agentic-guidelines-q8","slug":"karpathy-agentic-guidelines-q8","categories":["development"]},
+    {"name":"model-capability-router","path":"skills/core/model-capability-router","slug":"model-capability-router","categories":["agents"]},
+    {"name":"model-routing-preset-builder","path":"skills/core/model-routing-preset-builder","slug":"model-routing-preset-builder","categories":["agents","development"]}
+  ],
+  "existingExternalListings": [
+    {"slug":"video-frame-review","categories":["creative"]}
+  ]
+}

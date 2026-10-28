@@ -7,7 +7,9 @@ description: "Use when the operator explicitly wants to customise the native Cod
 
 Read the installed `model-capability-router` as the single baseline. It
 recommends GPT-6.1 Sol High for coordination, GPT-6 Astra Medium with XHigh
-reserved for exceptional reasoning, and GPT-6 Luna High/XHigh/Max. These are
+reserved for exceptional reasoning, GPT-6.1 Terra for visual and application
+work using the router's workload-specific efforts (High as the starting point
+for professional tool work), and GPT-6 Luna High/XHigh/Max. These are
 policy recommendations; they do not establish or change the actual home
 configuration. Preserve an explicit native effort selection, including Sol
 Low; High is the shared recommendation, not a forced configuration change.
@@ -27,8 +29,9 @@ default only for a new setup with no existing role choices.
    ownership, permissions, proof and compute selection separate.
 3. For this operator, use the recommended palette above when the exact native
    channel supports it. Luna Max is available when justified, not an Ultra mode
-   or a new paid route. Current GPT-6.1 capability, API pricing and benchmark
-   evidence is in the router's `references/gpt61-sol-20260929.md`; historical GPT-6
+   or a new paid route. Terra capability and effort/cost/latency evidence is in
+   the router's `references/gpt61-terra-20261028.md`; the Sol launch evidence is
+   in `references/gpt61-sol-20260929.md`; historical GPT-6
    evidence remains in `references/gpt6-20260922.md`. Token prices and benchmark
    costs do not prove lower cost per completed Codex outcome.
 4. Author changes in the normal TheAngrySkills source repository when requested

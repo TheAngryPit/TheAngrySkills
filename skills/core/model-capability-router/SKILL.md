@@ -45,12 +45,27 @@ or a required host/cloud boundary.
 | Recommended coordination profile | `gpt-6.1-sol` | `high` | Recommended for sustained coordination, integration and open-ended execution when available; verify the actual host selection separately. |
 | Planning, review and difficult decisions | `gpt-6-astra` | `medium` | Habitual Astra setting when its judgment helps. |
 | Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
+| Visual detection and identification | `gpt-6.1-terra` | `low` | Locate or identify elements in an image when additional reasoning does not improve the required result. |
+| Visual interpretation | `gpt-6.1-terra` | `medium` | Interpret images, charts, drawings and screenshots. |
+| Demanding visual extraction | `gpt-6.1-terra` | `high` | Difficult OCR, structured fields, text localization and demanding counting. |
+| Multistep computer use | `gpt-6.1-terra` | `high` | Complete desktop or browser operations with several steps and verify the resulting state; use `xhigh` when the quality gain justifies the added cost and wait. |
+| Professional work with tools | `gpt-6.1-terra` | `high` | Starting point for tool-based work with documents, spreadsheets, forms and applications that produces a verifiable deliverable. |
+| Exceptional Terra execution | `gpt-6.1-terra` | `max` | Use when demonstrated quality gains justify the additional consumption and latency; not a habitual default. |
 | Bounded subtask | `gpt-6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
 | Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
 | Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
 
 GPT-6.1 Sol high is also available for demanding coding. Choose directly for
 the work rather than forcing an Astra escalation.
+
+Prefer Terra when visual interpretation or operating applications is central
+to the work. Keep Luna for suitable bounded execution, Sol for coordination,
+integration and complex coding, and Astra when difficult judgment warrants it.
+A workflow involving a screenshot does not by itself require Astra. Select
+effort for the particular workload and the required accuracy, cost and latency;
+do not apply one effort to every Terra task or infer that more reasoning always
+improves the result. These profiles do not override a fixed specialist binding
+or the operator's selected main model and effort.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
@@ -65,13 +80,15 @@ Luna Max is available when justified by the work; it requires no repeated
 approval merely for that effort. Choose effort for the workload; higher effort does not guarantee better results.
 GPT-6 supports cache-preserving effort updates through its documented mechanism;
 do not assume every client uses it or that cache is shared across models or tasks.
-Current GPT-6.1 capability, pricing and benchmark evidence is in
+For the Terra workload and effort tradeoffs behind these profiles, consult
+[references/gpt61-terra-20261028.md](references/gpt61-terra-20261028.md).
+The GPT-6.1 Sol launch evidence is in
 [references/gpt61-sol-20260929.md](references/gpt61-sol-20260929.md). The
 historical GPT-6 evidence remains in
 [references/gpt6-20260922.md](references/gpt6-20260922.md). These profiles do
 not authorise new spending routes, external actions or additional access. Astra
-Max and Ultra are outside the habitual palette. Terra and other supported
-models remain available when selected by the operator or bound to a specialist.
+Max and Ultra are outside the habitual palette. Other supported models remain
+available when selected by the operator or bound to a specialist.
 Honour explicit selections and fixed bindings, including those outside this
 palette.
 

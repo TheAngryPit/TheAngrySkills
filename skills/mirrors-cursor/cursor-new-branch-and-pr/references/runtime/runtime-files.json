@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "b4b92f7ee4eaf6bc9129cd9ba89f7c50f7e799ba121849e2c56feeb9f9bf41fb",
+    "native-codex.md": "b4b92f7ee4eaf6bc9129cd9ba89f7c50f7e799ba121849e2c56feeb9f9bf41fb",
+    "original-codex.txt": "b4b92f7ee4eaf6bc9129cd9ba89f7c50f7e799ba121849e2c56feeb9f9bf41fb",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-new-branch-and-pr"
+}

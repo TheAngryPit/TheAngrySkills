@@ -79,3 +79,15 @@ def test_all_fourteen_profiles_have_portable_delivery():
     assert all('native registration' in p for p in profiles.values())
     assert 'parent owns' in profiles['poteto-agent'].lower()
     assert 'Do not spawn subagents' in profiles['advisor-subagent']
+
+
+def test_changed_canonical_contract_is_detected(tmp_path,monkeypatch):
+    target,text=package(tmp_path)
+    runtime.render_runtime_package(target,{'published_name':target.name},text,contracts())
+    read=runtime._read_owned
+    def changed(root,path):
+        value=read(root,path)
+        return value+b'changed contract' if path.endswith('/t3.md') else value
+    monkeypatch.setattr(runtime,'_read_owned',changed)
+    with pytest.raises(ValueError,match='runtime package drift'):
+        runtime.verify_runtime_packages(tmp_path,contracts())

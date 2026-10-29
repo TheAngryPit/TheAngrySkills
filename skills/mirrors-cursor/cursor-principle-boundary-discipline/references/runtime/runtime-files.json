@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "987e55529459045579bc2530a8b687d4dae2bbc09ba11bc43c1e01f9b44866ae",
+    "native-codex.md": "987e55529459045579bc2530a8b687d4dae2bbc09ba11bc43c1e01f9b44866ae",
+    "original-codex.txt": "987e55529459045579bc2530a8b687d4dae2bbc09ba11bc43c1e01f9b44866ae",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-boundary-discipline"
+}

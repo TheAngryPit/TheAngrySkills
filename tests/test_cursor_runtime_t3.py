@@ -25,7 +25,7 @@ def test_t3_writer_uses_tool_isolation_and_no_thread_fallback():
 def test_all_native_profile_assets_are_unchanged_and_all_portable_profiles_shipped():
     coverage=json.loads((BASE/'agent-coverage.json').read_text())['agents']
     shipped=set()
-    for p in (ROOT/'skills/mirrors-cursor').glob('*/references/runtime/package.json'):
+    for p in (ROOT/'skills/mirrors-cursor').glob('*/references/runtime/runtime-files.json'):
         shipped.update(json.loads(p.read_text())['personas'])
     assert shipped=={x['native_name'] for x in coverage.values()}
     for value in coverage.values():

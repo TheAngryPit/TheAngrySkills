@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "10e4a6a926483e7b95fdf72994dbe655f568425b1992e359390e6136d8b4575e",
+    "native-codex.md": "10e4a6a926483e7b95fdf72994dbe655f568425b1992e359390e6136d8b4575e",
+    "original-codex.txt": "1d0861318b4b74edf08f6fee49104f765009c8d4e64338a72c59d78a4155305b",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-poteto-help"
+}

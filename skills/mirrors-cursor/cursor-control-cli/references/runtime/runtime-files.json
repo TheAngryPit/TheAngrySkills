@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "fc0208c2f2d52ca5247676b234da6c4e24f5d44187195245d7f6914f673c7918",
+    "native-codex.md": "fc0208c2f2d52ca5247676b234da6c4e24f5d44187195245d7f6914f673c7918",
+    "original-codex.txt": "fc0208c2f2d52ca5247676b234da6c4e24f5d44187195245d7f6914f673c7918",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-control-cli"
+}

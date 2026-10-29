@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "7bd7a5aa1e09f013f6fb3e13287806ab974cc69613cc581351cc5fa095e81518",
+    "native-codex.md": "7bd7a5aa1e09f013f6fb3e13287806ab974cc69613cc581351cc5fa095e81518",
+    "original-codex.txt": "7bd7a5aa1e09f013f6fb3e13287806ab974cc69613cc581351cc5fa095e81518",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-never-block-on-the-human"
+}

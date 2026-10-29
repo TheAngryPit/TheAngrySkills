@@ -1,0 +1,22 @@
+{
+  "files": {
+    "method.md": "1dec54afa44b530465ad931072fe2ebb5a17f52b63bb2bc96579670ebc6ca8fd",
+    "native-codex.md": "1dec54afa44b530465ad931072fe2ebb5a17f52b63bb2bc96579670ebc6ca8fd",
+    "original-codex.txt": "1dec54afa44b530465ad931072fe2ebb5a17f52b63bb2bc96579670ebc6ca8fd",
+    "personas/compatibility-scan-review.md": "e9e14fa1b35222847c92e41e0c79d5b0d160a3c5f979f95d6d5ea23354218e8e",
+    "personas/docs-reliability-review.md": "a55e00cfcc6961d85a72e60912c08592717106363c91474f57058907b14f2071",
+    "personas/startup-review.md": "bf150d8f3e45e712ef296115b96e2f688ea4cfb961e460273227facff0684808",
+    "personas/validation-review.md": "32f81ebc1b53974a4509c0c5383a64564d9f5dc5f8e49420166a2b8932e79107",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "compatibility-scan-review": "personas/compatibility-scan-review.md",
+    "docs-reliability-review": "personas/docs-reliability-review.md",
+    "startup-review": "personas/startup-review.md",
+    "validation-review": "personas/validation-review.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-check-agent-compatibility"
+}

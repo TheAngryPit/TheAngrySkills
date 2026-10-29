@@ -20,6 +20,17 @@ family = importlib.util.module_from_spec(family_spec)
 family_spec.loader.exec_module(family)
 
 
+def verify_runtime_contracts():
+    spec = importlib.util.spec_from_file_location('cursor_runtime_contracts', ROOT / 'scripts/cursor_runtime_contracts.py')
+    runtime = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runtime)
+    manifest = json.loads((BASE / 'manifest.json').read_text())
+    contracts = runtime.load_contracts(BASE / 'runtime-adapters/compatibility.json', manifest['skills'])
+    runtime.verify_runtime_packages(sync.DEST, contracts)
+    live = any(item['t3']['evidence'] == 'live' for group in ('skills', 'profiles') for item in contracts[group].values())
+    return {'skills': len(contracts['skills']), 'profiles': len(contracts['profiles']), 'live_workflows_claimed': live}
+
+
 def verify(write_held=False):
     manifest = json.loads((BASE / 'manifest.json').read_text())
     full = json.loads((BASE / 'full-tree.json').read_text())
@@ -108,6 +119,8 @@ def verify(write_held=False):
                 missing.append(f'{entry["published_name"]}: {target}')
     if missing:
         raise ValueError('unresolved cross-pack links: ' + '; '.join(missing))
+    if (BASE / 'runtime-adapters/compatibility.json').exists():
+        verify_runtime_contracts()
     return {'skills': len(entries), 'published': sum(e['publish'] for e in entries),
             'held_adapted': sum(bool(e.get('excluded_from_mirror')) for e in entries),
             'agents_mapped': len(coverage), 'unresolved_links': 0,

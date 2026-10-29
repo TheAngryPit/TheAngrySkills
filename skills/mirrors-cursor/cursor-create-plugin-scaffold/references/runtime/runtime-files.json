@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "44d09da6b1ae8348ee93367c08652dc3fb709887ed94294881febe466d6d8a1e",
+    "native-codex.md": "44d09da6b1ae8348ee93367c08652dc3fb709887ed94294881febe466d6d8a1e",
+    "original-codex.txt": "44d09da6b1ae8348ee93367c08652dc3fb709887ed94294881febe466d6d8a1e",
+    "personas/plugin-architect.md": "c07051b08468450a6ab3e7186321cb3bf38dd2a67cb4e430e894400034c7df82",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "plugin-architect": "personas/plugin-architect.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-create-plugin-scaffold"
+}

@@ -1,0 +1,18 @@
+{
+  "files": {
+    "method.md": "53e9289ec20c3fe2632f6297cf77e849d90e3ba4e63389715ff7e3bd5b61a1eb",
+    "native-codex.md": "53e9289ec20c3fe2632f6297cf77e849d90e3ba4e63389715ff7e3bd5b61a1eb",
+    "original-codex.txt": "664c10191db464a463809c1462453e7a6e2ee4e8abb264166b45c8ceb4cfeeb6",
+    "personas/thermo-nuclear-code-quality-review-subagent.md": "d45423add7160d8e0dcf4a740d3b72af277f49bb5ea45b9981ae4ee9d9fa2997",
+    "personas/thermo-nuclear-review-subagent.md": "f26189920cb40018f5098252f602e39d6e0dcb88ea647abfda8074daafb4bf54",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "thermo-nuclear-code-quality-review-subagent": "personas/thermo-nuclear-code-quality-review-subagent.md",
+    "thermo-nuclear-review-subagent": "personas/thermo-nuclear-review-subagent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-thermos"
+}

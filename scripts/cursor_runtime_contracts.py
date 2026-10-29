@@ -197,7 +197,7 @@ def render_runtime_package(target: Path, entry: dict, rendered_codex: str, contr
     record = {'schema_version': 1, 'skill': name, 'native_base': '../..',
               'personas': {role: 'personas/' + role + '.md' for role in selected},
               'files': {key: hashlib.sha256(value).hexdigest() for key, value in payloads.items()}}
-    payloads['package.json'] = (json.dumps(record, indent=2, sort_keys=True) + '\n').encode()
+    payloads['runtime-files.json'] = (json.dumps(record, indent=2, sort_keys=True) + '\n').encode()
     folder = target / 'references/runtime'
     if folder.exists() or folder.is_symlink():
         raise ValueError('runtime package output collision: ' + name)
@@ -229,17 +229,30 @@ def render_runtime_package(target: Path, entry: dict, rendered_codex: str, contr
 
 def verify_runtime_packages(root: Path, contracts: dict) -> None:
     import hashlib
-    for name in contracts['skills']:
+    source_root = Path(__file__).resolve().parents[1]
+    profiles = portable_profiles(contracts)
+    for name, skill in contracts['skills'].items():
         folder = root / name / 'references/runtime'
         if not (root / name).exists():
             continue
-        record_path = folder / 'package.json'
+        record_path = folder / 'runtime-files.json'
         if not record_path.is_file() or record_path.is_symlink():
             raise ValueError('runtime package drift: missing metadata ' + name)
         record = json.loads(record_path.read_text(), object_pairs_hook=_object_pairs)
         if record.get('skill') != name or record.get('schema_version') != 1:
             raise ValueError('runtime package drift: identity ' + name)
         expected = record.get('files', {})
+        personas = {role: 'personas/' + role + '.md' for role in skill.get('profiles', [])}
+        required = {'selection.md', 't3.md', 'native-codex.md', 'original-codex.txt', 'method.md', *personas.values()}
+        if set(expected) != required or record.get('personas') != personas:
+            raise ValueError('runtime package drift: contract coverage ' + name)
+        for file in ('selection.md', 't3.md'):
+            canonical = _read_owned(source_root, 'sources/cursor-plugins/runtime-adapters/' + file)
+            if expected[file] != hashlib.sha256(canonical).hexdigest():
+                raise ValueError('runtime package drift: canonical input ' + name)
+        for role, relative in personas.items():
+            if expected[relative] != hashlib.sha256(profiles[role].encode()).hexdigest():
+                raise ValueError('runtime package drift: persona ' + name)
         actual = {}
         for p in folder.rglob('*'):
             if p.is_symlink():

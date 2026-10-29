@@ -1,0 +1,18 @@
+{
+  "files": {
+    "method.md": "8b7835ef1a66d899a78642b6aafd33d1b6e9059f3ce7f0f29ce4b929d1824461",
+    "native-codex.md": "8b7835ef1a66d899a78642b6aafd33d1b6e9059f3ce7f0f29ce4b929d1824461",
+    "original-codex.txt": "c87ecfbab42ef7add0b28fd08df2345ac4d0b671eb62dc3aac5025d8f5a30130",
+    "personas/comment-sicko.md": "adb0393023d7f3b66a5ac2cc0fac9edf379ab9b7d6c5ca98b2151fdc5d4b8747",
+    "personas/poteto-agent.md": "f88e4210f53ae7b93e6fda4536046b1a871004bc77b5d4a060e6811096865352",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "comment-sicko": "personas/comment-sicko.md",
+    "poteto-agent": "personas/poteto-agent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-poteto-mode"
+}

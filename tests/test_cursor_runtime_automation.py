@@ -47,3 +47,12 @@ def test_compatibility_document_separates_proof_and_future_runtime():
     assert 'Hermes' in text and 'ACP' in text
     assert 'not a live workflow certificate' in text
     assert 'Rollback' in text
+
+
+def test_baseline_checks_do_not_need_git_objects(monkeypatch):
+    def unavailable(*args, **kwargs):
+        raise subprocess.CalledProcessError(128, args[0], stderr=b'baseline commit is not in a shallow checkout')
+
+    monkeypatch.setattr(subprocess, 'check_output', unavailable)
+    test_runtime_generation_preserves_upstream_ownership()
+    test_no_profile_native_bytes_are_replaced()

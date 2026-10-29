@@ -37,7 +37,7 @@ Restore the previous reviewed adapter input and generator revision, regenerate t
 
 ## Review and refresh protection
 
-The independent Astra review identified three Important issues and one malformed-target issue, regraded Important. All four were addressed in one regression-tested fix pass; no second approval verdict is claimed. The final suite passed473 tests, with2 skips and13 subtests. The corrected clean-export security comparison records13 retained-content findings, no new blocked skills, and unchanged verdicts. The earlier working-tree17-signal conclusion was withdrawn because it included four ignored bytecode files.
+The independent Astra review identified three Important issues and one malformed-target issue, regraded Important. All four were addressed in one regression-tested fix pass; no second approval verdict is claimed. The final suite passed473 tests, with 2 skips and 13 subtests. The corrected clean-export security comparison records13 retained-content findings, no new blocked skills, and unchanged verdicts. The earlier working-tree17-signal conclusion was withdrawn because it included four ignored bytecode files.
 
 Coverage now binds each source identity to the reviewed effective Codex body and support-file digest. A source refresh invalidates that review until its operations and required personas are inspected and the new digest is deliberately accepted. Do not blindly recompute hashes to silence drift. Generated runtime files and generated license/provenance notices are excluded from that workflow digest; they retain separate package, source and license checks.
 
@@ -51,4 +51,4 @@ A full read-only Investigation playbook ran through How and parent runtime verif
 
 The first published CI run exposed an undeclared Git-history dependency in two preservation tests. They now exercise real generation in a source-only fixture and compare the complete protected inputs before and after. Native profile bytes must also match current accepted provenance. No workflow, checkout depth or update policy changed. This avoids freezing future reviewed upstream inputs to a historical commit. The [regression failure](../reports/cursor-runtime-live-20261029/historyless-red.log) and [focused pass](../reports/cursor-runtime-live-20261029/historyless-green.log) record the correction.
 
-After this correction, the local full suite passed474 tests, with2 skips and13 subtests. The original473-test logs describe the earlier implementation stage. GitHub CI must validate the updated PR head independently.
+After this correction, the local full suite passed 474 tests, with 2 skips and 13 subtests. The original 473-test logs describe the earlier implementation stage. GitHub CI must validate the updated PR head independently.

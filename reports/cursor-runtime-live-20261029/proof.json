@@ -164,6 +164,7 @@
       "passed": 474,
       "skipped": 2,
       "subtests_passed": 13
-    }
+    },
+    "public_log_normalization": "Absolute task path replaced by <source>; diagnostic trailing whitespace removed. Original raw receipt retained locally."
   }
 }

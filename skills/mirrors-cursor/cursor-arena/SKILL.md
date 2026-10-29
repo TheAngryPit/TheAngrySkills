@@ -3,6 +3,12 @@ name: cursor-arena
 description: "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 This published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a bounded local design Arena. Before starting, require at least two authorized, isolated candidates and an available independent judge; retain the same rubric and verification contract. Outside that proven scope, report the workflow as unavailable unless a separate task-specific proof supports it. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.

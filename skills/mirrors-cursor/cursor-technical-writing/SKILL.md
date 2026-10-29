@@ -3,6 +3,12 @@ name: cursor-technical-writing
 description: "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex adaptation
 
 Apply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.

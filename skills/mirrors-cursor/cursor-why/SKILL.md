@@ -3,6 +3,12 @@ name: cursor-why
 description: "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers authorized read-only sources through native tools, CLI or MCP and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 Use the connectors and read-only scopes actually available in this Codex task. Preserve the seven-category coverage map, source investigators, null results, epistemic framework, citation checks and synthesis. Native model/effort follows the standing `model-capability-router`; delegation does not grant source or write authority. The pinned Cursor skill says readonly mode strips MCP access; current official Cursor Subagents documentation describes readonly as restricting writes and separately says local subagents inherit MCP tools. Treat the source claim as unverified policy, not a platform contract or a reason to grant Codex write access.

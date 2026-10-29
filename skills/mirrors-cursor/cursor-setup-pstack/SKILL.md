@@ -3,6 +3,12 @@ name: cursor-setup-pstack
 description: Configure model and effort choices for pstack roles through the native Codex routing policy. Use for $cursor-setup-pstack, pstack model setup, reasoning budget, or changing the configured role choices.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 # Setup pstack for Codex
 
 Use the standing `model-capability-router` as the sole authority for model, effort, delegation and total-cost decisions. This skill maps pstack roles onto native Codex capabilities when the operator asks for setup; it does not create a second routing policy, switch the active task model, write a Cursor rule, or start agents merely to configure them.

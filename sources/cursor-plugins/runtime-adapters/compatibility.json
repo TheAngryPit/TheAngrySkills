@@ -56,7 +56,10 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "advisor-subagent"
+      ]
     },
     "cursor-check-agent-compatibility": {
       "source_path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md",
@@ -107,7 +110,13 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "compatibility-scan-review",
+        "docs-reliability-review",
+        "startup-review",
+        "validation-review"
+      ]
     },
     "cursor-cli-for-agents": {
       "source_path": "cli-for-agent/skills/cli-for-agents/SKILL.md",
@@ -227,7 +236,10 @@
           "delegate": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "agents-memory-updater"
+      ]
     },
     "cursor-create-plugin-scaffold": {
       "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
@@ -278,7 +290,10 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "plugin-architect"
+      ]
     },
     "cursor-review-plugin-submission": {
       "source_path": "create-plugin/skills/review-plugin-submission/SKILL.md",
@@ -836,7 +851,10 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "ci-watcher"
+      ]
     },
     "cursor-make-pr-easy-to-review": {
       "source_path": "cursor-team-kit/skills/make-pr-easy-to-review/SKILL.md",
@@ -1202,7 +1220,10 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "thermo-nuclear-code-quality-review"
+      ]
     },
     "cursor-verify-this": {
       "source_path": "cursor-team-kit/skills/verify-this/SKILL.md",
@@ -1538,7 +1559,10 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "dyl-agent"
+      ]
     },
     "cursor-dyl-mode": {
       "source_path": "dyl-stack/skills/dyl-mode/SKILL.md",
@@ -1601,7 +1625,11 @@
           "delegate": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "dyl-agent",
+        "dyl-agent"
+      ]
     },
     "cursor-dyl-ready-pr": {
       "source_path": "dyl-stack/skills/dyl-ready-pr/SKILL.md",
@@ -1664,7 +1692,11 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "dyl-agent",
+        "dyl-agent"
+      ]
     },
     "cursor-dyl-review": {
       "source_path": "dyl-stack/skills/dyl-review/SKILL.md",
@@ -1739,7 +1771,11 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "dyl-agent",
+        "dyl-agent"
+      ]
     },
     "cursor-principle-the-algorithm": {
       "source_path": "dyl-stack/skills/principle-the-algorithm/SKILL.md",
@@ -1790,7 +1826,10 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "dyl-agent"
+      ]
     },
     "cursor-orchestrate": {
       "source_path": "orchestrate/skills/orchestrate/SKILL.md",
@@ -2288,7 +2327,10 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-arena": {
       "source_path": "pstack/skills/arena/SKILL.md",
@@ -2351,7 +2393,10 @@
           "delegate": "deferred",
           "worktree": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-automate-me": {
       "source_path": "pstack/skills/automate-me/SKILL.md",
@@ -2870,7 +2915,10 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-in-your-own-words": {
       "source_path": "pstack/skills/in-your-own-words/SKILL.md",
@@ -2984,7 +3032,10 @@
           "delegate": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-ketchup": {
       "source_path": "pstack/skills/ketchup/SKILL.md",
@@ -3230,7 +3281,10 @@
           "delegate": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "comment-sicko"
+      ]
     },
     "cursor-poteto-help": {
       "source_path": "pstack/skills/poteto-help/SKILL.md",
@@ -3392,7 +3446,11 @@
           "watch-pr": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "comment-sicko",
+        "poteto-agent"
+      ]
     },
     "cursor-principle-attack-the-premise": {
       "source_path": "pstack/skills/principle-attack-the-premise/SKILL.md",
@@ -4766,7 +4824,10 @@
           "delegate": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-setup-pstack": {
       "source_path": "pstack/skills/setup-pstack/SKILL.md",
@@ -5012,7 +5073,10 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-tdd": {
       "source_path": "pstack/skills/tdd/SKILL.md",
@@ -5366,7 +5430,10 @@
           "history": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "poteto-agent"
+      ]
     },
     "cursor-cancel-ralph": {
       "source_path": "ralph-loop/skills/cancel-ralph/SKILL.md",
@@ -5747,7 +5814,10 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "thermo-nuclear-review-subagent"
+      ]
     },
     "cursor-thermos": {
       "source_path": "thermos/skills/thermos/SKILL.md",
@@ -5804,7 +5874,11 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "profiles": [
+        "thermo-nuclear-code-quality-review-subagent",
+        "thermo-nuclear-review-subagent"
+      ]
     },
     "cursor-google-docs": {
       "source_path": "third_party/google-docs/skills/google-docs/SKILL.md",
@@ -6868,5 +6942,118 @@
         }
       }
     }
+  },
+  "profile_replacements": {
+    "advisor-subagent": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "compatibility-scan-review": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "docs-reliability-review": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "startup-review": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "validation-review": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "agents-memory-updater": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "plugin-architect": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "ci-watcher": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "thermo-nuclear-code-quality-review": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      },
+      {
+        "before": "You are a **native Codex reviewer**.",
+        "after": "You are a **T3 review delegate**."
+      },
+      {
+        "before": "The coordinator gathers the actual diff and changed files, then invokes this exact native role when exposed. Use native asynchronous completion. Missing named capability is reported; no Cursor Task call is available.",
+        "after": "The coordinator gathers the actual diff and changed files, then delivers this exact persona in a T3 child brief. This is not native role registration. Follow T3 completion notifications. Missing persona or rubric is reported."
+      }
+    ],
+    "dyl-agent": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      }
+    ],
+    "comment-sicko": [],
+    "poteto-agent": [
+      {
+        "before": "The Codex task that receives `cursor-poteto-mode` owns the playbook, the todo list, and every native subagent spawn.",
+        "after": "The parent T3 thread that receives `cursor-poteto-mode` owns the playbook, the todo list, and every authorized child task."
+      },
+      {
+        "before": "search the installed Codex skills",
+        "after": "search the installed skills"
+      },
+      {
+        "before": "Use native Codex subagent delegation. Follow the operator's delegation policy. Reuse the existing poteto-agent while its context remains relevant; start a fresh named agent when the context does not fit. Keep model and reasoning choices with the coordinator. Include the original request, later direction, prior report, and branch in a fresh assignment. Native asynchronous completion replaces Cursor's `is_background`.",
+        "after": "The parent owns all delegation. Do not start subagents unless this task explicitly authorizes them. When authorized, follow the selected skill's T3 runtime contract and completion notifications. Keep model and reasoning choices with the coordinator and carry the original request, later direction, prior report and branch in each fresh assignment."
+      }
+    ],
+    "thermo-nuclear-code-quality-review-subagent": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      },
+      {
+        "before": "You are a **native Codex reviewer**.",
+        "after": "You are a **T3 review delegate**."
+      },
+      {
+        "before": "The coordinator gathers the actual diff and changed files, then invokes this exact native role when exposed. Use native asynchronous completion. Missing named capability is reported; no Cursor Task call is available.",
+        "after": "The coordinator gathers the actual diff and changed files, then delivers this exact persona in a T3 child brief. This is not native role registration. Follow T3 completion notifications. Missing persona or rubric is reported."
+      }
+    ],
+    "thermo-nuclear-review-subagent": [
+      {
+        "before": "Use native Codex tools and the operator-selected model and effort.",
+        "after": "Use tools exposed to this T3 provider and the operator-selected model and effort."
+      },
+      {
+        "before": "You are a **native Codex reviewer**.",
+        "after": "You are a **T3 review delegate**."
+      },
+      {
+        "before": "The coordinator gathers the actual diff and changed files, then invokes this exact native role when exposed. Use native asynchronous completion. Missing named capability is reported; no Cursor Task call is available.",
+        "after": "The coordinator gathers the actual diff and changed files, then delivers this exact persona in a T3 child brief. This is not native role registration. Follow T3 completion notifications. Missing persona or rubric is reported."
+      }
+    ]
   }
 }

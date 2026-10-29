@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "b47858c6d946c319facd30807390b64b9032960ed98f5415a8702eca40bba3a5",
+    "native-codex.md": "b47858c6d946c319facd30807390b64b9032960ed98f5415a8702eca40bba3a5",
+    "original-codex.txt": "7ddaf3f8aa2b4748e1c0e92d21d24473500cd8c14ace3be2098601b608f4c178",
+    "personas/dyl-agent.md": "82ab1d859e19c65e1cdf1060288387f711859c41aeccc6aa06d52dfc10213454",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "e7f9bf9ae4cd122ad4178354c164e9a98c4bf7b6e5e0af6c6ffe02a2fae772a0"
+  },
+  "native_base": "../..",
+  "personas": {
+    "dyl-agent": "personas/dyl-agent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-dyl-review"
+}

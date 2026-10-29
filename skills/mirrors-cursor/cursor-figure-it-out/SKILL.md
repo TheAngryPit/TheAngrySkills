@@ -3,6 +3,12 @@ name: cursor-figure-it-out
 description: "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 Resolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.

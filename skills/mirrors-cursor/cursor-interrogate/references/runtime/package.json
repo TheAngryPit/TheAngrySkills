@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "9484181150a04809f8722a01ad659270bf4b902e9bd36b00763fc47a9067492a",
+    "native-codex.md": "9484181150a04809f8722a01ad659270bf4b902e9bd36b00763fc47a9067492a",
+    "original-codex.txt": "9484181150a04809f8722a01ad659270bf4b902e9bd36b00763fc47a9067492a",
+    "personas/poteto-agent.md": "f88e4210f53ae7b93e6fda4536046b1a871004bc77b5d4a060e6811096865352",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "e7f9bf9ae4cd122ad4178354c164e9a98c4bf7b6e5e0af6c6ffe02a2fae772a0"
+  },
+  "native_base": "../..",
+  "personas": {
+    "poteto-agent": "personas/poteto-agent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-interrogate"
+}

@@ -3,6 +3,12 @@ name: cursor-create-verification-skill
 description: "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /cursor-create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex adaptation boundary
 
 This mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The feature-map references intentionally retain the reproducible upstream `control-notes` commands; adapt them to concrete commands observed in the target repository before use. Map browser/Electron/web actions to `cursor-control-ui`, and CLI/TUI actions to `cursor-control-cli`, only when those skills are installed and applicable; otherwise record the exact surface gap. The bounded CLI fixture uses separate subprocesses, runs syntax/version/health Doctor checks, drives each mapped feature, captures stdout/stderr/exit plus regular-file side effects, cleans only declared app state, and writes only the explicit project-local skill tree. A separate disposable local web fixture was driven through the native Codex in-app browser with accessibility-tree and screenshot evidence; this still does not claim production/live target or native-host verification.

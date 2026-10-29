@@ -3,6 +3,12 @@ name: cursor-no-comments
 description: "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 For Step 1, call native `collaboration.spawn_agent` with `agent_type: "comment-sicko"` when that exact type is exposed. The named profile is distributed by `model-capability-router`; never substitute a generic reviewer or a prompt that merely says to act as Comment Sicko. If the type is unavailable, report the gap and leave this run incomplete. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks. Automatic selection and the complex rejection/rerun branches remain unproven.

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -350,6 +351,13 @@ def render_skill(entry: dict, staging: Path, default_commit: str,
         )
         if rewritten != original:
             output_file.write_text(rewritten)
+    runtime_path = LEDGER.parent / "runtime-adapters" / "compatibility.json"
+    if runtime_path.exists() and entry["publish"] and not entry.get("excluded_from_mirror"):
+        spec = importlib.util.spec_from_file_location("cursor_runtime_contracts", ROOT / "scripts/cursor_runtime_contracts.py")
+        runtime = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runtime)
+        contracts = runtime.load_contracts(runtime_path, load(LEDGER)["skills"])
+        runtime.render_runtime_package(target, entry, skill_file.read_text(), contracts)
     if entry.get("license_path"):
         shutil.copy2(SOURCE / entry["license_path"], target / "LICENSE.upstream")
     note = [

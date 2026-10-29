@@ -97,3 +97,12 @@ def test_ledger_rejects_incomplete_or_unsafe_coverage(tmp_path, mutation):
     if mutation=='duplicate':d['schema_version']=True
     p=tmp_path/'contracts.json';p.write_text(json.dumps(d))
     with pytest.raises(ValueError):module().load_contracts(p,m['skills'])
+
+
+def test_ledger_cannot_omit_a_native_profile(tmp_path):
+    m=json.loads((ROOT/'sources/cursor-plugins/manifest.json').read_text())
+    d=json.loads((ROOT/'sources/cursor-plugins/runtime-adapters/compatibility.json').read_text())
+    d['profiles'].pop('comment-sicko')
+    p=tmp_path/'contracts.json';p.write_text(json.dumps(d))
+    with pytest.raises(ValueError,match='profile coverage'):
+        module().load_contracts(p,m['skills'])

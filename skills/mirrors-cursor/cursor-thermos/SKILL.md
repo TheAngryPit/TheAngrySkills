@@ -3,6 +3,12 @@ name: cursor-thermos
 description: "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 Pass the same scoped diff to two independent read-only native reviewers in parallel. Give the bug/security reviewer [its pinned role](references/bug-security-reviewer.md) and the code-quality reviewer [its pinned role](references/code-quality-reviewer.md); their full rubrics are `cursor-thermo-nuclear-review` and `cursor-thermos-thermo-nuclear-code-quality-review`. Follow the selected model/effort under `model-capability-router`. The coordinator verifies and synthesizes; if one lens fails, label the result partial.

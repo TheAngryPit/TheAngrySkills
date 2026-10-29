@@ -3,6 +3,12 @@ name: cursor-pr-review-canvas-pr-review-canvas
 description: "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:render_pr_review_canvas` for an explicit, bounded project-local Markdown/HTML review artifact when Canvas is unavailable. The adapter reads only a local diff fixture, groups files by reviewer value, and reports that live PR metadata/gh access is unavailable; it never claims Canvas SDK parity or publishes a review. External dependency remains explicit: Cursor Canvas surface.

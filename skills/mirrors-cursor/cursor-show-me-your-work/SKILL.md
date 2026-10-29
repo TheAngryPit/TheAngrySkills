@@ -3,6 +3,12 @@ name: cursor-show-me-your-work
 description: "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 Keep the canonical TSV and pinned source `scripts/log.sh` intact. The bundled helper requires `--root <task-root>` and a logfile below that root; it rejects path escapes and symlink components or targets while preserving append-only TSV sanitization. Write only inside the authorized workspace or task scratch path, verify evidence links, and use the native task history/rollout for transcript audit. Independent review follows the standing model router and is reported only when performed.

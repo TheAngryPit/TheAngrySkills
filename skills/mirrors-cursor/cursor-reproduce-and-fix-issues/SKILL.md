@@ -3,6 +3,12 @@ name: cursor-reproduce-and-fix-issues
 description: Reproduce triaged Slack bugs through a configured app-control adapter, verify existing fixes, and open a bounded draft pull request only after before-and-after proof. Use only from the configured Benny repro automation.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Native Codex execution boundary
 
 Use only an explicitly configured, authorized Benny workflow. Source distribution does not install or activate it. Resolve actual native connector schemas, permissions and control capabilities; missing event delivery remains incomplete and is never silently converted to scheduled polling. No source-repository or cache path is needed at runtime. Read configuration from the project-owned path supplied by setup.

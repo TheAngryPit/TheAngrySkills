@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "c454da36cf744911d665c8c9016309486bd611bed8b2c2364a8717cbec1d8f7e",
+    "native-codex.md": "c454da36cf744911d665c8c9016309486bd611bed8b2c2364a8717cbec1d8f7e",
+    "original-codex.txt": "605728fd1a4860b321b3a14f3f4bcdd0fc5a8951c5ad6fb2dc4e443b210785dd",
+    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "t3.md": "e7f9bf9ae4cd122ad4178354c164e9a98c4bf7b6e5e0af6c6ffe02a2fae772a0"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-cursor-team-kit-pr-review-canvas"
+}

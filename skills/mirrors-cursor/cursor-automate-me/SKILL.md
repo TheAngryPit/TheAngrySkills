@@ -3,6 +3,12 @@ name: cursor-automate-me
 description: "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via skill-creator + cursor-unslop, optionally pulling fresh evidence from recent transcripts."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex runtime mapping
 
 Use `skill-creator` for authoring, `cursor-unslop` for prose, and `cursor-poteto-mode` only as a shape example. Search `.agents/skills/` in the project and the personal Codex skills root only when it is relevant and readable. Mine bounded history from the current workspace/task, never unrelated task roots. Native user-input surfaces may allow fewer choices and no multiselect; retain the broad-to-specific preference inquiry in concise rounds with free text. Project-local writes follow the current task scope; personal installation is a separate explicit choice.

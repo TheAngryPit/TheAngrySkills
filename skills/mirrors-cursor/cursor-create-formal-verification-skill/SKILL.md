@@ -3,6 +3,12 @@ name: cursor-create-formal-verification-skill
 description: "Generate a project-local skill that formally verifies the code where a bug costs the most and tests reach the least, in any language, with whichever verification tool fits. Use for /create-formal-verification-skill, \"model-check this race\", \"prove this invariant\", or when concurrency, retries, state machines, parsers, or unsafe code need more than tests."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex mapping
 
 Use the selected repository's project-local skill location, preferring `.agents/skills/` for Codex. Keep generated verification files and scratch mutations inside that repository or a disposable copy. Follow native permissions for tool installation and external access. The existing `proof-orchestrator` selects the proof path; `model-capability-router` owns any model choice. A model check proves its stated model and bounds, not unexamined product code. Do not alter product code or weaken a property to obtain a pass.

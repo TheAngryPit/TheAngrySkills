@@ -140,4 +140,4 @@ The outcome is complete only when the supported T3 operations have their require
 
 ## Execution method
 
-Pending operator selection required by the writing-plans workflow. Native execution is recommended: generator, overlays and admission tests share tightly coupled interfaces, and one owner can preserve them with less context duplication. One fresh independent whole-branch review follows implementation. Subagent-driven execution remains available if selected: one implementer and one fresh review gate per task, plus a whole-branch review.
+Native execution approved by Vítor, including profile adaptation. Native execution was recommended: generator, overlays and admission tests share tightly coupled interfaces, and one owner can preserve them with less context duplication. One fresh independent whole-branch review follows implementation. Subagent-driven execution remains available if selected: one implementer and one fresh review gate per task, plus a whole-branch review.

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "base": "ecd94d59f67ad39c33f53a88b04a4c9d092cde4b",
+  "personas": {
+    "poteto-agent": {
+      "persona_sha256": "f88e4210f53ae7b93e6fda4536046b1a871004bc77b5d4a060e6811096865352",
+      "delivery": "instruction persona, not native registration",
+      "runtime": "T3/Codex",
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "live_proof": "isolated fixture creation and Node assertion"
+    },
+    "comment-sicko": {
+      "persona_sha256": "adb0393023d7f3b66a5ac2cc0fac9edf379ab9b7d6c5ca98b2151fdc5d4b8747",
+      "delivery": "instruction persona, not native registration",
+      "runtime": "T3/Codex",
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "live_proof": "read-only fixture review; required opening phrase; one obvious comment flagged; no edits"
+    }
+  },
+  "fixture_sha256": "c86acfdb47b6c7f31dc1ddce49a47977214b37791c5a47133d46e4ad911b2a59",
+  "parent_independent_verification": "exact contents, hash and Node assertion passed; hash unchanged after both reviews",
+  "native_codex": {
+    "discovery": {
+      "expected": 107,
+      "enabled": 107,
+      "missing": 0,
+      "isolated_home": true,
+      "credentials_copied": false
+    },
+    "native_named_dispatch": "comment-sicko type invoked; same one-comment recommendation; fixture unchanged; does not prove all native profiles freshly loaded"
+  },
+  "limits": [
+    "No cross-provider workflow run",
+    "No complete23-playbook runtime certification",
+    "Other12 persona adaptations have source and packaging proof only",
+    "No live forge watch/link or external test PR",
+    "No active-home install, fleet rollout or automation activation",
+    "Hermes and OpenClaw contexts remain deferred"
+  ],
+  "full_suite": {
+    "passed": 464,
+    "skipped": 2,
+    "subtests_passed": 13
+  }
+}

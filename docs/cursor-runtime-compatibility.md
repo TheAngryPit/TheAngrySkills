@@ -30,3 +30,7 @@ The existing adapted-upstream detector remains report-only. Its source pins, rep
 ## Rollback
 
 Restore the previous reviewed adapter input and generator revision, regenerate through the existing deterministic build and validate its complete file set before any authorized deployment. Preserve source pins, native profiles, user homes, credentials and task history. A local source change does not itself roll back or replace an installed skill; fleet deployment is separate and requires versioned readback evidence.
+
+## Bounded live evidence, 2026-10-29
+
+[Proof receipt](../reports/cursor-runtime-proof-20261029.json) records T3/Codex portable Poteto execution in a tool-prepared worktree and read-only Comment Sicko persona delivery, with parent content/hash/runtime verification. Native Codex discovered107/107 enabled skills in an isolated home, and native named comment-sicko dispatch returned the same fixture recommendation. All14 native profile asset bytes remain unchanged. These are bounded operation proofs; other12 personas and other providers retain source/packaging proof only, not full workflow certification. No installed home was changed.

@@ -1,6 +1,7 @@
 ---
 name: cursor-principle-the-algorithm
 description: "Apply to any non-trivial change before designing it. Make the requirement less dumb, delete, optimize, accelerate, automate, in that order, then run it again on the result. The reply names the requirement you questioned and what you deleted."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

@@ -1,6 +1,7 @@
 ---
 name: cursor-sharpen
 description: "Use when the user explicitly requests $cursor-sharpen to frame a task through expert methods, intended outcome and appropriate constraints, then execute the authorized work."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

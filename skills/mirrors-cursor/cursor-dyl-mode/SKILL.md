@@ -1,6 +1,7 @@
 ---
 name: cursor-dyl-mode
 description: "Dylan's agent style on top of pstack: concise verified delivery, root causes over symptom patches, The Algorithm before design, plain /cursor-bro replies, live UI proof, reuse/simplify, and hard merge gates. Use for Dylan, /cursor-dyl-mode, or his style. \"Get PR green\" → /cursor-dyl-ready-pr. \"Review this PR like me\" → /cursor-dyl-review. Figma URL → /cursor-build-figma."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

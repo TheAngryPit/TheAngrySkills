@@ -1,6 +1,7 @@
 ---
 name: cursor-setup-pstack
 description: Configure model and effort choices for pstack roles through the native Codex routing policy. Use for $cursor-setup-pstack, pstack model setup, reasoning budget, or changing the configured role choices.
+disable-model-invocation: true
 ---
 
 ## Runtime selection

@@ -1,6 +1,7 @@
 ---
 name: cursor-dyl-ready-pr
 description: "Get a PR merge-ready for Dylan: deep /cursor-dyl-review till 🟢, mark it ready, resolve conflicts, then babysit CI and comments. Use for /cursor-dyl-ready-pr, \"get PR green\", \"make the PR mergeable\", \"/cursor-dyl-review till green then ready\", or ready-to-merge asks under /cursor-dyl-mode."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

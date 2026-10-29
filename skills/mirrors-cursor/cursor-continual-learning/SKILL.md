@@ -1,6 +1,7 @@
 ---
 name: cursor-continual-learning
 description: Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.
+disable-model-invocation: true
 ---
 
 ## Runtime selection

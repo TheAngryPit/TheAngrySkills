@@ -192,9 +192,13 @@ class CursorMirrorTests(unittest.TestCase):
                     name,
                 )
             policy = output / "agents/openai.yaml"
-            frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
+            codex_source = output / "references/runtime/original-codex.txt"
+            native_text = codex_source.read_text() if codex_source.exists() else (output / "SKILL.md").read_text()
+            frontmatter = re.match(r"\A---\n(.*?)\n---", native_text, re.DOTALL)
             self.assertIsNotNone(frontmatter, name)
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1), name)
+            if codex_source.exists() and (explicit or adapted_explicit):
+                self.assertIn("disable-model-invocation: true", (output / "SKILL.md").read_text().split("---", 2)[1])
             if explicit or adapted_explicit:
                 self.assertEqual(policy.read_text(), "policy:\n  allow_implicit_invocation: false\n", name)
             else:

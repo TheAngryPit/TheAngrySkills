@@ -13,6 +13,11 @@ separately before describing them as configured. Choose the execution
 arrangement before a delegated worker's model.
 Authorization to delegate alone does not require consulting this router.
 
+When this policy is used inside T3 Code, read the conditional
+[T3 transport mapping](references/t3-runtime.md) before dispatch. It maps
+existing role choices to host capabilities; it does not replace the native
+Codex policy or authorize another model, provider or spending route.
+
 ## Execution arrangement
 
 Keep small, tightly coupled work and immediate follow-ups with the agent that

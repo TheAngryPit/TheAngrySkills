@@ -1,6 +1,7 @@
 ---
 name: cursor-in-your-own-words
 description: "Use when the user explicitly requests /in-your-own-words or asks you to restate your understanding of their goals and the problem they are trying to solve."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

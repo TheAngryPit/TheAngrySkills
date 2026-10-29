@@ -220,7 +220,11 @@ def render_runtime_package(target: Path, entry: dict, rendered_codex: str, contr
         'a permission refusal never authorizes switching branches.\n\n'
         '## Native Codex branch\n'
     )
-    (target / 'SKILL.md').write_text(rendered_codex[:marker.end()] + dispatch + rendered_codex[marker.end():])
+    frontmatter = rendered_codex[:marker.end()]
+    policy = target / 'agents/openai.yaml'
+    if policy.is_file() and 'allow_implicit_invocation: false' in policy.read_text():
+        frontmatter = frontmatter[:-4] + 'disable-model-invocation: true\n---\n'
+    (target / 'SKILL.md').write_text(frontmatter + dispatch + rendered_codex[marker.end():])
 
 
 def verify_runtime_packages(root: Path, contracts: dict) -> None:

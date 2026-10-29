@@ -1,6 +1,7 @@
 ---
 name: cursor-poteto-help
 description: "Use when the user explicitly asks for help with pstack, its skills, playbooks, setup, or the right prompt to start a task."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

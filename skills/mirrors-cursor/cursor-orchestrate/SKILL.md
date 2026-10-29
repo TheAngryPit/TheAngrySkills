@@ -1,6 +1,7 @@
 ---
 name: cursor-orchestrate
 description: "Use only when the user explicitly types `/orchestrate <goal>` to coordinate a bounded dependency graph through native Codex Cloud tasks; requires an exact configured environment and authorization for task creation."
+disable-model-invocation: true
 ---
 
 ## Runtime selection

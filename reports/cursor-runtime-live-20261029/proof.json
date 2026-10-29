@@ -134,7 +134,7 @@
   ],
   "release_checks": {
     "full_suite": {
-      "passed": 473,
+      "passed": 474,
       "skipped": 2,
       "subtests_passed": 13
     },
@@ -150,5 +150,20 @@
     "javascript_syntax": "passed",
     "shared_catalog": "passed with advisory findings",
     "safety": "same exact skill tree as recorded clean-export comparison;18 baseline blocked,18 candidate blocked,0 new; owned router has0 blocking and2 retained review signals"
+  },
+  "ci_followup": {
+    "first_run": "https://github.com/TheAngryPit/TheAngrySkills/actions/runs/40919442048",
+    "result": "2 preservation tests failed because checkout omitted historical base Git objects",
+    "root_cause": "The tests used git show/ls-tree at a fixed base SHA, so their local history was an undeclared dependency",
+    "fix": "Run real generation in the existing isolated source fixture with no .git metadata; compare complete source/control-plane/native-profile hashes before and after. Native assets also match current accepted provenance hashes.",
+    "automation_preservation": "No workflow/checkout-depth change and no frozen historical content fixture that blocks future reviewed upstream refreshes",
+    "regression": "History-dependent implementation observed RED with Git-object access disabled; revised5-case module observed GREEN",
+    "scope": "tests only; installed skill bytes and runtime implementation unchanged",
+    "status": "local correction verified; GitHub rerun required on updated PR head",
+    "local_full_suite": {
+      "passed": 474,
+      "skipped": 2,
+      "subtests_passed": 13
+    }
   }
 }

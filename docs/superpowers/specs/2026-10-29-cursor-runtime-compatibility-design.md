@@ -1,6 +1,6 @@
 # Add runtime support without replacing the Cursor adaptation
 
-Status: proposed design, awaiting operator approval before implementation.
+Status: approved by Vítor on 2026-10-29; implementation plan and execution-method selection follow.
 
 ## Intent
 

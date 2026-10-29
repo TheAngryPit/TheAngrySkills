@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "implementation_revision": "735f27114176c2c4accff2826f5297dfc3729799",
+  "installation": {
+    "scope": "one authorized local pilot",
+    "cursor_skills": 107,
+    "router": 1,
+    "exact_file_hash_readback": 108,
+    "backup_verified": true,
+    "native_profiles_config_updater_provenance_unchanged": true
+  },
+  "discovery": {
+    "fresh_actual_home_codex_app_server_skills_list": {
+      "expected": 108,
+      "enabled": 108,
+      "missing": 0
+    },
+    "fresh_t3_context": "Four explicitly gated skills absent from automatic advertised catalog; located and read from installed packages. Existing explicit-only policy preserved.",
+    "picker_ui_verified": false
+  },
+  "portable_profiles": [
+    {
+      "name": "advisor-subagent",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6-astra"
+    },
+    {
+      "name": "plugin-architect",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "docs-reliability-review",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "startup-review",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "validation-review",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "compatibility-scan-review",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "agents-memory-updater",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "ci-watcher",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "dyl-agent",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "thermo-nuclear-code-quality-review",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "thermo-nuclear-code-quality-review-subagent",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    },
+    {
+      "name": "thermo-nuclear-review-subagent",
+      "evidence": "installed persona and runtime file reads plus bounded actual role execution",
+      "model": "gpt-6.1-sol"
+    }
+  ],
+  "earlier_portable_profiles": [
+    "poteto-agent",
+    "comment-sicko"
+  ],
+  "role_acceptance": {
+    "advisor": "Rejected removal of validation with observed traversal evidence",
+    "plugin_architect": "Minimal instruction-only plugin proposal; no activation",
+    "startup_validation_docs": "Executed documented terminating commands; observed success",
+    "memory_updater": "Proposal-only deduplication; no instruction/index/memory writes",
+    "ci_watcher": "Read existing public merged PR150; correctly reported no attached checks. Separately diagnosed synthetic assertion failure. Pending watch not exercised.",
+    "dyl_agent": "Read exact requirements/shared skills and gave source-backed minimal recommendation",
+    "thermo_roles": "All three read exact installed rubrics/diff and found planted needless branches or token disclosure",
+    "compatibility_scanner": "Original published agent-compatibility0.1.7 CLI ran on synthetic fixture. Tarball integrity verified; temporary ignore-scripts dependencies only. Base28, accelerator2, reported overall28, preserved without inventing30."
+  },
+  "completed_read_only_workflow": "Investigation through simple How, bounded installed Poteto explainer, direct Node behavior, source reconciliation and Unslop",
+  "coding_workflow": {
+    "playbook": "Bug fix",
+    "scope": "explicitly disposable CLI fixture; not a product defect",
+    "data_shape": "optional CLI string to finite numeric limit with default10",
+    "reproduction": {
+      "command": "node cli.cjs 0",
+      "expected": "{\"limit\":0}",
+      "before": "{\"limit\":10}",
+      "after": "{\"limit\":0}"
+    },
+    "root_cause": "Truthiness fallback replaced valid numeric zero with default10",
+    "delegation": "Native named poteto-agent, same provider/model/settings and same-turn scope, as permitted by T3 transport",
+    "fix": "Existing parser defaults only for non-finite converted values",
+    "verification": {
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "same_cli_surface": true,
+      "default_positive_and_nonnumeric_probes": true
+    },
+    "test_committed_before_fix": true,
+    "files": {
+      "limit.cjs": "ce09f60344705c5832f7b5bc81c0da738dbb1e4b55b5ff6ffccc0276e7d6be27",
+      "cli.cjs": "574dfb61f528ae3f0a798eb324fc8b527e3654edc7049b0a12bdc1ffdb204f94",
+      "limit.test.cjs": "e8e475f931d6d9787553f05a03645851f341c9fa9f06ee81ef441a1b1b21ff14"
+    },
+    "raw_output_note": "Only the absolute task-owned fixture path is normalized to <fixture> in public logs. Original receipts retained locally."
+  },
+  "limits": [
+    "Bounded behavior for14 portable personas, not native registration or exhaustive certification",
+    "Two completed playbooks do not prove all23 playbooks",
+    "No cross-provider workflow run",
+    "No CI pending continuation proof yet",
+    "No fleet rollout, Hermes/OpenClaw adapter, session hook or sticky activation",
+    "Local pilot remains on reviewed implementation735f271; publication docs do not silently update it"
+  ],
+  "release_checks": {
+    "full_suite": {
+      "passed": 473,
+      "skipped": 2,
+      "subtests_passed": 13
+    },
+    "renderer": {
+      "physical": 112,
+      "published": 107,
+      "output_files": 1205
+    },
+    "admission": {
+      "mapped_agents": 14,
+      "unresolved_links": 0
+    },
+    "javascript_syntax": "passed",
+    "shared_catalog": "passed with advisory findings",
+    "safety": "same exact skill tree as recorded clean-export comparison;18 baseline blocked,18 candidate blocked,0 new; owned router has0 blocking and2 retained review signals"
+  }
+}

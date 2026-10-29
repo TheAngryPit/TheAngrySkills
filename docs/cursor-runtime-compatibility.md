@@ -34,3 +34,9 @@ Restore the previous reviewed adapter input and generator revision, regenerate t
 ## Bounded live evidence, 2026-10-29
 
 [Proof receipt](../reports/cursor-runtime-proof-20261029.json) records T3/Codex portable Poteto execution in a tool-prepared worktree and read-only Comment Sicko persona delivery, with parent content/hash/runtime verification. Native Codex discovered107/107 enabled skills in an isolated home, and native named comment-sicko dispatch returned the same fixture recommendation. All14 native profile asset bytes remain unchanged. These are bounded operation proofs; other12 personas and other providers retain source/packaging proof only, not full workflow certification. No installed home was changed.
+
+## Review and refresh protection
+
+The independent Astra review identified three Important issues and one malformed-target issue, regraded Important. All four were addressed in one regression-tested fix pass; no second approval verdict is claimed. The final suite passed473 tests, with2 skips and13 subtests. The corrected clean-export security comparison records13 retained-content findings, no new blocked skills, and unchanged verdicts. The earlier working-tree17-signal conclusion was withdrawn because it included four ignored bytecode files.
+
+Coverage now binds each source identity to the reviewed effective Codex body and support-file digest. A source refresh invalidates that review until its operations and required personas are inspected and the new digest is deliberately accepted. Do not blindly recompute hashes to silence drift. Generated runtime files and generated license/provenance notices are excluded from that workflow digest; they retain separate package, source and license checks.

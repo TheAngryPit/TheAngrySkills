@@ -41,8 +41,17 @@
     "Hermes and OpenClaw contexts remain deferred"
   ],
   "full_suite": {
-    "passed": 464,
+    "passed": 473,
     "skipped": 2,
     "subtests_passed": 13
+  },
+  "review": {
+    "model": "gpt-6-astra",
+    "effort": "medium",
+    "reviewed_head": "7217cda182ba6e5e0b8533dc947075279c475c9d",
+    "initial_verdict": "CHANGES",
+    "important_findings": 3,
+    "minor_findings": 1,
+    "resolution": "All4 addressed with observed failing/passing regressions; malformed target identifiers regraded Important; complete473-test suite passed; no second review claimed"
   }
 }

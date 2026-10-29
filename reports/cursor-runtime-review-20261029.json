@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reviewed_base": "ecd94d59f67ad39c33f53a88b04a4c9d092cde4b",
+  "reviewed_head": "7217cda182ba6e5e0b8533dc947075279c475c9d",
+  "reviewer": "gpt-6-astra medium",
+  "verdict": "CHANGES, followed by one implementation fix pass",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "Important",
+      "issue": "Relocated command/prose path bases were ambiguous",
+      "fix": "Explicit original skill root versus relocated Markdown link bases; original native text retained",
+      "regression": "test_relocated_prose_and_commands_use_original_skill_root",
+      "red_observed": true,
+      "green_observed": true
+    },
+    {
+      "id": "R2",
+      "severity": "Important",
+      "issue": "Workflow coverage not bound to effective source/support content",
+      "fix": "Reviewed workflow SHA256, exact source identity and required known-persona coverage; stale content rejected",
+      "regressions": [
+        "test_ledger_source_identity_is_reviewed",
+        "test_new_persona_requirement_invalidates_reviewed_workflow",
+        "test_reviewed_workflow_needs_every_referenced_persona"
+      ],
+      "red_observed": true,
+      "green_observed": true
+    },
+    {
+      "id": "R3",
+      "severity": "Important",
+      "issue": "Working-tree scan included4 untracked bytecode artifacts and overstated equivalent findings",
+      "fix": "Identical scanner over exact clean Git exports with -B; scanner and skill-tree identities recorded; prior17-signal assertion withdrawn",
+      "verification": "13 retained content signals, no new blocked skills, verdict changes or removed findings"
+    },
+    {
+      "id": "R4",
+      "severity": "Important (regraded from Minor)",
+      "issue": "Empty identifiers could select implicit target inheritance from malformed catalog metadata",
+      "fix": "Require explicit nonempty identifiers and preserve supported dict/list option types",
+      "regression": "test_malformed_identifiers_never_select_inheritance",
+      "red_observed": true,
+      "green_observed": true
+    }
+  ],
+  "deferred_minors": [],
+  "declined_to_judge_resolution": {
+    "permission_refusal_and_host_selection": "Existing blocking contracts and tests retained; no contrary behavior found",
+    "native_same_provider_lifecycle": "Preserved as a host-permitted operation, not a mandatory wrapper",
+    "valid_model_options": "Preserved; malformed identifiers corrected and option arrays covered",
+    "package_hash_admission": "Ordinary drift checks retained and reviewed workflow digest added",
+    "full_cross_provider_playbooks_and_PR_watch": "Unproven and explicitly excluded from certification; no new paid route or external test PR",
+    "inherited_native_limitations": "Preserved; no unrelated native behavior rewrite",
+    "ledger_rulings": "Accepted except path and security flaws corrected above"
+  }
+}

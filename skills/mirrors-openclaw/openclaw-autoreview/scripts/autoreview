@@ -7319,6 +7319,12 @@ def parse_args() -> argparse.Namespace:
         help="Claude fallback model chain or claude=a,b. Repeatable.",
     )
     parser.add_argument(
+        "--max-prompt-bytes",
+        type=positive_int,
+        default=MAX_REVIEW_PROMPT_BYTES,
+        help="UTF-8 byte limit per planned prompt (default: 512000). Intact context must fit. Does not change model context or token limits.",
+    )
+    parser.add_argument(
         "--max-review-passes",
         type=positive_int,
         default=os.environ.get("AUTOREVIEW_MAX_REVIEW_PASSES"),
@@ -7864,7 +7870,16 @@ def check_review_pass_budget(limit: int | None, pass_count: int) -> None:
 
 
 def check_review_plan(args: argparse.Namespace, prompts: list[str] | list[ReviewPass]) -> None:
-    print(f"review plan: {len(prompts)} passes; {review_plan_bytes(prompts)} total prompt bytes", flush=True)
+    limit = getattr(args, "max_prompt_bytes", MAX_REVIEW_PROMPT_BYTES)
+    largest = max((utf8_size(item.prompt if isinstance(item, ReviewPass) else item)
+                   for item in prompts), default=0)
+    print(f"review plan: {len(prompts)} passes; {review_plan_bytes(prompts)} total prompt bytes; "
+          f"largest {largest} bytes; limit {limit} bytes per pass", flush=True)
+    if largest > limit:
+        raise SystemExit(
+            f"planned prompt has {largest} bytes; --max-prompt-bytes allows {limit}; "
+            "no reviewer was started."
+        )
     check_review_pass_budget(getattr(args, "max_review_passes", None), len(prompts))
 
 
@@ -7913,7 +7928,7 @@ def dry_run_preflight(
                 threshold_extra_prompt = apply_finding_threshold_prompt(args, evidence.prompt)
                 prompts = prepare_review_prompts(
                     repo, target, target_ref, captured, threshold_extra_prompt,
-                    evidence.datasets, MAX_REVIEW_PROMPT_BYTES,
+                    evidence.datasets, args.max_prompt_bytes,
                     getattr(args, "max_review_passes", None),
                 )
                 check_review_plan(args, prompts)
@@ -8222,6 +8237,7 @@ class NativeHandoff:
     rejected response cannot launch the next pass. This is not a restart API.
     """
 
+    MAX_REQUEST_BYTES = 4_000_000
     MAX_RESULT_BYTES = 2_000_000
 
     def __init__(self, args: argparse.Namespace, reviewer: argparse.Namespace,
@@ -8234,6 +8250,10 @@ class NativeHandoff:
         self.model = reviewer.model
         self.thinking = reviewer.thinking
         self.effective_models = reviewer.openclaw_models
+        # Escaped JSON and envelope bytes must fit the consumer before any
+        # earlier pass can launch, even when a larger prompt budget is explicit.
+        for number, prompt in enumerate(prompts, 1):
+            self.encode_request(number, prompt.prompt if isinstance(prompt, ReviewPass) else prompt)
         parent = self.root.parent.stat()
         if parent.st_uid != os.getuid() or stat.S_IMODE(parent.st_mode) & 0o077:
             raise SystemExit("native handoff requires an owned private parent directory")
@@ -8281,9 +8301,7 @@ class NativeHandoff:
                 raise ValueError("native result exceeds the transport limit; no partial report accepted")
             return data
 
-    def run(self, prompt: str) -> str:
-        self.pass_number += 1
-        number = self.pass_number
+    def encode_request(self, number: int, prompt: str) -> tuple[str, str]:
         digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         request = {
             "protocol": "autoreview-exec-v1", "run_id": self.run_id,
@@ -8294,7 +8312,19 @@ class NativeHandoff:
             "engine_timeout_seconds": self.timeout,
             "max_result_bytes": self.MAX_RESULT_BYTES,
         }
-        atomic_write_text(self.root / f"{number}.request.json", json.dumps(request))
+        encoded = json.dumps(request)
+        if utf8_size(encoded) > self.MAX_REQUEST_BYTES:
+            raise SystemExit(
+                f"native handoff request {number}/{self.pass_count} exceeds {self.MAX_REQUEST_BYTES} bytes; "
+                "reduce --max-prompt-bytes; no request was published."
+            )
+        return encoded, digest
+
+    def run(self, prompt: str) -> str:
+        self.pass_number += 1
+        number = self.pass_number
+        encoded, digest = self.encode_request(number, prompt)
+        atomic_write_text(self.root / f"{number}.request.json", encoded)
         print(f"native pass ready: {number}/{self.pass_count}", flush=True)
         deadline = time.monotonic() + self.timeout if self.timeout is not None else None
         ready_path = self.root / f"{number}.ready"
@@ -8364,7 +8394,7 @@ def submit_native_response(root: Path, source: Path) -> None:
                 raise ValueError("native exchange is not private and owned")
             number = response["pass"]
             request = json.loads(NativeHandoff.read_file(
-                f"{number}.request.json", 4_000_000, dir_fd=descriptor))
+                f"{number}.request.json", NativeHandoff.MAX_REQUEST_BYTES, dir_fd=descriptor))
             if any(response.get(key) != request.get(key) for key in ("run_id", "pass", "prompt_sha256")):
                 raise ValueError("native response does not match the live prepared pass")
             # A failed partial submission is never retried or replaced.
@@ -8506,6 +8536,7 @@ def main_with_args(args: argparse.Namespace) -> int:
     if reviewer.engine == "openclaw":
         args.openclaw_models = reviewer.openclaw_models = []
     print(f"engine: {reviewer.engine}", flush=True)
+    print(f"prompt budget: {args.max_prompt_bytes} bytes per pass", flush=True)
     if reviewer.model:
         print(f"model: {reviewer.model}", flush=True)
     if getattr(reviewer, "fallback_model", None):
@@ -8549,7 +8580,7 @@ def main_with_args(args: argparse.Namespace) -> int:
         extra_prompt = apply_finding_threshold_prompt(args, evidence.prompt)
         prompts = prepare_review_prompts(
             repo, target, target_ref, captured, extra_prompt, evidence.datasets,
-            MAX_REVIEW_PROMPT_BYTES,
+            args.max_prompt_bytes,
             getattr(args, "max_review_passes", None),
         )
     print(f"bundle: {utf8_size(captured.text)} bytes; review passes: {len(prompts)}", flush=True)

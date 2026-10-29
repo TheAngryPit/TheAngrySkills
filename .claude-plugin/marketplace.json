@@ -144,6 +144,7 @@
       "name": "mirrors-looper",
       "skills": [
         "./skills/mirrors-looper/looper-looper",
+        "./skills/mirrors-looper/looper-maintainability-review",
         "./skills/mirrors-looper/looper-pr-takeover"
       ]
     },
@@ -224,6 +225,7 @@
         "./skills/mirrors-emilkowalski/emil-mobile-native",
         "./skills/mirrors-emilkowalski/emil-pick-ui-library",
         "./skills/mirrors-emilkowalski/emil-prototype",
+        "./skills/mirrors-emilkowalski/emil-remove-animations",
         "./skills/mirrors-emilkowalski/emil-review-animations",
         "./skills/mirrors-emilkowalski/emil-write-swift"
       ]

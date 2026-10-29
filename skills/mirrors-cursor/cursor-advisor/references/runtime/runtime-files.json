@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "b50a1c04e03858ed7d1054d5381c45e13ee64d348d97511455bab6c9b3cccdab",
+    "native-codex.md": "b50a1c04e03858ed7d1054d5381c45e13ee64d348d97511455bab6c9b3cccdab",
+    "original-codex.txt": "ad522b7d58fcf2ee88d9f6a4174af987154eb17486b378b1259105472a16e4c9",
+    "personas/advisor-subagent.md": "84c63ed59cf0340c792faed2cd48ba2ff3cf1d92da132ce44a269990a74f37dc",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "advisor-subagent": "personas/advisor-subagent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-advisor"
+}

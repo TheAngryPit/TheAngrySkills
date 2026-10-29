@@ -3,6 +3,12 @@ name: cursor-docs-canvas
 description: "Render a documentation-style Cursor Canvas that organizes architecture notes, API references, walkthroughs, and how-tos into a navigable layout with sections, tables of contents, and cross-references. Use when the user asks for a docs canvas, documentation overview, architecture walkthrough, API reference page, or wants to render structured documentation as an interactive canvas."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:render_docs_canvas` for an explicit, bounded project-local Markdown/HTML artifact when Canvas is unavailable; never read ~/.cursor/skills-cursor. The artifact includes a table of contents, section anchors, and links back to source files. External dependencies remain explicit: Cursor Canvas surface and SDK declarations. `canvas_parity` stays `UNAVAILABLE`, and no product configuration is created.

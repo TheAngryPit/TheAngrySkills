@@ -3,6 +3,12 @@ name: cursor-google-drive
 description: Work with Google Drive through its MCP tools - search, read, create, organize, share, comment, and export files. Use when creating files in specific folders, moving or renaming, converting Markdown/CSV into Docs/Sheets, managing comments, or exporting a rendered PDF.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex capability boundary
 
 This is source guidance, not an installed connector or a runtime proof. Resolve tools against the current host and read their actual schemas before using them. Preserve the named product and requested outcome. If a required operation is unavailable, report its exact name and leave that step incomplete. Do not invent tool names, connect accounts, install helpers, spend money, or broaden access from this document alone. Current operator authorization and native permissions govern every action.

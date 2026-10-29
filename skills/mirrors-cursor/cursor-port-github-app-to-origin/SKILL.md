@@ -6,6 +6,12 @@ compatibility: >-
   Needs network access to https://cursor.com/docs/api/origin/* at run time.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Native Codex boundary
 
 Origin remains the named external product. Fetch the current official public documentation through an available native web surface when this skill is invoked; the mirrored source pin is not a live API contract. Resolve actual capabilities and permissions before any API operation. Do not authenticate, install, create an app, register webhooks, send feedback, publish repository details or migrate code from guidance alone. The porting skill produces a local planning brief; feedback is draft material until explicitly authorized for sending. No connector, provider, credentials, cloud runtime or installation is supplied by this mirror.

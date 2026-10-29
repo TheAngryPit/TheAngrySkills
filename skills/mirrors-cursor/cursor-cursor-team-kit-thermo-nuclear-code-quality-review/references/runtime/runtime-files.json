@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "259a91de9fb17bd0cacfe72e634b71d9c23fe4c0db47018d30068272e9257175",
+    "native-codex.md": "259a91de9fb17bd0cacfe72e634b71d9c23fe4c0db47018d30068272e9257175",
+    "original-codex.txt": "e3e17ff8bb3e425acf37df001a2cef0e992af5d64826ffb4cf998eb9b01c8add",
+    "personas/thermo-nuclear-code-quality-review.md": "4b5e6839a3a14eac957f3d74d0f120cdb74dc9368a7de6ba04509fb0fe73c426",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "thermo-nuclear-code-quality-review": "personas/thermo-nuclear-code-quality-review.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-cursor-team-kit-thermo-nuclear-code-quality-review"
+}

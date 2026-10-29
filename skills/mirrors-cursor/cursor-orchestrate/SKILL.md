@@ -1,7 +1,14 @@
 ---
 name: cursor-orchestrate
 description: "Use only when the user explicitly types `/orchestrate <goal>` to coordinate a bounded dependency graph through native Codex Cloud tasks; requires an exact configured environment and authorization for task creation."
+disable-model-invocation: true
 ---
+
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
 
 # Native Codex Cloud orchestration
 

@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "fc0efa8f33e2c47d8ffdd506d3bf1f8cfe8db0e9b89353ce265fcb4fbe7e8781",
+    "native-codex.md": "fc0efa8f33e2c47d8ffdd506d3bf1f8cfe8db0e9b89353ce265fcb4fbe7e8781",
+    "original-codex.txt": "e845c23b71bca1e6b5c1451da8e28fadec71c126702bd862201f414d9331d44c",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-foundational-thinking"
+}

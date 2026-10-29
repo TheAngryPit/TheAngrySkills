@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "dce53edc9a4dd6c8799e539c7d83da3b03d0f0e5c70aa9670e7b080630f28a98",
+    "native-codex.md": "dce53edc9a4dd6c8799e539c7d83da3b03d0f0e5c70aa9670e7b080630f28a98",
+    "original-codex.txt": "9c846f2cd8696218cc5acb6576ef1c6d730a5e4ecb60f5aa60a276d2b588920b",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-run-smoke-tests"
+}

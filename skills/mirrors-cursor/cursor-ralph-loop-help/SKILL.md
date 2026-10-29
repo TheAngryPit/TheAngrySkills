@@ -3,6 +3,12 @@ name: cursor-ralph-loop-help
 description: Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex guide boundary
 
 Explain the Cursor Ralph Loop accurately. The commands and `.cursor/ralph` state in this guide describe the external Cursor plugin; this guide neither starts nor cancels a loop in Codex. For native Codex loop execution, resolve `cursor-ralph-loop` and its verified runtime separately.

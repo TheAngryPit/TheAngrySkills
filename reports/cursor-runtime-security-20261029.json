@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "base_revision": "ecd94d59f67ad39c33f53a88b04a4c9d092cde4b",
+  "candidate_revision": "4011d88278e3f04ea2cf0656d82f9631d8e5788a",
+  "base_skill_tree": "c6f91181575370efab9ad650c23139346683cbf4",
+  "candidate_skill_tree": "49fd7e76be13df6043477bcd9d9adcbd0fdca3de",
+  "scanner_sha256": "8f41054a97cab43b737179c2294217acfd0bbb942f062381e8350de8877eaf20",
+  "scan_environment": "identical scanner; exact clean Git exports; Python -B; no bytecode or ignored working-tree files",
+  "comparison_keys": [
+    "skill",
+    "file",
+    "rule",
+    "severity",
+    "sample"
+  ],
+  "base_blocked": 18,
+  "candidate_blocked": 18,
+  "new_blocked_skills": [],
+  "added": [
+    {
+      "skill": "cursor-check-agent-compatibility",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/method.md",
+      "line": 23,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "The local scanner never executes plugin components, hooks, MCP servers, startup commands, or tests. It performs no network access, credential reads, or external writes.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-check-agent-compatibility",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/native-codex.md",
+      "line": 23,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "The local scanner never executes plugin components, hooks, MCP servers, startup commands, or tests. It performs no network access, credential reads, or external writes.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-check-agent-compatibility",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/original-codex.txt",
+      "line": 18,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "The local scanner never executes plugin components, hooks, MCP servers, startup commands, or tests. It performs no network access, credential reads, or external writes.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-create-plugin-scaffold",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/method.md",
+      "line": 21,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "5. Treat hook, MCP server, marketplace wiring, global plugin-home, installation, activation, and publication requests as `REVIEW_REQUIRED` before any write.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-create-plugin-scaffold",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/native-codex.md",
+      "line": 21,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "5. Treat hook, MCP server, marketplace wiring, global plugin-home, installation, activation, and publication requests as `REVIEW_REQUIRED` before any write.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-create-plugin-scaffold",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/original-codex.txt",
+      "line": 16,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "5. Treat hook, MCP server, marketplace wiring, global plugin-home, installation, activation, and publication requests as `REVIEW_REQUIRED` before any write.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-create-plugin-scaffold",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/personas/plugin-architect.md",
+      "line": 16,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "2. Recommend component mix (`rules`, `skills`, `agents`, `commands`, `hooks`, `mcpServers`) based on need.",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-cursor-sdk",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/method.md",
+      "line": 17,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "1. Convert the requested operation to a JSON object with `operation` (`prompt`, `create`, `resume`, `send`, `wait`, or `stream`) and only the required safe fields. Do not includ...",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-cursor-sdk",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/native-codex.md",
+      "line": 17,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "1. Convert the requested operation to a JSON object with `operation` (`prompt`, `create`, `resume`, `send`, `wait`, or `stream`) and only the required safe fields. Do not includ...",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-cursor-sdk",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/original-codex.txt",
+      "line": 12,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "1. Convert the requested operation to a JSON object with `operation` (`prompt`, `create`, `resume`, `send`, `wait`, or `stream`) and only the required safe fields. Do not includ...",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-review-plugin-submission",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/method.md",
+      "line": 20,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "4. Escalate hooks, MCP server declarations, active components, marketplace uniqueness, runtime behavior, and external publication for separate human review. Never execute them d...",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-review-plugin-submission",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/native-codex.md",
+      "line": 20,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "4. Escalate hooks, MCP server declarations, active components, marketplace uniqueness, runtime behavior, and external publication for separate human review. Never execute them d...",
+      "classification": "reviewed native content retained at a reference path"
+    },
+    {
+      "skill": "cursor-review-plugin-submission",
+      "severity": "warning",
+      "rule_id": "mcp-plugin-hook-install",
+      "path": "references/runtime/original-codex.txt",
+      "line": 15,
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present.",
+      "sample": "4. Escalate hooks, MCP server declarations, active components, marketplace uniqueness, runtime behavior, and external publication for separate human review. Never execute them d...",
+      "classification": "reviewed native content retained at a reference path"
+    }
+  ],
+  "removed": [],
+  "verdict_changes": {},
+  "supersedes": "Earlier working-tree scan incorrectly included four untracked bytecode artifacts; its17-signal classification is withdrawn.",
+  "review_conclusion": "13 additional findings match reviewed native text at relocated reference paths. No bytecode or ignored file was scanned; no scanner/policy suppression.18 existing blocked skills remain unresolved and outside the changed runtime adaptation."
+}

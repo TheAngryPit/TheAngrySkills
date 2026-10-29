@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "30f8c54915f1f085c5a9c8e852c28c1470b0627f93588e080c4c3c5bd843b03d",
+    "native-codex.md": "30f8c54915f1f085c5a9c8e852c28c1470b0627f93588e080c4c3c5bd843b03d",
+    "original-codex.txt": "1e7df356c4d7779b9e2fb5db678776b747ebb2374412f850b433ebbdfd5189c6",
+    "personas/comment-sicko.md": "adb0393023d7f3b66a5ac2cc0fac9edf379ab9b7d6c5ca98b2151fdc5d4b8747",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "comment-sicko": "personas/comment-sicko.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-no-comments"
+}

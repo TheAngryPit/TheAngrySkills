@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_baseline_checks_do_not_need_git_objects _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1063289d0>
+
+    def test_baseline_checks_do_not_need_git_objects(monkeypatch):
+        def unavailable(*args, **kwargs):
+            raise subprocess.CalledProcessError(128, args[0], stderr=b'baseline commit is not in a shallow checkout')
+
+        monkeypatch.setattr(subprocess, 'check_output', unavailable)
+>       test_runtime_generation_preserves_upstream_ownership()
+
+tests/test_cursor_runtime_automation.py:57:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/test_cursor_runtime_automation.py:19: in test_runtime_generation_preserves_upstream_ownership
+    paths=subprocess.check_output(['git','ls-tree','-r','--name-only',BASE,folder],cwd=ROOT,text=True).splitlines()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (['git', 'ls-tree', '-r', '--name-only', 'ecd94d59f67ad39c33f53a88b04a4c9d092cde4b', '.github/workflows'],)
+kwargs = {'cwd': PosixPath('<source>'), 'text': True}
+
+    def unavailable(*args, **kwargs):
+>       raise subprocess.CalledProcessError(128, args[0], stderr=b'baseline commit is not in a shallow checkout')
+E       subprocess.CalledProcessError: Command '['git', 'ls-tree', '-r', '--name-only', 'ecd94d59f67ad39c33f53a88b04a4c9d092cde4b', '.github/workflows']' returned non-zero exit status 128.
+
+tests/test_cursor_runtime_automation.py:54: CalledProcessError
+=========================== short test summary info ============================
+FAILED tests/test_cursor_runtime_automation.py::test_baseline_checks_do_not_need_git_objects
+1 failed, 4 deselected in 0.03s

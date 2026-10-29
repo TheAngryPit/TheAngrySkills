@@ -3,6 +3,12 @@ name: cursor-workflow-from-chats
 description: Extract durable working preferences from recent Cursor chats and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:extract_workflow_from_chats` only with one explicitly supplied project-local JSONL export and the exact parent thread identifier. The adapter limits the time window, includes child evidence only when linked to that parent, redacts credentials/paths/contacts, and writes only a reviewable proposal plus receipt; it never writes a skill, rule, memory or global setting. Native task-history acquisition and automatic selection remain unavailable.

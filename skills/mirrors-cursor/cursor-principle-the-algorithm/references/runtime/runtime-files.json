@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "162b1bb5166e9a33acbe58e00eeb468501cf69dfc0ed1da21d1332a49206c955",
+    "native-codex.md": "162b1bb5166e9a33acbe58e00eeb468501cf69dfc0ed1da21d1332a49206c955",
+    "original-codex.txt": "b05ffec7061c0298b93419828103a40b99919b8b9facc67e505b7e911bc44d7c",
+    "personas/dyl-agent.md": "82ab1d859e19c65e1cdf1060288387f711859c41aeccc6aa06d52dfc10213454",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "dyl-agent": "personas/dyl-agent.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-principle-the-algorithm"
+}

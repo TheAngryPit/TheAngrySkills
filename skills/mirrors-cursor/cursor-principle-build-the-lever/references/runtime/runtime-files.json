@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "1f26f36df04ec1015abc96d61289169a5947edb609789d25c666fc36f4646eb0",
+    "native-codex.md": "1f26f36df04ec1015abc96d61289169a5947edb609789d25c666fc36f4646eb0",
+    "original-codex.txt": "fea5644a1a6c25e0ccd8dcd92bf7a7cbdd980c13461839324b90c01e23850ad6",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-build-the-lever"
+}

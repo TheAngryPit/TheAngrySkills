@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "12a3bf3937703c8f40f334ceea4c434c0fab9417c3b4d63ddc4efe500a2a4247",
+    "native-codex.md": "12a3bf3937703c8f40f334ceea4c434c0fab9417c3b4d63ddc4efe500a2a4247",
+    "original-codex.txt": "58b3cfd5e153708e02ba621aab30a1dbd22d93d42d2f0fb85cae0deac7e63b44",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-google-slides"
+}

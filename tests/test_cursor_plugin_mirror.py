@@ -32,6 +32,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         for relative in (
             "scripts/sync-cursor-plugin-skills.py",
+            "scripts/cursor_runtime_contracts.py",
             "scripts/cursor_native_hook_adapters.py",
             "scripts/cursor_canvas_adapters.py",
             "scripts/cursor_plugin_submission_audit.py",
@@ -191,9 +192,13 @@ class CursorMirrorTests(unittest.TestCase):
                     name,
                 )
             policy = output / "agents/openai.yaml"
-            frontmatter = re.match(r"\A---\n(.*?)\n---", (output / "SKILL.md").read_text(), re.DOTALL)
+            codex_source = output / "references/runtime/original-codex.txt"
+            native_text = codex_source.read_text() if codex_source.exists() else (output / "SKILL.md").read_text()
+            frontmatter = re.match(r"\A---\n(.*?)\n---", native_text, re.DOTALL)
             self.assertIsNotNone(frontmatter, name)
             self.assertNotIn("disable-model-invocation:", frontmatter.group(1), name)
+            if codex_source.exists() and (explicit or adapted_explicit):
+                self.assertIn("disable-model-invocation: true", (output / "SKILL.md").read_text().split("---", 2)[1])
             if explicit or adapted_explicit:
                 self.assertEqual(policy.read_text(), "policy:\n  allow_implicit_invocation: false\n", name)
             else:
@@ -566,6 +571,13 @@ class CursorMirrorTests(unittest.TestCase):
             rendered = (
                 self.root / "skills/mirrors-cursor" / name / "SKILL.md"
             ).read_text()
+            retained = self.root / "skills/mirrors-cursor" / name / "references/runtime/original-codex.txt"
+            if retained.exists():
+                original = retained.read_text()
+                body = re.match(r"\A---\n[\s\S]*?\n---\n([\s\S]*)\Z", original)
+                self.assertIsNotNone(body, name)
+                self.assertTrue(rendered.endswith(body.group(1)), name)
+                rendered = original
             match = re.match(r"\A---\n[\s\S]*?\n---\n([\s\S]*)\Z", rendered)
             self.assertIsNotNone(match, name)
             self.assertEqual(match.group(1).strip(), overlay["codex_native_body"].strip(), name)
@@ -575,7 +587,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotIn("~/.cursor/plugins/local", scaffold)
 
         sdk = self.root / "skills/mirrors-cursor/cursor-cursor-sdk"
-        self.assertFalse((sdk / "references").exists())
+        self.assertEqual({p.name for p in (sdk / "references").iterdir()}, {"runtime"})
         self.assertTrue((sdk / "scripts/cursor_sdk_native_adapter.py").is_file())
 
     def test_retained_source_files_reject_uninventoried_paths(self):

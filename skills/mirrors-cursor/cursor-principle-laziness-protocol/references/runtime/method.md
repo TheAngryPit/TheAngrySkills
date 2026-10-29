@@ -1,0 +1,18 @@
+---
+name: cursor-principle-laziness-protocol
+description: "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem."
+---
+
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
+## Codex adaptation
+
+Prefer deletion and the smallest direct change, subject to the real proof gate. Required native capabilities: none; this is instruction-only. No external product dependency is required by the adapted path. No tool is required; unsafe deletion preserves the original. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation.
+
+# Laziness Protocol
+
+- **Consolidate decisions.** Do not repeat the same choice in several places. Put it behind one source of truth and pass the result as a simple flag.
+- **Minimize the diff.** Make the smallest change that solves the problem. Fewer lines beat "elegant" boilerplate.

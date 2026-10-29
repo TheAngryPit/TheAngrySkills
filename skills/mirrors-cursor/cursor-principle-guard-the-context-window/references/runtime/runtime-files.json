@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "1ccbd126cea65d580d9c8f671a91c25d9ee881844df5ca60071d83480a0039dc",
+    "native-codex.md": "1ccbd126cea65d580d9c8f671a91c25d9ee881844df5ca60071d83480a0039dc",
+    "original-codex.txt": "7dcc76612e46d80650780b5f13d18352be2a8d23414d559277323fbdf93b4a10",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-guard-the-context-window"
+}

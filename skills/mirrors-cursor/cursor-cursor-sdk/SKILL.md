@@ -3,6 +3,12 @@ name: cursor-cursor-sdk
 description: "Use when building or troubleshooting an integration with the external Cursor TypeScript SDK (@cursor/sdk), including Agent.create, Agent.prompt, Agent.resume, streaming, MCP, local or cloud runs, and error handling."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 # Bounded Cursor SDK migration for Codex
 
 Use this mirror when the request concerns `@cursor/sdk`, `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `run.wait`, `CursorAgentError`, local/cloud selection, or MCP configuration. Preserve the upstream SDK guidance as external reference while using the local migration adapter for the Codex path.

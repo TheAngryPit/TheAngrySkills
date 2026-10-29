@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "957d47db176516a6e1618a9696a67cb3f06935544bfc8be0019536aac576f249",
+    "native-codex.md": "957d47db176516a6e1618a9696a67cb3f06935544bfc8be0019536aac576f249",
+    "original-codex.txt": "45b97cc8c7bb0d6693e3521e7b078423a9db488acafcd60a2f687f40a40604b1",
+    "personas/agents-memory-updater.md": "0c6cee49d4b3cb4da1558ade1c20f22ffdd2a04d63d41f7e03818fa4c390db50",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "agents-memory-updater": "personas/agents-memory-updater.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-continual-learning"
+}

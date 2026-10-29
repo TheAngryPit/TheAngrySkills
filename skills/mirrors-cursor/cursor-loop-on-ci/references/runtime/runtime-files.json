@@ -1,0 +1,16 @@
+{
+  "files": {
+    "method.md": "1e990c027549a70ff5e694c5f188098042be62e2bc07d0f7b138be48d95aaf4a",
+    "native-codex.md": "1e990c027549a70ff5e694c5f188098042be62e2bc07d0f7b138be48d95aaf4a",
+    "original-codex.txt": "e0e0ac3c33d401bdb121f5ddeeda18add76d536f82f0ba6ab872abcc1bd7560e",
+    "personas/ci-watcher.md": "4dc0772260b78dccc92c0f6614e82e6a1303da4b629b8b21fee9fb7da03b1dcb",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {
+    "ci-watcher": "personas/ci-watcher.md"
+  },
+  "schema_version": 1,
+  "skill": "cursor-loop-on-ci"
+}

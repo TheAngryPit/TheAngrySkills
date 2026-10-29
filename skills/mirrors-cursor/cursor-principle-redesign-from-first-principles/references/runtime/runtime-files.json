@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "54a5132ddca86bef8e9fd86a9205fd49429495a698eefcfc3fc5dd2f9ed3d4f3",
+    "native-codex.md": "54a5132ddca86bef8e9fd86a9205fd49429495a698eefcfc3fc5dd2f9ed3d4f3",
+    "original-codex.txt": "393b277dc105da7c3125c4a2ca8ff3e0f6b7ee41e4789df3ca68b0855cbba936",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-redesign-from-first-principles"
+}

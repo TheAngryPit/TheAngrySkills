@@ -3,6 +3,12 @@ name: cursor-check-agent-compatibility
 description: "Run the full repository compatibility pass: scanner score, startup path, validation loop, and docs reliability."
 ---
 
+## Runtime selection
+
+Before runtime-dependent work, read [execution selection](references/runtime/selection.md). In a verified T3 host follow [the T3 contract](references/runtime/t3.md) and its method reference; the inline section below is the native Codex branch, not literal T3 dispatch. Outside T3, native Codex follows that inline branch unchanged. If the host is ambiguous or a required capability is unavailable, report the gap; a permission refusal never authorizes switching branches.
+
+## Native Codex branch
+
 # Check agent compatibility in Codex
 
 Run a bounded, evidence-based compatibility review of an explicitly supplied local plugin directory.

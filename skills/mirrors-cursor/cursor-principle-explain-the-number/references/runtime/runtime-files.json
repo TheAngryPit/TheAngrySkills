@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "5d85dbeed4dcbb51a850eff637210ef2e87446c7d5abee7f42b0269a26ca96ef",
+    "native-codex.md": "5d85dbeed4dcbb51a850eff637210ef2e87446c7d5abee7f42b0269a26ca96ef",
+    "original-codex.txt": "02692ca270805e571275977acec50d093e58b3bf80513441104bcf103552392d",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-principle-explain-the-number"
+}

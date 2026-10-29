@@ -3,6 +3,11 @@ name: cursor-triage-issue-reports
 description: Triage Slack issue reports with one thread-only verdict, evidence review, cause-aware routing, tracker dedupe, and fail-closed ticket creation. Use only from the configured Benny triage automation.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Native Codex execution boundary
 
 Use only an explicitly configured, authorized Benny workflow. Source distribution does not install or activate it. Resolve actual native connector schemas, permissions and control capabilities; missing event delivery remains incomplete and is never silently converted to scheduled polling. No source-repository or cache path is needed at runtime. Read configuration from the project-owned path supplied by setup.

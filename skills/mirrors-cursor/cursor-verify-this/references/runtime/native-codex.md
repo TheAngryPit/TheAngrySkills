@@ -3,6 +3,11 @@ name: cursor-verify-this
 description: "Verify a claim with fresh local evidence: restate it falsifiably, capture baseline and treatment, compare artifacts, and return VERIFIED, NOT VERIFIED, or INCONCLUSIVE."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Verify This
 
 Verification is not a recap. It proves or disproves a specific claim with repeatable evidence.

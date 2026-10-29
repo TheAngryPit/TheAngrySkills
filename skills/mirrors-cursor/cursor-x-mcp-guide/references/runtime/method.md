@@ -3,6 +3,11 @@ name: cursor-x-mcp-guide
 description: "Use before authorized X connector work or errors, including encrypted X Chat. Resolve tools, credits, helper authorization and supported secret input before operations; do not infer runtime access from this guide."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex X capability and authorization boundary
 
 Read the upstream workflow below as product-specific guidance.

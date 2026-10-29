@@ -3,6 +3,11 @@ name: cursor-docs-canvas
 description: "Render a documentation-style Cursor Canvas that organizes architecture notes, API references, walkthroughs, and how-tos into a navigable layout with sections, tables of contents, and cross-references. Use when the user asks for a docs canvas, documentation overview, architecture walkthrough, API reference page, or wants to render structured documentation as an interactive canvas."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:render_docs_canvas` for an explicit, bounded project-local Markdown/HTML artifact when Canvas is unavailable; never read ~/.cursor/skills-cursor. The artifact includes a table of contents, section anchors, and links back to source files. External dependencies remain explicit: Cursor Canvas surface and SDK declarations. `canvas_parity` stays `UNAVAILABLE`, and no product configuration is created.

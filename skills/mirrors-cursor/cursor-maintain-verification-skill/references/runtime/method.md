@@ -3,6 +3,11 @@ name: cursor-maintain-verification-skill
 description: "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\"."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation boundary
 
 This mirror maintains only the explicitly selected project-local verification skill under `.agents/skills/verify-*/`. The coordinator owns the live pass and proof-orchestrator selects its proof level. Source readers may use native bounded delegation when exposed, but the sequential fallback is only a declared path here, not a live proof. A missing or unhealthy target is `blocked` with the attempted route and prerequisite. The maintenance flow never edits product code or global skills, and it never opens, publishes, or merges a PR without separate authorization. The bounded fixture reruns the real disposable CLI, performs syntax/version/health Doctor, records one source-wave result per feature, reconciles only its own feature files, cleans app state, persists before/after evidence, and reports `FIXTURE_ONLY`; a separate disposable web fixture was also re-driven through the native Codex in-app browser after drift removal with accessibility-tree and screenshot evidence. It does not claim live target coverage, PR, or native host activation.

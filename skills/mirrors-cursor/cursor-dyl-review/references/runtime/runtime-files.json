@@ -1,15 +1,19 @@
 {
   "files": {
-    "method.md": "b47858c6d946c319facd30807390b64b9032960ed98f5415a8702eca40bba3a5",
-    "native-codex.md": "b47858c6d946c319facd30807390b64b9032960ed98f5415a8702eca40bba3a5",
+    "method.md": "6635e2599e2257d978270963d6da725f4c4c4de5b08d9ed202110ce535b2e0e4",
+    "native-codex.md": "6635e2599e2257d978270963d6da725f4c4c4de5b08d9ed202110ce535b2e0e4",
     "original-codex.txt": "7ddaf3f8aa2b4748e1c0e92d21d24473500cd8c14ace3be2098601b608f4c178",
     "personas/dyl-agent.md": "82ab1d859e19c65e1cdf1060288387f711859c41aeccc6aa06d52dfc10213454",
-    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "personas/thermo-nuclear-code-quality-review-subagent.md": "d45423add7160d8e0dcf4a740d3b72af277f49bb5ea45b9981ae4ee9d9fa2997",
+    "personas/thermo-nuclear-review-subagent.md": "f26189920cb40018f5098252f602e39d6e0dcb88ea647abfda8074daafb4bf54",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
     "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
   },
   "native_base": "../..",
   "personas": {
-    "dyl-agent": "personas/dyl-agent.md"
+    "dyl-agent": "personas/dyl-agent.md",
+    "thermo-nuclear-code-quality-review-subagent": "personas/thermo-nuclear-code-quality-review-subagent.md",
+    "thermo-nuclear-review-subagent": "personas/thermo-nuclear-review-subagent.md"
   },
   "schema_version": 1,
   "skill": "cursor-dyl-review"

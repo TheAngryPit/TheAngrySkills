@@ -1,10 +1,10 @@
 {
   "files": {
-    "method.md": "5b35cf1da77a35111244f9c7e7d124679c6ebc8e90c7676e4161b0e260fd1488",
-    "native-codex.md": "5b35cf1da77a35111244f9c7e7d124679c6ebc8e90c7676e4161b0e260fd1488",
+    "method.md": "bb288b1dcc9a03c6c468c1d1ae2540e482bb31815397c8c1706547d3ba72fc0f",
+    "native-codex.md": "bb288b1dcc9a03c6c468c1d1ae2540e482bb31815397c8c1706547d3ba72fc0f",
     "original-codex.txt": "5b35cf1da77a35111244f9c7e7d124679c6ebc8e90c7676e4161b0e260fd1488",
     "personas/poteto-agent.md": "f88e4210f53ae7b93e6fda4536046b1a871004bc77b5d4a060e6811096865352",
-    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
     "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
   },
   "native_base": "../..",

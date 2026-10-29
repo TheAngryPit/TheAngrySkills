@@ -3,6 +3,11 @@ name: cursor-ketchup
 description: "Use when the user explicitly requests $cursor-ketchup to catch up on verified changes in this chat since their last message, with every pending decision made clear and actionable."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Ketchup
 
 Catch the user up on what changed in this chat since the last message they wrote before `$cursor-ketchup`. Notifications and subagent results are not their messages. Assume the user remembers their last message and nothing after it.

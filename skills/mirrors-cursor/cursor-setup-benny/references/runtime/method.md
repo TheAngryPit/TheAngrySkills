@@ -3,6 +3,11 @@ name: cursor-setup-benny
 description: Configure Benny and prepare its triage and repro automations. Use when installing Benny or changing its Slack, tracker, repository, routing, control, model, or budget settings.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Set up Benny on Codex
 
 Benny is a two-workflow automation pack: triage one Slack issue report, then reproduce or verify a trusted bug/performance verdict. These three explicit-only skills distribute its native instructions; distribution alone does not create, enable or schedule either workflow.

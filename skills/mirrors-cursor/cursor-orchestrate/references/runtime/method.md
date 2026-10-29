@@ -3,6 +3,11 @@ name: cursor-orchestrate
 description: "Use only when the user explicitly types `/orchestrate <goal>` to coordinate a bounded dependency graph through native Codex Cloud tasks; requires an exact configured environment and authorization for task creation."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Native Codex Cloud orchestration
 
 Use this mirror only when the user explicitly invokes `/orchestrate <goal>`. Preserve the goal, decompose it into a bounded coordinator-owned dependency graph, and use native Codex Cloud tasks only when an exact environment is configured and creation plus prompt-content transmission are authorized.

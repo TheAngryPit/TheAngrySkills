@@ -3,6 +3,11 @@ name: cursor-architect
 description: "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 This published workflow is explicit-only through `agents/openai.yaml` and bounded to local design work with observable source grounding, at least two structurally distinct candidates, an independent judge, and disposable verification. If the grounding or competition gate cannot be met, report PARTIAL or unavailable rather than a completed Architect result. This workflow depends on `cursor-how`, `cursor-why` when rationale matters, and `cursor-arena` for structural alternatives. The generated `cursor-how`/`cursor-why` mirrors and their relevant references have been read in a bounded native follow-up; the receipts preserve paths, outputs, nulls and gaps. Resolve exact installed names before invocation; a published mirror and an observed read/role-flow are not proof of automatic availability or triggering. In the observed native path, candidate delegates used `collaboration.spawn_agent` with `agent_type=general-worker`, the cross-judge used `agent_type=reviewer`, and the failed-hypothesis redesign used `agent_type=planner`; these native roles are capability mappings, not proof of the upstream Cursor runner slugs or automatic trigger. Native model and effort selection follows the standing `model-capability-router`; invocation metadata and worker self-report must be recorded separately. The coordinator owns design synthesis, implementation and re-design when the sketch fails.

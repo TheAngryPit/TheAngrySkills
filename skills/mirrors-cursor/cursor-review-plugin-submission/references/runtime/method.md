@@ -3,6 +3,11 @@ name: cursor-review-plugin-submission
 description: Audit a Cursor plugin for marketplace readiness. Use when validating manifests, component metadata, discovery paths, and submission quality before publishing.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Review a Cursor plugin submission
 
 Perform a read-only structural audit of an explicitly supplied local Cursor plugin.

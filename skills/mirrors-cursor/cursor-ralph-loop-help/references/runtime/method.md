@@ -3,6 +3,11 @@ name: cursor-ralph-loop-help
 description: Explain the Ralph Loop plugin, how it works, and available skills. Use when the user asks for help with ralph loop, wants to understand the technique, or needs usage examples.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex guide boundary
 
 Explain the Cursor Ralph Loop accurately. The commands and `.cursor/ralph` state in this guide describe the external Cursor plugin; this guide neither starts nor cancels a loop in Codex. For native Codex loop execution, resolve `cursor-ralph-loop` and its verified runtime separately.

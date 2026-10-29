@@ -3,6 +3,11 @@ name: cursor-figure-it-out
 description: "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Resolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.

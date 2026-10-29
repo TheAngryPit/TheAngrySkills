@@ -3,6 +3,11 @@ name: cursor-cursor-team-kit-pr-review-canvas
 description: Generate an interactive PR review walkthrough as an HTML page. Fetches PR data via gh API, categorizes files into core vs mechanical changes, adds reviewer annotations, and renders diffs with moved-code detection. Use when the user pastes a GitHub PR URL and asks for a review, walkthrough, or summary, or says "review this PR".
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Use the bundled renderer for a local artifact; never comment, approve, merge, or publish. Required native capabilities: gh read-only API or local diff, local HTML artifact, node syntax check. External dependencies remain explicit: GitHub gh CLI, read-only and optional with a local fixture. Missing gh falls back to a local diff and marks PR metadata unavailable. This candidate is promoted only for the bounded renderer/read-only path; PR retrieval, categorization, browser presentation, annotations, and publication remain unproven.

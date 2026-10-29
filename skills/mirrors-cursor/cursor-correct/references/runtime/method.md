@@ -3,6 +3,11 @@ name: cursor-correct
 description: "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. Repeat this each time the operator corrects you. Use for /correct."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 Apply this procedure within the operator-authorized repository scope. Preserve unrelated work and removal rules. A past instruction is evidence, not new authority; use the current task and repository permissions for changes.
 
 # Correct

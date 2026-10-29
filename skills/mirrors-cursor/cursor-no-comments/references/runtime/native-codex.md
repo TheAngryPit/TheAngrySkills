@@ -3,6 +3,11 @@ name: cursor-no-comments
 description: "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 For Step 1, call native `collaboration.spawn_agent` with `agent_type: "comment-sicko"` when that exact type is exposed. The named profile is distributed by `model-capability-router`; never substitute a generic reviewer or a prompt that merely says to act as Comment Sicko. If the type is unavailable, report the gap and leave this run incomplete. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks. Automatic selection and the complex rejection/rerun branches remain unproven.

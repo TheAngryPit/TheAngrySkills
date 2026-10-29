@@ -6,6 +6,11 @@ compatibility: >-
   Needs network access to https://cursor.com/docs/api/origin/* at run time.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Native Codex boundary
 
 Origin remains the named external product. Fetch the current official public documentation through an available native web surface when this skill is invoked; the mirrored source pin is not a live API contract. Resolve actual capabilities and permissions before any API operation. Do not authenticate, install, create an app, register webhooks, send feedback, publish repository details or migrate code from guidance alone. The porting skill produces a local planning brief; feedback is draft material until explicitly authorized for sending. No connector, provider, credentials, cloud runtime or installation is supplied by this mirror.

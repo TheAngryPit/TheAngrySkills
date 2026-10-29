@@ -3,6 +3,11 @@ name: cursor-workflow-from-chats
 description: Extract durable working preferences from recent Cursor chats and convert them into skills, rules, or workflow docs. Use when asked to learn preferences, mine feedback, personalize workflows, or generate team/person-specific agent guidance.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:extract_workflow_from_chats` only with one explicitly supplied project-local JSONL export and the exact parent thread identifier. The adapter limits the time window, includes child evidence only when linked to that parent, redacts credentials/paths/contacts, and writes only a reviewable proposal plus receipt; it never writes a skill, rule, memory or global setting. Native task-history acquisition and automatic selection remain unavailable.

@@ -3,6 +3,11 @@ name: cursor-continual-learning
 description: Orchestrate continual learning by delegating transcript mining and AGENTS.md updates to `agents-memory-updater`.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Continual learning proposal for Codex
 
 Use this only when the user explicitly asks to mine supplied task history or when an operator-enabled trusted project workflow invokes it.

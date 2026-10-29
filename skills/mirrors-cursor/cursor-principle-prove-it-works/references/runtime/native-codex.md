@@ -3,6 +3,11 @@ name: cursor-principle-prove-it-works
 description: "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'"
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Exercise the real path and inspect actual output before claiming done. Required native capabilities: none; this is instruction-only. External dependencies remain explicit: real artifact or runtime under test. No tool is required by the rule; unavailable runtime is NOT VERIFIED. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation.

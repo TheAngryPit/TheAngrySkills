@@ -3,6 +3,11 @@ name: cursor-how
 description: "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Use native read-only subagents only when authorized; the standing `model-capability-router` owns model and effort. Preserve simple versus complex paths, distinct exploration angles, cited synthesis and coordinator verification.

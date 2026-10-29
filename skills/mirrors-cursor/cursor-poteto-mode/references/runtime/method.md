@@ -3,6 +3,11 @@ name: cursor-poteto-mode
 description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation and security boundary
 
 This is a per-turn native Codex guidance adapter. It preserves the 23 playbooks and their principles, but it does not create a sticky mode or claim implicit future invocation. Read the selected playbook from the project-local mirror. Map the upstream question action to the host's optional user-input surface only for a genuine product or preference choice. Map the upstream task and delegation fields to native bounded delegation when exposed, keeping scope, selected model/effort, ownership, and proof with the coordinator. If named delegation is unavailable, report the exact gap; sequential local work may continue, but it does not complete the named-role playbook step. For cleanup, use `cursor-deslop` when installed; for CLI/TUI surfaces, use `cursor-control-cli`; for browser/Electron/web surfaces, use `cursor-control-ui`. Check each concrete skill before use and record the exact gap when unavailable or not applicable. Cloud-capable task environments are conditional; if the cloud lane is unavailable, record the gap and do not claim parity. Keep model selection with model-capability-router and proof-path selection with proof-orchestrator. A heartbeat or automation is used only when explicitly requested. Ordinary playbook delegates call native `collaboration.spawn_agent` with `agent_type: "poteto-agent"` when that exact type is exposed; reuse an existing suitable named agent with `collaboration.followup_task` instead of spawning a sibling. The profile is distributed by `model-capability-router`; install it explicitly before a fresh Codex session can select it. If the exact type is unavailable, report the gap and leave named-role execution incomplete rather than substituting a generic agent. Read the selected `cursor-principle-*` leaf when applied. Routed workflow skills (`cursor-how`, `cursor-why`, `cursor-interrogate`, `cursor-reflect`, `cursor-swarm`, `cursor-architect`, and `cursor-arena`) keep their own role-specific contracts. Reuse the same named delegate when supported. Automatic sticky routing, fresh top-level profile loading, and full live playbook execution remain unproven; native selection and bounded follow-up of a named `poteto-agent` have been observed in this task tree.
@@ -13,7 +18,7 @@ Poteto owns principle selection inside its playbooks through the inline index be
 
 # Poteto mode
 
-Bundled skills live at `../<name>/SKILL.md` from this file, so put this file's absolute path in every `poteto-agent` prompt.
+Bundled skills live at `../<name>/SKILL.md` from the original skill root, so put this file's absolute path in every `poteto-agent` prompt.
 
 ## Non-negotiables
 

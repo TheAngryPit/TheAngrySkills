@@ -3,6 +3,11 @@ name: cursor-why
 description: "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers authorized read-only sources through native tools, CLI or MCP and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Use the connectors and read-only scopes actually available in this Codex task. Preserve the seven-category coverage map, source investigators, null results, epistemic framework, citation checks and synthesis. Native model/effort follows the standing `model-capability-router`; delegation does not grant source or write authority. The pinned Cursor skill says readonly mode strips MCP access; current official Cursor Subagents documentation describes readonly as restricting writes and separately says local subagents inherit MCP tools. Treat the source claim as unverified policy, not a platform contract or a reason to grant Codex write access.

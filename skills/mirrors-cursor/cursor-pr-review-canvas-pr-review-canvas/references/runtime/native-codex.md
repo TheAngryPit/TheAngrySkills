@@ -3,6 +3,11 @@ name: cursor-pr-review-canvas-pr-review-canvas
 description: "Render a PR diff review as a Cursor Canvas that groups changes by reviewer importance, separates boilerplate from core logic, and highlights tricky or unexpected code. Use when reviewing a pull request, summarizing a diff for review, or when the user asks for a PR review canvas, diff walkthrough, or change-set overview."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Use `scripts/cursor_canvas_adapters.py:render_pr_review_canvas` for an explicit, bounded project-local Markdown/HTML review artifact when Canvas is unavailable. The adapter reads only a local diff fixture, groups files by reviewer value, and reports that live PR metadata/gh access is unavailable; it never claims Canvas SDK parity or publishes a review. External dependency remains explicit: Cursor Canvas surface.

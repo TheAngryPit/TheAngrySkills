@@ -1,6 +1,6 @@
 # Select one execution contract
 
-Keep the original skill directory as the base for relative paths in native-codex.md. That file preserves the original Codex contract verbatim; it is not a new runtime registration.
+The inline native branch and original-codex.txt preserve the original skill-root base and exact text. In relocated native-codex.md and method.md, commands, backticked paths and prose still use that original skill directory; Markdown links are file-relative and already relocated. Read each document's Reference path base section. These are not new runtime registrations.
 
 Choose from actual host context and exposed tools, not the model brand. In a verified T3 Code context with orchestrator_capabilities, read t3.md before executing runtime-dependent steps. A Codex model inside T3 still uses T3 task/worktree/PR ownership. Native same-provider delegation is allowed only within the current host instructions. If T3 tools are deferred, try the named capability tool once; absence is not a permission refusal.
 

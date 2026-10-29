@@ -3,6 +3,11 @@ name: cursor-automate-me
 description: "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via skill-creator + cursor-unslop, optionally pulling fresh evidence from recent transcripts."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Use `skill-creator` for authoring, `cursor-unslop` for prose, and `cursor-poteto-mode` only as a shape example. Search `.agents/skills/` in the project and the personal Codex skills root only when it is relevant and readable. Mine bounded history from the current workspace/task, never unrelated task roots. Native user-input surfaces may allow fewer choices and no multiselect; retain the broad-to-specific preference inquiry in concise rounds with free text. Project-local writes follow the current task scope; personal installation is a separate explicit choice.

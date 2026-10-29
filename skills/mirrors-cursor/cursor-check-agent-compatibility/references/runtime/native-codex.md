@@ -3,6 +3,11 @@ name: cursor-check-agent-compatibility
 description: "Run the full repository compatibility pass: scanner score, startup path, validation loop, and docs reliability."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Check agent compatibility in Codex
 
 Run a bounded, evidence-based compatibility review of an explicitly supplied local plugin directory.

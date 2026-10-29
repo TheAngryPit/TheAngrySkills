@@ -3,6 +3,11 @@ name: cursor-swarm
 description: "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Open a visible four-phase todolist or Markdown checklist before launch: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Default to Work cloud only when its native worker route is available and the operator has authorized that destination. Use local workers when they need access to the user's computer. Otherwise report cloud unavailable without substituting local work. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. The read-only two-slice local case and prior blocked worker outcome are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Automatic selection and Work cloud parity remain unobserved.

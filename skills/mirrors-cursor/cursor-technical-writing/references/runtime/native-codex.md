@@ -3,6 +3,11 @@ name: cursor-technical-writing
 description: "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex adaptation
 
 Apply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.

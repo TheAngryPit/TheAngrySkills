@@ -3,6 +3,11 @@ name: cursor-interrogate
 description: "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 This published workflow is explicit-only through `agents/openai.yaml`. Use the native Codex subagent capability for independent read-only reviewers only when delegation is authorized. Require one immutable scope and rubric, at least two distinct model requests accepted by native spawn, separate read-only outputs, and a coordinator lead judgment before claiming a bounded review. If a configured reviewer is missing or fails, mark the aggregate PARTIAL and name the slot; never fabricate multi-model consensus or a complete configured run. Follow the standing `model-capability-router` and the operator-selected model/effort; do not force the Cursor default model table. Record requested reviewer profiles and unavailable slots, and mark effective model/effort readback unavailable unless the native surface supplies it. Keep the source rubric, lead judgment, and no-auto-apply contract.

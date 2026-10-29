@@ -3,6 +3,11 @@ name: cursor-show-me-your-work
 description: "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Keep the canonical TSV and pinned source `scripts/log.sh` intact. The bundled helper requires `--root <task-root>` and a logfile below that root; it rejects path escapes and symlink components or targets while preserving append-only TSV sanitization. Write only inside the authorized workspace or task scratch path, verify evidence links, and use the native task history/rollout for transcript audit. Independent review follows the standing model router and is reported only when performed.

@@ -35,6 +35,7 @@ def load_contracts(path: Path, entries: list[dict]) -> dict:
     data = json.loads(path.read_text(), object_pairs_hook=_object_pairs)
     if type(data.get('schema_version')) is not int or data['schema_version'] != 1:
         raise ValueError('unsupported runtime contract schema')
+    by_name = {e['published_name']: e for e in entries}
     expected = {e['published_name'] for e in entries if e['publish'] and not e.get('excluded_from_mirror')}
     known = {e['published_name'] for e in entries}
     if not isinstance(data.get('skills'), dict) or not expected <= set(data['skills']) <= known:
@@ -54,6 +55,15 @@ def load_contracts(path: Path, entries: list[dict]) -> dict:
             safe_path(name)
             if not isinstance(item, dict):
                 raise ValueError('invalid runtime item')
+            if group == 'skills':
+                if item.get('source_path') != by_name[name]['path']:
+                    raise ValueError('runtime skill source identity differs: ' + name)
+                digest = item.get('reviewed_workflow_sha256')
+                if not isinstance(digest, str) or len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest):
+                    raise ValueError('reviewed workflow digest missing: ' + name)
+                roles = item.get('profiles', [])
+                if not isinstance(roles, list) or len(roles) != len(set(roles)) or not set(roles) <= set(data['profiles']):
+                    raise ValueError('invalid reviewed persona coverage: ' + name)
             if group == 'profiles':
                 safe_path(item.get('asset_path'))
                 if not isinstance(item.get('asset_sha256'), str) or len(item['asset_sha256']) != 64:
@@ -111,17 +121,27 @@ def t3_target(binding: dict, catalog: dict) -> dict:
     blocked = {'status': 'blocked', 'target': None, 'reason': 'selected target or option unavailable'}
     if not isinstance(binding, dict) or set(binding) - {'providerInstanceId', 'model', 'options'}:
         return blocked
-    providers = [p for p in catalog.get('providers', []) if p.get('providerInstanceId') == binding.get('providerInstanceId')]
+    if any(not isinstance(binding.get(key), str) or not binding[key].strip() for key in ('providerInstanceId', 'model')):
+        return blocked
+    providers = [p for p in catalog.get('providers', []) if p.get('providerInstanceId') == binding['providerInstanceId']]
     if len(providers) != 1 or providers[0].get('canRunChildTask') is not True:
         return blocked
     models = [m for m in providers[0].get('models', []) if m.get('id') == binding.get('model')]
     if len(models) != 1:
         return blocked
     options = binding.get('options', {})
-    if not isinstance(options, dict):
+    if isinstance(options, list):
+        if any(not isinstance(o, dict) or set(o) != {'id', 'value'} or not isinstance(o['id'], str) for o in options):
+            return blocked
+        if len({o['id'] for o in options}) != len(options):
+            return blocked
+        option_pairs = [(o['id'], o['value']) for o in options]
+    elif isinstance(options, dict):
+        option_pairs = list(options.items())
+    else:
         return blocked
     allowed = {o['id']: o.get('values', []) for o in models[0].get('options', [])}
-    for key, value in options.items():
+    for key, value in option_pairs:
         if not any(type(value) is type(v) and value == v for v in allowed.get(key, [])):
             return blocked
     return {'status': 'selected', 'target': copy.deepcopy(binding), 'reason': 'exact operator binding retained'}
@@ -173,7 +193,19 @@ def _relocate_links(text: str) -> str:
         if not path or ':' in path or path.startswith('/'):
             return match.group(0)
         return '](' + '../../' + path + sep + fragment + ')'
-    return re.sub(r'\]\(([^)]+)\)', replace, text)
+    relocated = re.sub(r'\]\(([^)]+)\)', replace, text)
+    relocated = relocated.replace('relative to this file', 'relative to the original skill root')
+    relocated = relocated.replace('from this file', 'from the original skill root')
+    marker = re.match(r'^---\r?\n[\s\S]*?\r?\n---\r?\n', relocated)
+    offset = marker.end() if marker else 0
+    context = (
+        '\n## Reference path base\n\n'
+        'Shell commands, bare/backticked paths and prose use the original skill root '
+        '(two directories above this reference). References to the original file mean that root, '
+        'including sibling skills and playbooks. Markdown link destinations are file-relative '
+        'and have already been relocated; do not apply the command base to those links.\n\n'
+    )
+    return relocated[:offset] + context + relocated[offset:]
 
 
 def render_runtime_package(target: Path, entry: dict, rendered_codex: str, contracts: dict) -> None:
@@ -181,6 +213,11 @@ def render_runtime_package(target: Path, entry: dict, rendered_codex: str, contr
     name = entry['published_name']
     if name not in contracts['skills']:
         return
+    if workflow_digest(target, rendered_codex) != contracts['skills'][name]['reviewed_workflow_sha256']:
+        raise ValueError('workflow coverage drift requires review: ' + name)
+    required = referenced_personas(target, rendered_codex, contracts['profiles'])
+    if not required <= set(contracts['skills'][name].get('profiles', [])):
+        raise ValueError('missing reviewed persona: ' + name)
     root = Path(__file__).resolve().parents[1]
     base = 'sources/cursor-plugins/runtime-adapters/'
     payloads = {'selection.md': _read_owned(root, base + 'selection.md'),
@@ -235,6 +272,11 @@ def verify_runtime_packages(root: Path, contracts: dict) -> None:
         folder = root / name / 'references/runtime'
         if not (root / name).exists():
             continue
+        original = folder / 'original-codex.txt'
+        if not original.is_file() or original.is_symlink() or workflow_digest(root / name, original.read_text()) != skill['reviewed_workflow_sha256']:
+            raise ValueError('runtime package drift: reviewed workflow ' + name)
+        if not referenced_personas(root / name, original.read_text(), contracts['profiles']) <= set(skill.get('profiles', [])):
+            raise ValueError('runtime package drift: missing reviewed persona ' + name)
         record_path = folder / 'runtime-files.json'
         if not record_path.is_file() or record_path.is_symlink():
             raise ValueError('runtime package drift: missing metadata ' + name)
@@ -261,3 +303,28 @@ def verify_runtime_packages(root: Path, contracts: dict) -> None:
                 actual[p.relative_to(folder).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
         if actual != expected:
             raise ValueError('runtime package drift: files ' + name)
+
+
+def _workflow_files(target: Path, rendered_codex: str) -> dict[str, bytes]:
+    result = {'SKILL.md': rendered_codex.encode()}
+    for path in target.rglob('*'):
+        relative = path.relative_to(target).as_posix()
+        if relative == 'SKILL.md' or path.name in {'MIRROR.md', 'LICENSE.upstream'} or relative.startswith('references/runtime/'):
+            continue
+        if path.is_symlink():
+            raise ValueError('workflow coverage drift: symlink')
+        if path.is_file():
+            result[relative] = path.read_bytes()
+    return result
+
+
+def workflow_digest(target: Path, rendered_codex: str) -> str:
+    import hashlib
+    files = {name: hashlib.sha256(body).hexdigest() for name, body in _workflow_files(target, rendered_codex).items()}
+    return hashlib.sha256(json.dumps(files, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def referenced_personas(target: Path, rendered_codex: str, profiles: dict) -> set[str]:
+    import re
+    text = '\n'.join(value.decode(errors='replace') for name, value in _workflow_files(target, rendered_codex).items() if name.endswith('.md'))
+    return {name for name in profiles if re.search(r'(?<![\w-])' + re.escape(name) + r'(?![\w-])', text)}

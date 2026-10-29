@@ -3,6 +3,11 @@ name: cursor-cancel-ralph
 description: Cancel an active Ralph Loop. Use when the user wants to stop, cancel, or abort a running ralph loop.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Cancel a native Codex Ralph Loop
 
 Cancel only the exact active loop identified by its retained native child identity.

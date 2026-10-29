@@ -59,7 +59,8 @@
       },
       "profiles": [
         "advisor-subagent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "bb1d841421ae87b6c38f9d8d1ae0c81b9236cb1a41651c0c1185e64627a78085"
     },
     "cursor-check-agent-compatibility": {
       "source_path": "agent-compatibility/skills/check-agent-compatibility/SKILL.md",
@@ -116,7 +117,8 @@
         "docs-reliability-review",
         "startup-review",
         "validation-review"
-      ]
+      ],
+      "reviewed_workflow_sha256": "40bccdaf4ae6be351511d1be0302be8177d7a20fea63e3ea8b78e8f319da81d8"
     },
     "cursor-cli-for-agents": {
       "source_path": "cli-for-agent/skills/cli-for-agents/SKILL.md",
@@ -173,7 +175,8 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "ca002d377c3bf8807adc6f89114711e8a92e16303bf83ee8c2492bba97fbdd56"
     },
     "cursor-continual-learning": {
       "source_path": "continual-learning/skills/continual-learning/SKILL.md",
@@ -239,7 +242,8 @@
       },
       "profiles": [
         "agents-memory-updater"
-      ]
+      ],
+      "reviewed_workflow_sha256": "88fedc115b8b90e7ce71cca7a37ea31797961282d672a79c8c8a45a738d3d6e5"
     },
     "cursor-create-plugin-scaffold": {
       "source_path": "create-plugin/skills/create-plugin-scaffold/SKILL.md",
@@ -293,7 +297,8 @@
       },
       "profiles": [
         "plugin-architect"
-      ]
+      ],
+      "reviewed_workflow_sha256": "c3764d564d899630d5779ab513710cb0fcd65ee466240c43f32870e2745056b7"
     },
     "cursor-review-plugin-submission": {
       "source_path": "create-plugin/skills/review-plugin-submission/SKILL.md",
@@ -344,7 +349,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5f4a2f07872f59be09176b3cfb8436c6122a5df7dcc3909eb1fd4f868c64ac7e"
     },
     "cursor-cursor-sdk": {
       "source_path": "cursor-sdk/skills/cursor-sdk/SKILL.md",
@@ -395,7 +401,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "b8bb8b572876a004c6a5a6d72531163048d40e7ca5a4f3629c66e04b1df91e28"
     },
     "cursor-check-compiler-errors": {
       "source_path": "cursor-team-kit/skills/check-compiler-errors/SKILL.md",
@@ -452,7 +459,8 @@
           "method": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "1dcd50b29f463dee94d548402cc5548c1570bcc41435e4f9a22c76ecb48d1d18"
     },
     "cursor-control-cli": {
       "source_path": "cursor-team-kit/skills/control-cli/SKILL.md",
@@ -509,7 +517,8 @@
           "method": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "e5b15f183c453519127acbb6b9e3ce34e541266e53ac86563e21bb81403d61fc"
     },
     "cursor-control-ui": {
       "source_path": "cursor-team-kit/skills/control-ui/SKILL.md",
@@ -566,7 +575,8 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "2853315a7de5010b5469306d70158a828c85c9bb2a525de720dfe3eb3a042d79"
     },
     "cursor-deslop": {
       "source_path": "cursor-team-kit/skills/deslop/SKILL.md",
@@ -617,7 +627,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "10b86dacf8b2290f0aae8e49ccc87b6a0cc86c62e2d980813364e6050b9e1546"
     },
     "cursor-fix-ci": {
       "source_path": "cursor-team-kit/skills/fix-ci/SKILL.md",
@@ -680,7 +691,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a4b97dab6c1da9db0a7ab0110244c56725fcf475150f6846479ab9d7f2e5739b"
     },
     "cursor-fix-merge-conflicts": {
       "source_path": "cursor-team-kit/skills/fix-merge-conflicts/SKILL.md",
@@ -731,7 +743,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5c8ec994f8c6540e159ab9c2e77a4be9f96408b4370948f22b3f3165700adf93"
     },
     "cursor-get-pr-comments": {
       "source_path": "cursor-team-kit/skills/get-pr-comments/SKILL.md",
@@ -788,7 +801,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "50d2d5f7177461147d83cfbfbe40abfb4600c8462d6ab2050cb50d0053ce024d"
     },
     "cursor-loop-on-ci": {
       "source_path": "cursor-team-kit/skills/loop-on-ci/SKILL.md",
@@ -854,7 +868,8 @@
       },
       "profiles": [
         "ci-watcher"
-      ]
+      ],
+      "reviewed_workflow_sha256": "9ba3da7b89b1f1acbda8aa6a9e36e0caae4096cdb6506f852f8dbecee66f5621"
     },
     "cursor-make-pr-easy-to-review": {
       "source_path": "cursor-team-kit/skills/make-pr-easy-to-review/SKILL.md",
@@ -917,7 +932,8 @@
           "history": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c0ffc7895b390aa1c0bf475a8976297d0c5b4f8df8c96754c8974daa24f17e50"
     },
     "cursor-new-branch-and-pr": {
       "source_path": "cursor-team-kit/skills/new-branch-and-pr/SKILL.md",
@@ -980,7 +996,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "e9dba24f64485161533ef8e5431bfd8c9670c57c8d51bfbfab677a2b5b41a21b"
     },
     "cursor-cursor-team-kit-pr-review-canvas": {
       "source_path": "cursor-team-kit/skills/pr-review-canvas/SKILL.md",
@@ -1043,7 +1060,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a511086be9a942675e1e3dff1a8932be0ee4ecce4b4890cd4d489612bacef32c"
     },
     "cursor-review-and-ship": {
       "source_path": "cursor-team-kit/skills/review-and-ship/SKILL.md",
@@ -1112,7 +1130,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "97e7ff3924011705b4141268dc45a807182d92aa4851c52b081f534765d074a9"
     },
     "cursor-run-smoke-tests": {
       "source_path": "cursor-team-kit/skills/run-smoke-tests/SKILL.md",
@@ -1163,7 +1182,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "6006011b31a329c1ba565163b8c7abf32bb0882d638a771c8e313fded4250ecf"
     },
     "cursor-cursor-team-kit-thermo-nuclear-code-quality-review": {
       "source_path": "cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md",
@@ -1223,7 +1243,8 @@
       },
       "profiles": [
         "thermo-nuclear-code-quality-review"
-      ]
+      ],
+      "reviewed_workflow_sha256": "9c002b6e9bfd3ad0604ed00ee77a0fb12136a16e9bd91eda2c9e2ee95a05ea7a"
     },
     "cursor-verify-this": {
       "source_path": "cursor-team-kit/skills/verify-this/SKILL.md",
@@ -1280,7 +1301,8 @@
           "method": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "2d78bec47050bb53f1b0d655ffa17548800c66d61a85dddefdddde5734e62cab"
     },
     "cursor-weekly-review": {
       "source_path": "cursor-team-kit/skills/weekly-review/SKILL.md",
@@ -1337,7 +1359,8 @@
           "method": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "ec25477f43d9cd0047131e5848594b6ecb9f758fa4b6fac6d4eab45e9e4d936c"
     },
     "cursor-what-did-i-get-done": {
       "source_path": "cursor-team-kit/skills/what-did-i-get-done/SKILL.md",
@@ -1388,7 +1411,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "65fb116e665faab822faddc24e4947da7460b94b8443d0519c0367f0d99bdc2a"
     },
     "cursor-workflow-from-chats": {
       "source_path": "cursor-team-kit/skills/workflow-from-chats/SKILL.md",
@@ -1457,7 +1481,8 @@
           "history": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "ec5cf23b1b5c0aacc4d92922c2ed42067b764cd5a00f4c67153ffa2fd2c292b2"
     },
     "cursor-docs-canvas": {
       "source_path": "docs-canvas/skills/docs-canvas/SKILL.md",
@@ -1508,7 +1533,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "0ca34f82d2a51f7d81d0f85fb51cf93aaffdb30073ef582bd991b189844c96cd"
     },
     "cursor-build-figma": {
       "source_path": "dyl-stack/skills/build-figma/SKILL.md",
@@ -1562,7 +1588,8 @@
       },
       "profiles": [
         "dyl-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "e2363266559bcdf0bd77095d54b9c4034ee8d30f691c761563352c2a77351d7f"
     },
     "cursor-dyl-mode": {
       "source_path": "dyl-stack/skills/dyl-mode/SKILL.md",
@@ -1628,8 +1655,9 @@
       },
       "profiles": [
         "dyl-agent",
-        "dyl-agent"
-      ]
+        "poteto-agent"
+      ],
+      "reviewed_workflow_sha256": "174d7e96ecbc619f7827829b5c0fc965dc21cc2b6946357083cb5bbba0155396"
     },
     "cursor-dyl-ready-pr": {
       "source_path": "dyl-stack/skills/dyl-ready-pr/SKILL.md",
@@ -1694,9 +1722,9 @@
         }
       },
       "profiles": [
-        "dyl-agent",
         "dyl-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "55c2c118b400e6ef3c3abcf50523d44153a1c7c64400c024ec635abcbd4d8335"
     },
     "cursor-dyl-review": {
       "source_path": "dyl-stack/skills/dyl-review/SKILL.md",
@@ -1774,8 +1802,10 @@
       },
       "profiles": [
         "dyl-agent",
-        "dyl-agent"
-      ]
+        "thermo-nuclear-code-quality-review-subagent",
+        "thermo-nuclear-review-subagent"
+      ],
+      "reviewed_workflow_sha256": "cfb34f83aed56a8f903c51962594ebf1e0eb0398c799aa311999bda3541e0b15"
     },
     "cursor-principle-the-algorithm": {
       "source_path": "dyl-stack/skills/principle-the-algorithm/SKILL.md",
@@ -1829,7 +1859,8 @@
       },
       "profiles": [
         "dyl-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "f6a91317f55bf11a87161cd72bee990e60e6e729b596f8c77e41afa5f6a3cefd"
     },
     "cursor-orchestrate": {
       "source_path": "orchestrate/skills/orchestrate/SKILL.md",
@@ -1880,7 +1911,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "635007d712deefbb18256fd7c91592976112bbead8ee3de34ce56b2237018dd4"
     },
     "cursor-origin-api": {
       "source_path": "origin-apps/skills/origin-api/SKILL.md",
@@ -1937,7 +1969,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a1039f8d0ebe320a5d37353be8597b7cfb450d2f69b10dea169204bbada0e4a2"
     },
     "cursor-port-github-app-to-origin": {
       "source_path": "origin-apps/skills/port-github-app-to-origin/SKILL.md",
@@ -1994,7 +2027,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5793b1357e4bdc54ba9ee4f2d2499b6456f35602647c7ee2cad1e4e7e5920c16"
     },
     "cursor-pr-review-canvas-pr-review-canvas": {
       "source_path": "pr-review-canvas/skills/pr-review-canvas/SKILL.md",
@@ -2057,7 +2091,8 @@
           "history": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "d9dd46b5409fe07cd26ab5215b47425e936f0a4cc77ef56bc21de04839f99d4f"
     },
     "cursor-reproduce-and-fix-issues": {
       "source_path": "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md",
@@ -2132,7 +2167,8 @@
           "link-pr": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c4c410f87b2ce3674a3548b1b98788903b177416d184edbef7e9d7deef697252"
     },
     "cursor-setup-benny": {
       "source_path": "pstack/automations/benny/skills/setup-benny/SKILL.md",
@@ -2201,7 +2237,8 @@
           "link-pr": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "d546bfdf6f85509c7a5e8652835d9495df1adbb793c565c155025ff162aa71de"
     },
     "cursor-triage-issue-reports": {
       "source_path": "pstack/automations/benny/skills/triage-issue-reports/SKILL.md",
@@ -2270,7 +2307,8 @@
           "link-pr": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "586892eae11b1a2af00e201b859bd117e7427d0dd9ab91ad1061c33ffd3fdba8"
     },
     "cursor-architect": {
       "source_path": "pstack/skills/architect/SKILL.md",
@@ -2330,7 +2368,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "32b7d1c9a1d1a3801c2482c5164f1791c3c4cf572cfce0bce1c4e19d31b6cf77"
     },
     "cursor-arena": {
       "source_path": "pstack/skills/arena/SKILL.md",
@@ -2396,7 +2435,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "bdf89520712f11622cd1bae2bf5076ae7d341c029dc42e57e279d236e90718fe"
     },
     "cursor-automate-me": {
       "source_path": "pstack/skills/automate-me/SKILL.md",
@@ -2465,7 +2505,8 @@
           "worktree": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5a93de2ca3d1c90e0a6210b0e0fefe6831607f092948e666300eb461335b3074"
     },
     "cursor-benchmark-checklist": {
       "source_path": "pstack/skills/benchmark-checklist/SKILL.md",
@@ -2522,7 +2563,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "2a48f5a1ae47bad05e8614273849b06a6b74ccc57d7a0880b83411bb48d871c5"
     },
     "cursor-blast-radius": {
       "source_path": "pstack/skills/blast-radius/SKILL.md",
@@ -2579,7 +2621,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "0640a329c9368e2cabc02a19ea73fee42129dbc95dc2f601b00d09065ce51311"
     },
     "cursor-bro": {
       "source_path": "pstack/skills/bro/SKILL.md",
@@ -2630,7 +2673,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "974924954d15ba0e4473a06e955f8ddcc1291a83e252b26dccb5a62d84b9dbb8"
     },
     "cursor-correct": {
       "source_path": "pstack/skills/correct/SKILL.md",
@@ -2687,7 +2731,8 @@
           "method": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "3c74581e5adbcce7f9c899565c184440f71e8fc3c7ef41cdc9f91b2c4f8cb507"
     },
     "cursor-create-formal-verification-skill": {
       "source_path": "pstack/skills/create-formal-verification-skill/SKILL.md",
@@ -2738,7 +2783,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "242d06b2d4f1c04e1f41dc9f6764e28f1b76bb6587d3e83f940c4f7fe2dda649"
     },
     "cursor-create-verification-skill": {
       "source_path": "pstack/skills/create-verification-skill/SKILL.md",
@@ -2795,7 +2841,8 @@
           "method": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "2042edf134f143df3127ab1eb7dbeacfd0e93b92fb4cb1fa4db5fb9186172f88"
     },
     "cursor-figure-it-out": {
       "source_path": "pstack/skills/figure-it-out/SKILL.md",
@@ -2858,7 +2905,8 @@
           "delegate": "deferred",
           "worktree": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "38bf0b12b1305b9583c82896dc8d67c6ffd094ca28dc51367c6a15c6ea2d25c1"
     },
     "cursor-how": {
       "source_path": "pstack/skills/how/SKILL.md",
@@ -2918,7 +2966,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "646465b56cdc1694fe0367f0f3e66188c4a5410f5bdc98623c8eb1944e1cb44d"
     },
     "cursor-in-your-own-words": {
       "source_path": "pstack/skills/in-your-own-words/SKILL.md",
@@ -2969,7 +3018,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "dc063306fc2dd9db4f8971bf3a02b577b3bbc440e207fd64fc99c5926beb574f"
     },
     "cursor-interrogate": {
       "source_path": "pstack/skills/interrogate/SKILL.md",
@@ -3035,7 +3085,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "57360d0b6eb39b716972c810be4d68974f7e1f3fd0604880f29f8aed4dcfd576"
     },
     "cursor-ketchup": {
       "source_path": "pstack/skills/ketchup/SKILL.md",
@@ -3104,7 +3155,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5ceb48a91d3ca501168f5135d5e232aad1ef98a0c941b50d43f3e92151049ae2"
     },
     "cursor-maintain-formal-verification-skill": {
       "source_path": "pstack/skills/maintain-formal-verification-skill/SKILL.md",
@@ -3155,7 +3207,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "0191858015796a052c2d7137094a57b4cb103aaed8fae576dd8d80d76a9da71b"
     },
     "cursor-maintain-verification-skill": {
       "source_path": "pstack/skills/maintain-verification-skill/SKILL.md",
@@ -3218,7 +3271,8 @@
           "delegate": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "0035c102ab684399293a1282be97255b62b07048b82a2b32c20ec4a217c6271a"
     },
     "cursor-no-comments": {
       "source_path": "pstack/skills/no-comments/SKILL.md",
@@ -3284,7 +3338,8 @@
       },
       "profiles": [
         "comment-sicko"
-      ]
+      ],
+      "reviewed_workflow_sha256": "88fbdf1b197bea088f30d9e56cf46e4082be71b7c2d85f8cc06f362b24b67c19"
     },
     "cursor-poteto-help": {
       "source_path": "pstack/skills/poteto-help/SKILL.md",
@@ -3359,7 +3414,12 @@
           "link-pr": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "d35ac844cb35a93ef0e875d6105ef6af51f8625b6fb9e7641468d437bd648bd9",
+      "profiles": [
+        "comment-sicko",
+        "poteto-agent"
+      ]
     },
     "cursor-poteto-mode": {
       "source_path": "pstack/skills/poteto-mode/SKILL.md",
@@ -3450,7 +3510,8 @@
       "profiles": [
         "comment-sicko",
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "baf1cf8949860530f6cc35c521c47a04f27712e07cce606eb9cdcc76f3608ef7"
     },
     "cursor-principle-attack-the-premise": {
       "source_path": "pstack/skills/principle-attack-the-premise/SKILL.md",
@@ -3501,7 +3562,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c75266e225a8375de57575ff9a6897ea34b5947b0619b54a4afef1a5e9539b42"
     },
     "cursor-principle-boundary-discipline": {
       "source_path": "pstack/skills/principle-boundary-discipline/SKILL.md",
@@ -3552,7 +3614,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a0f9a5e3df86b3e726dfc4e4e35355ac19cdca8a3622e312f45ae2a3321f5df1"
     },
     "cursor-principle-build-the-lever": {
       "source_path": "pstack/skills/principle-build-the-lever/SKILL.md",
@@ -3609,7 +3672,8 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "abba3a48cd862515a8900cd6da238408208a8294d3732bf055535552b7cfd093"
     },
     "cursor-principle-encode-lessons-in-structure": {
       "source_path": "pstack/skills/principle-encode-lessons-in-structure/SKILL.md",
@@ -3660,7 +3724,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "1e1a9e61eb9fb0a45b4a778906aae193ad7448e7d4cd51916bb2cb2dc21dc1b2"
     },
     "cursor-principle-exhaust-the-design-space": {
       "source_path": "pstack/skills/principle-exhaust-the-design-space/SKILL.md",
@@ -3711,7 +3776,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "6d3e5b1c82d7064ca900cb04f08b70b4f0d338c4411374a2ec521647ce1e0d3f"
     },
     "cursor-principle-experience-first": {
       "source_path": "pstack/skills/principle-experience-first/SKILL.md",
@@ -3762,7 +3828,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "f9b87d43fc7557214d40d3e083094a3db6ccb2c433827aa7b8e3606a377abce8"
     },
     "cursor-principle-explain-the-number": {
       "source_path": "pstack/skills/principle-explain-the-number/SKILL.md",
@@ -3813,7 +3880,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "29c8c37f39b3115f50d9495ce986063df083d39808329f583949411ccff06b05"
     },
     "cursor-principle-fix-root-causes": {
       "source_path": "pstack/skills/principle-fix-root-causes/SKILL.md",
@@ -3864,7 +3932,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "8668a2ba10152d51d4dc76292a9ceabe35dbc9d25645d83d690f09c56b8a8536"
     },
     "cursor-principle-foundational-thinking": {
       "source_path": "pstack/skills/principle-foundational-thinking/SKILL.md",
@@ -3921,7 +3990,8 @@
           "method": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "fe905bc915c26537a64d3dde5052f804e5959b1cbfe767580967c44b300f9936"
     },
     "cursor-principle-guard-the-context-window": {
       "source_path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
@@ -3978,7 +4048,8 @@
           "method": "deferred",
           "delegate": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "29d50a07097b42c6b7fe3f9c9644caf38de3fd409bc7f770fc2f8f28af393ecc"
     },
     "cursor-principle-laziness-protocol": {
       "source_path": "pstack/skills/principle-laziness-protocol/SKILL.md",
@@ -4029,7 +4100,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "49b9f075bf9ae2f42fa34d736456897942495062c287b1d893582d53c9822b74"
     },
     "cursor-principle-make-operations-idempotent": {
       "source_path": "pstack/skills/principle-make-operations-idempotent/SKILL.md",
@@ -4080,7 +4152,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "b0ee4a8502cc962471642cbe2547be11b828ad8f45bf7f6ffd5add6487b65413"
     },
     "cursor-principle-migrate-callers-then-delete-legacy-apis": {
       "source_path": "pstack/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md",
@@ -4131,7 +4204,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c6f4be72ec819bbf6334926d2ab38110da3df11d43a4dfaf292a67bdfc0915eb"
     },
     "cursor-principle-minimize-reader-load": {
       "source_path": "pstack/skills/principle-minimize-reader-load/SKILL.md",
@@ -4182,7 +4256,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "904df90ba38021e7fab36449b9d69277933919edefcc1f07cbd9dc6f82b4edbc"
     },
     "cursor-principle-model-the-domain": {
       "source_path": "pstack/skills/principle-model-the-domain/SKILL.md",
@@ -4233,7 +4308,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "9d4cd7ae7146677e9a3f59b936fb69cda337de7ee3b13546daa9c548a95edeb8"
     },
     "cursor-principle-never-block-on-the-human": {
       "source_path": "pstack/skills/principle-never-block-on-the-human/SKILL.md",
@@ -4284,7 +4360,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "88237dcfcaaeedc1d369c3896f775487d62e2d65f80815b0b1be18c5cbfc0b40"
     },
     "cursor-principle-outcome-oriented-execution": {
       "source_path": "pstack/skills/principle-outcome-oriented-execution/SKILL.md",
@@ -4335,7 +4412,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "5b5d920f0d0887a49305ae7d3ba8632f2321decf2a07f7eb48650df054fac782"
     },
     "cursor-principle-prove-it-works": {
       "source_path": "pstack/skills/principle-prove-it-works/SKILL.md",
@@ -4386,7 +4464,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "09ca35bf0c083d419f7a2df8f30ff4784266b58ea19edc93043d5e89d2f422f6"
     },
     "cursor-principle-redesign-from-first-principles": {
       "source_path": "pstack/skills/principle-redesign-from-first-principles/SKILL.md",
@@ -4437,7 +4516,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "e88b030277f7a35ed7bc83546fbe78c468dd28ecdaae25ec7fd56e0c89f5aecb"
     },
     "cursor-principle-separate-before-serializing-shared-state": {
       "source_path": "pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md",
@@ -4488,7 +4568,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "b33faaea2e74886e073142d99a5b171329c1086d39b103e5a59c577886192779"
     },
     "cursor-principle-sequence-verifiable-units": {
       "source_path": "pstack/skills/principle-sequence-verifiable-units/SKILL.md",
@@ -4539,7 +4620,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c415efe501062c22197f7c1ef69238fc4964e2f351af33124dac48d8bd1afa61"
     },
     "cursor-principle-subtract-before-you-add": {
       "source_path": "pstack/skills/principle-subtract-before-you-add/SKILL.md",
@@ -4590,7 +4672,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "45a99e7337635c4e7558981468ab85de45f9bdb84f57c4ce9db826f7cbe70795"
     },
     "cursor-principle-test-behavior-not-implementation": {
       "source_path": "pstack/skills/principle-test-behavior-not-implementation/SKILL.md",
@@ -4641,7 +4724,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "ecc80e9afe2dc4b52c437a956123cb11acbbc8cc2ce5e33bd04bcecbcb4d46f9"
     },
     "cursor-principle-type-system-discipline": {
       "source_path": "pstack/skills/principle-type-system-discipline/SKILL.md",
@@ -4692,7 +4776,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a5fc05b68254fcb3524ad81cc37ac2fb38fbc070b0274c397583182342ceb1d9"
     },
     "cursor-recall": {
       "source_path": "pstack/skills/recall/SKILL.md",
@@ -4761,7 +4846,8 @@
           "history": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "37aafcffefa75e0f55db2f5194949c5effe1ffe988b25f46b831e9984f250f6f"
     },
     "cursor-reflect": {
       "source_path": "pstack/skills/reflect/SKILL.md",
@@ -4827,7 +4913,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "ae96912a8d54aa8db45a715797f918cc2baa74fe39ea101a363e1f5d11683210"
     },
     "cursor-setup-pstack": {
       "source_path": "pstack/skills/setup-pstack/SKILL.md",
@@ -4890,7 +4977,8 @@
           "delegate": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "37e245bfba02c3625ff96dd97faa7e98fbd1fe7101984546f53e431533c2691d"
     },
     "cursor-sharpen": {
       "source_path": "pstack/skills/sharpen/SKILL.md",
@@ -4941,7 +5029,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "414214c1177d8ddd84fac8eb740285b205a2188237796aa39892067f31938586"
     },
     "cursor-show-me-your-work": {
       "source_path": "pstack/skills/show-me-your-work/SKILL.md",
@@ -5016,7 +5105,8 @@
           "history": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "a4d84fe4b1c21e840eb94cecb6b8d522e4d92432305da71c168f422e36a5b79f"
     },
     "cursor-swarm": {
       "source_path": "pstack/skills/swarm/SKILL.md",
@@ -5076,7 +5166,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "27edfaf9f0890dd39e9e0df5f1f8e7203b54d3fb096fd93737616e74131a2de8"
     },
     "cursor-tdd": {
       "source_path": "pstack/skills/tdd/SKILL.md",
@@ -5133,7 +5224,8 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "c93b57a7df38bbcdc9c0a57f7c6f1ac69956c0a355aa61edd7f9ad67d020fdf9"
     },
     "cursor-teach": {
       "source_path": "pstack/skills/teach/SKILL.md",
@@ -5184,7 +5276,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "77c9b3e6ac6e9f9f29bf343604169b01c42bc45483f7b17e333e50b0aeb79d8e"
     },
     "cursor-technical-writing": {
       "source_path": "pstack/skills/technical-writing/SKILL.md",
@@ -5253,7 +5346,8 @@
           "link-pr": "deferred",
           "watch-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "cba06daa72b827d9b9a56b437293c431cd6b1c06a82e330e8f233262bdd577c8"
     },
     "cursor-typescript-best-practices": {
       "source_path": "pstack/skills/typescript-best-practices/SKILL.md",
@@ -5304,7 +5398,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "4bbf5a03c8e63d63cb567eae5bedf0a03ab5fef9c2de38eecd9d32b284066f31"
     },
     "cursor-unslop": {
       "source_path": "pstack/skills/unslop/SKILL.md",
@@ -5361,7 +5456,8 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "1410049402dedcceace66c2988b2181e96b560de961bbd7ef9ada4888833743d"
     },
     "cursor-why": {
       "source_path": "pstack/skills/why/SKILL.md",
@@ -5433,7 +5529,8 @@
       },
       "profiles": [
         "poteto-agent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "1ff6aaf86361115324aa73ef3d950af5f98bcc7060563f589ca99f340d9cb787"
     },
     "cursor-cancel-ralph": {
       "source_path": "ralph-loop/skills/cancel-ralph/SKILL.md",
@@ -5484,7 +5581,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "bea6d75e1d567761c233ea3536ec9a05dde4b50b9fa4105c17cc0ea551fb1c46"
     },
     "cursor-ralph-loop-help": {
       "source_path": "ralph-loop/skills/ralph-loop-help/SKILL.md",
@@ -5541,7 +5639,8 @@
           "method": "deferred",
           "history": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "1bec2b462121abf03456d9c411c95769edf6d2741ac4e23768104fa48801d9f0"
     },
     "cursor-ralph-loop": {
       "source_path": "ralph-loop/skills/ralph-loop/SKILL.md",
@@ -5592,7 +5691,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "081774656468b67934b729627084e66e2e469babc4c9890a6f2af6f55ae104f9"
     },
     "cursor-create-learning-path": {
       "source_path": "teaching/skills/create-learning-path/SKILL.md",
@@ -5649,7 +5749,8 @@
           "method": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "3678ff20f6a849f3e52dde2fc857241bf8ff59d31e067ac7f94865c81bf4f680"
     },
     "cursor-run-learning-retrospective": {
       "source_path": "teaching/skills/run-learning-retrospective/SKILL.md",
@@ -5700,7 +5801,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "365c1ea99141dbcad519a1e02ec93390ce2b36a92f0a3708aad88111955eefd9"
     },
     "cursor-thermos-thermo-nuclear-code-quality-review": {
       "source_path": "thermos/skills/thermo-nuclear-code-quality-review/SKILL.md",
@@ -5757,7 +5859,8 @@
           "method": "deferred",
           "link-pr": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "8b9c6239122666861adafd1784d6125e2994d4bd70e01f30a10e9d28bfddafdc"
     },
     "cursor-thermo-nuclear-review": {
       "source_path": "thermos/skills/thermo-nuclear-review/SKILL.md",
@@ -5817,7 +5920,8 @@
       },
       "profiles": [
         "thermo-nuclear-review-subagent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "a0487fe8cce424661194cba30ffb18d4250fd5d45ac2112135c0729fae3ade4d"
     },
     "cursor-thermos": {
       "source_path": "thermos/skills/thermos/SKILL.md",
@@ -5878,7 +5982,8 @@
       "profiles": [
         "thermo-nuclear-code-quality-review-subagent",
         "thermo-nuclear-review-subagent"
-      ]
+      ],
+      "reviewed_workflow_sha256": "11222fa6358a508e68d22b72da13733766c73036ab420885c768d85231c85058"
     },
     "cursor-google-docs": {
       "source_path": "third_party/google-docs/skills/google-docs/SKILL.md",
@@ -5929,7 +6034,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "0a55543af499a70523973c91b2774f0a45e32b976d9c0796e023822e42666641"
     },
     "cursor-google-drive": {
       "source_path": "third_party/google-drive/skills/google-drive/SKILL.md",
@@ -5980,7 +6086,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "dc1101a9640dbccc5303dac67808cdf4d0040fc42eb8c6767850c898b72c4fd5"
     },
     "cursor-google-sheets": {
       "source_path": "third_party/google-sheets/skills/google-sheets/SKILL.md",
@@ -6031,7 +6138,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "ff22c9120b2756935c242099c89b28289ee9d7a301404f496ad065cd8e0dc526"
     },
     "cursor-google-slides": {
       "source_path": "third_party/google-slides/skills/google-slides/SKILL.md",
@@ -6082,7 +6190,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "74ab052849554b1ec9862b8b4c9664b1525b069c462ad12ae71ecec6767a4193"
     },
     "cursor-x-money-guide": {
       "source_path": "third_party/x-money/skills/x-money-guide/SKILL.md",
@@ -6133,7 +6242,8 @@
         "operations": {
           "method": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "253049f81c937f3d18fcb5d2e6464c9eeec377514f9feeeb5250a42e0119351f"
     },
     "cursor-x-mcp-guide": {
       "source_path": "third_party/x/skills/x-api-mcp-guide/SKILL.md",
@@ -6196,7 +6306,8 @@
           "history": "deferred",
           "schedule": "deferred"
         }
-      }
+      },
+      "reviewed_workflow_sha256": "7ad44ec26f2c95786ebd54ef26b6bb8d3dc4889f3de6bdab2add5ce81db0a133"
     }
   },
   "profiles": {

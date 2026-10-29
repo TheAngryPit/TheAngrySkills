@@ -3,6 +3,11 @@ name: cursor-create-plugin-scaffold
 description: Create a new Cursor plugin scaffold with a valid manifest, component directories, and marketplace wiring. Use when starting a new plugin or adding a plugin to a multi-plugin repository.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Create a bounded Cursor plugin scaffold
 
 Create a static Cursor-format scaffold only inside an explicitly supplied project-local disposable root.

@@ -1,9 +1,9 @@
 {
   "files": {
-    "method.md": "4055782fc5c7492b77c40f8544165b31c15a204e228a7d11b9af5040d9dd3161",
-    "native-codex.md": "4055782fc5c7492b77c40f8544165b31c15a204e228a7d11b9af5040d9dd3161",
+    "method.md": "40d64ed5660e82e4ee3572cddd069708cb3ca054eb4197bdd2bc5d4559cb432c",
+    "native-codex.md": "40d64ed5660e82e4ee3572cddd069708cb3ca054eb4197bdd2bc5d4559cb432c",
     "original-codex.txt": "817c1734503a2b2573d507c7753518e2457c99dfa460d589749ba9dabe9f95e4",
-    "selection.md": "a99054da8503ae12d4a6640ebea256735bf4f807ec5a6bde8231d102fb0dc31b",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
     "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
   },
   "native_base": "../..",

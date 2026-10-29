@@ -3,6 +3,11 @@ name: cursor-setup-pstack
 description: Configure model and effort choices for pstack roles through the native Codex routing policy. Use for $cursor-setup-pstack, pstack model setup, reasoning budget, or changing the configured role choices.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Setup pstack for Codex
 
 Use the standing `model-capability-router` as the sole authority for model, effort, delegation and total-cost decisions. This skill maps pstack roles onto native Codex capabilities when the operator asks for setup; it does not create a second routing policy, switch the active task model, write a Cursor rule, or start agents merely to configure them.

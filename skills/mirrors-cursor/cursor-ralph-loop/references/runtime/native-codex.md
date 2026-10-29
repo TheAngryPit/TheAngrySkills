@@ -3,6 +3,11 @@ name: cursor-ralph-loop
 description: Start a Ralph Loop for iterative self-referential development. Use when the user asks to run a ralph loop, start an iterative loop, or wants repeated autonomous iteration on a task until completion.
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Ralph Loop with native Codex continuation
 
 Use only when the user explicitly asks for a Ralph loop or repeated autonomous iteration.

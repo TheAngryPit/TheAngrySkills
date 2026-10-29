@@ -106,3 +106,26 @@ def test_ledger_cannot_omit_a_native_profile(tmp_path):
     p=tmp_path/'contracts.json';p.write_text(json.dumps(d))
     with pytest.raises(ValueError,match='profile coverage'):
         module().load_contracts(p,m['skills'])
+
+
+def test_ledger_source_identity_is_reviewed(tmp_path):
+    entries=json.loads((ROOT/'sources/cursor-plugins/manifest.json').read_text())['skills']
+    d=json.loads((ROOT/'sources/cursor-plugins/runtime-adapters/compatibility.json').read_text())
+    d['skills']['cursor-no-comments']['source_path']='different/skill.md'
+    p=tmp_path/'contracts.json';p.write_text(json.dumps(d))
+    with pytest.raises(ValueError,match='source identity'):
+        module().load_contracts(p,entries)
+
+
+@pytest.mark.parametrize('binding_value,catalog_value', [({}, {'providers':[{'canRunChildTask':True,'models':[{}]}]}),
+    ({'providerInstanceId':'','model':''},{'providers':[{'providerInstanceId':'','canRunChildTask':True,'models':[{'id':''}]}]}),
+    ({'providerInstanceId':None,'model':None},{'providers':[{'providerInstanceId':None,'canRunChildTask':True,'models':[{'id':None}]}]})])
+def test_malformed_identifiers_never_select_inheritance(binding_value,catalog_value):
+    result=module().t3_target(binding_value,catalog_value)
+    assert result['status']=='blocked' and result['target'] is None
+
+
+@pytest.mark.parametrize('options', [[], [{'id':'effort','value':'medium'}]])
+def test_supported_t3_option_array_is_preserved(options):
+    b=binding();b['options']=options
+    assert module().t3_target(b,catalog())['target']==b

@@ -11,7 +11,13 @@ runtime=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(runtime)
 
 def contracts():
     entries=json.loads((ROOT/'sources/cursor-plugins/manifest.json').read_text())['skills']
-    return runtime.load_contracts(ROOT/'sources/cursor-plugins/runtime-adapters/compatibility.json',entries)
+    result=runtime.load_contracts(ROOT/'sources/cursor-plugins/runtime-adapters/compatibility.json',entries)
+    # This fixture's reviewed workflow is deliberately smaller than the real source package.
+    import hashlib
+    body='---\nname: cursor-no-comments\n---\n\n# Existing Codex\n\nRead [reference](guide.md#rules).\n'
+    files={'SKILL.md':hashlib.sha256(body.encode()).hexdigest(),'guide.md':hashlib.sha256(b'# Rules\n').hexdigest()}
+    result['skills']['cursor-no-comments']['reviewed_workflow_sha256']=hashlib.sha256(json.dumps(files,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    return result
 
 
 def package(tmp_path,name='cursor-no-comments'):
@@ -35,7 +41,7 @@ def test_retained_codex_resolves_original_targets(tmp_path):
     runtime.render_runtime_package(target,{'published_name':target.name},text,contracts())
     retained=target/'references/runtime/native-codex.md'
     assert (target/'references/runtime/original-codex.txt').read_text()==text
-    assert retained.read_text().replace('../../guide.md','guide.md')==text
+    assert retained.read_text().replace('../../guide.md','guide.md').endswith(text.split('---\n',2)[-1])
     assert (retained.parent/'../../guide.md').resolve()==(target/'guide.md').resolve()
     assert (target/'SKILL.md').read_text().endswith(text.split('---\n',2)[-1])
     assert 'original skill directory' in (target/'references/runtime/selection.md').read_text()
@@ -91,3 +97,26 @@ def test_changed_canonical_contract_is_detected(tmp_path,monkeypatch):
     monkeypatch.setattr(runtime,'_read_owned',changed)
     with pytest.raises(ValueError,match='runtime package drift'):
         runtime.verify_runtime_packages(tmp_path,contracts())
+
+
+def test_relocated_prose_and_commands_use_original_skill_root():
+    text=(ROOT/'skills/mirrors-cursor/cursor-poteto-mode/references/runtime/method.md').read_text()
+    assert 'Shell commands, bare/backticked paths and prose use the original skill root' in text
+    assert 'from this file' not in text
+    root=ROOT/'skills/mirrors-cursor/cursor-poteto-mode'
+    assert (root/'playbooks/feature.md').is_file()
+    assert (root/'../cursor-no-comments/SKILL.md').is_file()
+
+
+def test_new_persona_requirement_invalidates_reviewed_workflow(tmp_path):
+    target,text=package(tmp_path);d=contracts()
+    changed=text+'\nDelegate to `ci-watcher`.\n'
+    with pytest.raises(ValueError,match='workflow coverage drift'):
+        runtime.render_runtime_package(target,{'published_name':target.name},changed,d)
+
+
+def test_reviewed_workflow_needs_every_referenced_persona(tmp_path):
+    target,text=package(tmp_path);d=contracts();changed=text+'\nDelegate to `ci-watcher`.\n'
+    d['skills'][target.name]['reviewed_workflow_sha256']=runtime.workflow_digest(target,changed)
+    with pytest.raises(ValueError,match='missing reviewed persona'):
+        runtime.render_runtime_package(target,{'published_name':target.name},changed,d)

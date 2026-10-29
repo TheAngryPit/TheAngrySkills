@@ -3,6 +3,11 @@ name: cursor-cursor-sdk
 description: "Use when building or troubleshooting an integration with the external Cursor TypeScript SDK (@cursor/sdk), including Agent.create, Agent.prompt, Agent.resume, streaming, MCP, local or cloud runs, and error handling."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # Bounded Cursor SDK migration for Codex
 
 Use this mirror when the request concerns `@cursor/sdk`, `Agent.create`, `Agent.prompt`, `Agent.resume`, `agent.send`, `run.stream`, `run.wait`, `CursorAgentError`, local/cloud selection, or MCP configuration. Preserve the upstream SDK guidance as external reference while using the local migration adapter for the Codex path.

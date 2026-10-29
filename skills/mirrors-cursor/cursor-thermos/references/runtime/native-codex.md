@@ -3,6 +3,11 @@ name: cursor-thermos
 description: "Launch both thermo-nuclear review subagents in parallel, then synthesize their findings. Use for thermos, double thermo review, or combined bug/security and code-quality branch audits."
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 ## Codex runtime mapping
 
 Pass the same scoped diff to two independent read-only native reviewers in parallel. Give the bug/security reviewer [its pinned role](../../references/bug-security-reviewer.md) and the code-quality reviewer [its pinned role](../../references/code-quality-reviewer.md); their full rubrics are `cursor-thermo-nuclear-review` and `cursor-thermos-thermo-nuclear-code-quality-review`. Follow the selected model/effort under `model-capability-router`. The coordinator verifies and synthesizes; if one lens fails, label the result partial.

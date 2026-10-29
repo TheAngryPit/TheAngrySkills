@@ -3,6 +3,11 @@ name: cursor-what-did-i-get-done
 description: Summarize authored commits over a user-specified time period into a concise update
 ---
 
+## Reference path base
+
+Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
+
+
 # What did I get done
 
 ## Trigger

@@ -1,0 +1,10 @@
+# emilkowalski/skills Skill Mirror
+
+Mirrored skill: remove-animations
+Published skill: emil-remove-animations
+Source: https://github.com/emilkowalski/skills.git
+Source path: skills/remove-animations
+Branch: main
+Commit: a81dbca07f2217b7103e510c0f13f8d5b017afc9
+
+This skill is vendored from upstream with a `emil-` prefix to avoid global skill-name collisions. The mirrored frontmatter names and concrete references to renamed sibling paths and skill names are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

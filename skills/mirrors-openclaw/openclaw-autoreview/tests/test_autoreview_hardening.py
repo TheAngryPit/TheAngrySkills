@@ -2505,7 +2505,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             path.write_text("TOKEN=changed-placeholder\n", encoding="utf-8")
             git(repo, "add", path.name)
 
-            bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            bundle = self.helper["local_bundle"](repo).text
 
             self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], bundle)
 
@@ -2523,7 +2523,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 path.write_text("placeholder=true\n", encoding="utf-8")
                 (repo / "review.py").write_text("print('review me')\n", encoding="utf-8")
 
-                bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+                bundle = self.helper["local_bundle"](repo).text
 
                 self.assertIn("# Review Input Omissions", bundle)
                 self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], bundle)
@@ -2570,7 +2570,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 self.helper["local_bundle"].__globals__,
                 {"read_file_bytes": read_once},
             ):
-                bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+                bundle = self.helper["local_bundle"](repo).text
 
             expected_record = json.dumps("review me" + os.linesep)
             self.assertIn(
@@ -2999,7 +2999,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             snapshot = self.helper["source_tree_snapshot"](repo)
             git(repo, "update-ref", "refs/heads/review-base", "HEAD")
             self.assertEqual(self.helper["source_tree_snapshot"](repo), snapshot)
-            bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo, pinned)
+            bundle = self.helper["local_bundle"](repo, pinned).text
             self.assertIn("+committed task change", bundle)
             self.assertEqual(
                 self.helper["build_bundle"](repo, target, pinned, "HEAD").paths,
@@ -3021,7 +3021,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
                 if staged:
                     git(repo, "add", safe)
                 with self.subTest(staged=staged):
-                    bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+                    bundle = self.helper["local_bundle"](repo).text
                     self.assertIn("struct CredentialFile", bundle)
                     self.assertIn(safe, self.helper["local_bundle"](repo).paths)
                     for label in ("--dataset", "--prompt-file"):
@@ -3696,6 +3696,68 @@ class AutoreviewHardeningTests(unittest.TestCase):
                         self.assertNotIn("DIAGNOSTIC_SENTINEL", sidecar.read_text())
                         self.assertNotIn("\x1b", result.stderr)
 
+
+    @unittest.skipIf(os.name == "nt", "the executable fixture is POSIX-only")
+    def test_cli_codex_model_fallback_opt_out_preserves_failed_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            root = Path(tempdir)
+            repo = init_repo(root)
+            git(repo, "commit", "-q", "--allow-empty", "-m", "base")
+            (repo / "source.txt").write_text("review me\n")
+            env = {key: value for key, value in os.environ.items()
+                   if not key.startswith("AUTOREVIEW_") or key == "AUTOREVIEW_GIT"}
+            env.update({"HOME": str(root), "USERPROFILE": str(root), "CODEX_HOME": str(root),
+                        "AUTOREVIEW_FAKE_RECORD": str(root / "record.json")})
+            for primary, fallback in (("gpt-6.1-sol", "gpt-6-sol"), ("gpt-6-sol", "gpt-6-luna"), ("gpt-5.6-sol", "gpt-5.6-terra")):
+                # Even a schema-valid output file cannot override the failing child exit.
+                failure = (
+                    'model = args[args.index("--model") + 1]\n'
+                    f'if model == {primary!r}:\n'
+                    '    print(json.dumps({"type": "error", "message": '
+                    'f"The model {model} does not exist or you do not have access to it."}))\n'
+                    '    raise SystemExit(17)\n'
+                )
+                executable = write_executable(root / "codex", fake_codex_script().replace(
+                    'print("fake codex ok")', failure + 'print("fake codex ok")',
+                ))
+                for disabled in (True, False):
+                    with self.subTest(primary=primary, disabled=disabled):
+                        outputs = root / f"{primary}-{disabled}"
+                        outputs.mkdir()
+                        invocations = outputs / "invocations.jsonl"
+                        sidecar, report = outputs / "status.json", outputs / "result.json"
+                        env["AUTOREVIEW_FAKE_CODEX_INVOCATIONS"] = str(invocations)
+                        argv = [sys.executable, str(SCRIPT), "--mode", "local", "--engine", "codex",
+                                "--model", primary, "--no-web-search", "--codex-bin", str(executable),
+                                "--status-output", str(sidecar), "--json-output", str(report)]
+                        if disabled:
+                            argv.append("--codex-no-fallback")
+                        planned = subprocess.run(argv + ["--dry-run"], cwd=repo, env=env, text=True, capture_output=True, timeout=30)
+                        self.assertEqual(planned.returncode, 0, planned.stdout + planned.stderr)
+                        policy = "codex_fallback: disabled (model and authentication route)"
+                        self.assertEqual(policy in planned.stdout, disabled)
+                        self.assertEqual(f"fallback_model: {fallback}" in planned.stdout, not disabled)
+                        self.assertFalse(report.exists())
+                        result = subprocess.run(argv, cwd=repo, env=env, text=True, capture_output=True, timeout=30)
+                        self.assertEqual(result.returncode, 1 if disabled else 0, result.stdout + result.stderr)
+                        self.assertEqual(policy in result.stdout, disabled)
+                        self.assertEqual(f"fallback_model: {fallback}" in result.stdout, not disabled)
+                        attempts = [json.loads(line)["argv"] for line in invocations.read_text().splitlines()]
+                        models = [args[args.index("--model") + 1] for args in attempts if "exec" in args]
+                        self.assertEqual(models, [primary] if disabled else [primary, fallback])
+                        outcome = json.loads(sidecar.read_text())
+                        self.assertEqual(outcome["status"], "reviewer_unavailable" if disabled else "scoped-clean")
+                        self.assertEqual(outcome["report_produced"], not disabled)
+                        if disabled:
+                            self.assertEqual(outcome["reason"], "engine_failed")
+                            self.assertEqual(outcome["reviewer_exit_code"], 17)
+                            self.assertFalse(outcome["timed_out"])
+                            self.assertFalse(report.exists())
+                            self.assertNotIn("scoped-clean:", result.stdout)
+                            self.assertNotIn("retrying with", result.stderr)
+                        else:
+                            self.assertEqual(json.loads(report.read_text())["findings"], [])
+                            self.assertIn(f"retrying with {fallback}", result.stderr)
 
     def test_tracked_binary_changes_are_blocked_in_all_modes(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
@@ -4802,17 +4864,18 @@ class AutoreviewHardeningTests(unittest.TestCase):
             (repo / ".env").write_text("placeholder=true\n", encoding="utf-8")
             (repo / "base.txt").write_text("base\nreview me\n", encoding="utf-8")
             git(repo, "add", ".env", "base.txt")
-            local, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            local = self.helper["local_bundle"](repo).text
             self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], local)
             self.assertNotIn(".env", local)
             self.assertNotIn("placeholder=true", local)
             self.assertIn("+review me", local)
 
             git(repo, "commit", "-q", "-m", "sensitive path")
-            for bundle, paths, _mixed, _spans, _commit, _images, _base in (
+            for captured in (
                 self.helper["branch_bundle"](repo, base),
                 self.helper["commit_bundle"](repo, "HEAD"),
             ):
+                bundle = captured.text
                 self.assertIn(self.helper["REVIEW_SECURITY_OMISSION"], bundle)
                 self.assertNotIn(".env", bundle)
                 self.assertNotIn("placeholder=true", bundle)
@@ -4829,16 +4892,16 @@ class AutoreviewHardeningTests(unittest.TestCase):
             workflow = repo / ".github" / "workflows" / "secret-scan.yml"
             workflow.parent.mkdir(parents=True)
             workflow.write_text("name: Secret scan\n", encoding="utf-8")
-            untracked_bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            untracked_bundle = self.helper["local_bundle"](repo).text
             self.assertIn("secret-scan.yml", untracked_bundle)
 
             git(repo, "add", str(workflow.relative_to(repo)))
-            tracked_bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            tracked_bundle = self.helper["local_bundle"](repo).text
             self.assertIn("secret-scan.yml", tracked_bundle)
 
             git(repo, "commit", "-q", "-m", "add secret scanner")
-            branch_bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["branch_bundle"](repo, base)
-            commit_bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["commit_bundle"](repo, "HEAD")
+            branch_bundle = self.helper["branch_bundle"](repo, base).text
+            commit_bundle = self.helper["commit_bundle"](repo, "HEAD").text
             self.assertIn("secret-scan.yml", branch_bundle)
             self.assertIn("secret-scan.yml", commit_bundle)
 
@@ -4906,7 +4969,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             path.parent.mkdir()
             path.write_text(source, encoding="utf-8")
 
-            bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            bundle = self.helper["local_bundle"](repo).text
 
             self.assertIn("ordinary-hardcoded-value-12345", bundle)
 
@@ -5178,7 +5241,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
             git(repo, "add", "-u")
             git(repo, "commit", "-q", "-m", "delete template")
 
-            bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["branch_bundle"](repo, base)
+            bundle = self.helper["branch_bundle"](repo, base).text
 
             self.assertIn("deleted file mode 100644", bundle)
             self.assertIn("------BEGIN [A-Z ]+-----", bundle)
@@ -5338,7 +5401,7 @@ class AutoreviewHardeningTests(unittest.TestCase):
 
             path.write_text('const request = { token: String() };\n', encoding="utf-8")
 
-            bundle, _paths, _mixed, _spans, _commit, _images, _base = self.helper["local_bundle"](repo)
+            bundle = self.helper["local_bundle"](repo).text
 
             self.assertIn('-const request = { token: "test-token" };', bundle)
 

@@ -1,0 +1,88 @@
+{
+  "base": "1db4fe77dbb4d6efab0626941854e70c0815302f",
+  "scanner_sha256": "8f41054a97cab43b737179c2294217acfd0bbb942f062381e8350de8877eaf20",
+  "new": [
+    {
+      "path": "SKILL.md",
+      "rule_id": "mcp-plugin-hook-install",
+      "sample": "The upstream Grok Bot plugin connects to X's hosted MCP server through its Connect flow. On Codex, inspect the actual configured connector and its supported authentication; do n...",
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-x-mcp-guide",
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present."
+    },
+    {
+      "path": "references/runtime/method.md",
+      "rule_id": "mcp-plugin-hook-install",
+      "sample": "The upstream Grok Bot plugin connects to X's hosted MCP server through its Connect flow. On Codex, inspect the actual configured connector and its supported authentication; do n...",
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-x-mcp-guide",
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present."
+    },
+    {
+      "path": "references/runtime/native-codex.md",
+      "rule_id": "mcp-plugin-hook-install",
+      "sample": "The upstream Grok Bot plugin connects to X's hosted MCP server through its Connect flow. On Codex, inspect the actual configured connector and its supported authentication; do n...",
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-x-mcp-guide",
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present."
+    },
+    {
+      "path": "references/runtime/original-codex.txt",
+      "rule_id": "mcp-plugin-hook-install",
+      "sample": "The upstream Grok Bot plugin connects to X's hosted MCP server through its Connect flow. On Codex, inspect the actual configured connector and its supported authentication; do n...",
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-x-mcp-guide",
+      "summary": "MCP, plugin, hook, or Codex config mutation surface present."
+    }
+  ],
+  "removed": [
+    {
+      "path": "scripts/orch/orch.test.ts",
+      "rule_id": "bundled-script-review",
+      "sample": null,
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-poteto-mode",
+      "summary": "Bundled script present; review required before global admission."
+    },
+    {
+      "path": "scripts/orch/orch.ts",
+      "rule_id": "bundled-script-review",
+      "sample": null,
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-poteto-mode",
+      "summary": "Bundled script present; review required before global admission."
+    },
+    {
+      "path": "scripts/orch/orch.ts",
+      "rule_id": "executable-file",
+      "sample": null,
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-poteto-mode",
+      "summary": "Executable file present; review before global admission."
+    },
+    {
+      "path": "scripts/orch/store.ts",
+      "rule_id": "bundled-script-review",
+      "sample": null,
+      "severity": "warning",
+      "skill": "mirrors-cursor/cursor-poteto-mode",
+      "summary": "Bundled script present; review required before global admission."
+    }
+  ],
+  "verdict_changes": {
+    "mirrors-cursor/cursor-x-mcp-guide": {
+      "base": "safe_to_install",
+      "candidate": "needs_human_review"
+    }
+  },
+  "candidate": "727ceae88bd1ba026f042a6b2586efc3df9fcec1",
+  "method": "Both skills trees exported with git archive at exact commits; same unchanged scanner and options; compare skill/file/rule/severity/evidence, excluding only line shifts.",
+  "review": "Four changed warning-level MCP/plugin prose signals replace four corresponding base signals across X root/runtime references. They describe the Grok connector as host-specific reference and require actual Codex authentication/capability/billing verification. Reviewed after correction; no new blocking signal. Existing blocking signals remain unresolved and are not install approval.",
+  "validation": {
+    "full_suite": "476 passed, 2 skipped, 13 subtests",
+    "final_cursor_delta": "60 passed, 6 subtests",
+    "gate_regression": "42 passed; red before narrow fix",
+    "source_checks": "Matt inverse patches, Cursor deterministic render/admission, curated/hyperframes checks and script syntax passed",
+    "runtime": "No new live or cross-host proof claimed"
+  }
+}

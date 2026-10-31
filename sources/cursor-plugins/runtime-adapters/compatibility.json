@@ -2436,7 +2436,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "bdf89520712f11622cd1bae2bf5076ae7d341c029dc42e57e279d236e90718fe"
+      "reviewed_workflow_sha256": "9ec4a242af369d764abd643889c51beb21683ff957ddd2bb08bf67521f535616"
     },
     "cursor-automate-me": {
       "source_path": "pstack/skills/automate-me/SKILL.md",
@@ -2784,7 +2784,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "242d06b2d4f1c04e1f41dc9f6764e28f1b76bb6587d3e83f940c4f7fe2dda649"
+      "reviewed_workflow_sha256": "8832b4dad29c5ec8f938ef7d9e82ae3fd99c1252a7d99fee4fb6a194279feb8d"
     },
     "cursor-create-verification-skill": {
       "source_path": "pstack/skills/create-verification-skill/SKILL.md",
@@ -3086,7 +3086,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "57360d0b6eb39b716972c810be4d68974f7e1f3fd0604880f29f8aed4dcfd576"
+      "reviewed_workflow_sha256": "dbde9f8871ed0fafded9ba756625e4f1d944063b68326116703de56a182cecd6"
     },
     "cursor-ketchup": {
       "source_path": "pstack/skills/ketchup/SKILL.md",
@@ -3415,7 +3415,7 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "d35ac844cb35a93ef0e875d6105ef6af51f8625b6fb9e7641468d437bd648bd9",
+      "reviewed_workflow_sha256": "d8ae5989559459b6e188b5d86c508b0b345b92f530e9a7096661286b486f9ab5",
       "profiles": [
         "comment-sicko",
         "poteto-agent"
@@ -3511,7 +3511,7 @@
         "comment-sicko",
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "baf1cf8949860530f6cc35c521c47a04f27712e07cce606eb9cdcc76f3608ef7"
+      "reviewed_workflow_sha256": "362595026a19e35bc627b83052da69072eedfdf940eb87cedbb472e52e161b91"
     },
     "cursor-principle-attack-the-premise": {
       "source_path": "pstack/skills/principle-attack-the-premise/SKILL.md",
@@ -3881,7 +3881,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "29c8c37f39b3115f50d9495ce986063df083d39808329f583949411ccff06b05"
+      "reviewed_workflow_sha256": "cea299d40ed650b1c94d25f7cf54426774612b042c58be1db5887c7ce5ce1494"
     },
     "cursor-principle-fix-root-causes": {
       "source_path": "pstack/skills/principle-fix-root-causes/SKILL.md",
@@ -4914,7 +4914,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "ae96912a8d54aa8db45a715797f918cc2baa74fe39ea101a363e1f5d11683210"
+      "reviewed_workflow_sha256": "d4e7ee40c6b44ed03146d7e1f09cd1e8194f08a572c82145439b5e35f846ee7f"
     },
     "cursor-setup-pstack": {
       "source_path": "pstack/skills/setup-pstack/SKILL.md",
@@ -4978,7 +4978,7 @@
           "history": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "37e245bfba02c3625ff96dd97faa7e98fbd1fe7101984546f53e431533c2691d"
+      "reviewed_workflow_sha256": "956ffec73521273e025379d9d6c90f3cbee4e720abb7f3d84ecd1f797b4f8537"
     },
     "cursor-sharpen": {
       "source_path": "pstack/skills/sharpen/SKILL.md",
@@ -5030,7 +5030,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "414214c1177d8ddd84fac8eb740285b205a2188237796aa39892067f31938586"
+      "reviewed_workflow_sha256": "63f85072ddbf5734e079bdc484682c7255e4ac1ac8214076fe6f0afa4f7ed46c"
     },
     "cursor-show-me-your-work": {
       "source_path": "pstack/skills/show-me-your-work/SKILL.md",
@@ -5167,7 +5167,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "27edfaf9f0890dd39e9e0df5f1f8e7203b54d3fb096fd93737616e74131a2de8"
+      "reviewed_workflow_sha256": "7529c4c3eed85450cbee894e3b8c1bf0c31272355774a2745fbf1bd57c53e1bf"
     },
     "cursor-tdd": {
       "source_path": "pstack/skills/tdd/SKILL.md",
@@ -6307,7 +6307,7 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "7ad44ec26f2c95786ebd54ef26b6bb8d3dc4889f3de6bdab2add5ce81db0a133"
+      "reviewed_workflow_sha256": "ec44eabde40056958a1d09ce8dc15ca3d980706ed1cf394cbce7364af5474257"
     }
   },
   "profiles": {

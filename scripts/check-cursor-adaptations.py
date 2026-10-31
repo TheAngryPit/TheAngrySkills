@@ -31,6 +31,16 @@ def verify_runtime_contracts():
     return {'skills': len(contracts['skills']), 'profiles': len(contracts['profiles']), 'live_workflows_claimed': live}
 
 
+def verify_unadmitted(full, known, pending, source):
+    for path, record in pending.items():
+        if (path in known or not path.startswith('pstack/skills/') or not path.endswith('/SKILL.md')
+                or record.get('state') != 'pending_review'
+                or record.get('source_commit') != full['files'].get(path, {}).get('source_commit')
+                or full['files'].get(path, {}).get('sha256') != record.get('sha256')
+                or (source / path).exists()):
+            raise ValueError('invalid unadmitted source record: ' + path)
+
+
 def verify(write_held=False):
     manifest = json.loads((BASE / 'manifest.json').read_text())
     full = json.loads((BASE / 'full-tree.json').read_text())
@@ -54,7 +64,11 @@ def verify(write_held=False):
     if (BASE / family.LEDGER_NAME).exists():
         full['files'] = family.merged_inventory(BASE)
     entries = manifest['skills']
-    if {e['path'] for e in entries} != {p for p in full['files'] if p.endswith('/SKILL.md')}:
+    known = {e['path'] for e in entries}
+    pending_path = BASE / 'unadmitted-skills.json'
+    pending = json.loads(pending_path.read_text())['skills'] if pending_path.exists() else {}
+    verify_unadmitted(full, known, pending, sync.SOURCE)
+    if known | set(pending) != {p for p in full['files'] if p.endswith('/SKILL.md')}:
         raise ValueError('skill adapter coverage is incomplete')
     for entry in entries:
         for relative, digest in entry['files'].items():

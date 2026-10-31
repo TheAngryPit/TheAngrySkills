@@ -1433,3 +1433,28 @@ def test_cli_routes_tree_payload_only_to_finalization_admission():
     assert "tree_payload=" not in assess_ready_block
     assert 'tree_payload=json.loads(Path(args.tree_json).read_text())' in finalization_block
     assert 'base_tree_payload=json.loads(Path(args.base_tree_json).read_text())' in finalization_block
+
+
+def test_codex_gate_detector_report_commit_requires_its_own_review():
+    head, parent = 'b' * 40, 'a' * 40
+    for family, batch in [('matt', 'adapted'), ('cursor', 'pstack')]:
+        pr = readiness_pr(family, batch, head)
+        commit = {
+            'sha': head, 'parents': [{'sha': parent}],
+            'files': [{'filename': f'reports/upstream-updates/{family}-{batch}.md', 'status': 'modified'}],
+            'author': {'login': lifecycle.BOT_LOGIN, 'id': lifecycle.BOT_USER_ID},
+            'committer': {'login': lifecycle.BOT_LOGIN, 'id': lifecycle.BOT_USER_ID},
+        }
+        pending = lifecycle.codex_review_gate(
+            pr, [codex_summary(parent), clean_codex_result(parent)], [], [], empty_threads(),
+            repository='owner/repo', current_commit=commit,
+        )
+        assert pending['state'] == 'pending'
+        assert pending['reviewed_head'] == head
+        assert pending['carry_forward'] is False
+        clean = lifecycle.codex_review_gate(
+            pr, [codex_summary(head), clean_codex_result(head)], [], [], empty_threads(),
+            repository='owner/repo', current_commit=commit,
+        )
+        assert clean['state'] == 'success'
+        assert clean['carry_forward'] is False

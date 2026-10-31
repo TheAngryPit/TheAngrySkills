@@ -48,6 +48,8 @@ Before applying any Accepted edit, present the complete Accepted/Rejected/Backlo
 
 For each approved Accepted item, follow the exact routing. Make a trivial one-line edit directly in the source-controlled skill repository. For a substantial skill edit, description tuning, or new skill, use the available native skill-authoring workflow with draft, test, and iterate steps; do not edit an installed skill root or assume Cursor's built-in `create-skill` exists. Validate every touched `SKILL.md` with the repository checker before declaring completion.
 
+Never edit a plugin cache. Before approval, identify the source-controlled destination or operator-approved local copy. Preserve the original bundle and validate the selected copy. This workflow never opens a PR or pushes.
+
 ## 6. Summarize for the user
 
 Short list, no preamble:

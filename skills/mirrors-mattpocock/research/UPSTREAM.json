@@ -2,19 +2,19 @@
   "name": "research",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/research",
-  "commit": "49dd158d1076134a641b33efb035946536778336",
+  "commit": "a496f5513d4a4cf889bc48e189e579f4b0bdf6aa",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "empty",
   "upstream_sha256": {
-    "SKILL.md": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+    "SKILL.md": "1f629e18ab899412683bc6a1c4efb4339999e27c2fdac328f26ee10a8c031d33",
     "agents/openai.yaml": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
     "ADAPTATIONS.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "5904fa3723058ab89cb0fe1cb2a4f50162f328a0ef97de0bae93fa155e759f0d",
-    "SKILL.md": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+    "PROVENANCE.md": "0af40d2aab3b51044e7ad81d8303a069f157a163a256cd815d95f7c2d3770e6a",
+    "SKILL.md": "1f629e18ab899412683bc6a1c4efb4339999e27c2fdac328f26ee10a8c031d33",
     "agents/openai.yaml": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
   }
 }

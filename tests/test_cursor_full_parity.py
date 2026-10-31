@@ -20,9 +20,9 @@ def load(name):
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
-    assert tree['files'] == 911
+    assert tree['files'] == 1312
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
-    assert tree['family_updates'] == {'pstack': 'd457567332aa6989e753ea289f30ea2bfbc80bc0'}
+    assert tree['family_updates'] == {'pstack': '4dd1d05818d19792e7cd6e818f1667f95f7e1dbe'}
     result = load('check-cursor-adaptations').verify()
     assert result == dict(skills=112, published=107, held_adapted=5, agents_mapped=14,
                           unresolved_links=0, runtime_proof='not claimed')
@@ -204,6 +204,9 @@ def test_refresh_preserves_availability_classification_and_is_idempotent(tmp_pat
     source = upstream / 'pstack/skills/example/SKILL.md'
     source.parent.mkdir(parents=True)
     source.write_text('---\nname: example\ndescription: example\n---\n')
+    extra = upstream / 'pstack/skills/unreviewed/SKILL.md'
+    extra.parent.mkdir(parents=True)
+    extra.write_text('---\nname: unreviewed\ndescription: fixture\n---\n')
     subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
     subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
     subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture',
@@ -216,6 +219,9 @@ def test_refresh_preserves_availability_classification_and_is_idempotent(tmp_pat
         'path': 'pstack/skills/example/SKILL.md', 'availability': 'guide-only; no runtime proof'}]}))
     (output / 'agent-coverage.json').write_text(json.dumps({'agents': {}}))
     refresh.refresh(upstream, base=output, root=tmp_path)
+    assert not (output / 'snapshot/pstack/skills/unreviewed').exists()
+    assert (output / 'upstream-tree/pstack/skills/unreviewed/SKILL.md').is_file()
+    assert 'pstack/skills/unreviewed/SKILL.md' in json.loads((output / 'unadmitted-skills.json').read_text())['skills']
     first = manifest.read_text()
     availability = json.loads(first)['skills'][0]['availability']
     assert availability.startswith('guide-only; no runtime proof')
@@ -330,3 +336,14 @@ def test_reviewed_file_updates_preserve_baseline_and_verify_git_provenance(tmp_p
     else:
         with pytest.raises(ValueError, match='reviewed file'):
             family.reviewed_file_updates(base, upstream)
+
+
+def test_unadmitted_skill_commit_must_match_reviewed_source(tmp_path):
+    check = load('check-cursor-adaptations')
+    path = 'pstack/skills/new-skill/SKILL.md'
+    full = {'files': {path: {'sha256': 'a' * 64, 'source_commit': '1' * 40}}}
+    pending = {path: {'state': 'pending_review', 'sha256': 'a' * 64, 'source_commit': '1' * 40}}
+    check.verify_unadmitted(full, set(), pending, tmp_path)
+    pending[path]['source_commit'] = '2' * 40
+    with pytest.raises(ValueError, match='invalid unadmitted source record'):
+        check.verify_unadmitted(full, set(), pending, tmp_path)

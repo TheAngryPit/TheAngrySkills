@@ -126,5 +126,9 @@
       "conditional_companions": {}
     }
   ],
-  "dependency": "technical-documentation vendored under refactor-docs references only"
+  "dependency": "technical-documentation vendored under refactor-docs references only",
+  "source_commit_overrides": {
+    "openclaw-control-ui-e2e": "447e14d02460342af4fe2c98dbd5475b15b938d2",
+    "openclaw-testing": "447e14d02460342af4fe2c98dbd5475b15b938d2"
+  }
 }

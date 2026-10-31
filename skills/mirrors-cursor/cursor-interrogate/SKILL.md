@@ -1,6 +1,6 @@
 ---
 name: cursor-interrogate
-description: "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles."
+description: "Use when explicitly requesting adversarial review of a change or design, with findings proven by executed reproductions."
 disable-model-invocation: true
 ---
 
@@ -16,76 +16,20 @@ This published workflow is explicit-only through `agents/openai.yaml`. Use the n
 
 # Interrogate
 
-Spawn one reviewer per configured model to adversarially review code changes. The adversarial signal comes from model diversity, not assigned personas. The deliverable is a synthesized verdict. Do NOT auto-apply changes.
+Adversaries try to break the named change or design. Keep only findings proven by an executed reproduction. Report findings; do not apply fixes.
 
-## Step 1, Scope
+## Frame
 
-Identify what to review from context:
+Freeze the user-named scope; otherwise capture the branch diff from its verified merge base, plus staged, unstaged and relevant untracked work. State the intent from the request, commits and PR description through `cursor-in-your-own-words`. Resolve material ambiguity before dispatch.
 
-- If the user points at specific files or a diff, use that.
-- If on a feature branch, run `git diff main...HEAD` (or the appropriate base branch) for the full changeset.
-- If the user's message references recent work, gather the relevant files.
+## Fan out
 
-Package the diff or file contents with any surrounding context files the reviewers need to understand the code.
+Use the framing and isolation of `cursor-arena` Phase A steps 3–4 and Phase B, with the configured interrogate reviewers rather than arena runners. Select actual models and efforts through `model-capability-router`; preserve explicit selections and mark unavailable reviewer slots. Each reviewer gets the same scope and intent, its own authorized scratch worktree and the scoped uncommitted changes. Reproduction permission applies only inside that worktree: preserve the user's workspace, credentials, live services and external-action boundaries. If safe isolation or execution is unavailable, report the missing proof rather than run against the user's active checkout.
 
-## Step 2, Intent
+Brief each bounded native reviewer: break this change, and prove every finding with a test, script, prototype or command against the real code. Report the exact command, actual output and output required by the intent. Keep reproductions in the assigned worktree. Omit unrun style, naming and hypothetical future risks. No findings is valid.
 
-Before spawning reviewers, state the intent in one clear paragraph from the user's message, commit messages, the PR description if one exists, and the code. If you're unsure about the intent, ask the user before proceeding.
+## Verify and report
 
-## Step 3, Spawn Reviewers
+Rerun each safe reproduction on the frozen candidate. Keep it only when the observed failure contradicts the intent. Distinguish base-existing failures and harness failures. Merge findings with the same root cause. Do not choose one adversary's list as a winner, graft code, or apply repairs; Arena Phases C–E do not run.
 
-Launch independent read-only reviewers through native Codex subagents when authorized. Use the actual available reviewers under the standing `model-capability-router` and the operator-selected model/effort; extend or shrink Reviewer A/B/C/D labels to match. Record unavailable reviewer slots.
-
-| Reviewer | Native Codex model |
-|----------|--------------------|
-| A/B/C/D as available | Record the requested model and effort; record effective identity only if the native surface exposes authoritative readback |
-
-- Assign a bounded review responsibility to each native subagent.
-- Use a genuinely read-only role or instructions and verify no reviewer modified the workspace.
-- Use native model selection only as allowed by the standing router and operator.
-
-If a requested model is unavailable, record that reviewer as unavailable. Continue with authorized available reviewers only when the proof bar can still be met. Do not silently substitute a model or create a repair PR.
-
-Read `references/reviewer-prompt.md` and fill in the same template for every reviewer with the stated intent, the diff or file contents, the rubric from `references/rubric.md`, and the code-quality lens from `references/code-quality-review.md`. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.
-
-## Step 4, Synthesize
-
-As results come back, build a unified picture:
-
-1. **Parse all findings** from the reviewers
-2. **Identify consensus**. Findings raised independently by 2+ actual reviewers are high signal; describe model diversity only when it was actually present.
-3. **Identify single-reviewer findings**. Still worth reading, but weight accordingly.
-4. **Deduplicate**. Different models may describe the same issue differently. Merge these and note which models raised it.
-5. **Note disagreements**. If one model flags something and another explicitly says the opposite, that's useful context for the verdict.
-
-## Step 5, Lead Judgment
-
-You are the lead reviewer, a pragmatic senior engineer, not a neutral aggregator. Read `references/lead-judgment.md` for the full framework. Put every finding in one of four buckets, with the model(s) that raised it and a one-line rationale.
-
-- **Act on**. Real issues affecting correctness, security, or maintainability given the actual goals. They would block a real PR.
-- **Consider**. Legitimate, but you're not sure they outweigh the cost of addressing them now. Worth the user's attention.
-- **Noted**. Technically valid but not actionable. Context-dependent, premature optimization, or low-impact at this stage.
-- **Dismissed**. Wrong, nitpicky, or missing context, with a brief reason.
-
-## Output Format
-
-### Intent
-> [The stated intent paragraph from Step 2]
-
-### Reviewers
-- Reviewer [label]: [model name], [N findings] (one bullet per reviewer)
-
-### Act On
-[Each: description, which models raised it, why it matters.]
-
-### Consider
-[Each: description, which models raised it, the tradeoff.]
-
-### Noted
-[Brief list.]
-
-### Dismissed
-[Each with a brief rationale.]
-
-### Agreement Map
-[Where models agreed and diverged, and what that pattern tells us.]
+Return the intent, actual reviewers and coverage gaps, verified findings with commands and outputs, and dropped-finding counts/reasons per reviewer. Say “no verified findings” when none survive. Missing execution or reviewer diversity must remain explicit; it is not proof the change is defect-free.

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "skills": {
+    "pstack/skills/ketchup-video/SKILL.md": {
+      "state": "pending_review",
+      "sha256": "027aed9a01adf208aeac3a134f47d12f7c1e42d6fea03095aedc2bae58cdcfd1",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
+    },
+    "pstack/skills/statechart/SKILL.md": {
+      "state": "pending_review",
+      "sha256": "010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
+    }
+  }
+}

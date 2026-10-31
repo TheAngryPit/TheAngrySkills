@@ -100,7 +100,7 @@ class CursorMirrorTests(unittest.TestCase):
             "cursor-why",
         }
         expected_names.update({"cursor-add-dictation", "cursor-build-figma", "cursor-dyl-mode", "cursor-dyl-ready-pr", "cursor-dyl-review", "cursor-principle-the-algorithm", "cursor-google-docs", "cursor-google-drive", "cursor-google-sheets", "cursor-google-slides", "cursor-x-money-guide", "cursor-x-mcp-guide"})
-        latest_pstack = "d457567332aa6989e753ea289f30ea2bfbc80bc0"
+        latest_pstack = "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
         previous = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
         historical_refresh = {"cursor-origin-api", "cursor-port-github-app-to-origin"}
         expected_names = {name for name in expected_names if name not in {
@@ -264,7 +264,7 @@ class CursorMirrorTests(unittest.TestCase):
                          (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
         provenance = (project / "MIRROR.md").read_text()
         self.assertIn("https://github.com/cursor/plugins.git", provenance)
-        self.assertIn("Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0", provenance)
+        self.assertIn("Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe", provenance)
         # The installed pack, detached from the source checkout, owns its complete links.
         for file in project.rglob("*.md"):
             for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):

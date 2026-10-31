@@ -9,13 +9,15 @@
  
  ## Process
  
-@@ -21,19 +21,19 @@
+@@ -21,19 +21,20 @@
  Look at the current repo to understand its starting state. Read whatever exists; don't assume:
  
  - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
 -- `AGENTS.md` and `CLAUDE.md` at the repo root: does either exist? Is there already an `## Agent skills` section in either?
+-- `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root, and the legacy `CONTEXT.md` / `CONTEXT-MAP.md`. If a legacy file exists, offer to `git mv` it to its `GLOSSARY` name and rewrite those names in `docs/agents/domain.md`.
 +- The active harness's documented instruction file (for example `AGENTS.md` or `CLAUDE.md`): does it already contain an `## Agent skills` section?
- - `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
++- `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
++- Also inspect legacy `CONTEXT.md` / `CONTEXT-MAP.md`. If present, offer the upstream `GLOSSARY` migration and update `docs/agents/domain.md` only when the repository's established naming and the user's decision support it.
  - `docs/adr/` and any `src/*/docs/adr/` directories
  - `docs/agents/`: does this skill's prior output already exist?
  - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
@@ -33,12 +35,14 @@
  
  **Section A: Issue tracker.**
  
-@@ -46,39 +46,37 @@
+@@ -46,40 +47,38 @@
  - **Local markdown**: issues live as files under `.scratch/<feature>/` in this repo (good for solo projects or repos without a remote)
  - **Other** (Jira, Linear, etc.): ask the user to describe the workflow in one paragraph; the skill will record it as freeform prose
  
 -Record the choice in `docs/agents/issue-tracker.md`. The GitHub and GitLab templates carry a "PRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs in the triage queue can flip the flag in the file later.
 +Record the choice in `docs/agents/issue-tracker.md`. If that file already exists, preserve its repo-specific conventions and edit only what the confirmed choice requires. The GitHub and GitLab templates carry a "PRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs in the triage queue can flip the flag in the file later.
+ 
+ A GitHub or GitLab tracker needs a reachable repo. When the user picks one and no `git remote` points at that host, get the repo URL from them and wire it up (`git init` if needed, `git remote add origin <url>`) before going further. Done when `gh repo view` / `glab repo view` prints the project from inside this directory; if it can't, stop and tell the user what's missing.
  
  **Section B: Triage label vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), since an uninstalled skill needs no labels.
  
@@ -75,12 +79,11 @@
 -- If `CLAUDE.md` exists, edit it.
 -- Else if `AGENTS.md` exists, edit it.
 -- If neither exists, ask the user which one to create; don't pick for them.
+-
+-Never create `AGENTS.md` when `CLAUDE.md` already exists (or vice versa); always edit the one that's already there.
 +- Edit the instruction file the active harness actually consumes, using its documented precedence. For Codex, create or edit `AGENTS.md` when that is the documented repo-instruction file, even if `CLAUDE.md` also exists; preserve the other file.
 +- If exactly one existing instruction file is compatible with the harness, use it without asking. If both exist and the harness documents no precedence, report the gap and ask only that real choice.
 +- If neither instruction file exists and the harness names its target, create that target; otherwise ask the user which one to create.
  
--Never create `AGENTS.md` when `CLAUDE.md` already exists (or vice versa); always edit the one that's already there.
--
  If an `## Agent skills` block already exists in the chosen file, update its contents in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
  
- The block:

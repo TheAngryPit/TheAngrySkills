@@ -4,21 +4,21 @@
   "files": {
     "pstack/skills/in-your-own-words/SKILL.md": {
       "sha256": "fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad",
-      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
       "mode": "100644",
       "git_blob": "4b2a476a9017863032c8dba9d12f0a2026943292"
     },
     "pstack/skills/ketchup/SKILL.md": {
       "sha256": "f2923ffd14f6fc778f75a47aaed1f317fb5fd00b5701ca769d6446c74106dead",
-      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
       "mode": "100644",
       "git_blob": "9eef27f92f8029137a7bfa7378305b075df9dc4f"
     },
     "pstack/skills/sharpen/SKILL.md": {
-      "sha256": "d895695fcc29b832bf118b842c1d7cf356a69622d63c9d49b40a0c97d8496c80",
-      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0",
+      "sha256": "563dfc460c605d311e650726288e2f1cbd61eab817db178d6e7e29643e07e7a2",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
       "mode": "100644",
-      "git_blob": "c1cfebe409b2e9d20ae96d14d71d8f2d9d360ecb"
+      "git_blob": "5b4a7b104e709f8cded1726541be42431c334164"
     }
   }
 }

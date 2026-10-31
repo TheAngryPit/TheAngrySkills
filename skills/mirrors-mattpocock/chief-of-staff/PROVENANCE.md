@@ -11,7 +11,9 @@ No content adaptation is approved for this package. The upstream files are prese
 The exact approved difference is [ADAPTATIONS.patch](ADAPTATIONS.patch). The empty file is intentional for a maintained copy.
 No additional behavior was invented during integration.
 
-Current upstream review: `49dd158d1076134a641b33efb035946536778336` on 2026-10-19. Per-file source hashes are recorded in UPSTREAM.json.
+Historical upstream review: `49dd158d1076134a641b33efb035946536778336` on 2026-10-19. Per-file source hashes are recorded in UPSTREAM.json.
+
+Current upstream review: `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` on 2026-10-31. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

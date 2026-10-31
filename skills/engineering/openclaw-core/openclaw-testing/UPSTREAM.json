@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
+  "commit": "447e14d02460342af4fe2c98dbd5475b15b938d2",
   "path": ".agents/skills/openclaw-testing",
   "original_name": "openclaw-testing",
   "installed_name": "openclaw-testing",
@@ -9,9 +9,9 @@
   "resources": {
     "LICENSE": "9efd316ecf1c4c60f6fd5d26433142fff2b6794d7d328e9bc6179b29bf9c82a4",
     "SKILL.md": "45d9d22ffd565f59de822dc407992ddbd847e919d861286454710cf6eedf7fd6",
-    "references/upstream-link-map.json": "486b7f61f51b02c5b71eff4e0026633cf88be3038c814abdf499c0064925085e",
+    "references/upstream-link-map.json": "37f4e4280f133afdfdf089792cbd55df902eaa690d31fe6946a1f18d68e2aba9",
     "agents/openai.yaml": "b31832f09d84441cf183ba276efdc2ddb0e791aca0334236d2092f08b236ea86",
-    "references/upstream/SKILL.source.md": "4bd2238b30457ba5b4d637564ca78b58c7a72e6ae0a43713ff0f30eca58ab9ee",
+    "references/upstream/SKILL.source.md": "8891b5a4ebd2c094deb6c1701035ba8e1bb2242c46fce079672eb36db7ba3b8e",
     "references/upstream/references/package-and-docker.md": "439327822b97dbf588b10176882a1496f537f004cef93a22736cc83c29ab8d23",
     "references/upstream/agents/openai.yaml": "dca3324b5609869208141a20201a2c1a8e188e204530c90e329a9e3921c2324b"
   },
@@ -19,5 +19,6 @@
   "source_backup": "sources/openclaw-core",
   "adapted_resource_entrypoint": false,
   "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
-  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source",
+  "original_integration_commit": "aea75db8e4cf3397749cc51011dea696777de02d"
 }

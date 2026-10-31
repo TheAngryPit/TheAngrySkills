@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
+Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe
 Physical source path: pstack/skills/create-formal-verification-skill/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
-Source SHA-256: 6c934cd15a9583533ff9b7a9cad62775d7e80402d26d3ba7f74f79ea21a1d8eb
+Upstream family README: https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md
+Source SHA-256: 30ef0ac27612ecd16fdc081112113221d673053cef3f8603db11932193861211
 Published name: cursor-create-formal-verification-skill
 Decision class: adaptação funcional
 Availability: Explicit-only guidance; source and packaging validation only. No real-project formal-verification workflow or generated-proof result claimed.

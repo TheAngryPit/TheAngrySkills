@@ -4,9 +4,9 @@
   "files": {
     "third_party/x/skills/x-api-mcp-guide/SKILL.md": {
       "mode": "100644",
-      "git_blob": "adea1fcb4f10cb2af99eefcfdb29177b12ae42b7",
-      "sha256": "f4daff50781a0be04c90d1d54bbc373ac984e3a99cfb9304f8d955235cdc0fe9",
-      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
+      "git_blob": "a8625aaee04f8386824c7234244a158af6987f98",
+      "sha256": "004a5713fce8efa8efb14e1faaf8a4c167de69a11b0f682f0a4e6e41ea767bf6",
+      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
     },
     "third_party/x/skills/x-api-mcp-guide/references/pricing.md": {
       "mode": "100644",

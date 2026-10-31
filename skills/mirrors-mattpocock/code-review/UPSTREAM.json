@@ -2,19 +2,19 @@
   "name": "code-review",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/code-review",
-  "commit": "49dd158d1076134a641b33efb035946536778336",
+  "commit": "a496f5513d4a4cf889bc48e189e579f4b0bdf6aa",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
-    "SKILL.md": "09eb147f793e4647949edd32dbad278f0554dfb56e0d46b699cd4c2c55bf0357",
+    "SKILL.md": "9c921a8d88138a41401d8897ca1bb852088ab1b7b605cdd04edc13e3e8aab6dd",
     "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
     "ADAPTATIONS.patch": "ce6cfe015368e7c78ae48cd2fde791e08cdb29ceb1a24ce7a254d25c723cad77",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "5f1bc19b175f5ce4ba10c177b3f025aca640a643c0ac2321b7ae6faa185be911",
-    "SKILL.md": "d28ddf54faf0de0f4561090b1e8c87b399a36acc0d1a522e059492476d378a85",
+    "PROVENANCE.md": "608d09b326cbe99292de8b5e4951fbeb7c96e0b9599e2b55f7f79d0682b57385",
+    "SKILL.md": "e1346983dfc8e19707572917b4fba5260ac24340e50cb9051938e679da6cf660",
     "agents/openai.yaml": "8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352"
   }
 }

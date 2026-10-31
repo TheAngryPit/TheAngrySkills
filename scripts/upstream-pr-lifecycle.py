@@ -248,6 +248,11 @@ def _reviewed_head_for_bot_attestation(
     if not isinstance(files, list) or len(files) != 1 or not isinstance(files[0], dict):
         raise ValueError("bot readiness commit must add exactly one file")
     path = files[0].get("filename")
+    if (
+        path == f"reports/upstream-updates/{family}-{batch}.md"
+        and files[0].get("status") in {"added", "modified"}
+    ):
+        return current_head, False
     path_match = _READINESS_PATH.fullmatch(path or "")
     if files[0].get("status") != "added" or path_match is None:
         raise ValueError("bot readiness commit contains a non-readiness change")

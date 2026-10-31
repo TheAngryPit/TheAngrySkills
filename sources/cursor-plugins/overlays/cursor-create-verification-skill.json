@@ -48,9 +48,9 @@
     "upstream_readme": {
       "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
       "path": "pstack/README.md",
-      "sha256": "90de91beb5655913705e0107740b0b4c735032c53582a3ceaae7c007530047fd",
+      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
       "status": "verified_in_supplied_upstream_clone",
-      "url": "https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md"
+      "url": "https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md"
     }
   },
   "codex_note": "## Codex adaptation boundary\n\nThis mirror uses the native Codex project-local skill root `.agents/skills/verify-<app>/`. It discovers the real surface from the repository, selects the proof path through proof-orchestrator, and respects the selected model and effort through model-capability-router. The native verification runner is required for a verified result. If the harness or startup is missing, preserve the project and report `blocked`. Generation never installs a global skill, publishes an artifact, opens a PR, kills by process name, or changes product code. The feature-map references intentionally retain the reproducible upstream `control-notes` commands; adapt them to concrete commands observed in the target repository before use. Map browser/Electron/web actions to `cursor-control-ui`, and CLI/TUI actions to `cursor-control-cli`, only when those skills are installed and applicable; otherwise record the exact surface gap. The bounded CLI fixture uses separate subprocesses, runs syntax/version/health Doctor checks, drives each mapped feature, captures stdout/stderr/exit plus regular-file side effects, cleans only declared app state, and writes only the explicit project-local skill tree. A separate disposable local web fixture was driven through the native Codex in-app browser with accessibility-tree and screenshot evidence; this still does not claim production/live target or native-host verification.\n",

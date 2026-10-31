@@ -60,7 +60,19 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
     snapshot = base / "snapshot" / "pstack"
     if snapshot.exists():
         shutil.rmtree(snapshot)
-    shutil.copytree(tree, snapshot)
+    selected = json.loads((base / "manifest.json").read_text())
+    known_skills = {entry["path"] for entry in selected["skills"]}
+    unadmitted = {
+        path: {"state": "pending_review", "sha256": record["sha256"], "source_commit": source_commit}
+        for path, record in current.items()
+        if path.endswith('/SKILL.md') and path not in known_skills
+    }
+    excluded_directories = {str(Path(path).parent) for path in unadmitted}
+    def ignore_unadmitted(directory, names):
+        parent = Path(directory).relative_to(tree).as_posix()
+        return [name for name in names if (Path('pstack') / parent / name).as_posix() in excluded_directories]
+    shutil.copytree(tree, snapshot, ignore=ignore_unadmitted)
+    write_json(base / 'unadmitted-skills.json', {"schema_version": 1, "skills": unadmitted})
     ledger = {
         "schema_version": 1,
         "family": "pstack",
@@ -74,7 +86,7 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
     manifest_path = base / "manifest.json"
     manifest = json.loads(manifest_path.read_text())
     entries = [entry for entry in manifest["skills"] if entry.get("family") == "pstack"]
-    source_refresh_note = "0.15.28 source refresh; prior runtime and fixture evidence predates this refresh. "
+    source_refresh_note = "Reviewed source refresh; prior runtime and fixture evidence predates this refresh. "
     for entry in entries:
         path = entry["path"]
         if path not in current:

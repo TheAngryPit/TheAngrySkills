@@ -6,7 +6,7 @@ Swap in the real paths, skills, and done checks. Informal wording works.
 
 - `$cursor-poteto-mode read <thread>. restate the underlying issue in your own words, in plain english.`
 - `$cursor-in-your-own-words <long or messy ask>`
-- `$cursor-sharpen <your task>`
+- `$cursor-sharpen <the prompt you are about to send>`
 - `$cursor-poteto-mode investigate why <symptom>. give me what we know, what data you used, and your best hypotheses. don't change any code yet.`
 - `use $cursor-how to understand <subsystem>. then use $cursor-why to find out why it broke recently.`
 - `$cursor-recall my work on <topic> from last week, then read <issue>.`
@@ -33,7 +33,7 @@ Swap in the real paths, skills, and done checks. Informal wording works.
 
 ## Review and ship
 
-- `$cursor-interrogate the whole branch, but skeptically. don't change anything yet. no nitpicks unless it's a real bug or regression.` Read the dismissals too.
+- `$cursor-interrogate the whole branch, but skeptically. don't change anything yet. no nitpicks unless it's a real bug or regression.` Read the Dropped list too.
 - `$cursor-create-formal-verification-skill prove <property> holds in <module>, even when <steps> interleave or retry.` After merges or refactors in that code: `$cursor-maintain-formal-verification-skill`.
 - `$cursor-swarm check every package under <dir> against its check script. one worker per package. one report.`
 - `$cursor-poteto-mode open the pr. small ordered commits, evidence in the description.`

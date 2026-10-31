@@ -9,3 +9,7 @@ Original relative links resolve through `references/upstream-link-map.json`; on-
 The operator's native boundaries govern publication, landing, dependency installation, authentication homes and execution permissions. No paid route, shared-process mutation or credential access is authorized by installation. Automatic source refresh is not enabled for these authored adaptations; reconcile the pinned source and recorded adjustments before updating.
 
 Verification receipts are maintained at the pack source and task delivery; package checks/discovery do not prove Gateway runtime repair or a fresh model's invocation behavior.
+
+## Source refresh — 2026-10-31
+
+Reviewed `SKILL.md` at `447e14d02460342af4fe2c98dbd5475b15b938d2`; updated the original source archive and packaged reference, preserving the Codex root, invocation policy, companions and existing link pins. New links bind this revision. Resource hashes were regenerated. Original integration remains in Git history.

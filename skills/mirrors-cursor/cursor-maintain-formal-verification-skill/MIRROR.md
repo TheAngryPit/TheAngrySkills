@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
+Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe
 Physical source path: pstack/skills/maintain-formal-verification-skill/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md
 Source SHA-256: 0c96f54293542d3818b68754562b338073958781a9684454611dca37592e2d2c
 Published name: cursor-maintain-formal-verification-skill
 Decision class: adaptação funcional

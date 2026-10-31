@@ -269,7 +269,7 @@ class CursorPstackCoreTests(unittest.TestCase):
             )
             self.assertTrue((target / "references/bugbot-triage.md").is_file())
             self.assertTrue((target / "scripts/package.json").is_file())
-            self.assertTrue((target / "scripts/orch/orch.ts").is_file())
+            self.assertFalse((target / "scripts/orch/orch.ts").exists())
             self.assertTrue((target / "scripts/watch-pr/watch-pr").is_file())
             self.assertFalse((target / "references/poteto-agent.md").exists())
             native_profile = (
@@ -1181,53 +1181,14 @@ esac
             self.assertIn(str(child), audited.stdout)
             self.assertIn("no-remote", audited.stdout)
 
-    def test_orch_store_runs_in_scratch_without_bootstrap(self):
-        bun = shutil.which("bun")
-        if bun is None:
-            self.skipTest("bun unavailable")
-        source = (
-            REPO
-            / "sources/cursor-plugins/snapshot/pstack/skills/poteto-mode/scripts/orch"
-        )
+    def test_orchestrate_uses_native_coordination_without_removed_cli(self):
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            scripts = root / "scripts"
-            shutil.copytree(source, scripts / "orch")
-            environment = {
-                "PATH": f"{Path(bun).parent}:/usr/bin:/bin",
-                "HOME": str(root / "home"),
-                "LANG": "C",
-            }
-            checked = subprocess.run(
-                [
-                    bun,
-                    "test",
-                    "scripts/orch/orch.test.ts",
-                    "--test-name-pattern",
-                    "initializes an idempotent plain-file store|composes unit add|records, replaces, checks|pushes, peeks|parks gates",
-                ],
-                cwd=str(root),
-                env=environment,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-                shell=False,
-                timeout=5.0,
-            )
-            self.assertEqual(
-                checked.returncode,
-                0,
-                f"stdout={checked.stdout!r} stderr={checked.stderr!r}",
-            )
-            combined = checked.stdout + checked.stderr
-            self.assertIn(
-                "5 pass",
-                combined,
-            )
-            self.assertIn("0 fail", combined)
-            self.assertFalse((scripts / "node_modules").exists())
+            target = self.render_core("cursor-poteto-mode", Path(temporary) / "staging")
+            text = (target / "playbooks/orchestrate.md").read_text()
+            self.assertIn("native collaboration and completion notifications", text)
+            self.assertIn("existing authorized project checkpoint", text)
+            self.assertNotIn("scripts/orch/orch.ts", text)
+            self.assertFalse((target / "scripts/orch").exists())
 
     def test_watch_pr_reader_uses_real_bun_with_mocked_gh_and_git(self):
         bun = shutil.which("bun")
@@ -1283,7 +1244,7 @@ case "$*" in
     printf '{"mergeable":"MERGEABLE","mergeStateStatus":"CLEAN","reviewDecision":"APPROVED","headRefOid":"abc123","headRefName":"fix/mock","baseRefName":"main","state":"OPEN","mergedAt":null,"isDraft":false}\\n'
     ;;
   *"pr list --repo owner/repo --state open --limit 300 --json number,headRefName,baseRefName"*)
-    printf '[{"number":42,"headRefName":"fix/mock","baseRefName":"main"}]\\n'
+    printf '[{"number":42,"headRefName":"fix/mock","baseRefName":"main","isCrossRepository":false}]\\n'
     ;;
   *"pr checks 42 --repo owner/repo --json name,state,description,link,workflow,bucket"*)
     printf '[{"name":"ci","state":"SUCCESS","description":"ok","link":"","workflow":"ci","bucket":"pass"}]\\n'

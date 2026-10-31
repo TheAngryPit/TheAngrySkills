@@ -113,6 +113,11 @@
       "repository_path": ".agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
       "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md",
       "bundled_target": null
+    },
+    {
+      "source_file": "references/upstream/SKILL.source.md",
+      "original": "../../../docs/help/testing/writing-tests.md#cost-budget",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/447e14d02460342af4fe2c98dbd5475b15b938d2/docs/help/testing/writing-tests.md#cost-budget"
     }
   ]
 }

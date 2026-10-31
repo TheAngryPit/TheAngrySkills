@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: d457567332aa6989e753ea289f30ea2bfbc80bc0
+Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe
 Physical source path: pstack/skills/principle-explain-the-number/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/README.md
-Source SHA-256: cd5a25f9e7cf023627ccb470dc5faa97542f29b4319496a32b839a8e1e988047
+Upstream family README: https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md
+Source SHA-256: 3c84fbf9a7d9842abcfcd134010782b32092ac3d3fb4aaf9ed5732dca83aa58c
 Published name: cursor-principle-explain-the-number
 Decision class: adaptação funcional
-Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven 0.15.28 source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

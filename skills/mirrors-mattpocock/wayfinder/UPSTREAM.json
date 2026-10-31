@@ -2,18 +2,18 @@
   "name": "wayfinder",
   "repository": "https://github.com/mattpocock/skills.git",
   "source_path": "skills/engineering/wayfinder",
-  "commit": "49dd158d1076134a641b33efb035946536778336",
+  "commit": "a496f5513d4a4cf889bc48e189e579f4b0bdf6aa",
   "adaptation_patch": "ADAPTATIONS.patch",
   "overlay": "patch",
   "upstream_sha256": {
-    "SKILL.md": "9be7b478c389605a24517d27752f278933588da97a1b5921b165f455edf4c5b7",
+    "SKILL.md": "0c9fa96791aebf3b7d654cf35c6aadde97d81f57c17b07d13b27c14d9c46561f",
     "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
   },
   "generated_sha256": {
-    "ADAPTATIONS.patch": "453ba0e6d5c6e13cd3e2ab7e54d2b789cb5cd29f89e6f6cb22e7006dd0612236",
+    "ADAPTATIONS.patch": "09974385ddea94966c8c3bcecd2ff933835607e9ef1d3f4cf3956d09b7fa2b8b",
     "LICENSE": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
-    "PROVENANCE.md": "7db423d60834b7b2a1c23cfe00eb0edd95a10f3e8784a2c480b39c9d87d1ffe0",
+    "PROVENANCE.md": "130527b8dee16ef4af71dc34f52635485cff518fef493519d09d79fc71700768",
     "SKILL.md": "148a28dff11723acc670326034b02bb7a1d37e32914db49d9b84213e3180078c",
     "agents/openai.yaml": "88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073"
   }

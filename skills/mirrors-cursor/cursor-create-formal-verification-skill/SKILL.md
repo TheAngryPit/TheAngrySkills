@@ -13,6 +13,7 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 ## Codex mapping
 
 Use the selected repository's project-local skill location, preferring `.agents/skills/` for Codex. Keep generated verification files and scratch mutations inside that repository or a disposable copy. Follow native permissions for tool installation and external access. The existing `proof-orchestrator` selects the proof path; `model-capability-router` owns any model choice. A model check proves its stated model and bounds, not unexamined product code. Do not alter product code or weaken a property to obtain a pass.
+The upstream statechart skill is a pinned reference, not distributed here. Use it only when separately available and authorized; otherwise disclose the missing visualization step. Do not claim that this link installs it.
 
 # Create a formal verification skill
 
@@ -41,6 +42,8 @@ Pick the tool that answers the question at the lowest cost: a model checker, a p
 ## Generate the verify skill
 
 Write a project-local skill with frontmatter that names the area and says when to use it. Without frontmatter, the skill never registers. From the skill alone, the next agent must be able to tell whether a change touches the verified code, run the check, tell a real bug from a modeling error, and update the verification when a change is intended. Put the coverage record and the sync commit in the skill, and tell the next agent to move the sync commit forward only after it confirms that the verification describes the code at the new commit. Use this repo's real commands, paths, and nouns, and leave no placeholders.
+
+If the check is a TLA+ model, tell the next agent to read every result with the pstack [`/statechart`](https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/skills/statechart/SKILL.md) skill. It shows each invariant violation the checker finds as its shortest path in plain words. When the check passes, `/statechart` draws a chart of how the system moves between states. Refer to `/statechart` by name. Its commands, options, and file paths change between releases and machines, so copy none of them into the generated skill or its scripts.
 
 ## Prove it before you hand off
 

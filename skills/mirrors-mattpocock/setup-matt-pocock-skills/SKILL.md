@@ -23,6 +23,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
 - The active harness's documented instruction file (for example `AGENTS.md` or `CLAUDE.md`): does it already contain an `## Agent skills` section?
 - `GLOSSARY.md` and `GLOSSARY-MAP.md` at the repo root
+- Also inspect legacy `CONTEXT.md` / `CONTEXT-MAP.md`. If present, offer the upstream `GLOSSARY` migration and update `docs/agents/domain.md` only when the repository's established naming and the user's decision support it.
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
 - `.scratch/`: a sign that a local-markdown issue tracker convention is already in use
@@ -47,6 +48,8 @@ Default posture: these skills were designed for GitHub. If a `git remote` points
 - **Other** (Jira, Linear, etc.): ask the user to describe the workflow in one paragraph; the skill will record it as freeform prose
 
 Record the choice in `docs/agents/issue-tracker.md`. If that file already exists, preserve its repo-specific conventions and edit only what the confirmed choice requires. The GitHub and GitLab templates carry a "PRs as a request surface" flag, defaulted **off**. Leave it off and don't raise it: a user who wants external PRs in the triage queue can flip the flag in the file later.
+
+A GitHub or GitLab tracker needs a reachable repo. When the user picks one and no `git remote` points at that host, get the repo URL from them and wire it up (`git init` if needed, `git remote add origin <url>`) before going further. Done when `gh repo view` / `glab repo view` prints the project from inside this directory; if it can't, stop and tell the user what's missing.
 
 **Section B: Triage label vocabulary.** Skip this section entirely if the `triage` skill isn't installed (exploration told you), since an uninstalled skill needs no labels.
 

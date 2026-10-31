@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/openclaw/openclaw",
-  "commit": "aea75db8e4cf3397749cc51011dea696777de02d",
+  "commit": "447e14d02460342af4fe2c98dbd5475b15b938d2",
   "path": ".agents/skills/control-ui-e2e",
   "original_name": "control-ui-e2e",
   "installed_name": "openclaw-control-ui-e2e",
@@ -13,7 +13,7 @@
     "agents/openai.yaml": "521218dd3292ac4e5b0245dbb3b484c9f485c6b2420b076f0ca4821bcbc006b4",
     "references/upstream/SKILL.source.md": "f036c3f7986dfff24a17da4d43af75fe27aaba4dc306704a2bad02e5416db96a",
     "references/upstream/agents/openai.yaml": "892ebbd1307525b1caf6c32f45a0a1ba77bee042bdff729e494eacb560d0bd07",
-    "references/upstream/references/interaction-performance.md": "236ebe247a01a7a3f3531e631c834b494cc68358a109b8bbd71a5a49734e165e",
+    "references/upstream/references/interaction-performance.md": "ec8452cbc5ff7f88e73fdf04423f20fc1b336dc8f1ad969421d576c1039e4e8b",
     "references/upstream/references/run-inspector.md": "09daa006a71efe18ecef0a11b6c51649abae3f100ec22106d1fef0fd596c1a97",
     "references/upstream/references/visual-proof.md": "c19ef871dcd76f6357b4cdb22f16d98b34d52b14d94a916c71a62272ca620a89"
   },
@@ -21,5 +21,6 @@
   "source_backup": "sources/openclaw-core",
   "adapted_resource_entrypoint": false,
   "distribution_repository": "https://github.com/TheAngryPit/TheAngrySkills",
-  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source"
+  "reference_link_adaptation": "all nested Markdown relative links outside package point to pinned upstream source",
+  "original_integration_commit": "aea75db8e4cf3397749cc51011dea696777de02d"
 }

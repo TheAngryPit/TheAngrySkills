@@ -85,13 +85,13 @@ jobs:
           set -euo pipefail
           detection="$RUNNER_TEMP/upstream-detection.json"
           report_dir="$RUNNER_TEMP/upstream-reports"
+          cp scripts/upstream-pr-lifecycle.py "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py"
           while IFS=$'\t' read -r family batch; do
             [ -n "$family" ] || continue
             report_name="${family}-${batch}.md"
             report_file="$report_dir/$report_name"
             [ -f "$report_file" ] || { echo "missing report: $report_file" >&2; exit 1; }
 
-            branch="automation/upstream-${family}-${batch}"
             python - "$detection" "$family" "$batch" > "$RUNNER_TEMP/report.json" <<'PY'
           import json
           import pathlib
@@ -104,7 +104,7 @@ jobs:
           print(json.dumps(selected[0], sort_keys=True))
           PY
             report_json="$(cat "$RUNNER_TEMP/report.json")"
-            python scripts/upstream-pr-lifecycle.py render-pr \
+            python "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py" render-pr \
               --report-json "$report_json" \
               --report-file "$report_file" \
               > "$RUNNER_TEMP/pr-body.md"
@@ -114,10 +114,16 @@ jobs:
             gh api --paginate --slurp \
               "repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" \
               > "$RUNNER_TEMP/open-pr-pages.json"
-            python scripts/upstream-pr-lifecycle.py normalize-prs \
+            python "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py" normalize-prs \
               < "$RUNNER_TEMP/open-pr-pages.json" \
               > "$RUNNER_TEMP/open-prs.json"
-            selection="$(python scripts/upstream-pr-lifecycle.py select \
+            source_head="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["latest"])' "$report_json")"
+            branch="$(python "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py" proposal-branch \
+              --family "$family" \
+              --batch "$batch" \
+              --repository "$GITHUB_REPOSITORY" \
+              --source-head "$source_head" < "$RUNNER_TEMP/open-prs.json")"
+            selection="$(python "$RUNNER_TEMP/trusted-upstream-pr-lifecycle.py" select \
               --family "$family" \
               --batch "$batch" \
               --base main \
@@ -126,8 +132,8 @@ jobs:
             action="$(python -c 'import json,sys; print(json.loads(sys.argv[1])["action"])' "$selection")"
 
             # Resolve the PR identity before switching branches or making any
-            # local/remote mutation.  A static branch without an open marked
-            # PR is treated as closed/abandoned work and fails closed.
+            # local/remote mutation. Closed cycle refs remain untouched. A
+            # collision on the selected new cycle still fails closed.
             branch_exists=false
             if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
               branch_exists=true

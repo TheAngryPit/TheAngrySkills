@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import pytest
 from pathlib import Path
 import subprocess
 import sys
@@ -490,7 +491,8 @@ def test_local_bridge_deduplicates_and_separates_receipt_from_delivery():
     assert status["delivery"]["changed_files"] == ["skills/example/SKILL.md"]
 
 
-def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
+@pytest.mark.parametrize("cycle_suffix", ["", "-" + "a" * 40])
+def test_local_bridge_posts_once_then_reuses_readback(monkeypatch, cycle_suffix):
     source_head = "a" * 40
     report = detector.blank_result("cursor", "pstack", "https://example.invalid/cursor", "old", source_head)
     pr_body = lifecycle.pr_body(report, detector.render_report(report), lifecycle.bounded_prompt(report))
@@ -530,7 +532,7 @@ def test_local_bridge_posts_once_then_reuses_readback(monkeypatch):
                 "number": 17,
                 "body": pr_body,
                 "base": {"ref": "main"},
-                "head": {"ref": "automation/upstream-cursor-pstack", "repo": {"full_name": "owner/repo"}},
+                "head": {"ref": "automation/upstream-cursor-pstack" + cycle_suffix, "repo": {"full_name": "owner/repo"}},
             }]]
         elif endpoint == "repos/owner/repo/pulls/17":
             payload = {"head": {"sha": "b" * 40}}
@@ -639,7 +641,7 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert "gh pr merge" not in workflow
     assert "--force" not in workflow
     assert "reports/upstream-updates" in workflow
-    selection = workflow.index("upstream-pr-lifecycle.py select")
+    selection = workflow.index('trusted-upstream-pr-lifecycle.py" select')
     first_switch = workflow.index("git switch")
     first_push = workflow.index("git push")
     assert selection < first_switch < first_push
@@ -1233,7 +1235,7 @@ def test_codex_gate_is_non_applicable_outside_two_canonical_branches():
     }
 
 
-def finalization_fixture():
+def finalization_fixture(cycle_suffix=""):
     parent = "b" * 40
     files = [
         {"filename": "reports/upstream-updates/matt-adapted.md"},
@@ -1241,6 +1243,7 @@ def finalization_fixture():
         {"filename": "skills/mirrors-mattpocock/retro/UPSTREAM.json"},
     ]
     pr = readiness_pr("matt", "adapted", parent)
+    pr["head"]["ref"] += cycle_suffix
     pr["changed_files"] = len(files)
     initial = lifecycle.finalization_admission(
         pr,
@@ -1268,6 +1271,7 @@ def finalization_fixture():
         "committer": {"login": "github-actions[bot]", "id": lifecycle.BOT_USER_ID},
     }
     resumed_pr = readiness_pr("matt", "adapted", final_head)
+    resumed_pr["head"]["ref"] += cycle_suffix
     resumed_pr["changed_files"] = len(files) + 1
     return parent, files, initial, attestation, bot_commit, resumed_pr
 
@@ -1310,8 +1314,9 @@ def test_initial_finalization_allows_only_unchanged_inherited_readiness_material
         raise AssertionError("inherited readiness material was accepted")
 
 
-def test_finalization_resume_accepts_only_verified_single_bot_attestation():
-    parent, files, _, attestation, bot_commit, pr = finalization_fixture()
+@pytest.mark.parametrize("cycle_suffix", ["", "-" + "a" * 40])
+def test_finalization_resume_accepts_only_verified_single_bot_attestation(cycle_suffix):
+    parent, files, _, attestation, bot_commit, pr = finalization_fixture(cycle_suffix)
     resumed = lifecycle.finalization_admission(
         pr,
         files + [{"filename": attestation["attestation_file"]}],
@@ -1458,3 +1463,129 @@ def test_codex_gate_detector_report_commit_requires_its_own_review():
         )
         assert clean['state'] == 'success'
         assert clean['carry_forward'] is False
+
+
+def test_new_review_cycle_uses_a_source_scoped_branch_after_old_pr_closes():
+    # The closed legacy branch is deliberately not reused or deleted.
+    for family, batch in lifecycle.EXPECTED_BATCHES:
+        prefix = f"automation/upstream-{family}-{batch}"
+        first = lifecycle.proposal_branch([], family, batch, "owner/repo", "a" * 40)
+        second = lifecycle.proposal_branch([], family, batch, "owner/repo", "b" * 40)
+        assert first == prefix + "-" + "a" * 40
+        assert second != first and second != prefix
+
+
+def test_proposal_cycle_reuses_its_open_branch_even_when_source_advances():
+    for suffix in ("", "-" + "a" * 40):
+        branch = "automation/upstream-matt-adapted" + suffix
+        pr = {"number": 10, "body": lifecycle.family_batch_marker("matt", "adapted"), "baseRefName": "main", "headRefName": branch, "headRepoFullName": "owner/repo"}
+        assert lifecycle.proposal_branch([pr], "matt", "adapted", "owner/repo", "b" * 40) == branch
+        with pytest.raises(ValueError, match="multiple open PRs"):
+            lifecycle.proposal_branch([pr, {**pr, "number": 11}], "matt", "adapted", "owner/repo", "b" * 40)
+        for field, value in (("headRefName", "someone-else"), ("baseRefName", "other"), ("headRepoFullName", "attacker/fork")):
+            with pytest.raises(ValueError):
+                lifecycle.proposal_branch([{**pr, field: value}], "matt", "adapted", "owner/repo", "b" * 40)
+
+
+@pytest.mark.parametrize("source", ["short", "A" * 40, "a" * 39, "a" * 41, "a" * 40 + "/other"])
+def test_proposal_cycle_rejects_non_sha_source(source):
+    with pytest.raises(ValueError, match="source head"):
+        lifecycle.proposal_branch([], "matt", "adapted", "owner/repo", source)
+
+
+def test_source_scoped_branches_remain_subject_to_exact_head_review_and_finalization():
+    for family, batch in lifecycle.EXPECTED_BATCHES:
+        head = "b" * 40
+        pr = readiness_pr(family, batch, head)
+        branch = pr['head']['ref'] + '-' + 'a' * 40
+        pr['head']['ref'] = branch
+        gate = lifecycle.codex_review_gate(pr, [], [], [], empty_threads(), repository="owner/repo")
+        assert gate['state'] == 'pending'
+        files = [{'filename': f'skills/mirrors-{family}/example/SKILL.md'}, {'filename': f'reports/upstream-updates/{family}-{batch}.md'}]
+        if family == 'matt':
+            files = [{'filename': 'skills/mirrors-mattpocock/tdd/SKILL.md'}, {'filename': 'skills/mirrors-mattpocock/tdd/UPSTREAM.json'}, {'filename': 'reports/upstream-updates/matt-adapted.md'}]
+        else:
+            files.append({'filename': 'sources/cursor-plugins/manifest.json'})
+        pr['changed_files'] = len(files)
+        ready = lifecycle.adaptation_readiness(pr, [files], [readiness_commits()], report_text=readiness_report_text(family, batch), family=family, batch=batch, expected_head=head, repository='owner/repo', dispatcher='TheAngryPit', dispatcher_permission='admin')
+        assert ready['branch'] == branch
+        malformed = json.loads(json.dumps(pr))
+        malformed['head']['ref'] += '-suffix'
+        with pytest.raises(ValueError):
+            lifecycle.codex_review_gate(malformed, [], [], [], empty_threads(), repository='owner/repo')
+
+
+def test_actual_staging_step_preserves_closed_branches_and_reuses_open_cycles(tmp_path):
+    import os
+    import textwrap
+
+    remote = tmp_path / 'remote.git'
+    repo = tmp_path / 'checkout'
+    subprocess.run(['git', 'init', '--bare', str(remote)], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-b', 'main', str(repo)], check=True, capture_output=True)
+    # Main carries an old helper; switching to a proposal must not replace the
+    # trusted helper used to process the second family in this very same run.
+    write(repo / 'scripts/upstream-pr-lifecycle.py', 'raise SystemExit("untrusted checkout helper executed")\n')
+    initial = commit(repo, 'old accepted main')
+    git(repo, 'remote', 'add', 'origin', str(remote))
+    git(repo, 'push', 'origin', 'main')
+    for family, batch in lifecycle.EXPECTED_BATCHES:
+        git(repo, 'push', 'origin', f'HEAD:automation/upstream-{family}-{batch}')
+    git(repo, 'fetch', 'origin')
+    git(repo, 'switch', '-c', 'repair')
+    write(repo / 'scripts/upstream-pr-lifecycle.py', (ROOT / 'scripts/upstream-pr-lifecycle.py').read_text())
+    commit(repo, 'reviewed repair helper')
+    runner = tmp_path / 'runner'
+    reports = []
+    for index, (family, batch) in enumerate(lifecycle.EXPECTED_BATCHES):
+        report = detector.blank_result(family, batch, f'https://example.invalid/{family}', '0' * 40, ('a' if index == 0 else 'b') * 40)
+        report['changed'] = True
+        reports.append(report)
+        write(runner / 'upstream-reports' / f'{family}-{batch}.md', detector.render_report(report))
+    write(runner / 'upstream-detection.json', json.dumps({'schema_version': 1, 'changed': True, 'reports': reports}))
+    state = tmp_path / 'open-prs.json'
+    write(state, '[]')
+    fake_gh = tmp_path / 'bin/gh'
+    write(fake_gh, f'#!{sys.executable}\n' + '''import json, os, sys
+from pathlib import Path
+args=sys.argv[1:]; path=Path(os.environ['FIXTURE_PR_STATE']); prs=json.loads(path.read_text())
+if args[0]=='api' and '--method' not in args:
+    print(json.dumps([prs]))
+elif args[:2]==['pr','create']:
+    number=len(prs)+1
+    prs.append({'number':number,'body':Path(args[args.index('--body-file')+1]).read_text(),'base':{'ref':'main'},'head':{'ref':args[args.index('--head')+1],'repo':{'full_name':'owner/repo'}}})
+    path.write_text(json.dumps(prs)); print(f'https://example.invalid/owner/repo/pull/{number}')
+elif args[:2]==['pr','edit']:
+    number=int(args[2]); pr=next(p for p in prs if p['number']==number); pr['body']=Path(args[args.index('--body-file')+1]).read_text(); path.write_text(json.dumps(prs))
+elif args[0]=='api' and '--method' in args:
+    assert args[args.index('--method')+1]=='POST'
+    assert any('actions/workflows/codex-review-gate.yml/dispatches' in a for a in args)
+else:
+    raise SystemExit('unexpected fake gh command '+repr(args))
+''')
+    fake_gh.chmod(0o755)
+    (fake_gh.parent / "python").symlink_to(sys.executable)
+    workflow = (ROOT / '.github/workflows/review-matt-cursor-upstreams.yml').read_text()
+    step = workflow.split('- name: Create or update one review PR per family and batch', 1)[1]
+    script = textwrap.dedent(step.split('run: |\n', 1)[1])
+    env = {**os.environ, 'PATH': str(fake_gh.parent) + os.pathsep + os.environ['PATH'], 'RUNNER_TEMP': str(runner), 'GITHUB_REPOSITORY': 'owner/repo', 'FIXTURE_PR_STATE': str(state)}
+    for _ in range(2):
+        git(repo, 'switch', 'repair')
+        result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', script], cwd=repo, env=env, capture_output=True, text=True)
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert len(json.loads(state.read_text())) == 2, result.stdout + result.stderr
+        for report in reports:
+            family, batch = report['family'], report['batch']
+            legacy = f'automation/upstream-{family}-{batch}'
+            branch = legacy + '-' + report['latest']
+            assert git(remote, 'rev-parse', legacy) == initial
+            assert git(remote, 'diff', '--name-only', initial, branch) == f'reports/upstream-updates/{family}-{batch}.md'
+    # A same-cycle collision without its open PR stays closed: no overwrite,
+    # force push, deletion or fabricated success is introduced by the repair.
+    refs_before = git(remote, 'show-ref')
+    state.write_text('[]')
+    git(repo, 'switch', 'repair')
+    result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', script], cwd=repo, env=env, capture_output=True, text=True)
+    assert result.returncode != 0
+    assert 'exists without an open marked PR' in result.stderr
+    assert git(remote, 'show-ref') == refs_before

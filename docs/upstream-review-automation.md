@@ -18,6 +18,10 @@ The earlier Matt issue watcher remains available through manual dispatch as a
 fallback. Its schedule is disabled so one Matt delta does not open both legacy
 issues and the new family PR.
 
+New proposal cycles use `automation/upstream-<family>-<batch>-<full-source-sha>` branches. One validated open proposal is reused when the source advances, including an existing legacy static branch. Closed cycle branches are preserved and never reset, deleted or force-pushed. A collision on the selected cycle without its open PR still fails closed. The review gate, bridge and finalizer recognize both branch forms and continue to bind the exact repository, family, base, review head and readiness record.
+
+The staging step freezes its reviewed lifecycle helper before changing checkouts. Candidate branches cannot replace the helper used for the next family in the same run.
+
 The pull request contains a stable family/batch marker and the observed source
 commit. Its only repository artifact is the detector evidence under
 `reports/upstream-updates/`. The workflow never rewrites snapshots, overlays,

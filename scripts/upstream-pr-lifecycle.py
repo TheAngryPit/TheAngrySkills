@@ -63,6 +63,36 @@ def codex_execution_marker(family: str, batch: str, source_head: str) -> str:
     return f"<!-- {CODEX_EXECUTION_PREFIX}:v1:family={family}:batch={batch}:head={source_head} -->"
 
 
+
+def canonical_branch_identity(branch: str) -> tuple[str, str] | None:
+    """Recognize legacy proposals and immutable source-scoped review cycles."""
+    if not isinstance(branch, str):
+        return None
+    for family, batch in EXPECTED_BATCHES:
+        prefix = f"automation/upstream-{family}-{batch}"
+        if branch == prefix or re.fullmatch(re.escape(prefix) + r"-[0-9a-f]{40}", branch):
+            return family, batch
+        if branch.startswith(prefix + "-"):
+            raise ValueError("malformed canonical review cycle branch")
+    return None
+
+
+def proposal_branch(prs: list[dict[str, Any]], family: str, batch: str, repository: str, source_head: str) -> str:
+    """Reuse one validated open proposal; start a new cycle on a fresh ref."""
+    if (family, batch) not in EXPECTED_BATCHES or not _REPOSITORY.fullmatch(repository):
+        raise ValueError("unsupported proposal family/batch or repository")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_head):
+        raise ValueError("source head must be a full commit SHA")
+    marked = [pr for pr in prs if family_batch_marker(family, batch) in (pr.get("body") or "")]
+    branch = f"automation/upstream-{family}-{batch}-{source_head}"
+    if len(marked) == 1:
+        branch = marked[0].get("headRefName")
+        if canonical_branch_identity(branch) != (family, batch):
+            raise ValueError("open proposal has unexpected refs")
+    select_pr(prs, family, batch, "main", branch, repository)
+    return branch
+
+
 def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> list[dict[str, Any]]:
     """Return PRs with the exact family/batch marker and refs.
 
@@ -199,11 +229,7 @@ def _canonical_identity(pr: dict[str, Any], repository: str) -> tuple[str, str] 
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
     branch = head.get("ref")
-    expected = {
-        "automation/upstream-matt-adapted": ("matt", "adapted"),
-        "automation/upstream-cursor-pstack": ("cursor", "pstack"),
-    }
-    identity = expected.get(branch)
+    identity = canonical_branch_identity(branch)
     if identity is None:
         return None
     if base.get("ref") != "main" or head_repo.get("full_name") != repository:
@@ -261,7 +287,9 @@ def _reviewed_head_for_bot_attestation(
     if not isinstance(readiness, dict):
         raise ValueError("bot readiness content is unavailable")
     finalizer = readiness.get("finalizer") if isinstance(readiness.get("finalizer"), dict) else {}
-    expected_branch = f"automation/upstream-{family}-{batch}"
+    expected_branch = head.get("ref")
+    if canonical_branch_identity(expected_branch) != (family, batch):
+        raise ValueError("pull request refs do not match the canonical family/batch branch")
     if (
         readiness.get("state") != "adapted_ready"
         or readiness.get("family") != family
@@ -471,7 +499,9 @@ def adaptation_readiness(
     base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
-    expected_branch = f"automation/upstream-{family}-{batch}"
+    expected_branch = head.get("ref")
+    if canonical_branch_identity(expected_branch) != (family, batch):
+        raise ValueError("pull request refs do not match the canonical family/batch branch")
     if base.get("ref") != "main" or head.get("ref") != expected_branch:
         raise ValueError("pull request refs do not match the canonical family/batch branch")
     if head_repo.get("full_name") != repository:
@@ -1083,8 +1113,8 @@ def bridge_upstream_handoffs(
     prs = normalize_prs(prs_payload)
     results: list[dict[str, Any]] = []
     for family, batch in families:
-        branch = f"automation/upstream-{family}-{batch}"
         try:
+            branch = proposal_branch(prs, family, batch, repo, "0" * 40)
             selection = select_pr(prs, family, batch, "main", branch, repo)
         except ValueError as error:
             results.append({"family": family, "batch": batch, "status": "blocked", "error": str(error)})
@@ -1372,6 +1402,11 @@ def main() -> int:
     select.add_argument("--head", required=True)
     select.add_argument("--head-repo", required=True)
     select.add_argument("--prs-json", help="JSON array of open PRs; stdin when omitted")
+    branch = subparsers.add_parser("proposal-branch")
+    branch.add_argument("--family", required=True)
+    branch.add_argument("--batch", required=True)
+    branch.add_argument("--repository", required=True)
+    branch.add_argument("--source-head", required=True)
     codex = subparsers.add_parser("request-present")
     codex.add_argument("--report-json", required=True)
     codex.add_argument("--author", required=True)
@@ -1461,6 +1496,13 @@ def main() -> int:
         help="limit observation to one configured batch; required with --execute",
     )
     args = parser.parse_args()
+    if args.command == "proposal-branch":
+        try:
+            print(proposal_branch(json.loads(sys.stdin.read() or "[]"), args.family, args.batch, args.repository, args.source_head))
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        return 0
     if args.command == "select":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
         try:

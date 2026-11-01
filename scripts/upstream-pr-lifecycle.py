@@ -135,6 +135,40 @@ def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, hea
     return {"action": "update", "number": number}
 
 
+
+def assess_orphan_proposal(family: str, batch: str, branch: str, closed_prs: Any, report_text: str) -> dict[str, str]:
+    """Recover an unpublished exact report commit without treating Git metadata as authentication."""
+    if _flatten_pages(closed_prs, "closed PR"):
+        raise ValueError("closed proposal cycle cannot be reopened automatically")
+    report = report_from_pr_body(report_text)
+    expected_branch = f"automation/upstream-{family}-{batch}-{report['latest']}"
+    if canonical_branch_identity(branch) != (family, batch) or branch != expected_branch:
+        raise ValueError("orphan recovery requires the exact source-scoped proposal branch")
+    if (report['family'], report['batch']) != (family, batch):
+        raise ValueError("orphan report family/batch does not match")
+    def git(*args: str) -> bytes:
+        return subprocess.check_output(["git", *args])
+    base = git("rev-parse", "origin/main").decode().strip()
+    tip = git("rev-parse", f"refs/remotes/origin/{branch}").decode().strip()
+    parents = git("rev-list", "--parents", "-n", "1", tip).decode().split()
+    if len(parents) != 2 or parents[0] != tip:
+        raise ValueError("orphan report must have exactly one parent")
+    parent = parents[1]
+    ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", parent, base], capture_output=True)
+    if ancestry.returncode != 0:
+        raise ValueError("orphan report parent is not a verified main ancestor")
+    report_path = f"reports/upstream-updates/{family}-{batch}.md"
+    if git("diff", "--name-only", parent, tip).decode().splitlines() != [report_path]:
+        raise ValueError("orphan branch contains changes beyond its detector report")
+    if git("show", f"{tip}:{report_path}") != report_text.encode():
+        raise ValueError("orphan detector report differs from the current proposal")
+    identity = git("show", "-s", "--format=%an%x00%ae%x00%cn%x00%ce", tip).decode().rstrip("\n").split("\0")
+    bot_email = f"{BOT_USER_ID}+{BOT_LOGIN}@users.noreply.github.com"
+    if identity != [BOT_LOGIN, bot_email, BOT_LOGIN, bot_email]:
+        raise ValueError("orphan report does not match expected bot author and committer metadata")
+    return {"state": "unpublished_detector_report", "branch": branch, "head": tip}
+
+
 def _flatten_pages(payload: Any, label: str) -> list[Any]:
     if not isinstance(payload, list):
         raise ValueError(f"{label} response must be a JSON array")
@@ -1306,6 +1340,16 @@ def pr_body(report: dict[str, Any], report_markdown: str, codex_prompt: str) -> 
         if separator:
             evidence = evidence.rstrip()
             break
+    if len(evidence.encode("utf8")) > 40000:
+        evidence = (
+            "## Detector evidence summary\n\n"
+            f"The complete detector report remains in `reports/upstream-updates/{report['family']}-{report['batch']}.md` "
+            "in this PR's Files changed tab. Detailed path inventories are omitted here to stay within GitHub's body limit.\n\n"
+            + "\n".join(f"- {key.replace('_', ' ')}: {len(report.get(key, []))}" for key in (
+                "changed_skills", "new_skills", "removed_skills", "changed_support_files",
+                "new_support_files", "removed_support_files", "changed_licenses",
+            ))
+        )
     return (
         f"{report['marker']}\n"
         f"## Review-only upstream update: {report['family']} / {report['batch']}\n\n"
@@ -1407,6 +1451,12 @@ def main() -> int:
     branch.add_argument("--batch", required=True)
     branch.add_argument("--repository", required=True)
     branch.add_argument("--source-head", required=True)
+    orphan = subparsers.add_parser("assess-orphan")
+    orphan.add_argument("--family", required=True)
+    orphan.add_argument("--batch", required=True)
+    orphan.add_argument("--branch", required=True)
+    orphan.add_argument("--closed-prs-json", required=True)
+    orphan.add_argument("--report-file", required=True)
     codex = subparsers.add_parser("request-present")
     codex.add_argument("--report-json", required=True)
     codex.add_argument("--author", required=True)
@@ -1502,6 +1552,14 @@ def main() -> int:
         except (ValueError, json.JSONDecodeError) as error:
             print(str(error), file=sys.stderr)
             return 2
+        return 0
+    if args.command == "assess-orphan":
+        try:
+            result = assess_orphan_proposal(args.family, args.batch, args.branch, json.loads(Path(args.closed_prs_json).read_text()), Path(args.report_file).read_text())
+        except (ValueError, json.JSONDecodeError, subprocess.CalledProcessError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        print(json.dumps(result, sort_keys=True))
         return 0
     if args.command == "select":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()

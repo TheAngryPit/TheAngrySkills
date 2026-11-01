@@ -658,7 +658,7 @@ def test_scheduled_workflow_is_review_only_and_scoped_to_two_batches():
     assert "local bridge" in workflow
     assert "existing gh login" in workflow
     assert "delivery proof" in workflow
-    assert workflow.count("gh api --paginate --slurp") == 1
+    assert workflow.count("gh api --paginate --slurp") == 2
     assert "detector status/output mismatch" in workflow
     assert '--head-repo "$GITHUB_REPOSITORY"' in workflow
     legacy_matt = (ROOT / ".github/workflows/check-adapted-skill-upstreams.yml").read_text()
@@ -1541,17 +1541,29 @@ def test_actual_staging_step_preserves_closed_branches_and_reuses_open_cycles(tm
         report = detector.blank_result(family, batch, f'https://example.invalid/{family}', '0' * 40, ('a' if index == 0 else 'b') * 40)
         report['changed'] = True
         reports.append(report)
-        write(runner / 'upstream-reports' / f'{family}-{batch}.md', detector.render_report(report))
+        text = detector.render_report(report)
+        if family == 'cursor':
+            text = text.replace(report['marker'], report['marker'] + '\n## Large inventory\n' + ('- `source-path`\n' * 12000), 1)
+        write(runner / 'upstream-reports' / f'{family}-{batch}.md', text)
     write(runner / 'upstream-detection.json', json.dumps({'schema_version': 1, 'changed': True, 'reports': reports}))
     state = tmp_path / 'open-prs.json'
+    closed_state = tmp_path / 'closed-prs.json'
+    fail_create = tmp_path / 'fail-create-once'
     write(state, '[]')
+    write(closed_state, '[]')
+    write(fail_create, 'simulate interrupted PR creation')
     fake_gh = tmp_path / 'bin/gh'
     write(fake_gh, f'#!{sys.executable}\n' + '''import json, os, sys
 from pathlib import Path
 args=sys.argv[1:]; path=Path(os.environ['FIXTURE_PR_STATE']); prs=json.loads(path.read_text())
 if args[0]=='api' and '--method' not in args:
-    print(json.dumps([prs]))
+    payload=json.loads(Path(os.environ['FIXTURE_CLOSED_STATE']).read_text()) if any('state=closed' in a for a in args) else prs
+    print(json.dumps([payload]))
 elif args[:2]==['pr','create']:
+    fail=Path(os.environ['FIXTURE_FAIL_CREATE'])
+    if fail.exists():
+        fail.unlink(); raise SystemExit('simulated PR creation failure')
+    assert len(Path(args[args.index('--body-file')+1]).read_bytes()) <= 60000
     number=len(prs)+1
     prs.append({'number':number,'body':Path(args[args.index('--body-file')+1]).read_text(),'base':{'ref':'main'},'head':{'ref':args[args.index('--head')+1],'repo':{'full_name':'owner/repo'}}})
     path.write_text(json.dumps(prs)); print(f'https://example.invalid/owner/repo/pull/{number}')
@@ -1568,7 +1580,17 @@ else:
     workflow = (ROOT / '.github/workflows/review-matt-cursor-upstreams.yml').read_text()
     step = workflow.split('- name: Create or update one review PR per family and batch', 1)[1]
     script = textwrap.dedent(step.split('run: |\n', 1)[1])
-    env = {**os.environ, 'PATH': str(fake_gh.parent) + os.pathsep + os.environ['PATH'], 'RUNNER_TEMP': str(runner), 'GITHUB_REPOSITORY': 'owner/repo', 'FIXTURE_PR_STATE': str(state)}
+    env = {**os.environ, 'PATH': str(fake_gh.parent) + os.pathsep + os.environ['PATH'], 'RUNNER_TEMP': str(runner), 'GITHUB_REPOSITORY': 'owner/repo', 'FIXTURE_PR_STATE': str(state), 'FIXTURE_CLOSED_STATE': str(closed_state), 'FIXTURE_FAIL_CREATE': str(fail_create)}
+    interrupted = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', script], cwd=repo, env=env, capture_output=True, text=True)
+    assert interrupted.returncode != 0 and 'simulated PR creation failure' in interrupted.stderr
+    assert json.loads(state.read_text()) == []
+    # Deploy the fix to main between the interrupted push and its retry.
+    git(repo, 'switch', 'main')
+    write(repo / 'scripts/upstream-pr-lifecycle.py', (ROOT / 'scripts/upstream-pr-lifecycle.py').read_text())
+    write(repo / 'README.md', 'new accepted main\n')
+    commit(repo, 'deploy lifecycle repair')
+    git(repo, 'push', 'origin', 'main')
+    git(repo, 'fetch', 'origin')
     for _ in range(2):
         git(repo, 'switch', 'repair')
         result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', script], cwd=repo, env=env, capture_output=True, text=True)
@@ -1579,13 +1601,65 @@ else:
             legacy = f'automation/upstream-{family}-{batch}'
             branch = legacy + '-' + report['latest']
             assert git(remote, 'rev-parse', legacy) == initial
-            assert git(remote, 'diff', '--name-only', initial, branch) == f'reports/upstream-updates/{family}-{batch}.md'
+            parent = git(remote, 'rev-parse', branch + '^')
+            assert git(remote, 'diff', '--name-only', parent, branch) == f'reports/upstream-updates/{family}-{batch}.md'
     # A same-cycle collision without its open PR stays closed: no overwrite,
     # force push, deletion or fabricated success is introduced by the repair.
     refs_before = git(remote, 'show-ref')
+    closed_state.write_text(state.read_text())
     state.write_text('[]')
     git(repo, 'switch', 'repair')
     result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', script], cwd=repo, env=env, capture_output=True, text=True)
     assert result.returncode != 0
-    assert 'exists without an open marked PR' in result.stderr
+    assert 'closed proposal cycle cannot be reopened' in result.stderr
     assert git(remote, 'show-ref') == refs_before
+
+
+def test_oversized_detector_inventory_keeps_complete_handoff_within_github_body_limit():
+    report = detector.blank_result('cursor', 'pstack', 'https://example.invalid/cursor', '0' * 40, 'a' * 40)
+    markdown = detector.render_report(report)
+    huge = markdown.replace(report['marker'], report['marker'] + '\n## Huge source inventory\n' + ('- `untrusted-path`\n' * 12000), 1)
+    body = lifecycle.pr_body(report, huge, lifecycle.bounded_prompt(report))
+    assert len(body.encode('utf8')) <= 60000
+    assert lifecycle.report_from_pr_body(body)['latest'] == report['latest']
+    assert lifecycle.codex_execution_request(report) in body
+    assert 'reports/upstream-updates/cursor-pstack.md' in body
+    assert huge.count('untrusted-path') == 12000
+
+
+@pytest.mark.parametrize('variant', ['valid', 'advanced-main', 'unrelated-main', 'closed', 'extra', 'author', 'stale-report'])
+def test_orphan_recovery_requires_exact_unpublished_bot_report(tmp_path, monkeypatch, variant):
+    repo = tmp_path / 'checkout'
+    subprocess.run(['git', 'init', '-b', 'main', str(repo)], check=True, capture_output=True)
+    write(repo / 'README.md', 'accepted main\n')
+    base = commit(repo, 'accepted main')
+    git(repo, 'update-ref', 'refs/remotes/origin/main', base)
+    report = readiness_report_text('matt', 'adapted')
+    path = 'reports/upstream-updates/matt-adapted.md'
+    write(repo / path, report)
+    if variant == 'extra':
+        write(repo / 'scripts/unknown.py', 'unreviewed content\n')
+    git(repo, 'add', '.')
+    author = 'Someone' if variant == 'author' else lifecycle.BOT_LOGIN
+    email = 'someone@example.invalid' if variant == 'author' else f'{lifecycle.BOT_USER_ID}+{lifecycle.BOT_LOGIN}@users.noreply.github.com'
+    git(repo, '-c', f'user.name={author}', '-c', f'user.email={email}', 'commit', '-qm', 'Record detector evidence')
+    tip = git(repo, 'rev-parse', 'HEAD')
+    branch = 'automation/upstream-matt-adapted-' + 'a' * 40
+    git(repo, 'update-ref', 'refs/remotes/origin/' + branch, tip)
+    if variant == 'advanced-main':
+        git(repo, 'switch', '--detach', base)
+        write(repo / 'README.md', 'advanced accepted main\n')
+        updated = commit(repo, 'advance main after interrupted creation')
+        git(repo, 'update-ref', 'refs/remotes/origin/main', updated)
+    if variant == 'unrelated-main':
+        unrelated = git(repo, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit-tree', base + '^{tree}', '-m', 'unrelated history')
+        git(repo, 'update-ref', 'refs/remotes/origin/main', unrelated)
+    monkeypatch.chdir(repo)
+    closed = [[{'number': 7}]] if variant == 'closed' else [[]]
+    expected = report + '\nnot current' if variant == 'stale-report' else report
+    if variant in ('valid', 'advanced-main'):
+        assert lifecycle.assess_orphan_proposal('matt', 'adapted', branch, closed, expected)['head'] == tip
+    else:
+        with pytest.raises(ValueError):
+            lifecycle.assess_orphan_proposal('matt', 'adapted', branch, closed, expected)
+    assert git(repo, 'rev-parse', 'refs/remotes/origin/' + branch) == tip

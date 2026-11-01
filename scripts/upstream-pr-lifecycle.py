@@ -63,6 +63,36 @@ def codex_execution_marker(family: str, batch: str, source_head: str) -> str:
     return f"<!-- {CODEX_EXECUTION_PREFIX}:v1:family={family}:batch={batch}:head={source_head} -->"
 
 
+
+def canonical_branch_identity(branch: str) -> tuple[str, str] | None:
+    """Recognize legacy proposals and immutable source-scoped review cycles."""
+    if not isinstance(branch, str):
+        return None
+    for family, batch in EXPECTED_BATCHES:
+        prefix = f"automation/upstream-{family}-{batch}"
+        if branch == prefix or re.fullmatch(re.escape(prefix) + r"-[0-9a-f]{40}", branch):
+            return family, batch
+        if branch.startswith(prefix + "-"):
+            raise ValueError("malformed canonical review cycle branch")
+    return None
+
+
+def proposal_branch(prs: list[dict[str, Any]], family: str, batch: str, repository: str, source_head: str) -> str:
+    """Reuse one validated open proposal; start a new cycle on a fresh ref."""
+    if (family, batch) not in EXPECTED_BATCHES or not _REPOSITORY.fullmatch(repository):
+        raise ValueError("unsupported proposal family/batch or repository")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_head):
+        raise ValueError("source head must be a full commit SHA")
+    marked = [pr for pr in prs if family_batch_marker(family, batch) in (pr.get("body") or "")]
+    branch = f"automation/upstream-{family}-{batch}-{source_head}"
+    if len(marked) == 1:
+        branch = marked[0].get("headRefName")
+        if canonical_branch_identity(branch) != (family, batch):
+            raise ValueError("open proposal has unexpected refs")
+    select_pr(prs, family, batch, "main", branch, repository)
+    return branch
+
+
 def matching_prs(prs: list[dict[str, Any]], family: str, batch: str, base: str, head: str, head_repo: str) -> list[dict[str, Any]]:
     """Return PRs with the exact family/batch marker and refs.
 
@@ -103,6 +133,40 @@ def select_pr(prs: list[dict[str, Any]], family: str, batch: str, base: str, hea
     if not isinstance(number, int) or isinstance(number, bool) or number < 1:
         raise ValueError(f"open PR marker {family}:{batch} has an invalid number; aborting")
     return {"action": "update", "number": number}
+
+
+
+def assess_orphan_proposal(family: str, batch: str, branch: str, closed_prs: Any, report_text: str) -> dict[str, str]:
+    """Recover an unpublished exact report commit without treating Git metadata as authentication."""
+    if _flatten_pages(closed_prs, "closed PR"):
+        raise ValueError("closed proposal cycle cannot be reopened automatically")
+    report = report_from_pr_body(report_text)
+    expected_branch = f"automation/upstream-{family}-{batch}-{report['latest']}"
+    if canonical_branch_identity(branch) != (family, batch) or branch != expected_branch:
+        raise ValueError("orphan recovery requires the exact source-scoped proposal branch")
+    if (report['family'], report['batch']) != (family, batch):
+        raise ValueError("orphan report family/batch does not match")
+    def git(*args: str) -> bytes:
+        return subprocess.check_output(["git", *args])
+    base = git("rev-parse", "origin/main").decode().strip()
+    tip = git("rev-parse", f"refs/remotes/origin/{branch}").decode().strip()
+    parents = git("rev-list", "--parents", "-n", "1", tip).decode().split()
+    if len(parents) != 2 or parents[0] != tip:
+        raise ValueError("orphan report must have exactly one parent")
+    parent = parents[1]
+    ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", parent, base], capture_output=True)
+    if ancestry.returncode != 0:
+        raise ValueError("orphan report parent is not a verified main ancestor")
+    report_path = f"reports/upstream-updates/{family}-{batch}.md"
+    if git("diff", "--name-only", parent, tip).decode().splitlines() != [report_path]:
+        raise ValueError("orphan branch contains changes beyond its detector report")
+    if git("show", f"{tip}:{report_path}") != report_text.encode():
+        raise ValueError("orphan detector report differs from the current proposal")
+    identity = git("show", "-s", "--format=%an%x00%ae%x00%cn%x00%ce", tip).decode().rstrip("\n").split("\0")
+    bot_email = f"{BOT_USER_ID}+{BOT_LOGIN}@users.noreply.github.com"
+    if identity != [BOT_LOGIN, bot_email, BOT_LOGIN, bot_email]:
+        raise ValueError("orphan report does not match expected bot author and committer metadata")
+    return {"state": "unpublished_detector_report", "branch": branch, "head": tip}
 
 
 def _flatten_pages(payload: Any, label: str) -> list[Any]:
@@ -199,11 +263,7 @@ def _canonical_identity(pr: dict[str, Any], repository: str) -> tuple[str, str] 
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
     branch = head.get("ref")
-    expected = {
-        "automation/upstream-matt-adapted": ("matt", "adapted"),
-        "automation/upstream-cursor-pstack": ("cursor", "pstack"),
-    }
-    identity = expected.get(branch)
+    identity = canonical_branch_identity(branch)
     if identity is None:
         return None
     if base.get("ref") != "main" or head_repo.get("full_name") != repository:
@@ -261,7 +321,9 @@ def _reviewed_head_for_bot_attestation(
     if not isinstance(readiness, dict):
         raise ValueError("bot readiness content is unavailable")
     finalizer = readiness.get("finalizer") if isinstance(readiness.get("finalizer"), dict) else {}
-    expected_branch = f"automation/upstream-{family}-{batch}"
+    expected_branch = head.get("ref")
+    if canonical_branch_identity(expected_branch) != (family, batch):
+        raise ValueError("pull request refs do not match the canonical family/batch branch")
     if (
         readiness.get("state") != "adapted_ready"
         or readiness.get("family") != family
@@ -471,7 +533,9 @@ def adaptation_readiness(
     base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
     head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
     head_repo = head.get("repo") if isinstance(head.get("repo"), dict) else {}
-    expected_branch = f"automation/upstream-{family}-{batch}"
+    expected_branch = head.get("ref")
+    if canonical_branch_identity(expected_branch) != (family, batch):
+        raise ValueError("pull request refs do not match the canonical family/batch branch")
     if base.get("ref") != "main" or head.get("ref") != expected_branch:
         raise ValueError("pull request refs do not match the canonical family/batch branch")
     if head_repo.get("full_name") != repository:
@@ -1083,8 +1147,8 @@ def bridge_upstream_handoffs(
     prs = normalize_prs(prs_payload)
     results: list[dict[str, Any]] = []
     for family, batch in families:
-        branch = f"automation/upstream-{family}-{batch}"
         try:
+            branch = proposal_branch(prs, family, batch, repo, "0" * 40)
             selection = select_pr(prs, family, batch, "main", branch, repo)
         except ValueError as error:
             results.append({"family": family, "batch": batch, "status": "blocked", "error": str(error)})
@@ -1276,6 +1340,16 @@ def pr_body(report: dict[str, Any], report_markdown: str, codex_prompt: str) -> 
         if separator:
             evidence = evidence.rstrip()
             break
+    if len(evidence.encode("utf8")) > 40000:
+        evidence = (
+            "## Detector evidence summary\n\n"
+            f"The complete detector report remains in `reports/upstream-updates/{report['family']}-{report['batch']}.md` "
+            "in this PR's Files changed tab. Detailed path inventories are omitted here to stay within GitHub's body limit.\n\n"
+            + "\n".join(f"- {key.replace('_', ' ')}: {len(report.get(key, []))}" for key in (
+                "changed_skills", "new_skills", "removed_skills", "changed_support_files",
+                "new_support_files", "removed_support_files", "changed_licenses",
+            ))
+        )
     return (
         f"{report['marker']}\n"
         f"## Review-only upstream update: {report['family']} / {report['batch']}\n\n"
@@ -1372,6 +1446,17 @@ def main() -> int:
     select.add_argument("--head", required=True)
     select.add_argument("--head-repo", required=True)
     select.add_argument("--prs-json", help="JSON array of open PRs; stdin when omitted")
+    branch = subparsers.add_parser("proposal-branch")
+    branch.add_argument("--family", required=True)
+    branch.add_argument("--batch", required=True)
+    branch.add_argument("--repository", required=True)
+    branch.add_argument("--source-head", required=True)
+    orphan = subparsers.add_parser("assess-orphan")
+    orphan.add_argument("--family", required=True)
+    orphan.add_argument("--batch", required=True)
+    orphan.add_argument("--branch", required=True)
+    orphan.add_argument("--closed-prs-json", required=True)
+    orphan.add_argument("--report-file", required=True)
     codex = subparsers.add_parser("request-present")
     codex.add_argument("--report-json", required=True)
     codex.add_argument("--author", required=True)
@@ -1461,6 +1546,21 @@ def main() -> int:
         help="limit observation to one configured batch; required with --execute",
     )
     args = parser.parse_args()
+    if args.command == "proposal-branch":
+        try:
+            print(proposal_branch(json.loads(sys.stdin.read() or "[]"), args.family, args.batch, args.repository, args.source_head))
+        except (ValueError, json.JSONDecodeError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        return 0
+    if args.command == "assess-orphan":
+        try:
+            result = assess_orphan_proposal(args.family, args.batch, args.branch, json.loads(Path(args.closed_prs_json).read_text()), Path(args.report_file).read_text())
+        except (ValueError, json.JSONDecodeError, subprocess.CalledProcessError) as error:
+            print(str(error), file=sys.stderr)
+            return 2
+        print(json.dumps(result, sort_keys=True))
+        return 0
     if args.command == "select":
         raw = args.prs_json if args.prs_json is not None else sys.stdin.read()
         try:

@@ -81,7 +81,6 @@ jobs:
             cursor) batch=pstack ;;
             *) echo "unsupported family" >&2; exit 1 ;;
           esac
-          branch="automation/upstream-${FAMILY}-${batch}"
           permission="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${GITHUB_ACTOR}/permission" --jq .permission)"
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > "$RUNNER_TEMP/pr.json"
           gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=100" > "$RUNNER_TEMP/files.json"
@@ -129,6 +128,7 @@ jobs:
             --current-commit-json "$RUNNER_TEMP/current-commit.json" \
             "${readiness_args[@]}" \
             > "$RUNNER_TEMP/admission.json"
+          branch="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["branch"])' "$RUNNER_TEMP/admission.json")"
           checkout_head="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["checkout_head"])' "$RUNNER_TEMP/admission.json")"
           mode="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$RUNNER_TEMP/admission.json")"
           if [ "$mode" = resume ]; then

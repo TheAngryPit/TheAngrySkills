@@ -18,6 +18,12 @@ The earlier Matt issue watcher remains available through manual dispatch as a
 fallback. Its schedule is disabled so one Matt delta does not open both legacy
 issues and the new family PR.
 
+New proposal cycles use `automation/upstream-<family>-<batch>-<full-source-sha>` branches. One validated open proposal is reused when the source advances, including an existing legacy static branch. Closed cycle branches are preserved and never reset, deleted or force-pushed. A collision on the selected cycle without its open PR fails closed unless it is a never-published producer report: no closed PR exists for that branch, its one report-only commit has a verified ancestor of fetched main as parent and matches the expected bot author/committer metadata, its only changed file is the detector report, and its bytes match the newly generated report. In that narrow interrupted-creation case, staging may finish creating the PR without replacing the commit or reopening closed work. Git author/committer metadata is a convention check, not authenticated producer provenance; exact report content, ancestry and closed-history checks provide the recovery boundary. The review gate, bridge and finalizer recognize both branch forms and continue to bind the exact repository, family, base, review head and readiness record.
+
+Oversized inventories stay complete in the versioned detector report. The PR body substitutes counts and a Files changed pointer when the evidence exceeds 40,000 UTF-8 bytes; the family/source markers, authorization boundaries and execution candidate remain complete.
+
+The staging step freezes its reviewed lifecycle helper before changing checkouts. Candidate branches cannot replace the helper used for the next family in the same run.
+
 The pull request contains a stable family/batch marker and the observed source
 commit. Its only repository artifact is the detector evidence under
 `reports/upstream-updates/`. The workflow never rewrites snapshots, overlays,

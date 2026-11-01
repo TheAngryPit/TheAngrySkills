@@ -13,7 +13,9 @@ No additional behavior was invented during integration.
 
 Historical upstream review: `49dd158d1076134a641b33efb035946536778336` on 2026-10-19. Per-file source hashes are recorded in UPSTREAM.json.
 
-Current upstream review: `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` on 2026-10-31. Per-file source hashes are recorded in UPSTREAM.json.
+Historical upstream review: `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` on 2026-10-31. Per-file source hashes are recorded in UPSTREAM.json.
+
+Current upstream review: `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d` on 2026-11-01. Per-file source hashes are recorded in UPSTREAM.json.
 
 ## Upstream review
 

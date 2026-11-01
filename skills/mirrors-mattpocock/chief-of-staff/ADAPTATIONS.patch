@@ -12,7 +12,13 @@
  
  Communication to and from subagents should be sparse. Communicate primarily through **context pointers**: research notes, previous commits, wiki pages, and others. Don't duplicate information already available via pointers.
  
-@@ -48,7 +48,7 @@
+@@ -50,12 +50,12 @@
+ 
+ Some procedures you run live in other skills, installed beside this one. To run one, read its `SKILL.md` at the path below, relative to this skill's directory, and follow it.
+ 
+-- **Retro** (`../retro/SKILL.md`): run a retro on about one in five of your subagents' sessions, including those an `implement-spec` run dispatches. Pick first the ones where something went wrong. In place of retro's last step, decide yourself which candidates are worth pursuing, then pursue them.
++- **Retro** (`../retro/SKILL.md`): sample about one in five of the subagent sessions coordinated for this explicitly invoked goal, including sessions dispatched by `implement-spec`; prioritize sessions where something went wrong. In place of retro's last step, choose and pursue candidates yourself when they directly support this goal and fit the existing authorization. Keep unrelated improvements as suggestions; the retro does not authorize publication, new credentials, spending or changes to another owner's work.
+ - **Large chunks of work**: write a spec with `../to-spec/SKILL.md`, break it into tickets with `../to-tickets/SKILL.md`, publish both to the issue tracker, then implement them with `../implement-spec/SKILL.md`.
  
  ## Strategic View
  
@@ -21,7 +27,7 @@
  
  - API's and functions which are extremely constrained and limited
  - Lint rules which force correctness
-@@ -63,6 +63,6 @@
+@@ -70,6 +70,6 @@
  Finally, create environments (and codebases) that obey the **"no workarounds"** rule:
  
  - No one-off workarounds, or hacks that bypass established processes

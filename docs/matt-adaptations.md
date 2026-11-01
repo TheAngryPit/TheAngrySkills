@@ -1,5 +1,7 @@
 ## Refresh — 6 October 2026
 
+On 2026-11-01, `chief-of-staff` advanced separately to `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`: reuse an existing shared wiki and add scoped retro/spec procedures. The native delegation, goal ownership and authorization adaptations remain. Other packages retain their per-package revisions described below.
+
 The latest reviewed upstream is `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa`; the nine changed packages listed below advance to it. Unchanged packages retain their existing per-package pins. Existing reviewed overlays from PR100 remain the base for package refresh. AskPit retains its own identity and Writing for Astra route, incorporates current implement-spec/pr/retro flows, and uses native context decisions. Writing for Astra integrates useful pointer, information-structure, completion and source-of-truth guidance while retaining the documented Astra decisions. Vanilla ask-matt and writing-for-agents remain excluded from the emitted catalog.
 
 The new portable, explicit-only `chief-of-staff` guidance is curated with an intentional empty overlay. It suggests schedules subject to harness support; it creates no schedule or delegated run during source publication. `pr` was already curated in PR100 and is refreshed rather than duplicated. These packages need manual installation where absent. The removed resolving-merge-conflicts source remains preserved as a legacy package; it is not silently replaced by a docs page or deleted.

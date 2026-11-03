@@ -173,6 +173,7 @@
         "./skills/mirrors-hyperframes/hyperframes-registry",
         "./skills/mirrors-hyperframes/hyperframes-reverse-any-video",
         "./skills/mirrors-hyperframes/hyperframes-slideshow",
+        "./skills/mirrors-hyperframes/hyperframes-style-sampling",
         "./skills/mirrors-hyperframes/remotion-to-hyperframes"
       ]
     },

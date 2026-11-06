@@ -62,7 +62,7 @@ def test_runtime_input_drift_requires_review():
     checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
     assert hasattr(checker,'verify_runtime_contracts'),'admission check does not yet validate runtime inputs'
     result=checker.verify_runtime_contracts()
-    assert result=={'skills':107,'profiles':14,'live_workflows_claimed':False}
+    assert result=={'skills':109,'profiles':14,'live_workflows_claimed':False}
 
 
 def test_no_profile_native_bytes_are_replaced(regenerated_tree):

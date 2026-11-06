@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: cursor-team-kit/skills/what-did-i-get-done/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/cursor-team-kit/README.md
 Source SHA-256: 479813c9abaacb5b6b0531f1de7dc5eb2f3bd9673707a992d1073335836e82f8
 Published name: cursor-what-did-i-get-done
 Decision class: intacta

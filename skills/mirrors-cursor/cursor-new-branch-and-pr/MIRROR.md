@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: cursor-team-kit/skills/new-branch-and-pr/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/cursor-team-kit/README.md
 Source SHA-256: 4e8f502fcf48553949387a9a7f58b21349e0ff87c24bf8ff5c0013e9da6819fd
 Published name: cursor-new-branch-and-pr
 Decision class: intacta

@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: cursor-team-kit/skills/make-pr-easy-to-review/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/cursor-team-kit/README.md
 Source SHA-256: e8da0d4a85b7c04823698f539251617389f827fd9137100ef7eaea5dcc992fe7
 Published name: cursor-make-pr-easy-to-review
 Decision class: intacta

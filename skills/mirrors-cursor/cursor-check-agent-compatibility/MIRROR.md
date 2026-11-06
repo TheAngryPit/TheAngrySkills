@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: agent-compatibility/skills/check-agent-compatibility/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/agent-compatibility/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/agent-compatibility/README.md
 Source SHA-256: 2391a06aec1bfb475690a9c386207e009090e35c624b5ca6cace3ea4c6705970
 Published name: cursor-check-agent-compatibility
 Decision class: adaptação funcional

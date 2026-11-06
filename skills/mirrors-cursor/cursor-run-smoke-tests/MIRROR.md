@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: cursor-team-kit/skills/run-smoke-tests/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/cursor-team-kit/README.md
 Source SHA-256: 848c9f34af50f8a0edecbdc239707b694f5f9ac497c61b5907f2bf0caa1372fb
 Published name: cursor-run-smoke-tests
 Decision class: intacta

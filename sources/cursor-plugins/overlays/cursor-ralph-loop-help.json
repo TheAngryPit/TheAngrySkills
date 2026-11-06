@@ -31,8 +31,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "ralph-loop/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/ralph-loop/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/ralph-loop/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
+      "sha256": "931b35a3718b56269694f9c91fa13a7bf08bb3965c4122caf7f11cd7b2107d7a"
     },
     "security_review": {
       "scanner_verdict": "safe_docs_only",

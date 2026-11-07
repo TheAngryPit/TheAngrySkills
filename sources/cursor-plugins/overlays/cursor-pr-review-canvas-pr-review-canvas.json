@@ -39,8 +39,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pr-review-canvas/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/pr-review-canvas/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pr-review-canvas/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
+      "sha256": "7d9bdc809b14e5d0ef735be75cd98349b9dea3a7eb52372c8142dc200c6c9a55"
     },
     "security_review": {
       "scanner_verdict": "safe_docs_only",

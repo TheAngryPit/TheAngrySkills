@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-06",
+  "scope": "Refresh existing adapted skills while preserving native boundaries; admit two reviewed explicit-only source adaptations.",
+  "cursor": {
+    "commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
+    "physical_adapters": 114,
+    "published": 109,
+    "held": 5,
+    "raw_source_files": 2073,
+    "parallel_harness_variants": "reference only; not native admission",
+    "private_only": "tailscale-setup remains excluded from public promotion and installation",
+    "new_adaptations": [
+      "cursor-ketchup-video",
+      "cursor-statechart"
+    ],
+    "native_profiles": "all 14 existing source bodies and native asset bytes unchanged; two harness source aliases do not add profiles"
+  },
+  "openclaw": {
+    "commit": "39d85007e9ba04ca502bf06da2ed51d35cbad491",
+    "changed_packages": [
+      "openclaw-control-ui-e2e",
+      "openclaw-refactor-docs",
+      "openclaw-test-performance",
+      "openclaw-testing",
+      "openclaw-update"
+    ],
+    "preserved": "Native entrypoints and authorization gates; link-only and safety adaptations retained"
+  },
+  "marketing_commit": "96798cf38736ecdba015a1d2b0521b0c8f8f41dd",
+  "hyperframes_commit": "539c70ceea4607883fb79dbc55eae2346ce1a91d",
+  "matt": "No tracked source drift at 4ae2317ddb22b046e26455e4f9c9b3aaaf62212d; stale evidence-only PR #158 closed",
+  "validation": {
+    "pytest": "501 passed, 2 skipped, 13 subtests",
+    "catalog_errors": 0,
+    "cursor_links_unresolved": 0,
+    "upstream_execution": "not claimed",
+    "T3_or_other_runtime_recertification": "not claimed"
+  },
+  "security_review": {
+    "verdict_changes": [
+      {
+        "name": "cursor-ketchup-video",
+        "before": "absent",
+        "after": "safe_to_install"
+      },
+      {
+        "name": "cursor-statechart",
+        "before": "absent",
+        "after": "quarantine"
+      }
+    ],
+    "statechart_review": {
+      "finding_scope": "all eight critical matches occur in test fixtures and generated corpus reports",
+      "privilege_escalation": "TCConsistent invariant text; no escalation operation",
+      "persistence_mutation": "tests write .bashrc inside temporary test output to verify rejection of non-empty directories",
+      "runtime_gate": "native entrypoint requires existing reviewed Java/TLC tools; global mise installation is not authorized by loading the skill",
+      "runtime_proof": "not executed; no actual escalation or user shell startup mutation observed in these matching lines"
+    }
+  },
+  "review_corrections": [
+    {
+      "source": "Codex review on PR #166",
+      "issue": "npm adoption requested one extra calendar month",
+      "change": "Start at current month minus months - 1; retain a reviewed hash-checked source patch through mirror regeneration.",
+      "proof": "UTC month/year/leap boundaries, empty first-day data, lost-patch rejection, and original RED/corrected GREEN demonstrated."
+    }
+  ]
+}

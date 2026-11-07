@@ -1,5 +1,22 @@
 {
   "checkout_required": true,
-  "source_commit": "aea75db8e4cf3397749cc51011dea696777de02d",
-  "links": []
+  "source_commit": "39d85007e9ba04ca502bf06da2ed51d35cbad491",
+  "links": [
+    {
+      "source_file": "references/upstream/SKILL.source.md",
+      "source_repository_file": ".agents/skills/openclaw-test-performance/SKILL.md",
+      "original": "../openclaw-testing/SKILL.md",
+      "repository_path": ".agents/skills/openclaw-testing/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-testing/SKILL.md",
+      "bundled_target": null
+    },
+    {
+      "source_file": "references/upstream/SKILL.source.md",
+      "source_repository_file": ".agents/skills/openclaw-test-performance/SKILL.md",
+      "original": "../../../CONTRIBUTING.md#source-dependencies",
+      "repository_path": "CONTRIBUTING.md#source-dependencies",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/CONTRIBUTING.md#source-dependencies",
+      "bundled_target": null
+    }
+  ]
 }

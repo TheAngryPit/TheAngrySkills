@@ -9,3 +9,7 @@ Original relative links resolve through `references/upstream-link-map.json`; on-
 The operator's native boundaries govern publication, landing, dependency installation, authentication homes and execution permissions. No paid route, shared-process mutation or credential access is authorized by installation. Automatic source refresh is not enabled for these authored adaptations; reconcile the pinned source and recorded adjustments before updating.
 
 Verification receipts are maintained at the pack source and task delivery; package checks/discovery do not prove Gateway runtime repair or a fresh model's invocation behavior.
+
+## Source refresh — 2026-11-06
+
+Compared original upstream files at the prior recorded commit with 39d85007e9ba04ca502bf06da2ed51d35cbad491. Incorporated only genuine upstream deltas; preserved the Codex root, permissions, companions and safety adaptations. Rebuilt resource hashes and pinned links. Link-rewritten reference bytes were not treated as upstream source changes.

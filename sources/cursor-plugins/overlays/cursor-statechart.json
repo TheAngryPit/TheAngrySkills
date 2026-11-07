@@ -1,0 +1,53 @@
+{
+  "source_path": "pstack/skills/statechart/SKILL.md",
+  "source_sha256": "010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d",
+  "replacements": [
+    {
+      "file": "SKILL.md",
+      "before": "description: \"Check a TLA+ model of a system that moves between states, such as a product flow, a protocol, or a service, and draw it as a Mermaid statechart. The report gives the shortest path to each state that breaks a rule. Use for /statechart, or to show a bug as a path through states.\"",
+      "after": "description: \"Use when explicitly requesting $cursor-statechart to check an explicit bounded TLA+ model and explain its statechart and shortest invariant counterexamples.\""
+    },
+    {
+      "file": "SKILL.md",
+      "before": "The first run installs TLC and Java with mise and needs the network.",
+      "after": "Use existing reviewed Java and TLC through JAVA and TLA2TOOLS. Automatic mise installation is a separate environment change requiring authorization; do not run that bootstrap merely because this skill was invoked."
+    }
+  ],
+  "reason": "Reviewed new native Codex adaptation with preserved source and bounded runtime authority.",
+  "preserved_requirement": "Check an explicit bounded TLA+ model and explain its statechart and shortest invariant counterexamples.",
+  "proof": "source and distribution checks; runtime claims require actual target evidence",
+  "codex_rule": "Preserve native permissions and explicit invocation.",
+  "codex_contract": {
+    "schema_version": 1,
+    "adapter_mode": "native-guidance",
+    "name_mapping": {
+      "upstream_skill": "statechart",
+      "published_name": "cursor-statechart",
+      "source_path": "pstack/skills/statechart/SKILL.md"
+    },
+    "preserved_semantics": "Check an explicit bounded TLA+ model and explain its statechart and shortest invariant counterexamples.",
+    "native_mapping": {
+      "availability": "source_validated_runtime_unproven",
+      "capabilities": [
+        "native explicit skill discovery"
+      ],
+      "fallback": "Report unavailable capability rather than inventing execution."
+    },
+    "permission_gates": [
+      "Operator authorization and native refusals remain binding."
+    ],
+    "behavioral_proof": {
+      "positive": "Source and distribution checked; fresh native execution unproven.",
+      "missing_tool_or_input": "Report exact gap.",
+      "error": "Preserve refusal and report unfinished outcome."
+    },
+    "upstream_readme": {
+      "status": "verified_in_pinned_upstream_clone",
+      "path": "pstack/README.md",
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md",
+      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
+      "note": "Source provenance, not runtime or subscription access proof."
+    }
+  },
+  "codex_note": "## Native Codex execution boundary\n\nRead the bundled upstream spec, view, report and rendering contract. Work in a task-owned scratch directory. Inspect the bundled runner and existing TypeScript, Java and TLC prerequisites before execution; its automatic mise bootstrap is not permission to alter a global environment. Use reviewed existing tools or report the precise missing prerequisite. Keep invariants agreed with the reader intact; bound the state space and report unchecked rules, model omissions and hidden transitions. Show the actual generated Mermaid statechart and each invariant counterexample. Replay code-related bug paths against the real implementation before claiming a product bug. Use the requested supported renderer; if the source-specific Pele renderer is unavailable, say so rather than inventing a rendered artifact. Native permissions and model selection remain authoritative.\n\nThe upstream workflow below supplies the detailed procedure; its host-specific tools never establish native capability or permission."
+}

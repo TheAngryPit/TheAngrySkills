@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: dyl-stack/skills/principle-the-algorithm/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/dyl-stack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/dyl-stack/README.md
 Source SHA-256: a15929a44ddd3b856092513eade5ac884516723937c5fe2667e2f95806f27f7f
 Published name: cursor-principle-the-algorithm
 Decision class: native guidance adaptation; runtime unproven

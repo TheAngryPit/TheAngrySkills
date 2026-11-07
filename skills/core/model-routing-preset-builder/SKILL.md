@@ -1,12 +1,17 @@
 ---
 name: model-routing-preset-builder
-description: "Use when the operator explicitly wants to customise the native Codex model-capability-router policy."
+description: "Use when the operator explicitly wants to customise the GPT-only or OpenClaw subscription model-capability-router policy."
 ---
 
 # Native Routing Policy Builder
 
-Read the installed `model-capability-router` as the single baseline. It
-recommends GPT-6.1 Sol High for coordination, GPT-6 Astra Medium with XHigh
+Read the installed `model-capability-router` as the single baseline. Select
+its GPT-only or OpenClaw subscription edition before changing model choices.
+The OpenClaw edition is defined in `references/openclaw-subscriptions.md`
+inside that router; use its task table and subscription-route checks instead
+of imposing the GPT-only palette. Preserve all existing explicit bindings.
+
+The GPT-only edition recommends GPT-6.1 Sol High for coordination, GPT-6 Astra Medium with XHigh
 reserved for exceptional reasoning, GPT-6.1 Terra for visual and application
 work using the router's workload-specific efforts (High as the starting point
 for professional tool work), and GPT-6 Luna High/XHigh/Max. These are
@@ -16,7 +21,7 @@ Low; High is the shared recommendation, not a forced configuration change.
 Do not revive retired schema-3 presets, mandatory coordinator topology or
 resolver scripts.
 
-For pstack role-aware choices, the router's
+For GPT-only pstack role-aware choices, the router's
 `references/pstack-role-presets.json` is the only preset mapping. Change that
 source only when the operator asks for a durable shared-policy change. Keep a
 selected role-aware preset separate from pstack's global budget options; do not
@@ -27,7 +32,7 @@ default only for a new setup with no existing role choices.
    availability for each relevant channel. Preserve explicit selections.
 2. Change only the requested profile choices or task boundaries. Keep task
    ownership, permissions, proof and compute selection separate.
-3. For this operator, use the recommended palette above when the exact native
+3. For this operator, use the selected edition's palette when the exact native
    channel supports it. Luna Max is available when justified, not an Ultra mode
    or a new paid route. Terra capability and effort/cost/latency evidence is in
    the router's `references/gpt61-terra-20261028.md`; the Sol launch evidence is

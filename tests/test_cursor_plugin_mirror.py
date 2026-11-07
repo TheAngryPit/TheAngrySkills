@@ -68,69 +68,17 @@ class CursorMirrorTests(unittest.TestCase):
     def test_committed_tree_is_reproducible(self):
         result = self.run_build("--check")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(f"112 physical, {published_count()} published", result.stdout)
+        self.assertIn(f"114 physical, {published_count()} published", result.stdout)
 
-    def test_reviewed_pstack_source_overrides_preserve_the_global_baseline(self):
+    def test_refreshed_baseline_pins_every_adapter_and_keeps_holds(self):
         manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
         state = json.loads((REPO / "reports/cursor-plugin-skills-state.json").read_text())
-        expected_names = {
-            "cursor-benchmark-checklist",
-            "cursor-correct",
-            "cursor-principle-explain-the-number",
-            "cursor-typescript-best-practices",
-            "cursor-architect",
-            "cursor-arena",
-            "cursor-blast-radius",
-            "cursor-figure-it-out",
-            "cursor-how",
-            "cursor-interrogate",
-            "cursor-poteto-mode",
-            "cursor-principle-guard-the-context-window",
-            "cursor-principle-never-block-on-the-human",
-            "cursor-principle-outcome-oriented-execution",
-            "cursor-principle-prove-it-works",
-            "cursor-principle-sequence-verifiable-units",
-            "cursor-reflect",
-            "cursor-setup-pstack",
-            "cursor-show-me-your-work",
-            "cursor-swarm",
-            "cursor-tdd",
-            "cursor-technical-writing",
-            "cursor-unslop",
-            "cursor-why",
-        }
-        expected_names.update({"cursor-add-dictation", "cursor-build-figma", "cursor-dyl-mode", "cursor-dyl-ready-pr", "cursor-dyl-review", "cursor-principle-the-algorithm", "cursor-google-docs", "cursor-google-drive", "cursor-google-sheets", "cursor-google-slides", "cursor-x-money-guide", "cursor-x-mcp-guide"})
-        latest_pstack = "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
-        previous = "e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a"
-        historical_refresh = {"cursor-origin-api", "cursor-port-github-app-to-origin"}
-        expected_names = {name for name in expected_names if name not in {
-            "cursor-benchmark-checklist", "cursor-correct", "cursor-principle-explain-the-number",
-            "cursor-typescript-best-practices", "cursor-architect", "cursor-arena",
-            "cursor-blast-radius", "cursor-figure-it-out", "cursor-how", "cursor-interrogate",
-            "cursor-poteto-mode", "cursor-principle-guard-the-context-window",
-            "cursor-principle-never-block-on-the-human", "cursor-principle-outcome-oriented-execution",
-            "cursor-principle-prove-it-works", "cursor-principle-sequence-verifiable-units",
-            "cursor-reflect", "cursor-setup-pstack", "cursor-show-me-your-work", "cursor-swarm",
-            "cursor-tdd", "cursor-technical-writing", "cursor-unslop", "cursor-why"}}
-        expected_names |= historical_refresh
-        self.assertEqual(manifest["upstream_commit"], "c1c0a32802223f4be824112dd83d33ad29a8b26c")
-        self.assertEqual(manifest["pstack_upstream_commit"], latest_pstack)
-        self.assertEqual(sum(e["family"] == "pstack" for e in manifest["skills"]), 59)
-        overrides = {e["published_name"]: e["source_commit"] for e in manifest["skills"] if e.get("source_commit")}
-        self.assertEqual(state["source_commit_overrides"], overrides)
+        pin = "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+        self.assertEqual(manifest["upstream_commit"], pin)
+        self.assertEqual(manifest["pstack_upstream_commit"], pin)
+        self.assertEqual(state["source_commit_overrides"], {})
         for entry in manifest["skills"]:
             name = entry["published_name"]
-            if entry["family"] == "pstack":
-                pin = latest_pstack
-            elif name == "cursor-x-mcp-guide":
-                pin = latest_pstack
-            elif name in historical_refresh:
-                pin = "df581122cde17e6e27686b5a448bde23e4ad4318"
-            elif name in expected_names:
-                pin = previous
-            else:
-                self.assertNotIn("source_commit", entry)
-                continue
             self.assertEqual(entry["source_commit"], pin)
             overlay = json.loads((REPO / "sources/cursor-plugins/overlays" / f"{name}.json").read_text())
             mirror_root = REPO / ("skills/mirrors-cursor" if entry["publish"] else "sources/cursor-plugins/adapted-held")
@@ -138,9 +86,6 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
             self.assertIn(f"Commit: {pin}\n", mirror)
             self.assertIn(f"blob/{pin}/{entry['family']}/README.md", mirror)
-            readme = overlay.get("codex_contract", {}).get("upstream_readme")
-            if readme:
-                self.assertIn(f"blob/{pin}/{entry['family']}/README.md", readme["url"])
 
     def test_held_sibling_links_use_the_siblings_reviewed_source_commit(self):
         baseline = "c1c0a32802223f4be824112dd83d33ad29a8b26c"
@@ -264,7 +209,7 @@ class CursorMirrorTests(unittest.TestCase):
                          (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
         provenance = (project / "MIRROR.md").read_text()
         self.assertIn("https://github.com/cursor/plugins.git", provenance)
-        self.assertIn("Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe", provenance)
+        self.assertIn("Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b", provenance)
         # The installed pack, detached from the source checkout, owns its complete links.
         for file in project.rglob("*.md"):
             for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):

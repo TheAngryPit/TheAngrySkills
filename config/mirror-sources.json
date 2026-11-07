@@ -23,7 +23,17 @@
       "branch": "main",
       "source_root": "skills",
       "destination_root": "skills/mirrors-marketing",
-      "prefix": "marketing-"
+      "prefix": "marketing-",
+      "reviewed_patches": [
+        {
+          "path": "reverse-engineer-marketing/scripts/teardown.mjs",
+          "source_sha256": "16b89a7efbafc7f75c3025d43e4c9396bf9e4165ea665f4a6a9755e7dcab382d",
+          "patched_sha256": "40ca8b8b5a74ffa55ad18cfd3a26d2adcc022745d49ca69dbc534c3c676e7996",
+          "before": "now.getUTCMonth() - months, 1",
+          "after": "now.getUTCMonth() - (months - 1), 1",
+          "reason": "Start the requested calendar-month window at the current month minus months - 1; avoid an extra npm adoption bucket."
+        }
+      ]
     },
     {
       "id": "openclaw",

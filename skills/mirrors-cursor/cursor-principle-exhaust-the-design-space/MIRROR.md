@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: pstack/skills/principle-exhaust-the-design-space/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
 Source SHA-256: 2de83d99f93f60ec6313455b0bc9aa9f0bfb93dd59f414f403691322db00d4db
 Published name: cursor-principle-exhaust-the-design-space
 Decision class: intacta

@@ -33,8 +33,10 @@ def verify_runtime_contracts():
 
 def verify_unadmitted(full, known, pending, source):
     for path, record in pending.items():
-        if (path in known or not path.startswith('pstack/skills/') or not path.endswith('/SKILL.md')
-                or record.get('state') != 'pending_review'
+        parallel = path.startswith('harness/pstack/claude-code/skills/')
+        expected_state = 'parallel_harness_reference_only' if parallel else 'pending_review'
+        if (path in known or not (path.startswith('pstack/skills/') or path == 'third_party/tailscale/skills/tailscale-setup/SKILL.md' or parallel) or not path.endswith('/SKILL.md')
+                or record.get('state') != expected_state
                 or record.get('source_commit') != full['files'].get(path, {}).get('source_commit')
                 or full['files'].get(path, {}).get('sha256') != record.get('sha256')
                 or (source / path).exists()):

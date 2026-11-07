@@ -1,0 +1,13 @@
+{
+  "files": {
+    "method.md": "59c03cbdb8d26ffc200c5f688108a190782342c3bb9ebf3342cc6e1563eeffe9",
+    "native-codex.md": "59c03cbdb8d26ffc200c5f688108a190782342c3bb9ebf3342cc6e1563eeffe9",
+    "original-codex.txt": "c2194702a8cd336960aab43f85e96480a7e87152131872fe0c5e3a8a874ed2ff",
+    "selection.md": "a8769970cd5dc570d86969be3b11333b222b278cb10b90cd2dc7c48a9a1522d3",
+    "t3.md": "ce6603182e0d9499b7883a549fe00bacad756fc1d3ed2c3f426477537d7237a8"
+  },
+  "native_base": "../..",
+  "personas": {},
+  "schema_version": 1,
+  "skill": "cursor-ketchup-video"
+}

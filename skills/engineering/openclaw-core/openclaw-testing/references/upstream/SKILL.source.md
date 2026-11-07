@@ -9,6 +9,20 @@ description: Choose proportional OpenClaw tests/checks, diagnose failures, route
 
 - **PR CI = default broad proof.** Change builds + focused tests pass → open
   ready PR. CI runs broad suites; never delay PR for pre-PR suite runs.
+- **Build unavailable before publication:** when publication is already authorized,
+  remote capacity is unavailable, and local execution is unqualified, push/open a
+  draft PR with the exact missing build and capacity gap recorded. Defer that build
+  to exact-head CI. Require its success before marking ready or merging. This
+  changes proof timing only, not publication authority, source trust, credentials,
+  owner approval, or merge gates.
+  Automatic CI skips drafts. For a trusted canonical branch, use the existing
+  `ci.yml` manual dispatch with `target_ref` set to the full pushed head SHA
+  (`ghx workflow run ci.yml --repo openclaw/openclaw --ref main -f target_ref=<sha>`).
+  Verify the selected checkout SHA and successful `build-artifacts` job cover the
+  required build. CI's `build:ci-artifacts` omits full declaration emission. Keep
+  uncovered proof pending. A skipped job or workflow-ref SHA is not build proof.
+  Link the run in the PR, then use normal ready-PR CI and landing gates.
+  Untrusted source keeps its secretless route.
 - **Before PR, prove narrowly:** touched tests with
   `pnpm test <file> --maxWorkers=1`, targeted typecheck, lint, format.
   Prefer local proof for trusted, bounded work when dependencies and current
@@ -27,8 +41,8 @@ description: Choose proportional OpenClaw tests/checks, diagnose failures, route
 - Prove changed contract, complete required gates, finish. Broaden/repeat only for
   changed inputs, failures, or named unresolved risk.
 - Follow scoped `AGENTS.md`; authoring/reviewing tests: use
-  [boundary guide](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/help/testing/writing-tests.md#prove-behavior-at-the-owning-boundary)
-  and [test-audit](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/test-audit/SKILL.md).
+  [boundary guide](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/help/testing/writing-tests.md#prove-behavior-at-the-owning-boundary)
+  and [test-audit](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/test-audit/SKILL.md).
 
 ## Select the proof
 
@@ -37,24 +51,27 @@ description: Choose proportional OpenClaw tests/checks, diagnose failures, route
 - Runtime defect: reproduce real entry point; rerun it + relevant siblings.
 - Trusted source: `pnpm changed:lanes --json`, focused tests + targeted typecheck/lint/format; `pnpm check:changed` = optional smart local check.
 - Public SDK/plugin contract: representative consumers, not all-plugin sweep.
-- Build output, lazy imports, package boundaries: include `pnpm build`.
+- Build output, lazy imports, package boundaries: include `pnpm build` or the
+  repository CI build that covers the changed contract. Record uncovered
+  packaging/platform/declaration requirements. Required full package or release
+  builds still need their matching proof.
 - Workflow: `git diff --check` + `pnpm check:workflows`.
 - Docs only: relevant docs/link/format checks + `git diff --check`; no runtime tests.
 
-- Read on demand: [local commands](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/reference/test.md),
-  [Crabbox](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/crabbox/SKILL.md), [OpenClaw remote setup](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/reference/test/remote-proof.md),
-  [package/Docker proof](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/references/package-and-docker.md),
-  [release CI](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/release-openclaw-ci/SKILL.md),
-  [plugin release matrix](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/release-openclaw-plugin-testing/SKILL.md),
-  [Docker authoring](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md), channel skill/
-  [Control UI E2E](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/SKILL.md).
+- Read on demand: [local commands](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/reference/test.md),
+  [Crabbox](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/crabbox/SKILL.md), [OpenClaw remote setup](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/reference/test/remote-proof.md),
+  [package/Docker proof](references/package-and-docker.md),
+  [release CI](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/release-openclaw-ci/SKILL.md),
+  [plugin release matrix](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/release-openclaw-plugin-testing/SKILL.md),
+  [Docker authoring](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md), channel skill/
+  [Control UI E2E](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/SKILL.md).
 - An isolated mock-Gateway harness is valid channel boundary proof; state live
   gaps. Prove user-visible behavior through the real flow when feasible;
   external APIs require live contract proof. Read the scoped channel/platform
   guide for live-channel or native-app work. Telegram claims require
-  [Test Server userbot proof with Convex-leased credentials](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/telegram-e2e-userbot/SKILL.md).
+  [Test Server userbot proof with Convex-leased credentials](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/telegram-e2e-userbot/SKILL.md).
   Platform claims require real-device evidence; macOS permission proof requires
-  a stable [signed app](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/docs/platforms/mac/signing.md#permission-evidence).
+  a stable [signed app](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/platforms/mac/signing.md#permission-evidence).
 - Release proof: preserve candidate/Tooling SHAs; never grants publication authority.
 
 ## Source and state boundaries
@@ -76,7 +93,7 @@ description: Choose proportional OpenClaw tests/checks, diagnose failures, route
 - PR CI fails → `pnpm test:ci-failed <pr>`; read pre-existing/new/unknown classification.
 - Fix new failures; investigate unknown → `pnpm test:ci-failed <pr> --run` until selected tests pass locally → push once.
 - `--run` enables `OPENCLAW_NODE_TEST_PLAN_CONTINUE_ON_FAILURE=1`: collect ordinary failures across selected configs, while infrastructure failures still stop; use the same opt-in for manual focused reruns.
-- Pre-existing failures: [failure-table landing rule](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-pr-maintainer/references/landing.md#red-main-and-inherited-failures). Matching signatures ≠ job-name-only attribution.
+- Pre-existing failures: [failure-table landing rule](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-pr-maintainer/references/landing.md#red-main-and-inherited-failures). Matching signatures ≠ job-name-only attribution.
 - Never `gh run rerun` to chase green; never local full suite for CI repair.
 - Bind diagnosis to exact SHA + job. Fetch failed logs once; prefer exact run/job
   state over stale PR rollups.
@@ -97,8 +114,14 @@ net regression-test lines when the squash body states the reason. Keep the share
 scalar unchanged so independent grants merge. The checker bounds effective
 ceiling growth against actual LF growth and preserves inherited debt. Other
 raises, including scalar-only reconciliation, need approval. See the
-[cost budget](https://github.com/openclaw/openclaw/blob/447e14d02460342af4fe2c98dbd5475b15b938d2/docs/help/testing/writing-tests.md#cost-budget) for record
+[cost budget](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/help/testing/writing-tests.md#cost-budget) for record
 format and pruning.
+
+For module mocks, follow the
+[fixture contract](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/docs/help/testing/fixtures.md#module-mocks-and-export-completeness).
+When an isolation annotation retires an existing baseline entry, commit the annotation and corresponding baseline removal together.
+Inspect the full baseline diff because `--prune` scans the whole checkout.
+Verify the updated baseline with a guard run without `--prune`.
 
 ### Test failure policy
 

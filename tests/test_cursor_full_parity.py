@@ -20,11 +20,11 @@ def load(name):
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
-    assert tree['files'] == 1312
+    assert tree['files'] == 2073
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
-    assert tree['family_updates'] == {'pstack': '4dd1d05818d19792e7cd6e818f1667f95f7e1dbe'}
+    assert tree['family_updates'] == {'pstack': '8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b'}
     result = load('check-cursor-adaptations').verify()
-    assert result == dict(skills=112, published=107, held_adapted=5, agents_mapped=14,
+    assert result == dict(skills=114, published=109, held_adapted=5, agents_mapped=16,
                           unresolved_links=0, runtime_proof='not claimed')
 
 
@@ -78,19 +78,20 @@ def test_detector_notices_new_non_pstack_plugin_and_dormant_pack_change(tmp_path
     assert report['batch'] == 'pstack'
 
 
-def test_selected_additions_are_pinned_and_tailscale_is_not_published():
+def test_new_admissions_are_pinned_and_explicit():
     check = load('check-cursor-adaptations')
-    assert check.verify()['published'] == 107
-    ledger = json.loads((ROOT / 'sources/cursor-plugins/additions.json').read_text())
-    assert set(ledger['files']) == {
-        'pstack/skills/in-your-own-words/SKILL.md',
-        'pstack/skills/ketchup/SKILL.md',
-        'pstack/skills/sharpen/SKILL.md',
-    }
-    assert not (ROOT / 'skills/mirrors-cursor/cursor-tailscale-setup').exists()
-    for name in ['in-your-own-words', 'ketchup', 'sharpen']:
-        policy = (ROOT / f'skills/mirrors-cursor/cursor-{name}/agents/openai.yaml').read_text()
-        assert 'allow_implicit_invocation: false' in policy
+    assert check.verify()['published'] == 109
+    manifest = json.loads((ROOT / 'sources/cursor-plugins/manifest.json').read_text())
+    full = json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())
+    for name in ['in-your-own-words', 'ketchup', 'sharpen', 'ketchup-video', 'statechart']:
+        entry = next(item for item in manifest['skills'] if item['published_name'] == f'cursor-{name}')
+        assert full['files'][entry['path']]['sha256'] == entry['files']['SKILL.md']
+        skill = ROOT / f'skills/mirrors-cursor/cursor-{name}'
+        policy = skill / 'agents/openai.yaml'
+        if policy.exists():
+            assert 'allow_implicit_invocation: false' in policy.read_text()
+        else:
+            assert 'disable-model-invocation: true' in (skill / 'SKILL.md').read_text()
 
 
 def test_family_refresh_cannot_rewrite_a_non_pstack_path():
@@ -119,8 +120,8 @@ def test_family_override_must_name_the_historical_hash():
         shutil.copytree(source / 'upstream-tree/pstack', target / 'upstream-tree/pstack')
         ledger_path = target / 'family-refresh.json'
         ledger = json.loads(ledger_path.read_text())
-        path = next(iter(ledger['overrides']))
-        ledger['overrides'][path]['baseline']['sha256'] = '0' * 64
+        path = next(iter(ledger['files']))
+        ledger['overrides'][path] = {'baseline': {**ledger['files'][path], 'sha256': '0' * 64}, 'current': ledger['files'][path]}
         ledger_path.write_text(json.dumps(ledger))
         with pytest.raises(ValueError, match='historical baseline'):
             family.verify(target)
@@ -155,17 +156,17 @@ def test_family_ledger_rejects_malformed_provenance(tmp_path, mutation, message)
 
 def test_addition_content_drift_is_rejected(tmp_path):
     check = load('check-cursor-adaptations')
-    sync = check.sync
-    original = sync.SOURCE
-    source = original / 'pstack/skills/sharpen/SKILL.md'
-    target = tmp_path / 'pstack/skills/sharpen/SKILL.md'
+    base = tmp_path / 'source'
+    shutil.copytree(ROOT / 'sources/cursor-plugins', base)
+    path = 'pstack/skills/future-fixture/SKILL.md'
+    record = dict(next(iter(json.loads((base / 'full-tree.json').read_text())['files'].values())))
+    (base / 'additions.json').write_text(json.dumps({'files': {path: record}}))
+    snapshot = base / 'snapshot'
+    target = snapshot / path
     target.parent.mkdir(parents=True)
-    target.write_bytes(source.read_bytes() + b'altered')
-    for name in ['in-your-own-words', 'ketchup']:
-        dest = tmp_path / f'pstack/skills/{name}/SKILL.md'
-        dest.parent.mkdir(parents=True)
-        dest.write_bytes((original / f'pstack/skills/{name}/SKILL.md').read_bytes())
-    sync.SOURCE = tmp_path
+    target.write_text('corrupt fixture')
+    check.BASE = base
+    check.sync.SOURCE = snapshot
     with pytest.raises(ValueError, match='addition source drift'):
         check.verify()
 

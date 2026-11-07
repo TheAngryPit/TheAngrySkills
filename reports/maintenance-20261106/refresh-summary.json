@@ -30,7 +30,7 @@
   "hyperframes_commit": "539c70ceea4607883fb79dbc55eae2346ce1a91d",
   "matt": "No tracked source drift at 4ae2317ddb22b046e26455e4f9c9b3aaaf62212d; stale evidence-only PR #158 closed",
   "validation": {
-    "pytest": "495 passed, 2 skipped, 13 subtests",
+    "pytest": "501 passed, 2 skipped, 13 subtests",
     "catalog_errors": 0,
     "cursor_links_unresolved": 0,
     "upstream_execution": "not claimed",
@@ -56,5 +56,13 @@
       "runtime_gate": "native entrypoint requires existing reviewed Java/TLC tools; global mise installation is not authorized by loading the skill",
       "runtime_proof": "not executed; no actual escalation or user shell startup mutation observed in these matching lines"
     }
-  }
+  },
+  "review_corrections": [
+    {
+      "source": "Codex review on PR #166",
+      "issue": "npm adoption requested one extra calendar month",
+      "change": "Start at current month minus months - 1; retain a reviewed hash-checked source patch through mirror regeneration.",
+      "proof": "UTC month/year/leap boundaries, empty first-day data, lost-patch rejection, and original RED/corrected GREEN demonstrated."
+    }
+  ]
 }

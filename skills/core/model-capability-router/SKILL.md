@@ -1,13 +1,13 @@
 ---
 name: model-capability-router
-description: "Use when the operator explicitly asks for native Codex model or reasoning-effort routing, including an active standing request."
+description: "Use when the operator asks for model or reasoning-effort routing using a GPT-only or OpenClaw subscription palette, including a standing request."
 ---
 
-# Native Model Routing
+# Model Capability Routing
 
-Use native Codex model, effort and agent selection. Respect the operator's
+Use the host's native model, effort and agent selection. Respect the operator's
 selected main model and effort; this skill does not switch an active task.
-The profiles below are policy recommendations. They do not establish the
+The edition profiles are policy recommendations. They do not establish the
 current host configuration or model selected by a running task; check those
 separately before describing them as configured. Choose the execution
 arrangement before a delegated worker's model.
@@ -43,34 +43,26 @@ bounded work inside that task. Create a separate user-owned task only on the
 operator's explicit request, for an independent or durable outcome, a schedule,
 or a required host/cloud boundary.
 
-## Operator profiles
+## Choose one edition
 
-| Profile | Model | Effort | Use |
-|---|---|---|---|
-| Recommended coordination profile | `gpt-6.1-sol` | `high` | Recommended for sustained coordination, integration and open-ended execution when available; verify the actual host selection separately. |
-| Planning, review and difficult decisions | `gpt-6-astra` | `medium` | Habitual Astra setting when its judgment helps. |
-| Exceptional reasoning | `gpt-6-astra` | `xhigh` | Rare difficult decisions or unresolved investigations after the task warrants deeper effort. |
-| Visual detection and identification | `gpt-6.1-terra` | `low` | Locate or identify elements in an image when additional reasoning does not improve the required result. |
-| Visual interpretation | `gpt-6.1-terra` | `medium` | Interpret images, charts, drawings and screenshots. |
-| Demanding visual extraction | `gpt-6.1-terra` | `high` | Difficult OCR, structured fields, text localization and demanding counting. |
-| Multistep computer use | `gpt-6.1-terra` | `high` | Complete desktop or browser operations with several steps and verify the resulting state; use `xhigh` when the quality gain justifies the added cost and wait. |
-| Professional work with tools | `gpt-6.1-terra` | `high` | Starting point for tool-based work with documents, spreadsheets, forms and applications that produces a verifiable deliverable. |
-| Exceptional Terra execution | `gpt-6.1-terra` | `max` | Use when demonstrated quality gains justify the additional consumption and latency; not a habitual default. |
-| Bounded subtask | `gpt-6-luna` | `high` | Narrow, well-specified work with clear ownership and acceptance checks. |
-| Defined execution | `gpt-6-luna` | `xhigh` | Implementation or transformation with a concrete outcome and verification. |
-| Substantial execution | `gpt-6-luna` | `max` | Justified when deeper effort materially helps a bounded implementation with observable proof. |
+| Edition | Palette | When to use |
+|---|---|---|
+| [GPT-only](references/gpt-only.md) | GPT-6 Astra, GPT-6 Luna, GPT-6.1 Sol and GPT-6.1 Terra | Default for Codex/T3 and any explicit GPT-only request. |
+| [OpenClaw subscriptions](references/openclaw-subscriptions.md) | The four GPT models plus current Claude, Composer, Grok and Gemini Argon/Pro/Flash/Flash-Lite | Use in OpenClaw under the operator's standing request for this edition, or when explicitly selected. |
 
-GPT-6.1 Sol high is also available for demanding coding. Choose directly for
-the work rather than forcing an Astra escalation.
+Read the selected edition before making a routing decision. Its role table
+replaces the other edition's recommendations; shared execution, authority,
+verification and specialist rules below still apply. Neither edition switches
+the running agent or rewrites an explicit binding. When the edition is unclear,
+retain an existing edition; otherwise use GPT-only. Keep both editions in this
+one canonical skill so their shared rules and installation cannot drift.
+Select them in ordinary language: "use model-capability-router, GPT-only" or
+"use model-capability-router, OpenClaw subscriptions".
 
-Prefer Terra when visual interpretation or operating applications is central
-to the work. Keep Luna for suitable bounded execution, Sol for coordination,
-integration and complex coding, and Astra when difficult judgment warrants it.
-A workflow involving a screenshot does not by itself require Astra. Select
-effort for the particular workload and the required accuracy, cost and latency;
-do not apply one effort to every Terra task or infer that more reasoning always
-improves the result. These profiles do not override a fixed specialist binding
-or the operator's selected main model and effort.
+The GPT-only edition recommends Sol high for coordination, Astra medium for
+judgment, Luna high/xhigh/max for bounded execution, and workload-specific Terra
+efforts. The OpenClaw edition adds task-specific choices without requiring a
+provider handoff or enabling new billing routes.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the
@@ -92,12 +84,12 @@ The GPT-6.1 Sol launch evidence is in
 historical GPT-6 evidence remains in
 [references/gpt6-20260922.md](references/gpt6-20260922.md). These profiles do
 not authorise new spending routes, external actions or additional access. Astra
-Max and Ultra are outside the habitual palette. Other supported models remain
+Max and Ultra are outside the habitual GPT-only palette. Other supported models remain
 available when selected by the operator or bound to a specialist.
 Honour explicit selections and fixed bindings, including those outside this
 palette.
 
-For pstack's three role-aware presets, use the single canonical mapping in
+For GPT-only pstack's three role-aware presets, use the single canonical mapping in
 [references/pstack-role-presets.json](references/pstack-role-presets.json).
 Equilibrado is the default for unbound roles in a new setup with no existing
 role choices. Economia, Equilibrado and Power preserve explicit model/effort
@@ -108,9 +100,12 @@ channel, keep it unchanged and mark it as needing a choice. Select either a
 role-aware preset or one upstream global budget; never apply the global effort
 target over a role-aware preset.
 
+The OpenClaw edition does not rewrite these GPT-only pstack presets. Select
+its task-specific roles directly; preserve existing preset and specialist bindings.
+
 ## Changing selection during work
 
-Keep GPT-6.1 Sol high as the recommended policy default and choose
+Keep the selected edition's recommendation (Sol high for coordination) and choose
 task-specific overrides through the native surface that actually supports them.
 Honor an explicit native effort selection, including low; this recommendation
 does not require changing a home configuration or an active thread. In CLI,
@@ -158,10 +153,14 @@ across tasks, models or changed prefixes. Do not add speculative cache
 retention, keepalive prompts or repetitive polling merely to preserve context
 or show activity. Count reasoning and child usage once if a meter already
 includes them. API token prices and benchmarks inform comparisons but do not
-measure this account's Codex allowance or prove a routing saving. Use observed
+measure this account's Codex or provider subscription allowance or prove a routing saving. Use observed
 account usage or a like-for-like native task comparison for such claims; state
 when that evidence is unavailable. Keep changing prices and benchmark scores
-out of durable profile rules.
+out of durable profile rules. The [November benchmark refresh](references/benchmarks-20261106.md)
+records current comparisons and their limitations. Subscription routing uses
+the existing authorized provider account and its actual allowance, supported
+models, effort controls and cooldowns. API prices are contextual evidence;
+subscription access is not unlimited or proof that an API route is included.
 
 ## Installation and updates
 

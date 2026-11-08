@@ -5,6 +5,6 @@ Published skill: hyperframes-reverse-any-video
 Source: https://github.com/heygen-com/hyperframes.git
 Source path: skills/reverse-any-video
 Branch: main
-Commit: 336abaa80f405717b82111656f204d48bbde53b9
+Commit: 074de9dd1e7196c1e1f56b6c8704f4bebac41983
 
 This skill is vendored from heygen-com/hyperframes. Naturally namespaced `hyperframes*` names are preserved; generic names receive a `hyperframes-` prefix to avoid global skill-name collisions. Only frontmatter names and concrete references to renamed skill directories are adapted so sibling scripts and documentation remain resolvable after installation. Product and CLI commands, internal identifiers, scripts, tests, assets, and workflow behavior remain upstream material. Automatic source updates arrive through this mirror workflow. See `LICENSE` for the preserved Apache-2.0 terms.

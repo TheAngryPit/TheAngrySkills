@@ -5,6 +5,6 @@ Published skill: openclaw-session-viewer
 Source: https://github.com/openclaw/agent-skills.git
 Source path: skills/session-viewer
 Branch: main
-Commit: 71975d6606655911c5b4c84616b94b4bc1dca2f3
+Commit: 094088a06ab93d6194a7f51b18a36de55adcb9af
 
 This skill is vendored from upstream with a `openclaw-` prefix to avoid global skill-name collisions. The mirrored frontmatter name and references to sibling skill paths are adapted to the published names; upstream scripts, assets, instructions, licensing, and workflow logic otherwise remain upstream material.

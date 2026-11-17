@@ -85,7 +85,8 @@ fetch_web_source() {
 normalized_web_doc_hash() {
     local file="$1"
 
-    python3 - "$file" <<'PY' | shasum -a 256 | awk '{print $1}'
+    python3 - "$file" <<'PY'
+import hashlib
 import sys
 from pathlib import Path
 
@@ -107,9 +108,8 @@ while i < len(lines):
     else:
         out.append(lines[i])
         i += 1
-sys.stdout.write("\n".join(out))
-if text.endswith("\n"):
-    sys.stdout.write("\n")
+normalized = "\n".join(out) + ("\n" if text.endswith("\n") else "")
+print(hashlib.sha256(normalized.encode("utf-8")).hexdigest())
 PY
 }
 

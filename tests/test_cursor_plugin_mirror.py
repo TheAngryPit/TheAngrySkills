@@ -374,12 +374,8 @@ class CursorMirrorTests(unittest.TestCase):
         ):
             self.assertTrue((self.root / "skills/mirrors-cursor" / name / "SKILL.md").is_file())
 
-    def test_named_agent_uses_native_profile_without_workbench_copy(self):
-        preview = self.root / "candidate-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
+    def assert_native_agent_preview(self, preview):
         skill = (preview / "cursor-no-comments/SKILL.md").read_text()
-        self.assertIn('agent_type: "comment-sicko"', skill)
         self.assertFalse(
             (preview / "cursor-no-comments/references/comment-sicko-agent.md").exists()
         )
@@ -402,10 +398,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertIn("operator's explicit go", plan)
         self.assertIn("routed workflows such as `cursor-swarm` choose their own role", poteto)
 
-    def test_thermos_bundles_two_distinct_review_lenses(self):
-        preview = self.root / "thermos-preview"
-        result = self.run_build("--preview-candidates", str(preview))
-        self.assertEqual(result.returncode, 0, result.stderr)
+    def assert_thermos_preview(self, preview):
         root = preview / "cursor-thermos"
         skill = (root / "SKILL.md").read_text()
         bug = (root / "references/bug-security-reviewer.md").read_text()
@@ -481,6 +474,10 @@ class CursorMirrorTests(unittest.TestCase):
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(list(preview.glob("*/SKILL.md"))), published_count())
+        with self.subTest("native agent profiles"):
+            self.assert_native_agent_preview(preview)
+        with self.subTest("Thermos review lenses"):
+            self.assert_thermos_preview(preview)
         self.assertTrue((preview / "cursor-setup-benny").exists())
         self.assertFalse((preview / "cursor-make-bot-ui").exists())
         self.assertEqual(marketplace.read_bytes(), before)

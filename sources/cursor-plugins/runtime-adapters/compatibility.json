@@ -2099,7 +2099,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -2168,14 +2168,14 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "c4c410f87b2ce3674a3548b1b98788903b177416d184edbef7e9d7deef697252"
+      "reviewed_workflow_sha256": "62d6726bb43426d031e72ec636545ed41f1cf3d7113863d1a8b4350acd658c94"
     },
     "cursor-setup-benny": {
       "source_path": "pstack/automations/benny/skills/setup-benny/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "history": "preserved",
@@ -2238,14 +2238,14 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "d546bfdf6f85509c7a5e8652835d9495df1adbb793c565c155025ff162aa71de"
+      "reviewed_workflow_sha256": "e888d78e6cb1450d650a8d192d0269c29dd67453e0db7d324d4137ca1fbaf15a"
     },
     "cursor-triage-issue-reports": {
       "source_path": "pstack/automations/benny/skills/triage-issue-reports/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "history": "preserved",
@@ -2308,14 +2308,14 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "586892eae11b1a2af00e201b859bd117e7427d0dd9ab91ad1061c33ffd3fdba8"
+      "reviewed_workflow_sha256": "a2e01de319d7b49b0783bed0be312f5f33bb225afca836c49ef9adef213e24d7"
     },
     "cursor-architect": {
       "source_path": "pstack/skills/architect/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved"
@@ -2369,14 +2369,14 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "32b7d1c9a1d1a3801c2482c5164f1791c3c4cf572cfce0bce1c4e19d31b6cf77"
+      "reviewed_workflow_sha256": "a0aa16cd148df95c5a61ccf18acd14f6d8f868eb85c0c0c2b2d5077b1cb6fd63"
     },
     "cursor-arena": {
       "source_path": "pstack/skills/arena/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -2436,14 +2436,14 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "9ec4a242af369d764abd643889c51beb21683ff957ddd2bb08bf67521f535616"
+      "reviewed_workflow_sha256": "c2b6857bd955aa8616f6840d20ca923e8a2e4f102e49f7ffeb6594d69c3ab185"
     },
     "cursor-automate-me": {
       "source_path": "pstack/skills/automate-me/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -2506,14 +2506,14 @@
           "history": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "5a93de2ca3d1c90e0a6210b0e0fefe6831607f092948e666300eb461335b3074"
+      "reviewed_workflow_sha256": "281d652195652a8612cdd203a3d598263bfbec208f9c0ce3c24074090f1bc0f8"
     },
     "cursor-benchmark-checklist": {
       "source_path": "pstack/skills/benchmark-checklist/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "link-pr": "preserved"
@@ -2564,14 +2564,14 @@
           "link-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "2a48f5a1ae47bad05e8614273849b06a6b74ccc57d7a0880b83411bb48d871c5"
+      "reviewed_workflow_sha256": "8389e96395147da5e9b88819fcbaa6b074495f66a5fe502d09c2e986e5a96fc5"
     },
     "cursor-blast-radius": {
       "source_path": "pstack/skills/blast-radius/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "link-pr": "preserved"
@@ -2622,7 +2622,7 @@
           "link-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "0640a329c9368e2cabc02a19ea73fee42129dbc95dc2f601b00d09065ce51311"
+      "reviewed_workflow_sha256": "d9357e61085725d9122bb5af81f92dc089e46dadbc1a360acc46bedc6dd81f12"
     },
     "cursor-bro": {
       "source_path": "pstack/skills/bro/SKILL.md",
@@ -2849,7 +2849,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -2906,14 +2906,14 @@
           "worktree": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "38bf0b12b1305b9583c82896dc8d67c6ffd094ca28dc51367c6a15c6ea2d25c1"
+      "reviewed_workflow_sha256": "5edd119e830391a71ae57e5e5399c8077b5937e9227c9149a073a2eb7375705b"
     },
     "cursor-how": {
       "source_path": "pstack/skills/how/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved"
@@ -2967,7 +2967,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "646465b56cdc1694fe0367f0f3e66188c4a5410f5bdc98623c8eb1944e1cb44d"
+      "reviewed_workflow_sha256": "519f49d1c654431d39fd6380e52cbb9defe6143e9b895a34ec848d3c7b7b5fa8"
     },
     "cursor-in-your-own-words": {
       "source_path": "pstack/skills/in-your-own-words/SKILL.md",
@@ -3279,7 +3279,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -3339,14 +3339,14 @@
       "profiles": [
         "comment-sicko"
       ],
-      "reviewed_workflow_sha256": "88fbdf1b197bea088f30d9e56cf46e4082be71b7c2d85f8cc06f362b24b67c19"
+      "reviewed_workflow_sha256": "3ae1507ab5e10e55dadbbb2f16027f1494b9d0dea20dcbfaf95c5b6ee6fdb976"
     },
     "cursor-poteto-help": {
       "source_path": "pstack/skills/poteto-help/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "worktree": "preserved",
@@ -3415,7 +3415,7 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "478e0973e26b7a1c4f7e80c9ee611a4c87daa22251ca2755122ee1fee4b5ee47",
+      "reviewed_workflow_sha256": "58070e0e88290c71144213f16c7a0e02e7af96350ea4fe97a985ebf98c45e2f7",
       "profiles": [
         "comment-sicko",
         "poteto-agent"
@@ -3426,7 +3426,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -3511,14 +3511,14 @@
         "comment-sicko",
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "362595026a19e35bc627b83052da69072eedfdf940eb87cedbb472e52e161b91"
+      "reviewed_workflow_sha256": "16f5fae31374967a1d48e88027c1935e1755b47ecf58d0e119c43dc768c30568"
     },
     "cursor-principle-attack-the-premise": {
       "source_path": "pstack/skills/principle-attack-the-premise/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -3563,14 +3563,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "c75266e225a8375de57575ff9a6897ea34b5947b0619b54a4afef1a5e9539b42"
+      "reviewed_workflow_sha256": "ce4ce5ee13ae85ecd4ceb754563323971db4bca8c3f0a059b0520abdcd41bac7"
     },
     "cursor-principle-boundary-discipline": {
       "source_path": "pstack/skills/principle-boundary-discipline/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -3615,14 +3615,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "a0f9a5e3df86b3e726dfc4e4e35355ac19cdca8a3622e312f45ae2a3321f5df1"
+      "reviewed_workflow_sha256": "0f6b034d9e04b36965c206c13ced405525335b62aa36b5793d1497aed99138ac"
     },
     "cursor-principle-build-the-lever": {
       "source_path": "pstack/skills/principle-build-the-lever/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved"
@@ -3673,7 +3673,7 @@
           "delegate": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "abba3a48cd862515a8900cd6da238408208a8294d3732bf055535552b7cfd093"
+      "reviewed_workflow_sha256": "6986dfeed083511cdddadfa5a7889cef8d7c5c32dbb88e99b930a9e4a15799e7"
     },
     "cursor-principle-encode-lessons-in-structure": {
       "source_path": "pstack/skills/principle-encode-lessons-in-structure/SKILL.md",
@@ -3836,7 +3836,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -3881,14 +3881,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "cea299d40ed650b1c94d25f7cf54426774612b042c58be1db5887c7ce5ce1494"
+      "reviewed_workflow_sha256": "1cf74783a42430e43cec080ec3d9dc9b47e748260616a199b6da81ddb450278c"
     },
     "cursor-principle-fix-root-causes": {
       "source_path": "pstack/skills/principle-fix-root-causes/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -3933,14 +3933,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "8668a2ba10152d51d4dc76292a9ceabe35dbc9d25645d83d690f09c56b8a8536"
+      "reviewed_workflow_sha256": "7a5451c2ee94b9d75b84769df64a35ba668966e1bfe4f981525e8ad2ee16da16"
     },
     "cursor-principle-foundational-thinking": {
       "source_path": "pstack/skills/principle-foundational-thinking/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "watch-pr": "preserved"
@@ -3991,7 +3991,7 @@
           "watch-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "fe905bc915c26537a64d3dde5052f804e5959b1cbfe767580967c44b300f9936"
+      "reviewed_workflow_sha256": "e81755f5cf9dce97f2666a9c103ad7babc6200ee72654ef1a0d7c236ed2f6bc2"
     },
     "cursor-principle-guard-the-context-window": {
       "source_path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
@@ -4108,7 +4108,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4153,7 +4153,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "b0ee4a8502cc962471642cbe2547be11b828ad8f45bf7f6ffd5add6487b65413"
+      "reviewed_workflow_sha256": "96c878bd373544eb3047fe2c3e0ed2eb17c940e652e5a7ba07612d472b3ef90b"
     },
     "cursor-principle-migrate-callers-then-delete-legacy-apis": {
       "source_path": "pstack/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md",
@@ -4212,7 +4212,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4257,14 +4257,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "904df90ba38021e7fab36449b9d69277933919edefcc1f07cbd9dc6f82b4edbc"
+      "reviewed_workflow_sha256": "2321308efcfaf492235615301311706df212a660b94708ba18242d200a008708"
     },
     "cursor-principle-model-the-domain": {
       "source_path": "pstack/skills/principle-model-the-domain/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4309,7 +4309,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "9d4cd7ae7146677e9a3f59b936fb69cda337de7ee3b13546daa9c548a95edeb8"
+      "reviewed_workflow_sha256": "3c4aeb007004d26baeef43ce7e42b67bf568d8be79569459cece6755cf864a05"
     },
     "cursor-principle-never-block-on-the-human": {
       "source_path": "pstack/skills/principle-never-block-on-the-human/SKILL.md",
@@ -4420,7 +4420,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4465,7 +4465,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "09ca35bf0c083d419f7a2df8f30ff4784266b58ea19edc93043d5e89d2f422f6"
+      "reviewed_workflow_sha256": "7ada89742b945cf62764a1d873234ddb38dc6d14c2bec80b66f3ce03ff69ce19"
     },
     "cursor-principle-redesign-from-first-principles": {
       "source_path": "pstack/skills/principle-redesign-from-first-principles/SKILL.md",
@@ -4524,7 +4524,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4569,14 +4569,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "b33faaea2e74886e073142d99a5b171329c1086d39b103e5a59c577886192779"
+      "reviewed_workflow_sha256": "a01a83dac92fc379738f1be1b71abfb5b6c8634a239c59f9c62ae7f7b2194f64"
     },
     "cursor-principle-sequence-verifiable-units": {
       "source_path": "pstack/skills/principle-sequence-verifiable-units/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4621,7 +4621,7 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "c415efe501062c22197f7c1ef69238fc4964e2f351af33124dac48d8bd1afa61"
+      "reviewed_workflow_sha256": "cad9b97ab37fe8f3f8305ea780137a21d0c98104fdda9558dbedc80ca4c206bb"
     },
     "cursor-principle-subtract-before-you-add": {
       "source_path": "pstack/skills/principle-subtract-before-you-add/SKILL.md",
@@ -4680,7 +4680,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4725,14 +4725,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "ecc80e9afe2dc4b52c437a956123cb11acbbc8cc2ce5e33bd04bcecbcb4d46f9"
+      "reviewed_workflow_sha256": "cd4159104fed4b4511323b649bf82ae23fd0f3414c9e2d0c25947a4a0375a0e7"
     },
     "cursor-principle-type-system-discipline": {
       "source_path": "pstack/skills/principle-type-system-discipline/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -4777,14 +4777,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "a5fc05b68254fcb3524ad81cc37ac2fb38fbc070b0274c397583182342ceb1d9"
+      "reviewed_workflow_sha256": "ad2f633915f0871c1892f41f5df57f47fa8637d5b253b33b1cf05082f6f17a65"
     },
     "cursor-recall": {
       "source_path": "pstack/skills/recall/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -4847,14 +4847,14 @@
           "link-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "37aafcffefa75e0f55db2f5194949c5effe1ffe988b25f46b831e9984f250f6f"
+      "reviewed_workflow_sha256": "519a6082e9997c4de93bf68e7cbc738d8706027267980d8584793badb48d4c58"
     },
     "cursor-reflect": {
       "source_path": "pstack/skills/reflect/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -4914,14 +4914,14 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "d4e7ee40c6b44ed03146d7e1f09cd1e8194f08a572c82145439b5e35f846ee7f"
+      "reviewed_workflow_sha256": "0218ca35548c0107269680a52937cf5b01cc02b305a12b25e5633648980282ab"
     },
     "cursor-setup-pstack": {
       "source_path": "pstack/skills/setup-pstack/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -4978,14 +4978,14 @@
           "history": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "956ffec73521273e025379d9d6c90f3cbee4e720abb7f3d84ecd1f797b4f8537"
+      "reviewed_workflow_sha256": "a79e1957a012e05ef1141e8df6f78ae835bcc6fcfe08731a5cd49c1f7d1a8b4c"
     },
     "cursor-sharpen": {
       "source_path": "pstack/skills/sharpen/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -5030,14 +5030,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "63f85072ddbf5734e079bdc484682c7255e4ac1ac8214076fe6f0afa4f7ed46c"
+      "reviewed_workflow_sha256": "381dd5d61f2c47faf67e68dbcc99e50d1f725afc8568256bb510dde926f4000b"
     },
     "cursor-show-me-your-work": {
       "source_path": "pstack/skills/show-me-your-work/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -5106,14 +5106,14 @@
           "link-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "a4d84fe4b1c21e840eb94cecb6b8d522e4d92432305da71c168f422e36a5b79f"
+      "reviewed_workflow_sha256": "63454ef48c03ecb87d50cb105dcf170455099ac82fb200cde9627afb63309165"
     },
     "cursor-swarm": {
       "source_path": "pstack/skills/swarm/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved"
@@ -5167,7 +5167,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "7529c4c3eed85450cbee894e3b8c1bf0c31272355774a2745fbf1bd57c53e1bf"
+      "reviewed_workflow_sha256": "b45dfaa775d0ed7dba983b38b8fca7fd579b4946fa36ee780b3825ed231e339a"
     },
     "cursor-tdd": {
       "source_path": "pstack/skills/tdd/SKILL.md",
@@ -5232,7 +5232,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved"
         }
@@ -5277,14 +5277,14 @@
           "method": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "77c9b3e6ac6e9f9f29bf343604169b01c42bc45483f7b17e333e50b0aeb79d8e"
+      "reviewed_workflow_sha256": "58fa53794026c696c2da0a107a530b4f1bc3a788b1c4a91f40adaa75f42e2a8e"
     },
     "cursor-technical-writing": {
       "source_path": "pstack/skills/technical-writing/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "history": "preserved",
@@ -5347,7 +5347,7 @@
           "watch-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "cba06daa72b827d9b9a56b437293c431cd6b1c06a82e330e8f233262bdd577c8"
+      "reviewed_workflow_sha256": "8945f168a83c4d04c7c14a72058ebf9a068bf0f961d4c5a527ee9090d03968e7"
     },
     "cursor-typescript-best-practices": {
       "source_path": "pstack/skills/typescript-best-practices/SKILL.md",
@@ -5406,7 +5406,7 @@
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "schedule": "preserved"
@@ -5457,14 +5457,14 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "1410049402dedcceace66c2988b2181e96b560de961bbd7ef9ada4888833743d"
+      "reviewed_workflow_sha256": "e2152d3ee142a0ec280b74299911779c7934805774f76e20d7168b678d14afd4"
     },
     "cursor-why": {
       "source_path": "pstack/skills/why/SKILL.md",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",
-        "reason": "Existing reviewed Codex contract retained",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "preserved",
           "delegate": "preserved",
@@ -5530,7 +5530,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "1ff6aaf86361115324aa73ef3d950af5f98bcc7060563f589ca99f340d9cb787"
+      "reviewed_workflow_sha256": "d233fa1c05d5928a3c0e48adc1e97873b96c92b8353a1de02bf4842b0b65611b"
     },
     "cursor-cancel-ralph": {
       "source_path": "ralph-loop/skills/cancel-ralph/SKILL.md",
@@ -6314,7 +6314,7 @@
       "native-codex": {
         "status": "partial",
         "evidence": "source-only",
-        "reason": "New bounded adaptation; source/distribution validation, live target execution unproven",
+        "reason": "Reviewed e1cc031 source refresh with explicit native overlays and retained native support; source and fixture proof only",
         "operations": {
           "method": "partial"
         }
@@ -6371,7 +6371,7 @@
           "watch-pr": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "c5bd727e3fd84a5dd115d4b5949649708b8405edcc96a42d1d55dff0ab927b08",
+      "reviewed_workflow_sha256": "e709ca1f8826f0e8ea6881cb463e4c914f51eb35d1d4a11adfb8ea7e27829a77",
       "profiles": []
     },
     "cursor-ketchup-video": {
@@ -6974,7 +6974,7 @@
     "comment-sicko": {
       "source_path": "pstack/agents/comment-sicko.md",
       "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
-      "asset_sha256": "e32fb192894e2cf1d390d41a3421c0ade52fbfbdce16f3472f85afa6d95d4057",
+      "asset_sha256": "907499d1ce7be9dd8986a99148c37039b3bf96c8bca6dc260e86015eab652915",
       "native-codex": {
         "status": "preserved",
         "evidence": "retained",

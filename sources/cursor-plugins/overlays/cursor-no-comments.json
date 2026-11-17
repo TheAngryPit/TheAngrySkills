@@ -1,10 +1,10 @@
 {
   "codex_contract": {
-    "adapter_mode": "delegated-native-fix-gated",
+    "adapter_mode": "native-guidance",
     "behavioral_proof": {
-      "error": "Error fixture for cursor-no-comments: a malformed input or failed dependency is reported explicitly and does not widen scope.",
-      "missing_tool_or_input": "Missing-capability fixture for cursor-no-comments: an unavailable named profile or sibling skill yields a specific partial result, not a completed no-comments run.",
-      "positive": "The named comment-sicko role was selected in this task, deleted one redundant comment in a disposable JS file, kept its SPDX header, and left application code intact; the coordinator verified the result."
+      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
+      "error": "Operator scope, privacy and native refusals remain binding."
     },
     "external_dependencies": [
       "model-capability-router native profile asset",
@@ -17,42 +17,31 @@
       "upstream_skill": "no-comments"
     },
     "native_mapping": {
-      "availability": "public profile asset present; named native selection and one simple accepted-finding loop observed in this task",
+      "availability": "reviewed_current_source_fixture_only",
       "capabilities": [
-        "named comment-sicko profile asset",
-        "bounded native reviewer with explicit file ownership",
-        "cursor-how/cursor-why/cursor-architect sibling skills",
-        "local diff/test runner"
+        "actual native tools required by the current method"
       ],
-      "fallback": "If the named profile, reviewer, or required sibling skill is unavailable, report the exact gap; do not claim the accepted-finding loop ran.",
-      "required_tools": [
-        "named comment-sicko profile",
-        "local diff/test runner"
-      ]
+      "fallback": "Report the exact unavailable capability and proof gap; do not restore retired workflow stages."
     },
     "permission_gates": [
-      "The coordinator owns integration and rejects application-code edits made by the reviewer.",
-      "The coordinator owns integration and may implement accepted in-scope findings under the caller's authorization.",
-      "Only the optional constraint encoding waits for the approval required by upstream Step 5; a missing reviewer is reported as an explicit capability gap.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "preserved_semantics": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
-    "promotion_status": "promoted_bounded_native_explicit_only_complex_branches_unproven",
+    "promotion_status": "promoted_current_source_fixture_only_explicit",
     "schema_version": 1,
     "security_review": {
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
-      "scanner_verdict": "safe_docs_only",
-      "status": "retained"
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     },
     "upstream_readme": {
-      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority.",
       "path": "pstack/README.md",
-      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
+      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
       "status": "verified_in_supplied_upstream_clone",
-      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md"
+      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md"
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nFor Step 1, call native `collaboration.spawn_agent` with `agent_type: \"comment-sicko\"` when that exact type is exposed. The named profile is distributed by `model-capability-router`; never substitute a generic reviewer or a prompt that merely says to act as Comment Sicko. If the type is unavailable, report the gap and leave this run incomplete. Pass the exact scope and assign writable files explicitly; the coordinator checks the report and diff, performs accepted in-scope implementation fixes under the caller's authorization, and runs verification. Only the optional constraint encoding waits for the approval required by upstream Step 5. Follow `model-capability-router`; the reviewer is not authority. Use `cursor-how`, `cursor-why`, and `cursor-architect` by their adapted names when the workflow requires them. The profile asset must be installed explicitly before a fresh Codex session can select it. Do not install Cursor hooks. Automatic selection and the complex rejection/rerun branches remain unproven.\n",
+  "codex_note": "",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "native_agent_profiles": [
     {
@@ -60,19 +49,15 @@
       "loading": "explicit profile installation; fresh-session selection not proven",
       "name": "comment-sicko",
       "pinned_source_path": "pstack/agents/comment-sicko.md",
-      "pinned_source_sha256": "3e239e40b7b4b9beb2cf7f3ccc57f2388eb8b69bd1ba8ae888ef87ef6e0e2116"
+      "pinned_source_sha256": "0fb37221ab2a9159714d38f1528898e82b9758b5750f244bbe2e575bb593a1de",
+      "pinned_source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     }
   ],
   "preserved_requirement": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
-  "proof": "Pinned source hash plus the source-grounded `comment-sicko` TOML asset prove packaging and semantic adaptation. The profile checker proves TOML syntax, byte distribution, and explicit install behavior. After reading the rendered skill Step 1 with its exact native agent_type comment-sicko, Sol selected that named type on a disposable JS file; it removed one redundant comment, retained SPDX, and changed no application code. Sol accepted the diff after node syntax and runtime readback. The role's actual model/effort, fresh top-level loading, first-output marker, complex no-comments branches, and automatic skill activation remain unproven. See reports/cursor-no-comments-role-fixture.md.",
-  "reason": "Map the missing upstream reviewer to the public native named profile without copying the pinned Markdown role into the generated workbench.",
-  "replacements": [
-    {
-      "after": "---\nname: cursor-no-comments\ndescription: \"Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.\"\ndisable-model-invocation: true\n---\n\n# No comments\n\nSpawn Comment Sicko. Act on accepted findings.\n\nDefer to Comment Sicko's fresh perspective.\n\n## Scope\n\nUse the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree.\n\n## Steps\n\n1. Call `collaboration.spawn_agent` with `agent_type: \"comment-sicko\"`, an exact scoped brief, and explicit writable-file ownership. Do not substitute a generic agent type or copy the role into the prompt. If the named type is unavailable, report that gap. The coordinator inspects the reviewer diff and owns accepted implementation fixes.\n2. Inspect its report and diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat kept intentional code as guilty. Reshape flags on our-code surprises stay actionable. Do not restore those comments. A keep survives only with proof it is about something we cannot change. Audit missed scoped lint and TypeScript suppressions. Correctness or safety suppressions stay actionable `MUST KILL`s. Restore deletions only with exact exceptions and scoped proof. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, run `cursor-how` or `cursor-why` on their symbol. If a kill is ambiguous, do not restore. If a keep is refuted or still ambiguous, delete it. Revert and rerun one rejected report with the failure named. Reject a second, report it open, and fail `/no-comments`.\n3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If any fix needs a shape, run `cursor-architect` once for the accepted set and surrounding code. Stop at the sketch. Architect shapes. Step 4 implements.\n4. Implement the smallest root-cause fix in scope. Remove every named workaround. If the root cause is out of scope, land the smallest in-scope fix and report the rest open. The **principle-fix-root-causes** and **principle-redesign-from-first-principles** skills guide intent only. Neither authorizes widening the fence nor fixing instances outside it. Never bolt on symptom guards.\n5. Constraint comments say `do not remove`, `do not change wording`, or `talk to X before changing`. Leave keeps about things we cannot change. Offer the cheapest in-scope type, runtime, test, or CI lint. Wait for interactive approval. Unattended and eval require caller pre-approval. If approved, encode then delete. Otherwise delete, report the constraint open, and sketch out-of-scope work.\n6. Report the deletion count, restored comments, reruns, architect sketch, fixes, encoding offers, encodings, unenforced constraints, and other open work.\n",
-      "before": "---\nname: cursor-no-comments\ndescription: \"Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.\"\ndisable-model-invocation: true\n---\n\n# No comments\n\nSpawn Comment Sicko. Act on accepted findings.\n\nDefer to Comment Sicko's fresh perspective.\n\n## Scope\n\nUse the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree.\n\n## Steps\n\n1. Spawn `Task` with `subagent_type: \"comment-sicko\"`. Pass the scope. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill. Do not restate its rules.\n2. Inspect its report and diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat kept intentional code as guilty. Reshape flags on our-code surprises stay actionable. Do not restore those comments. A keep survives only with proof it is about something we cannot change. Audit missed scoped lint and TypeScript suppressions. Correctness or safety suppressions stay actionable `MUST KILL`s. Restore deletions only with exact exceptions and scoped proof. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, run `/how` or `/why` on their symbol. If a kill is ambiguous, do not restore. If a keep is refuted or still ambiguous, delete it. Revert and rerun one rejected report with the failure named. Reject a second, report it open, and fail `/no-comments`.\n3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If any fix needs a shape, run `/architect` once for the accepted set and surrounding code. Stop at the sketch. Architect shapes. Step 4 implements.\n4. Implement the smallest root-cause fix in scope. Remove every named workaround. If the root cause is out of scope, land the smallest in-scope fix and report the rest open. The **principle-fix-root-causes** and **principle-redesign-from-first-principles** skills guide intent only. Neither authorizes widening the fence nor fixing instances outside it. Never bolt on symptom guards.\n5. Constraint comments say `do not remove`, `do not change wording`, or `talk to X before changing`. Leave keeps about things we cannot change. Offer the cheapest in-scope type, runtime, test, or CI lint. Wait for interactive approval. Unattended and eval require caller pre-approval. If approved, encode then delete. Otherwise delete, report the constraint open, and sketch out-of-scope work.\n6. Report the deletion count, restored comments, reruns, architect sketch, fixes, encoding offers, encodings, unenforced constraints, and other open work.\n",
-      "file": "SKILL.md"
-    }
-  ],
+  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
+  "replacements": [],
   "source_path": "pstack/skills/no-comments/SKILL.md",
-  "source_sha256": "078ecfe224eafbb017f6476870612838bf6dbe38c0b697e12f0c887d0313f17e"
+  "source_sha256": "054a46f2662c725add02d9e0440d8dcb4351f3bd0afcf797acc22a501b527b54",
+  "codex_native_body": "# No comments\n\nSpawn Comment Sicko. Act on accepted findings.\n\nDefer to Comment Sicko's fresh perspective.\n\n## Scope\n\nUse the caller's files or diff. Otherwise use the current diff against the base branch, default `main`, including the working tree.\n\n## Steps\n\n1. Use the exposed native named `comment-sicko` delegate through `collaboration.spawn_agent` with `agent_type: \"comment-sicko\"`. If that exact role is unavailable, report the gap; do not substitute a generic role. Pass the scope. Pick each subagent's reasoning level for the job, through the standing `model-capability-router`. Do not restate its rules.\n2. Inspect its report and diff. Reject application-code edits, scope escapes, exception-protected deletions, misstated `MUST KILL` reasons, and flags that treat kept intentional code as guilty. Reshape flags on our-code surprises stay actionable. Do not restore those comments. A keep survives only with proof it is about something we cannot change. Audit missed scoped lint and TypeScript suppressions. Correctness or safety suppressions stay actionable `MUST KILL`s. Restore deletions only with exact exceptions and scoped proof. Before accepting thin `IMPORTANT` or `do not remove` kills or keeps, trace their symbol or run `$cursor-why` on it. If a kill is ambiguous, do not restore. If a keep is refuted or still ambiguous, delete it. Revert and rerun one rejected report with the failure named. Reject a second, report it open, and fail `$cursor-no-comments`.\n3. Fix trivial accepted flags directly by deleting a dead path, dropping a parameter, or using the real API. If any fix needs a shape, run `$cursor-architect` once for the accepted set and surrounding code. Stop at the sketch. Architect shapes. Step 4 implements.\n4. Implement the smallest root-cause fix in scope. Remove every named workaround. If the root cause is out of scope, land the smallest in-scope fix and report the rest open. The **cursor-principle-fix-root-causes** and **cursor-principle-redesign-from-first-principles** skills guide intent only. Neither authorizes widening the fence nor fixing instances outside it. Never bolt on symptom guards.\n5. Constraint comments say `do not remove`, `do not change wording`, or `talk to X before changing`. Leave keeps about things we cannot change. Offer the cheapest in-scope type, runtime, test, or CI lint. Wait for interactive approval. Unattended and eval require caller pre-approval. If approved, encode then delete. Otherwise delete, report the constraint open, and sketch out-of-scope work.\n6. Report the deletion count, restored comments, reruns, architect sketch, fixes, encoding offers, encodings, unenforced constraints, and other open work."
 }

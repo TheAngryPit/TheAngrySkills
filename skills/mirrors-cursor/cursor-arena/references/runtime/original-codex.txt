@@ -3,34 +3,31 @@ name: cursor-arena
 description: "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape."
 ---
 
-## Codex runtime mapping
-
-This published workflow is explicit-only through `agents/openai.yaml`; the proven branch is a bounded local design Arena. Before starting, require at least two authorized, isolated candidates and an available independent judge; retain the same rubric and verification contract. Outside that proven scope, report the workflow as unavailable unless a separate task-specific proof supports it. Use native Codex subagents and isolated paths for parallel candidates, not Cursor `Task`, Work cloud, or `~/.cursor/rules`. In the observed native path, candidates used `collaboration.spawn_agent` with `agent_type=general-worker` and the cross-judge used `agent_type=reviewer`; the exact upstream Cursor roles and automatic trigger are not proven. Keep the same rubric, full-candidate read, cross-judge, base selection, named graft, redesign-on-failure, and verification phases. Follow the standing model router and task authority; record invocation metadata separately from worker self-report.
-
 # Arena
 
-Open a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.
+Record one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) in the native planning surface when available, otherwise in the existing task checkpoint, before launching anything.
 
 ## Phase A: Frame
 
 Every candidate gets the same prompt, so the prompt is the contract.
 
 1. State the artifact each candidate is producing.
-2. Derive the rubric. State what success looks like for *this* task, then turn it into 3-6 concrete gradeable criteria. The rubric is the picker's tool in Phase D. Candidates only see the task.
-3. Choose available native Codex runners under the standing `model-capability-router` policy and the operator’s explicit selection. Use structurally distinct prompts or models when comparison needs diversity; record the actual runners.
-4. Assign output paths. Each candidate writes to its own location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per `cursor-principle-separate-before-serializing-shared-state`.
+2. Derive the rubric, 3-6 concrete gradeable criteria for what success looks like on *this* task. It is the picker's tool in Phase D. Candidates only see the task.
+3. Select runner seats through `model-capability-router` and actual native availability, preserving the operator's panel choices. Inheritance stays on the parent model. Do not import Cursor model slugs or silently substitute an unavailable model. Keep at least two runners unless the selected list has one entry, and disclose any dropout. Repeat one model for generation-bound work; choose reasoning for the job.
+
+4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
 
 ## Phase B: Fan out
 
-Launch N independent Codex subagents in parallel when authorized, each with the same task contract, the shared grounding path, its own isolated output path, and a short rationale. Keep one writer per path and wait for each artifact before judging.
+Launch the authorized native delegates asynchronously, each with the task, shared grounding path, isolated output path and a short rationale naming considered and rejected alternatives. Use the host's actual workspace isolation capability.
 
-Each rationale names the alternatives the candidate considered and what it rejected.
 
-If a candidate fails to produce output, proceed with N-1 and note the dropout in the synthesis record. Mark the aggregate PARTIAL. If fewer than two candidates completed, do not select a winner or claim Arena competition; report the surviving artifact as a single attempt.
+If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-Choose one available native Codex judge under the standing `model-capability-router` policy from a model family different from the parent. Try eligible entries in the configured pool order. Parent-inheriting aliases are not independent judges. If the parent identity is unavailable, report that the family check could not be performed; do not claim family independence. Spawn one read-only judge subagent after candidate writes finish. If no authorized independent judge is available, the coordinator may assess the candidates but must mark the aggregate PARTIAL and must not call its own assessment a cross-judge verdict.
+After all Phase B candidates complete, use one authorized read-only judge from the operator's cross-judge pool, in pool order, from a different vendor than the parent. Fable and Opus count as the same vendor. An inherited seat is the parent and cannot judge independently. If the parent model is unknown, use the first real entry and disclose that the vendor check did not run. If no eligible configured model is available, skip the judge and say so; do not turn this disclosed skip into an extra acceptance gate. While you read in Phase D, the judge scores each candidate against the rubric and recommends a base.
+
 
 ## Phase D: Pick a base
 
@@ -40,18 +37,14 @@ Pick the base a future maintainer can extend most easily without breaking invari
 
 ## Phase E: Graft
 
-Walk each losing candidate once more and identify what is worth porting into the base. The signal is usually one or two things per candidate, not most of it.
-
-Fold each graft in by hand, per `cursor-principle-redesign-from-first-principles`. Don't paste mechanically. The result has to remain coherent under one mental model.
+Walk each losing candidate once more for what is worth porting into the base, usually one or two things per candidate, not most of it. Fold each graft in by hand, per the **redesign-from-first-principles** principle skill, so the result stays coherent under one mental model. Don't paste mechanically.
 
 If the candidates converge on one shape, that is strong agreement. Note it and ship the consensus shape. No graft is needed. If they wildly diverge, Phase A was under-specified. Reframe and re-run rather than averaging the divergence.
 
 ## Phase F: Verify
 
-The synthesized artifact has to hold up under the same scrutiny as any other output, per `cursor-principle-prove-it-works`.
-
-If verification surfaces a problem the arena did not catch, either Phase A was wrong (re-frame and re-run) or one candidate caught it and you missed the graft (go back to Phase E). Don't paper over.
+Verify the synthesized artifact like any other output, per the **prove-it-works** principle skill. If verification finds a problem the arena missed, either Phase A was wrong (re-frame and re-run) or a candidate caught it and you missed the graft (go back to Phase E). Don't paper over it.
 
 ## Outputs
 
-One synthesized artifact when competition and independent judgment completed; otherwise label the result PARTIAL and state which phase was missing. One short synthesis note alongside, naming the base if selected, the grafts (with source candidate), the rejections, the dropouts if any, the actual judge or coordinator assessment, and the verification result.
+One synthesized artifact, with a short synthesis note alongside naming the base and why, the cross-judge's verdict or that Phase C skipped the judge, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.

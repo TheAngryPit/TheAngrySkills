@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/principle-foundational-thinking/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 864b827e8199d946ce58beca0f89c4ed4099ed6e426fb698a3aaa45de2a9eea2
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: 5c63eecf4b83ea5a99eda7a95a96cac0929d2dce7393d7089c83917bc12cf820
 Published name: cursor-principle-foundational-thinking
 Decision class: intacta
 Availability: content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

@@ -1,6 +1,6 @@
 ---
 name: cursor-sharpen
-description: "Use when explicitly requesting $cursor-sharpen to deepen and rewrite a prompt without executing its task."
+description: "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen."
 disable-model-invocation: true
 ---
 
@@ -10,6 +10,14 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 ## Native Codex branch
 
-Make the task deeper, not bigger. Before rewriting the prompt, state what a top professional would add, the rawest material they would use, the specific methods and tools, and an outside check that would show the result is right. Then return a rewritten prompt asking for exactly that. Leave the user's choices open. Do not execute the task described by the prompt.
+I want a deeper version of this task, not a bigger one. Before rewriting it, do four things:
 
-Preserve explicit scope, access, cost, privacy, security and requested tools. The outside check is supported evidence, not automatic external contact, new credentials or delegation. Use the standing model-capability-router for any authorized model selection.
+1. Say what a top professional in this field would do here that I'm not asking for.
+2. Name the rawest material they would start from instead of what has already been digested for me.
+3. Name the specific methods and tools they would use.
+4. Say what, other than you or me, would show the result is right.
+
+Then rewrite my prompt to ask for exactly that.
+
+Have the rewritten prompt ask the agent to prototype any choice an experiment can settle and recommend an option based on what it observed. Leave product or preference choices that no experiment can settle for me to make.
+Return the rewritten prompt; do not execute the task it describes. Preserve the user's scope and tools.

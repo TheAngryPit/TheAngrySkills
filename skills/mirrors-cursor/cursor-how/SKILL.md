@@ -10,33 +10,18 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 ## Native Codex branch
 
-## Codex runtime mapping
-
-Use native read-only subagents only when authorized; the standing `model-capability-router` owns model and effort. Preserve simple versus complex paths, distinct exploration angles, cited synthesis and coordinator verification.
-
 # How
 
-Explore the codebase to answer how a subsystem works. Give a senior engineer enough of a mental model to start changing it without turning the explanation into annotated source.
+Explore the codebase to answer "how does X work?" questions. If scope is ambiguous, state your interpretation and explore; the user can redirect.
 
-Choose model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report that exact gap without substituting another model.
+## 1. Explain
 
-## 1. Assess complexity
+Use one authorized native read-only delegate that explores and explains in one pass. Give it the user's question and this brief:
 
-If scope is ambiguous, state the interpretation and explore. The user can redirect.
+> You are writing an architectural explanation for a senior engineer. Explore the codebase and write an explanation that a senior engineer unfamiliar with this area could read and walk away with a solid mental model. They should understand the architecture well enough to start working in it confidently. You have read-only access to the codebase.
 
-- **Simple:** one module, small utility, or narrow question. Do not spawn explorers. If native delegation is authorized and useful, use one read-only explainer with `references/explainer-prompt.md`; otherwise inspect and explain directly. Then go to step 4.
-- **Complex:** a subsystem spanning files or services, a cross-cutting feature, or a full architecture overview. Continue to step 2.
+Use the actual native delegation interface and the operator's model selection. If read-only delegation is unavailable, report that capability gap; do not replace this with an explorer panel or a separate synthesis stage.
 
-When in doubt, take the simple path.
+## 2. Present
 
-## 2. Explore complex questions
-
-When native delegation is authorized, investigate two to four distinct angles in parallel with read-only delegates. Choose model and effort through `model-capability-router`. Give each delegate a bounded angle and the explorer prompt in `references/explorer-prompt.md`. If delegation is unavailable, investigate the same angles sequentially and keep their evidence separate. Do not ask one explainer to repeat exploration after these findings exist.
-
-## 3. Synthesize complex questions
-
-After explorers return, combine their cited findings in the coordinator or one read-only native synthesizer selected through `model-capability-router`. Give it every finding and `references/explainer-prompt.md`. Resolve contradictions by checking the source. The coordinator owns the explanation and verifies its source paths. Simple questions skip this synthesis step because their one explainer already produced the account.
-
-## 4. Present
-
-Check the cited source paths and explain the result in the requested scope. Correct factual errors before presenting it. Use only the applicable sections from `references/explainer-prompt.md`: Overview, Key Concepts, How It Works, Where Things Live, and Gotchas.
+Present the delegate's output. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.

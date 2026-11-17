@@ -56,6 +56,14 @@ class CursorMirrorTests(unittest.TestCase):
             else:
                 shutil.copy2(source, target)
 
+        manifest = json.loads((self.root / "sources/cursor-plugins/manifest.json").read_text())
+        for relative in manifest.get("native_support_files", {}):
+            source = REPO / relative
+            target = self.root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if not target.exists():
+                shutil.copy2(source, target)
+
     def run_build(self, *args):
         return subprocess.run(
             [sys.executable, str(self.root / "scripts/sync-cursor-plugin-skills.py"), *args],
@@ -75,17 +83,22 @@ class CursorMirrorTests(unittest.TestCase):
         state = json.loads((REPO / "reports/cursor-plugin-skills-state.json").read_text())
         pin = "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
         self.assertEqual(manifest["upstream_commit"], pin)
-        self.assertEqual(manifest["pstack_upstream_commit"], pin)
-        self.assertEqual(state["source_commit_overrides"], {})
+        pstack_pin = "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+        self.assertEqual(manifest["pstack_upstream_commit"], pstack_pin)
+        self.assertEqual(state["source_commit_overrides"], {
+            entry["published_name"]: pstack_pin for entry in manifest["skills"]
+            if entry["family"] == "pstack"
+        })
         for entry in manifest["skills"]:
             name = entry["published_name"]
-            self.assertEqual(entry["source_commit"], pin)
+            source_pin = pstack_pin if entry["family"] == "pstack" else pin
+            self.assertEqual(entry["source_commit"], source_pin)
             overlay = json.loads((REPO / "sources/cursor-plugins/overlays" / f"{name}.json").read_text())
             mirror_root = REPO / ("skills/mirrors-cursor" if entry["publish"] else "sources/cursor-plugins/adapted-held")
             mirror = (mirror_root / name / "MIRROR.md").read_text()
             self.assertEqual(overlay["source_sha256"], entry["files"]["SKILL.md"])
-            self.assertIn(f"Commit: {pin}\n", mirror)
-            self.assertIn(f"blob/{pin}/{entry['family']}/README.md", mirror)
+            self.assertIn(f"Commit: {source_pin}\n", mirror)
+            self.assertIn(f"blob/{source_pin}/{entry['family']}/README.md", mirror)
 
     def test_held_sibling_links_use_the_siblings_reviewed_source_commit(self):
         baseline = "c1c0a32802223f4be824112dd83d33ad29a8b26c"
@@ -209,7 +222,7 @@ class CursorMirrorTests(unittest.TestCase):
                          (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
         provenance = (project / "MIRROR.md").read_text()
         self.assertIn("https://github.com/cursor/plugins.git", provenance)
-        self.assertIn("Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b", provenance)
+        self.assertIn("Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8", provenance)
         # The installed pack, detached from the source checkout, owns its complete links.
         for file in project.rglob("*.md"):
             for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):
@@ -341,9 +354,8 @@ class CursorMirrorTests(unittest.TestCase):
         skill = (
             self.root / "skills/mirrors-cursor/cursor-technical-writing/SKILL.md"
         ).read_text()
-        self.assertIn("requires `cursor-unslop` for every document", skill)
         self.assertIn("Apply the **cursor-unslop** skill to every doc", skill)
-        self.assertIn("`cursor-unslop`'s abstract-metaphor rule", skill)
+        self.assertNotIn("propose a new offender", skill.lower())
         self.assertNotIn("optional unslop/style reference", skill)
         self.assertTrue(
             (self.root / "skills/mirrors-cursor/cursor-unslop/SKILL.md").is_file()
@@ -375,19 +387,20 @@ class CursorMirrorTests(unittest.TestCase):
             self.root
             / "skills/core/model-capability-router/assets/agents/comment-sicko.toml"
         ).read_text()
-        self.assertIn("cursor-how", agent)
+        self.assertIn("trace the named symbol", agent)
+        self.assertNotIn("cursor-how", agent)
         self.assertNotIn("`Task`", skill)
         self.assertIn('agent_type: "comment-sicko"', skill)
         self.assertIn("collaboration.spawn_agent", skill)
-        self.assertIn("coordinator inspects the reviewer diff", skill)
+        self.assertIn("Inspect its report and diff.", skill)
 
         poteto = (preview / "cursor-poteto-mode/SKILL.md").read_text()
         plan = (preview / "cursor-poteto-mode/playbooks/multi-phase-plan.md").read_text()
-        self.assertIn('agent_type: "poteto-agent"', poteto)
-        self.assertIn("collaboration.followup_task", poteto)
-        self.assertIn('agent_type: "poteto-agent"', plan)
-        self.assertIn("collaboration.followup_task", plan)
-        self.assertIn("Routed workflow skills keep their own role-specific", poteto)
+        self.assertIn("named native `poteto-agent`", poteto)
+        self.assertIn("native asynchronous delegation", poteto)
+        self.assertIn("The plan is the deliverable. Do not implement.", plan)
+        self.assertIn("operator's explicit go", plan)
+        self.assertIn("routed workflows such as `cursor-swarm` choose their own role", poteto)
 
     def test_thermos_bundles_two_distinct_review_lenses(self):
         preview = self.root / "thermos-preview"

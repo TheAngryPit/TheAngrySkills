@@ -1,7 +1,7 @@
 {
   "codex_contract": {
     "schema_version": 1,
-    "adapter_mode": "native-instruction",
+    "adapter_mode": "native-guidance",
     "name_mapping": {
       "upstream_skill": "technical-writing",
       "published_name": "cursor-technical-writing",
@@ -9,56 +9,43 @@
     },
     "preserved_semantics": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
     "native_mapping": {
-      "capabilities": [],
-      "required_tools": [],
-      "fallback": "If cursor-unslop is unavailable, report that the full technical-writing workflow is blocked; a partial prose review must be labeled partial.",
-      "availability": "guide_only",
-      "proof_harness": "scripts/cursor_functional_adapters.py:review_prose"
+      "availability": "reviewed_current_source_fixture_only",
+      "capabilities": [
+        "actual native tools required by the current method"
+      ],
+      "fallback": "Report the exact unavailable capability and proof gap; do not restore retired workflow stages."
     },
     "external_dependencies": [
       "required cursor-unslop skill"
     ],
     "permission_gates": [
-      "Apply a native instruction-only writing standard and preserve symbols, wording, intent, and language.",
-      "The source requires cursor-unslop on every document touched; do not call a prose-only review complete when it is unavailable.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "behavioral_proof": {
-      "positive": "Guide fixture is checked by the proof harness `scripts/cursor_functional_adapters.py:review_prose`; this validates the rule shape, not a native runtime implementation.",
-      "missing_tool_or_input": "The prose harness can return a partial result, but it does not substitute for required cursor-unslop or prove the complete workflow.",
-      "error": "The harness exercises the invalid/error or unsafe-permission case for `review_prose` and records rejection or preservation; no workflow parity is claimed."
+      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
+      "error": "Operator scope, privacy and native refusals remain binding."
     },
-    "promotion_status": "promoted_guide_only",
+    "promotion_status": "promoted_current_source_fixture_only_explicit",
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
-      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3"
+      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
+      "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority.",
+      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015"
     },
     "security_review": {
-      "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     }
   },
-  "codex_note": "## Codex adaptation\n\nApply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.\n",
+  "codex_note": "",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [
-    {
-      "file": "SKILL.md",
-      "before": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n",
-      "after": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n"
-    },
-    {
-      "file": "SKILL.md",
-      "before": "## Voice and repo specifics\n\n- Apply the **unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n",
-      "after": "## Voice and repo specifics\n\n- Apply the **cursor-unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n"
-    }
-  ],
+  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
+  "replacements": [],
   "source_path": "pstack/skills/technical-writing/SKILL.md",
-  "source_sha256": "61fe9c424a798ebf36ad94941f87be049cb8827bdf86d21474a0dde37b513c43"
+  "source_sha256": "0a620885599cdde5a0a31fa39878144c10f61c894b56bf4a9ff779496e718b14",
+  "codex_native_body": "# Technical writing\n\nWrite so a tired engineer understands on the first read.\n\n- Cut every word that does no work.\n- Use the short, everyday word: \"use\", not \"utilize\".\n- When a rule makes a sentence worse, fix the sentence another way or leave it alone.\n- Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n- Don't invent jargon. Use the words a developer would say out loud. Say what a named pattern means the first time.\n\n## Vary the rhythm\n\n- Mix sentence lengths. Split the sentence that carries two thoughts. Keep the long sentence that carries one.\n- Have a view in explanation. Keep reference dry.\n- Be specific. Not \"schema changes can cause issues\" but \"a column rename fails the build\".\n\n## Pick the mode first (Diátaxis)\n\nOne document, one mode. Don't mix modes. Split and link instead.\n\n- **Tutorial: learning by doing.** Say what the learner will build. Every step produces a visible result, and you say what they should see. Explanation gets one clause and a link.\n- **How-to: steps to a goal.** Solve the reader's problem. Assume competence. Action only. Allow forks. Name the guide by the task.\n- **Reference: facts for lookup.** Only describe. Be dry, complete, and sure. Mirror the structure of the thing described.\n- **Explanation: understanding and why.** One bounded topic. Give context: design decisions, history, constraints, alternatives. Opinion is allowed here and nowhere else.\n\n## Write sentences to the reader (Google developer style)\n\n- Talk to the reader as \"you\", in the present tense.\n- Say who does what. Passive is fine only when the actor is unknown or beside the point.\n- Write instructions as commands. Put the condition before the instruction and the common case first.\n- No buzzwords, no figurative language, no \"please\", and never \"simply\", \"easy\", or \"quickly\" in a procedure.\n- Don't pre-announce, and don't start consecutive sentences with the same phrase.\n- Link with words that say where the link goes.\n- Headings carry the point, in sentence case. One h1 per page, no skipped levels.\n- Numbered lists for sequences, bullets for everything else. Introduce a list with a complete sentence. Keep items parallel.\n- Code goes in code font. UI elements go in bold. Use serial commas. Drop \"etc.\".\n\n## Make statements load one at a time (STE rules)\n\n- One instruction per sentence. One thought per sentence everywhere else.\n- Split instructions longer than about 20 words and other sentences longer than about 25.\n- Put the warning or condition before the step it guards.\n- Keep \"the\" and \"a\".\n- Give each word one meaning, and pick one word per action.\n- Write procedures as direct commands, never as narration and never in the passive.\n- Avoid \"-ing\" words where you can.\n\n## Leave no sentence open to two readings (Global English)\n\n- Keep words like \"only\" and \"not\" next to the word they change.\n- Break up long noun strings.\n- Make every \"it\", \"they\", and \"this\" point at one obvious thing. Never use \"this\" or \"which\" to point at a whole clause.\n- Don't drop verbs, or the small words that show structure, such as \"that\".\n- Repeat the article in a series when it prevents a misread. Say which parts \"and\" or \"or\" joins.\n- Use periods, not semicolons or em dashes. No slashes, and no \"(s)\". Make text in parentheses a full grammatical unit.\n- Call each thing by one name, everywhere.\n- Skip idioms, colloquialisms, Latin abbreviations, and metaphors.\n\n## Voice and repo specifics\n\n- Apply the **cursor-unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n- Indent code snippets with tabs. Write real paths. Make every count or tree claim true at the commit that lands it, and include the command that regenerates it."
 }

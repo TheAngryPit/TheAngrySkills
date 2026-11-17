@@ -58,7 +58,7 @@ class NativeAgentProfileFixtureTests(unittest.TestCase):
                 item["name"]: item["skill_references"]
                 for item in result["instructions"]
             }
-            self.assertIn("cursor-how", instructions["comment-sicko"])
+            self.assertNotIn("cursor-how", instructions["comment-sicko"])
             self.assertIn("cursor-why", instructions["comment-sicko"])
             self.assertIn("cursor-poteto-mode", instructions["poteto-agent"])
             self.assertIn("cursor-principle-*", instructions["poteto-agent"])

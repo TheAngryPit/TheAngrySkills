@@ -1,10 +1,10 @@
 {
   "codex_contract": {
-    "adapter_mode": "delegated-native",
+    "adapter_mode": "native-guidance",
     "behavioral_proof": {
-      "error": "Malformed input or failed worker is reported with its slice and evidence; the aggregate does not claim full coverage or widen scope.",
-      "missing_tool_or_input": "An unavailable worker is recorded as BLOCKED and the aggregate explicitly identifies uncovered slices or a partial race.",
-      "positive": "A four-phase todolist precedes one parallel N-worker launch; each worker returns PASS, ISSUES, or BLOCKED with evidence; the coordinator drains and aggregates one report."
+      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
+      "error": "Operator scope, privacy and native refusals remain binding."
     },
     "external_dependencies": [
       "native bounded delegates on the selected channel; Work cloud worker/task route remains unproven"
@@ -15,52 +15,37 @@
       "upstream_skill": "swarm"
     },
     "native_mapping": {
-      "availability": "bounded_native_local_four_phase_fanout_observed; work_cloud_and_trigger_unobserved",
+      "availability": "reviewed_current_source_fixture_only",
       "capabilities": [
-        "bounded worker delegates",
-        "local result collector"
+        "actual native tools required by the current method"
       ],
-      "fallback": "A dropped or unavailable worker is recorded as BLOCKED; the aggregate is partial when required coverage is missing. Never silently drop a worker.",
-      "required_tools": [
-        "bounded worker delegates",
-        "local result collector"
-      ]
+      "fallback": "Report the exact unavailable capability and proof gap; do not restore retired workflow stages."
     },
     "permission_gates": [
-      "Open a four-phase todolist (Frame, Fan out, Aggregate, Report) before launching workers.",
-      "Declare the done predicate, output, shape, total N, selection rule for races, worker models, and separate writable outputs before fan-out.",
-      "Launch all N bounded workers in parallel; use local execution only when they need access to the user's computer. Sequential fallback is not fan-out proof.",
-      "Require each worker to report PASS, ISSUES, or BLOCKED with evidence. Preserve dropouts and mark the aggregate partial when required coverage is missing.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "preserved_semantics": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
-    "promotion_status": "promoted_bounded_native_local_swarm_trigger_unobserved",
+    "promotion_status": "promoted_current_source_fixture_only_explicit",
     "schema_version": 1,
     "security_review": {
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
-      "scanner_verdict": "safe_docs_only",
-      "status": "retained"
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     },
     "upstream_readme": {
-      "note": "Read from the supplied current upstream clone; this README is provenance and is not vendored in the skills-only snapshot.",
+      "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority.",
       "path": "pstack/README.md",
-      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
+      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
       "status": "verified_in_supplied_upstream_clone",
-      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md"
+      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md"
     }
   },
-  "codex_note": "## Codex adaptation\n\nOpen a visible four-phase todolist or Markdown checklist before launch: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Default to Work cloud only when its native worker route is available and the operator has authorized that destination. Use local workers when they need access to the user's computer. Otherwise report cloud unavailable without substituting local work. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. The read-only two-slice local case and prior blocked worker outcome are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Automatic selection and Work cloud parity remain unobserved.\n",
+  "codex_note": "",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
-  "proof": "The four-phase checklist was written before an N=2 native parallel launch on PR #64 head ea6099fa. Two local Luna-high workers with disjoint slices returned PASS with evidence, were drained, and produced one aggregate. A previous source-faithful run preserved ISSUES/BLOCKED worker verdicts and a BLOCKED aggregate. Both cases and limits are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Work cloud workers, automatic selection, race behavior, dropout and cross-host behavior remain unobserved.",
-  "reason": "Per-skill Codex contract adds native mapping, permission gates, behavior proof, promotion state, security retention, and pinned README provenance without changing upstream source text.",
-  "replacements": [
-    {
-      "file": "SKILL.md",
-      "before": "---\nname: cursor-swarm\ndescription: \"Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.\"\ndisable-model-invocation: true\n---\n\n# Swarm\n\n## Start\n\nOpen a todolist with one entry per phase before launching anything.\n\n1. Frame\n2. Fan out\n3. Aggregate\n4. Report\n\n## Phase A: Frame\n\n1. State the done predicate and the artifact or report the swarm must return.\n2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.\n3. Pick the worker model from the `swarm workers` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, use `grok-4.7-xhigh-fast`. For `auto` or `inherit-parent`, omit `model` so the workers run on the parent model. If the Task tool rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message. For a model race, name each arm's model up front. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.\n4. Give each worker its own writable output when it writes. When workers verify or measure commits, each brief names the exact SHAs. A measurement brief also names the method (sample count, what one sample is, order). The worker records both in its result.\n\n## Phase B: Fan out\n\nSpawn all N workers in one message with `subagent_type: generalPurpose`, `environment: \"cloud\"`, `run_in_background: true`, and the step 3 model, left unset for `auto` or `inherit-parent`. Use `environment: \"local\"` only when the worker needs access to something on the user's computer.\n\nWhen a worker must start from a non-default pushed branch, pass `cloud_base_branch`.\n\nEvery brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that can prove a defect reports `ISSUES` and lists every issue it can prove, not only the first.\n\nIf a worker drops out, proceed with N-1 and note it.\n\n## Phase C: Aggregate\n\nRead the terminal results. Drop a result that does not record the SHAs and method its brief names, and respawn that worker once. After a second miss, record a gap. A gap does not count as a pass. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.\n\n## Phase D: Report\n\nReturn one consolidated in-chat report with a result table, issue one-liners, gaps or dropouts, and the race rule when used.\n",
-      "after": "---\nname: cursor-swarm\ndescription: \"Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.\"\ndisable-model-invocation: true\n---\n\n# Swarm\n\nFan out N parallel native workers. Work cloud is the default only when its native worker route is available and authorized. Use local workers when they need the user's computer; never silently substitute local workers for unavailable cloud workers. They may cover separate slices, race the same brief, or mix both. The parent waits, aggregates, and returns one report.\n\n## Start\n\nOpen a visible native todolist or Markdown checklist with one entry per phase before launching anything.\n\n1. Frame\n2. Fan out\n3. Aggregate\n4. Report\n\n## Phase A: Frame\n\n1. State the done predicate and the artifact or report the swarm must return.\n2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.\n3. Set N from the user or derive it from the shape. N is total workers, not the cloud concurrency limit.\n4. Pick the worker model and effort from the standing `model-capability-router` and the target channel's advertised inventory. Preserve an explicit operator selection. For a model race, name each arm's model and effort up front; do not invent unavailable Cursor slugs.\n5. Give each worker its own writable output when it writes. When workers verify or measure commits, each brief names the exact SHAs. A measurement brief also names the method (sample count, what one sample is, order). The worker records both in its result.\n\n## Phase B: Fan out\n\nLaunch all N bounded native workers in parallel with the selected model/effort and standalone briefs. Default to Work cloud only when its native worker route is available and authorized. Use local native subagents when the workers need access to the user's computer; otherwise report cloud unavailable rather than substituting local work.\n\nWhen a worker must start from a non-default pushed branch, give the exact verified branch/ref in its brief and use a native branch-start option only if that worker channel documents one. Do not invent `cloud_base_branch` support.\n\nEvery brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that can prove a defect reports `ISSUES` and lists every issue it can prove, not only the first.\n\nIf a worker drops out, proceed with N-1 and note it.\n\n## Phase C: Aggregate\n\nRead the terminal results. Drop a result that does not record the SHAs and method its brief names, and respawn that worker once. After a second miss, record a gap. A gap does not count as a pass. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.\n\n## Phase D: Report\n\nReturn one consolidated in-chat report with a result table, issue one-liners, gaps or dropouts, and the race rule when used.\n"
-    }
-  ],
+  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
+  "replacements": [],
   "source_path": "pstack/skills/swarm/SKILL.md",
-  "source_sha256": "fea6bfbbf21e067a4e2d2ebab034bc3af508118e9df1abc9d2ba040d58a6df3a"
+  "source_sha256": "8558089df5320e4ddf61126ca3d638404341584c8307dd6d20f8984e5ae3bbd1",
+  "codex_native_body": "# Swarm\n\n## Start\n\nRecord one entry per phase in the native planning surface when available, otherwise in the existing task checkpoint, before launching anything.\n\n1. Frame\n2. Fan out\n3. Aggregate\n4. Report\n\n## Phase A: Frame\n\n1. State the done predicate and the artifact or report the swarm must return.\n2. Choose the shape. Partition into slices, race N workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.\n3. Select available native workers through `model-capability-router` and explicit operator choices. Inheritance uses the parent selection. Name each race arm's actual model; report an unsupported choice instead of importing a Cursor slug.\n\n4. Give each worker its own writable output when it writes. When workers verify or measure commits, each brief names the exact SHAs. A measurement brief also names the method (sample count, what one sample is, order). The worker records both in its result.\n\n## Phase B: Fan out\n\nLaunch authorized native workers asynchronously. Use an actually exposed cloud task capability when the work calls for it; keep local-only dependencies on the permitted host. Report missing cloud or branch-selection capabilities precisely rather than inventing Cursor Task parameters.\n\n\nEvery brief stands alone. Include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that can prove a defect reports `ISSUES` and lists every issue it can prove, not only the first.\n\nIf a worker drops out, proceed with N-1 and note it.\n\n## Phase C: Aggregate\n\nRead the terminal results. Drop a result that does not record the SHAs and method its brief names, and respawn that worker once. After a second miss, record a gap. A gap does not count as a pass. For coverage, every required slice needs a result. For a race, apply the selection rule declared up front. Use first pass, rank all, or best-of. Do not paste raw worker dumps.\n\n## Phase D: Report\n\nReturn one consolidated in-chat report with a result table, issue one-liners, gaps or dropouts, and the race rule when used."
 }

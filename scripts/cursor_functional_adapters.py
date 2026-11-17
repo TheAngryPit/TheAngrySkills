@@ -54,7 +54,6 @@ PSTACK_PLAYBOOK_FILES = (
     "investigation",
     "multi-phase-plan",
     "opening-a-pr",
-    "orchestrate",
     "pause-safely",
     "perf-issue",
     "prototype",
@@ -77,29 +76,19 @@ PSTACK_MODEL_ROLES = (
     "perf-issue",
     "hillclimb",
     "judgment and prose",
-    "hardest tasks",
-    "how explorer",
-    "how explainer",
-    "why investigators",
-    "why synthesizer",
-    "reflect tooling",
-    "reflect judgment, divergent, synthesizer",
     "arena runners",
     "arena cross-judge pool",
     "swarm workers",
-    "architect runners",
     "interrogate reviewers",
 )
 PSTACK_MODEL_PANEL_ROLES = frozenset(
     {
         "arena runners",
         "arena cross-judge pool",
-        "architect runners",
-        "interrogate reviewers",
+            "interrogate reviewers",
     }
 )
 PSTACK_BUDGETS = {
-    "unlimited": {"label": "unlimited — keep max", "target_effort": "max"},
     "large": {"label": "large — xhigh reasoning", "target_effort": "xhigh"},
     "medium": {"label": "medium — high reasoning", "target_effort": "high"},
     "small": {"label": "small — medium reasoning", "target_effort": "medium"},
@@ -1852,10 +1841,13 @@ def run_pstack_model_mapping_fixture(
         family = "-".join(parts)
         return family.removeprefix("cursor-")
 
-    if budget_spec and budget != "unlimited":
-        target_index = PSTACK_EFFORT_LADDER.index(budget_spec["target_effort"])
+    if budget_spec:
         effective_choices: dict[str, tuple[dict[str, object], ...]] = {}
         for role in PSTACK_MODEL_ROLES:
+            starting_effort = "high" if role in PSTACK_MODEL_PANEL_ROLES or role == "swarm workers" else "xhigh"
+            shift = {"large": 0, "medium": 1, "small": 2}[budget]
+            target_index = max(0, PSTACK_EFFORT_LADDER.index(starting_effort) - shift)
+            target_effort = PSTACK_EFFORT_LADDER[target_index]
             effective: list[dict[str, object]] = []
             for index, selection in enumerate(normalized_choices[role]):
                 model = selection["model"]
@@ -1895,7 +1887,7 @@ def run_pstack_model_mapping_fixture(
                     budget_issues[(role, index)] = (
                         f"{role}[{index}]: no detected model in family {family!r} "
                         f"supports budget {budget!r} at or below "
-                        f"{budget_spec['target_effort']!r}"
+                        f"{target_effort!r}"
                     )
                     effective.append(dict(selection))
                     continue

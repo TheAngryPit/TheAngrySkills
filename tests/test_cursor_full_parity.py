@@ -20,9 +20,9 @@ def load(name):
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
-    assert tree['files'] == 2073
+    assert tree['files'] == 2051
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
-    assert tree['family_updates'] == {'pstack': '8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b'}
+    assert tree['family_updates'] == {'pstack': 'e1cc03121a0e71129a4fb730d7c5528a0a3e43c8'}
     result = load('check-cursor-adaptations').verify()
     assert result == dict(skills=114, published=108, held_adapted=6, agents_mapped=16,
                           unresolved_links=0, runtime_proof='not claimed')
@@ -82,10 +82,10 @@ def test_new_admissions_are_pinned_and_explicit():
     check = load('check-cursor-adaptations')
     assert check.verify()['published'] == 108
     manifest = json.loads((ROOT / 'sources/cursor-plugins/manifest.json').read_text())
-    full = json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())
+    current = load('cursor_pstack_family').merged_inventory(ROOT / 'sources/cursor-plugins')
     for name in ['in-your-own-words', 'ketchup', 'sharpen', 'ketchup-video']:
         entry = next(item for item in manifest['skills'] if item['published_name'] == f'cursor-{name}')
-        assert full['files'][entry['path']]['sha256'] == entry['files']['SKILL.md']
+        assert current[entry['path']]['sha256'] == entry['files']['SKILL.md']
         skill = ROOT / f'skills/mirrors-cursor/cursor-{name}'
         policy = skill / 'agents/openai.yaml'
         if policy.exists():
@@ -219,7 +219,19 @@ def test_refresh_preserves_availability_classification_and_is_idempotent(tmp_pat
     manifest.write_text(json.dumps({'skills': [{'family': 'pstack',
         'path': 'pstack/skills/example/SKILL.md', 'availability': 'guide-only; no runtime proof'}]}))
     (output / 'agent-coverage.json').write_text(json.dumps({'agents': {}}))
+    retained_pending = {
+        'harness/pstack/claude-code/skills/example/SKILL.md': {
+            'state': 'parallel_harness_reference_only', 'sha256': '1' * 64,
+            'source_commit': '2' * 40},
+        'third_party/tailscale/skills/tailscale-setup/SKILL.md': {
+            'state': 'pending_review', 'sha256': '3' * 64,
+            'source_commit': '4' * 40},
+    }
+    (output / 'unadmitted-skills.json').write_text(json.dumps({
+        'schema_version': 1, 'skills': retained_pending}))
     refresh.refresh(upstream, base=output, root=tmp_path)
+    pending = json.loads((output / 'unadmitted-skills.json').read_text())['skills']
+    assert {path: pending[path] for path in retained_pending} == retained_pending
     assert not (output / 'snapshot/pstack/skills/unreviewed').exists()
     assert (output / 'upstream-tree/pstack/skills/unreviewed/SKILL.md').is_file()
     assert 'pstack/skills/unreviewed/SKILL.md' in json.loads((output / 'unadmitted-skills.json').read_text())['skills']
@@ -348,3 +360,25 @@ def test_unadmitted_skill_commit_must_match_reviewed_source(tmp_path):
     pending[path]['source_commit'] = '2' * 40
     with pytest.raises(ValueError, match='invalid unadmitted source record'):
         check.verify_unadmitted(full, set(), pending, tmp_path)
+
+
+def test_refresh_requires_native_profile_review_before_writing(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / 'scripts'))
+    refresh = load('refresh-cursor-pstack-family')
+    upstream = tmp_path / 'upstream'
+    role = upstream / 'pstack/agents/poteto-agent.md'
+    role.parent.mkdir(parents=True)
+    role.write_text('---\nname: poteto-agent\nmodel: upstream-model\n---\nChanged role.\n')
+    subprocess.run(['git', 'init', '-q', str(upstream)], check=True)
+    subprocess.run(['git', '-C', str(upstream), 'add', '.'], check=True)
+    subprocess.run(['git', '-C', str(upstream), '-c', 'user.name=Fixture',
+                    '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'fixture'], check=True)
+    base = tmp_path / 'output'
+    base.mkdir()
+    (base / 'full-tree.json').write_text(json.dumps({'commit': '0' * 40, 'files': {}}))
+    (base / 'agent-coverage.json').write_text(json.dumps({'agents': {
+        'pstack/agents/poteto-agent.md': {'source_sha256': '1' * 64}}}))
+    before = {path.name: path.read_bytes() for path in base.iterdir()}
+    with pytest.raises(ValueError, match='requires explicit adaptation review'):
+        refresh.refresh(upstream, base=base, root=tmp_path)
+    assert {path.name: path.read_bytes() for path in base.iterdir()} == before

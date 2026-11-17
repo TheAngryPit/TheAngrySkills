@@ -28,7 +28,7 @@ def write_json(path: Path, value: dict) -> None:
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n")
 
 
-def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
+def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT, *, refresh_native_profiles: bool = False) -> dict:
     if git(upstream, "status", "--porcelain", "--untracked-files=all", "--ignored", "--", "pstack"):
         raise ValueError("pstack upstream checkout is dirty; refresh requires committed source")
     source_commit = git(upstream, "rev-parse", "HEAD")
@@ -36,6 +36,11 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
     baseline_commit = full["commit"]
     current = current_inventory(upstream)
     current = {path: {**record, "source_commit": source_commit} for path, record in current.items()}
+    coverage = json.loads((base / "agent-coverage.json").read_text())
+    for path, profile in coverage["agents"].items():
+        if path.startswith("pstack/") and current.get(path, {}).get("sha256") != profile["source_sha256"]:
+            if not refresh_native_profiles:
+                raise ValueError("changed native profile requires explicit adaptation review: " + path)
     baseline_family = {path: value for path, value in full["files"].items() if path.startswith("pstack/")}
     overrides = {
         path: {
@@ -62,12 +67,15 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
         shutil.rmtree(snapshot)
     selected = json.loads((base / "manifest.json").read_text())
     known_skills = {entry["path"] for entry in selected["skills"]}
-    unadmitted = {
+    pending_path = base / "unadmitted-skills.json"
+    pending = json.loads(pending_path.read_text()) if pending_path.exists() else {"schema_version": 1, "skills": {}}
+    unadmitted = {path: record for path, record in pending["skills"].items() if not path.startswith("pstack/")}
+    unadmitted.update({
         path: {"state": "pending_review", "sha256": record["sha256"], "source_commit": source_commit}
         for path, record in current.items()
         if path.endswith('/SKILL.md') and path not in known_skills
-    }
-    excluded_directories = {str(Path(path).parent) for path in unadmitted}
+    })
+    excluded_directories = {str(Path(path).parent) for path in unadmitted if path.startswith("pstack/")}
     def ignore_unadmitted(directory, names):
         parent = Path(directory).relative_to(tree).as_posix()
         return [name for name in names if (Path('pstack') / parent / name).as_posix() in excluded_directories]
@@ -190,5 +198,6 @@ def refresh(upstream: Path, base: Path = BASE, root: Path = ROOT) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--upstream", type=Path, required=True)
+    parser.add_argument("--refresh-native-profiles", action="store_true", help="apply the separately reviewed native role adaptation")
     args = parser.parse_args()
-    print(json.dumps(refresh(args.upstream.resolve()), indent=2))
+    print(json.dumps(refresh(args.upstream.resolve(), refresh_native_profiles=args.refresh_native_profiles), indent=2))

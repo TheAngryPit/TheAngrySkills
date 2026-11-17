@@ -1,4 +1,5 @@
 import json
+import importlib.util
 import hashlib
 import os
 import subprocess
@@ -69,9 +70,21 @@ class NativeAgentProfileTests(unittest.TestCase):
             self.assertEqual(overlay_profile["pinned_source_sha256"], digest)
             self.assertTrue((ROOT / expected_asset).is_file())
 
+    def test_upstream_model_frontmatter_does_not_change_native_binding(self):
+        spec = importlib.util.spec_from_file_location("native_profile_checker", SCRIPT)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+        source = (ROOT / "sources/cursor-plugins/snapshot/pstack/agents/poteto-agent.md").read_text()
+        baseline = checker.adapted_body("poteto-agent", source)
+        changed = source.replace("\n---\n", "\nmodel: unrequested-upstream-model\n---\n", 1)
+        self.assertEqual(checker.adapted_body("poteto-agent", changed), baseline)
+        parsed = tomllib.loads((ASSETS / "poteto-agent.toml").read_text())
+        self.assertEqual(set(parsed), {"name", "description", "developer_instructions"})
+        self.assertEqual(parsed["developer_instructions"], baseline)
+
     def test_assets_are_native_toml_and_source_grounded(self):
         anchors = {
-            "comment-sicko": ("I hate comments.", "MUST KILL", "cursor-how", "cursor-why"),
+            "comment-sicko": ("I hate comments.", "MUST KILL", "trace the named symbol", "cursor-why"),
             "poteto-agent": (
                 "cursor-poteto-mode",
                 "cursor-principle-",

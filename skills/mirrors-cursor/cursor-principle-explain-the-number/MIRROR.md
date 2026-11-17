@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/principle-explain-the-number/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 3c84fbf9a7d9842abcfcd134010782b32092ac3d3fb4aaf9ed5732dca83aa58c
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: e6a3f00991f4949cf18a0b5c77dd3126ca4402b8553f88c9c7905e577512676e
 Published name: cursor-principle-explain-the-number
 Decision class: adaptação funcional
 Availability: explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

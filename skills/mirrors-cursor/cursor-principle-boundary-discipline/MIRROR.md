@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/principle-boundary-discipline/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 62ac2862c2caa22dd14531f51c9c6bb445ceb198ca98a687e25b4d47c1f10a28
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: c02c26cca3906bfd57829535f8fa7ee9e00df037b4dbb24e5f85ec9e12710b48
 Published name: cursor-principle-boundary-discipline
 Decision class: intacta
 Availability: content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

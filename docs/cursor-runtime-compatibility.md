@@ -1,6 +1,6 @@
 # Cursor adaptation runtime compatibility
 
-This is the existing reviewed Cursor mirror with an additional conditional T3 execution contract. Names, source snapshots and accepted pstack revision remain unchanged. It is not a live workflow certificate for every provider or playbook.
+This is the existing reviewed Cursor mirror with an additional conditional T3 execution contract. Published names and native execution boundaries are preserved. Pstack source refreshes are recorded separately from runtime evidence. It is not a live workflow certificate for every provider or playbook.
 
 ## Execution
 
@@ -52,3 +52,15 @@ A full read-only Investigation playbook ran through How and parent runtime verif
 The first published CI run exposed an undeclared Git-history dependency in two preservation tests. They now exercise real generation in a source-only fixture and compare the complete protected inputs before and after. Native profile bytes must also match current accepted provenance. No workflow, checkout depth or update policy changed. This avoids freezing future reviewed upstream inputs to a historical commit. The [regression failure](../reports/cursor-runtime-live-20261029/historyless-red.log) and [focused pass](../reports/cursor-runtime-live-20261029/historyless-green.log) record the correction.
 
 After this correction, the local full suite passed 474 tests, with 2 skips and 13 subtests. The original 473-test logs describe the earlier implementation stage. GitHub CI must validate the updated PR head independently.
+
+## Pstack source refresh, 2026-11-17
+
+The global raw baseline remains 8ecfb19; only the Pstack family advances to
+e1cc031. [The current-method receipt](../reports/upstream-updates/cursor-pstack.md)
+records intent adoption and necessary native host translations across all 106
+changed paths. The rejected compatibility candidate is superseded: its 23 copied
+removed dependencies are gone. Current Architect, How, Why and Reflect flows
+replace the old topology. Poteto has 22 playbooks; Orchestrate and the plan
+checker are retired. Native routing, explicit role bindings, privacy, permissions
+and six package holds remain. Historical live receipts do not certify these new
+methods. No live installation or activation accompanies the source update.

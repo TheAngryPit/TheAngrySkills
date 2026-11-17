@@ -62,14 +62,53 @@ def test_same_package_keeps_explicit_invocation_for_claude_and_codex():
             assert 'disable-model-invocation: true' in (target/'SKILL.md').read_text().split('---',2)[1],entry['published_name']
 
 
-def test_all_23_playbooks_are_retained_and_runtime_scoped():
+def test_all_22_current_playbooks_are_adapted_and_runtime_scoped():
     target=ROOT/'skills/mirrors-cursor/cursor-poteto-mode'
     files=list((target/'playbooks').glob('*.md'))
-    assert len(files)==23
+    assert len(files)==22
     for file in files:
-        original=(BASE/'snapshot/pstack/skills/poteto-mode/playbooks'/file.name).read_text()
+        source=BASE/'snapshot/pstack/skills/poteto-mode/playbooks'/file.name
+        original=source.read_text()
         # Existing reviewed overlays remain the source of changes. No step can disappear
         # merely because it mentions a foreign runtime.
         assert original.strip() and file.read_text().strip()
     assert 'Read method.md in full' in (target/'references/runtime/t3.md').read_text()
     assert 'No step is waived' in (target/'references/runtime/t3.md').read_text()
+
+
+def test_native_authoring_and_shipping_do_not_require_cursor_builtins():
+    root = ROOT / "skills/mirrors-cursor/cursor-poteto-mode/playbooks"
+    authoring = (root / "authoring-a-skill.md").read_text()
+    shipping = (root / "shipping.md").read_text()
+    assert "skill-creator" in authoring
+    assert "Cursor's built-in" not in authoring
+    assert "`/loop`" not in shipping
+    assert "task-owned" in shipping
+    assert "native status/completion waits" in shipping
+    assert "COMPLETE" in shipping and "ceiling" in shipping
+
+
+def test_native_history_playbooks_use_verified_host_session_locations():
+    root = ROOT / "skills/mirrors-cursor/cursor-poteto-mode/playbooks"
+    for name in ("eval.md", "session-pickup.md"):
+        text = (root / name).read_text()
+        assert "authorized chat/rollout reader" in text
+        assert "verified session metadata" in text
+        assert "the system prompt names" not in text
+        assert "private chats" in text
+
+
+def test_native_playbook_planning_does_not_require_a_cursor_todo_tool():
+    text = (ROOT / "skills/mirrors-cursor/cursor-poteto-mode/SKILL.md").read_text()
+    assert "native planning surface" in text
+    assert "existing task checkpoint" in text
+    assert "todolist tool" not in text
+
+
+def test_native_phase_workflows_do_not_require_cursor_todolist():
+    for name in ("cursor-swarm", "cursor-arena", "cursor-figure-it-out"):
+        text = (ROOT / "skills/mirrors-cursor" / name / "SKILL.md").read_text()
+        assert "native planning surface" in text, name
+        assert "existing task checkpoint" in text, name
+        assert "Open a todolist" not in text, name
+        assert "to the todolist" not in text, name

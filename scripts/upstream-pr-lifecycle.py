@@ -43,7 +43,7 @@ _CODEX_SUMMARY_COMMIT = re.compile(
     r"\|\s*📝\s*\*\*Code Review\*\*\s*\|\s*✅\s*\*\*Completed\*\*.*?\|\s*`(?P<sha>[0-9a-f]{7,40})`\s*\|"
 )
 _CODEX_CLEAN_COMMIT = re.compile(
-    r"^Codex Review: Didn't find any major issues\..*?\*\*Reviewed commit:\*\*\s*`(?P<sha>[0-9a-f]{10,40})`",
+    r"^(?:<!-- codex-review-receipt:v1 -->\n\n)?Codex Review: Didn't find any major issues\..*?\*\*Reviewed commit:\*\*\s*`(?P<sha>[0-9a-f]{10,40})`",
     re.DOTALL,
 )
 _READINESS_PATH = re.compile(

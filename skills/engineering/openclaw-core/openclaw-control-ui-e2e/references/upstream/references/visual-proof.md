@@ -50,7 +50,7 @@ Keep final captures separate from the evolving gallery; allocate them with the
 ## Standalone Recording
 
 - Narrated captions, eased target zooms, fast-forwarded pauses: use
-  [proof-video dev skill](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/proof-video/SKILL.md). Standalone template records
+  [proof-video dev skill](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/proof-video/SKILL.md). Standalone template records
   raw evidence + cue sidecar, renders captioned MP4 with system ffmpeg.
   Keep raw capture; attach inspected polished video.
 - Already-running mocked Control UI URL: temporary Playwright script or

@@ -57,7 +57,7 @@ def test_all_installed_markdown_relative_links_resolve():
 def test_nested_docker_link_is_pinned_and_mapped_from_its_own_resource():
     directory = PACK / "openclaw-testing"
     resource = "references/upstream/references/package-and-docker.md"
-    url = "https://github.com/openclaw/openclaw/blob/" + MANIFEST["source_commit"] + "/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md"
+    url = "https://github.com/openclaw/openclaw/blob/" + json.loads((directory / "UPSTREAM.json").read_text())["commit"] + "/.agents/skills/openclaw-docker-e2e-authoring/SKILL.md"
     assert url in (directory / resource).read_text()
     mapping = json.loads((directory / "references/upstream-link-map.json").read_text())
     assert any(link["source_file"] == resource and link["original"] == "../../openclaw-docker-e2e-authoring/SKILL.md" and link["pinned_url"] == url for link in mapping["links"])
@@ -72,3 +72,16 @@ def test_resource_hashes_and_native_entrypoints_match_the_declared_pack():
         record = json.loads((directory / "UPSTREAM.json").read_text())
         for resource, expected in record["resources"].items():
             assert hashlib.sha256((directory / resource).read_bytes()).hexdigest() == expected, resource
+
+
+def test_archived_link_maps_use_each_packages_declared_commit():
+    for entry in MANIFEST["skills"]:
+        directory = ROOT / entry["path"]
+        record = json.loads((directory / "UPSTREAM.json").read_text())
+        mapping = json.loads((directory / "references/upstream-link-map.json").read_text())
+        assert mapping["source_commit"] == record["commit"]
+        expected = record["repository"] + "/blob/" + record["commit"] + "/"
+        for link in mapping["links"]:
+            assert link["pinned_url"].startswith(expected), (entry["name"], link["pinned_url"])
+            if link["bundled_target"] is None:
+                assert link["pinned_url"] in (directory / link["source_file"]).read_text()

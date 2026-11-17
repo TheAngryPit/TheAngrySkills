@@ -61,6 +61,10 @@ When touching mirrors or generated docs:
 Read [`docs/pr-safety-minimums.md`](docs/pr-safety-minimums.md) before opening
 a pull request.
 
+The [owner-authored PR policy](docs/owner-pr-merges.md) distinguishes the
+owner's approval exception from the reviews required for other contributors.
+All acceptance checks below still apply.
+
 Run the focused checks that match your change:
 
 ```bash

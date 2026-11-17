@@ -11,13 +11,13 @@ The OpenClaw edition is defined in `references/openclaw-subscriptions.md`
 inside that router; use its task table and subscription-route checks instead
 of imposing the GPT-only palette. Preserve all existing explicit bindings.
 
-The GPT-only edition recommends GPT-6.1 Sol High for coordination, GPT-6 Astra Medium with XHigh
-reserved for exceptional reasoning, GPT-6.1 Terra for visual and application
-work using the router's workload-specific efforts (High as the starting point
-for professional tool work), and GPT-6 Luna High/XHigh/Max. These are
-policy recommendations; they do not establish or change the actual home
-configuration. Preserve an explicit native effort selection, including Sol
-Low; High is the shared recommendation, not a forced configuration change.
+Read the selected edition's task table for model versions and efforts; do not
+copy one edition's defaults into the other. The general OpenClaw edition uses
+Sol 6.2 medium for defined daily work, high for sustained coordination, Astra
+6.2 medium for difficult judgment, and Fable 5.2 medium/high for technical
+analysis/execution. Its pricing and benchmark rationale is in the router's
+`references/gpt62-20261117.md`. These are recommendations, not proof of a live
+subscription route or permission to change an explicit native selection.
 Do not revive retired schema-3 presets, mandatory coordinator topology or
 resolver scripts.
 
@@ -35,10 +35,10 @@ default only for a new setup with no existing role choices.
 3. For this operator, use the selected edition's palette when the exact native
    channel supports it. Luna Max is available when justified, not an Ultra mode
    or a new paid route. Terra capability and effort/cost/latency evidence is in
-   the router's `references/gpt61-terra-20261028.md`; the Sol launch evidence is
-   in `references/gpt61-sol-20260929.md`; historical GPT-6
-   evidence remains in `references/gpt6-20260922.md`. Token prices and benchmark
-   costs do not prove lower cost per completed Codex outcome.
+   the router's `references/gpt61-terra-20261028.md`; the OpenClaw Sol/Astra 6.2 and Fable comparison is in
+   `references/gpt62-20261117.md`. Older launch notes are historical evidence.
+   API token prices do not prove lower subscription consumption or cost per
+   completed outcome.
 4. Author changes in the normal TheAngrySkills source repository when requested
    as a durable shared policy. Do not create a competing Workbench install.
 5. Validate identifiers and effort support against the current channel; check

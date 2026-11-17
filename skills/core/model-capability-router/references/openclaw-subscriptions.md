@@ -6,14 +6,26 @@ main model, explicit effort and named specialist bindings. Keep the current
 agent when it can complete the work; these choices do not require delegation
 or switching providers merely because another model is listed.
 
+## Current model review
+
+This is the general OpenClaw router, independent of Codex's native subagent
+catalog. Resolve models through the actual OpenClaw provider and subscription
+route. Codex availability neither includes nor excludes Fable here. The
+[17 November pricing review](gpt62-20261117.md#price-comparison-and-effort)
+compares generations; effort choices remain workload policies until matched
+per-task measurements justify a change. Keep high for sustained coordination,
+not for every everyday request.
+
 ## Task choices
 
 | Work | Starting choice | Effort / native control | Selection boundary |
 |---|---|---|---|
-| Sustained coordination and integration | GPT-6.1 Sol | high | Preserve the main agent and useful context; no forced coordinator stage. |
-| Planning, review and difficult judgment | Claude Opus 5.5 or GPT-6 Astra | Opus high; Astra medium | Choose directly for the task and existing context. Use Opus xhigh or Astra xhigh only when the problem warrants deeper work. |
+| Everyday, well-defined GPT work | GPT-6.2 Sol | medium | Provisional starting point; use low for simple requests and high when sustained reasoning helps. |
+| Sustained coordination and integration | GPT-6.2 Sol | high | Preserve the main agent and useful context; no forced coordinator stage. |
+| Planning, review and difficult judgment | Claude Opus 5.5 or GPT-6.2 Astra | Opus high; Astra medium | Choose directly for the task and existing context. Use Opus xhigh or Astra xhigh only when the problem warrants deeper work. |
+| Hard open-ended technical work and expert consultation | Claude Fable 5.2 or GPT-6.2 Astra | Fable medium/high; Astra medium | Use Fable medium for analysis/consultation and high for demanding technical execution when exposed; xhigh/max only when justified. Live account/adapter availability still needs checking. |
 | Routine implementation and debugging | Claude Sonnet 5.5 | xhigh | A quality-oriented starting point for bounded coding; high suits faster, well-specified changes. |
-| Complex coding and repository-wide integration | GPT-6.1 Sol or Claude Opus 5.5 | high | Preserve a suitable existing worker; max is exceptional and justified by the work. |
+| Complex coding and repository-wide integration | GPT-6.2 Sol or Claude Opus 5.5 | high | Preserve a suitable existing worker; max is exceptional and justified by the work. |
 | Small, well-specified execution | Claude Haiku 5.5 or GPT-6 Luna | high | Haiku is the added general execution candidate; Luna remains useful for suitable narrow work and available allowance. |
 | Substantial bounded execution | Claude Haiku 5.5 or GPT-6 Luna | xhigh | Choose Sonnet/Sol directly when ambiguity or integration risk needs stronger coding; do not require a failed cheap attempt. |
 | Visual detection and identification | GPT-6.1 Terra | low | Fast, economical visual location; use a stronger setting only when it helps the acceptance check. |
@@ -42,8 +54,8 @@ is not evidence that a subscription covers the call.
 
 | Family | Model identity to resolve |
 |---|---|
-| GPT | gpt-6-astra, gpt-6-luna, gpt-6.1-sol, gpt-6.1-terra |
-| Anthropic | Claude Opus 5.5, Claude Sonnet 5.5, Claude Haiku 5.5 |
+| GPT | gpt-6.2-astra, gpt-6-luna, gpt-6.2-sol, gpt-6.1-terra |
+| Anthropic | Claude Fable 5.2, Claude Opus 5.5, Claude Sonnet 5.5, Claude Haiku 5.5 |
 | Cursor | Composer 2.5 |
 | Grok | Grok 4.7 |
 | Gemini | Gemini 4 Argon, Gemini 3.1 Pro, Gemini 3.8 Flash, Gemini 3.5 Flash-Lite |
@@ -68,10 +80,13 @@ the operator's instructions permit it; preserve explicit selections and native
 refusals. Never silently fall back to OpenRouter, direct API billing or a new
 subscription.
 
-Carbon is excluded. Fable/Mythos, older model generations and other families
-are not default candidates in this edition. An explicit operator selection
-still prevails; do not claim restricted models are included in a subscription.
+Carbon is excluded. Mythos is not interchangeable with Fable or presumed to be
+included in the account. Fable 5.2 is a candidate for hard technical work;
+map its medium/high/xhigh/max controls only where the actual subscription
+transport supports them. The live Fable route remains unverified.
+An explicit operator selection still prevails.
 
-See [current evidence and methodology](benchmarks-20261106.md). GPT-only
-pstack presets and native profile assets remain unchanged. This edition is
-routing guidance, not a provider installer or a claim of live invocation proof.
+See the [GPT-6.2 pricing and evidence refresh](gpt62-20261117.md) and the
+[6 November baseline](benchmarks-20261106.md) for the other provider families.
+GPT-only pstack presets and native profile assets remain unchanged. This
+edition is routing guidance, not a provider installer or live invocation proof.

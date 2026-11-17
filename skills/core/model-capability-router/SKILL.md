@@ -48,7 +48,7 @@ or a required host/cloud boundary.
 | Edition | Palette | When to use |
 |---|---|---|
 | [GPT-only](references/gpt-only.md) | GPT-6 Astra, GPT-6 Luna, GPT-6.1 Sol and GPT-6.1 Terra | Default for Codex/T3 and any explicit GPT-only request. |
-| [OpenClaw subscriptions](references/openclaw-subscriptions.md) | The four GPT models plus current Claude, Composer, Grok and Gemini Argon/Pro/Flash/Flash-Lite | Use in OpenClaw under the operator's standing request for this edition, or when explicitly selected. |
+| [OpenClaw subscriptions](references/openclaw-subscriptions.md) | GPT-6.2 Sol/Astra, Luna/Terra and Claude, Composer, Grok, Gemini Argon/Pro/Flash/Flash-Lite | Use in OpenClaw under the operator's standing request for this edition, or when explicitly selected. |
 
 Read the selected edition before making a routing decision. Its role table
 replaces the other edition's recommendations; shared execution, authority,
@@ -61,8 +61,10 @@ Select them in ordinary language: "use model-capability-router, GPT-only" or
 
 The GPT-only edition recommends Sol high for coordination, Astra medium for
 judgment, Luna high/xhigh/max for bounded execution, and workload-specific Terra
-efforts. The OpenClaw edition adds task-specific choices without requiring a
-provider handoff or enabling new billing routes.
+efforts. The OpenClaw edition has its own version choices: see the
+[GPT-6.2 pricing and role review](references/gpt62-20261117.md). It adds
+task-specific choices without requiring a provider handoff or enabling new
+billing routes. The GPT-only edition and its pstack presets are unchanged.
 
 Choose directly for the task. Use an Astra → Sol → Luna sequence only when
 coordination materially helps the outcome; a direct bounded worker or the

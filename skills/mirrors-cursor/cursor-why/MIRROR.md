@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/why/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 144d42e7712723d763e607bc0a969e5f1cdf83ec7228519d87677cc534571bed
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: 6b65b3180f1f1bd3b696d7933daf900747410c82931d220a3f57a98addb1c0fd
 Published name: cursor-why
 Decision class: adaptação funcional
 Availability: bounded native read-only investigator/synthesizer flow observed; unavailable evidence categories remain explicit; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

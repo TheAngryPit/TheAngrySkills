@@ -1,6 +1,6 @@
 # Cursor adaptation runtime compatibility
 
-This is the existing reviewed Cursor mirror with an additional conditional T3 execution contract. Names, source snapshots and accepted pstack revision remain unchanged. It is not a live workflow certificate for every provider or playbook.
+This is the existing reviewed Cursor mirror with an additional conditional T3 execution contract. Published names and native execution boundaries are preserved. Pstack source refreshes are recorded separately from runtime evidence. It is not a live workflow certificate for every provider or playbook.
 
 ## Execution
 
@@ -52,3 +52,15 @@ A full read-only Investigation playbook ran through How and parent runtime verif
 The first published CI run exposed an undeclared Git-history dependency in two preservation tests. They now exercise real generation in a source-only fixture and compare the complete protected inputs before and after. Native profile bytes must also match current accepted provenance. No workflow, checkout depth or update policy changed. This avoids freezing future reviewed upstream inputs to a historical commit. The [regression failure](../reports/cursor-runtime-live-20261029/historyless-red.log) and [focused pass](../reports/cursor-runtime-live-20261029/historyless-green.log) record the correction.
 
 After this correction, the local full suite passed 474 tests, with 2 skips and 13 subtests. The original 473-test logs describe the earlier implementation stage. GitHub CI must validate the updated PR head independently.
+
+## Pstack source refresh, 2026-11-17
+
+The global raw baseline remains 8ecfb19 and the Pstack family advances to
+ e1cc031. [The review receipt](../reports/upstream-updates/cursor-pstack.md)
+records source identities, compatible changes and the deliberate native methods
+preserved by overlays. Twenty-three removed upstream dependencies become owned
+native support through the existing hash ledger, retaining their old provenance.
+Comment Sicko receives a bounded sentence adaptation; Poteto's upstream model
+frontmatter does not become a native binding. Previous live receipts describe
+their dated packages and do not certify this source refresh. Six excluded
+adapters remain held, including the updated Statechart source.

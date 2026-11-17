@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/no-comments/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 078ecfe224eafbb017f6476870612838bf6dbe38c0b697e12f0c887d0313f17e
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: 054a46f2662c725add02d9e0440d8dcb4351f3bd0afcf797acc22a501b527b54
 Published name: cursor-no-comments
 Decision class: adaptação funcional
 Availability: bounded explicit-only native named comment-sicko reviewer selected from the rendered skill; the reviewer removed one redundant comment, preserved SPDX, changed no application code, and coordinator verification passed; complex finding/rerun branches, fresh top-level loading and automatic selection remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

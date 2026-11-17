@@ -67,7 +67,13 @@ def test_all_23_playbooks_are_retained_and_runtime_scoped():
     files=list((target/'playbooks').glob('*.md'))
     assert len(files)==23
     for file in files:
-        original=(BASE/'snapshot/pstack/skills/poteto-mode/playbooks'/file.name).read_text()
+        source=BASE/'snapshot/pstack/skills/poteto-mode/playbooks'/file.name
+        if not source.exists():
+            overlay=json.loads((BASE/'overlays/cursor-poteto-mode.json').read_text())
+            bundle=next(item for item in overlay['bundled_native_files']
+                        if item['target_path']=='playbooks/'+file.name)
+            source=ROOT/bundle['source_path']
+        original=source.read_text()
         # Existing reviewed overlays remain the source of changes. No step can disappear
         # merely because it mentions a foreign runtime.
         assert original.strip() and file.read_text().strip()

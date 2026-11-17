@@ -17,8 +17,8 @@ REPO_ROOT = SKILL_ROOT.parents[2]
 ASSET_ROOT = SKILL_ROOT / "assets/agents"
 SOURCE_ROOT = REPO_ROOT / "sources/cursor-plugins/snapshot/pstack/agents"
 PINNED_SOURCE_SHA256 = {
-    "comment-sicko": "3e239e40b7b4b9beb2cf7f3ccc57f2388eb8b69bd1ba8ae888ef87ef6e0e2116",
-    "poteto-agent": "979f18abd000d185a0b4c41a2a4111c0910596a7f5c81cbb571885bc721b2bf7",
+    "comment-sicko": "0fb37221ab2a9159714d38f1528898e82b9758b5750f244bbe2e575bb593a1de",
+    "poteto-agent": "369065b46c217a5898cb1a400652c3399449252f4d5dbf8937eb8d4922d3cf6b",
 }
 
 PROFILES = {
@@ -64,6 +64,10 @@ def adapted_body(name: str, source_text: str) -> str:
         body = body.replace(
             "I run `/how`, `/why`, or both from the **how** and **why** skills",
             "I run `cursor-how`, `cursor-why`, or both from the adapted **cursor-how** and **cursor-why** skills",
+        )
+        body = body.replace(
+            "I trace the named symbol or call, run `/why` from the **why** skill on it, or both",
+            "I trace the named symbol or call with `cursor-how`, run `cursor-why` from the adapted **cursor-why** skill on it, or both",
         )
         return body + "\nIf a required adapted skill is unavailable, report the exact missing dependency to the coordinator; do not silently substitute a different workflow.\n"
     body = body.replace("The chat that receives `/poteto-mode` owns the playbook, the todo list, and every Task spawn.",

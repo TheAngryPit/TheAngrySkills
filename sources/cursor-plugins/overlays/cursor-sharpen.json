@@ -1,10 +1,10 @@
 {
   "source_path": "pstack/skills/sharpen/SKILL.md",
-  "source_sha256": "563dfc460c605d311e650726288e2f1cbd61eab817db178d6e7e29643e07e7a2",
+  "source_sha256": "aac4f8e6a1ffd70e3763314db37d3c2eb0cfea08bc63e98907aca6dae0343031",
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "---\nname: cursor-sharpen\ndescription: \"Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.\"\ndisable-model-invocation: true\n---\n\nI want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nLeave choices that are mine to make open instead of deciding them.\n",
+      "before": "---\nname: cursor-sharpen\ndescription: \"Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.\"\ndisable-model-invocation: true\n---\n\nI want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nHave the rewritten prompt ask the agent to prototype any choice an experiment can settle and recommend an option based on what it observed. Leave product or preference choices that no experiment can settle for me to make.\n",
       "after": "---\nname: cursor-sharpen\ndescription: \"Use when explicitly requesting $cursor-sharpen to deepen and rewrite a prompt without executing its task.\"\ndisable-model-invocation: true\n---\n\nI want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nLeave choices that are mine to make open instead of deciding them.\n"
     }
   ],
@@ -40,9 +40,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md",
-      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
+      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
+      "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority."
     }
   }
 }

@@ -1060,6 +1060,7 @@ console.log(JSON.stringify({{
             REPO
             / "skills/mirrors-cursor/cursor-poteto-mode/scripts/check-plan.mjs"
         )
+        self.assertTrue(os.access(script, os.X_OK), "native plan checker lost its executable mode")
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             home = root / "home"

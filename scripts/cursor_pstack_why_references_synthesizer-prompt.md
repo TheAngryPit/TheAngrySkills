@@ -37,12 +37,12 @@ You MUST follow `references/epistemics.md`. Read it in full before writing. The 
 
 ## Instructions
 
-1. **Read all investigator findings** and weigh the evidence yourself. Investigators gathered raw evidence, not conclusions.
-2. **Merge overlaps.** When several investigators cite the same PR, ticket, or doc, give it one authoritative reference.
-3. **Surface contradictions.** When two items disagree, show both. Don't pick one.
-4. **Calibrate each claim.** Find its evidence and tier. Direct: cite it and state it plainly. Inferred: hedge it and show the inference. Speculative: mark it. No evidence: put it in the gaps.
-5. **Verify citations by spot-checking.** If you're uncertain a cited item exists or says what the investigator claims, check it by reading the codebase or calling MCP tools. Don't propagate errors. Do not write files, commit, or modify external state.
-6. **Don't overreach.** The user will act on this. Leave an open question open rather than fill it with a confident guess.
+1. **Read all investigator findings.** They gathered raw evidence, not conclusions. You weigh it.
+2. **Reconcile overlapping findings.** Multiple investigators may have cited the same PR, ticket, or doc. Merge into a single, authoritative reference.
+3. **Identify contradictions.** If two items of evidence disagree, don't pick one. Surface both.
+4. **Calibrate confidence.** For each claim, identify the evidence and the tier. State Direct claims plainly with a citation. Hedge Inferred claims and explain the inference. Mark Speculative claims explicitly. Put claims with no evidence in the gaps section.
+5. **Verify citations by spot-checking.** You can read the codebase and use authorized read-only native tools, CLI or MCP resources to verify citations. Do not write files, commit, or modify external state. If you're uncertain a cited item exists or says what's claimed, check it. Don't propagate errors.
+6. **Don't overreach.** The user will act on your output. Better to leave an open question open than to fill it with a confident-sounding guess.
 
 ## Output Format
 
@@ -62,7 +62,7 @@ File paths, line ranges, key symbols. Two or three lines to orient a cold reader
 
 Claims with textual evidence, each quoted or paraphrased and cited precisely:
 
-- **[Direct]** {Claim}. Source: [PR #123](url) / ticket ID / file:line. {Brief quote or paraphrase.}
+- **[Direct]** {Claim}. Source: PR #123 (link the verified URL when available) / ticket ID / file:line. {Brief quote or paraphrase.}
 - **[Supported]** {Claim}. Evidence: {list of items and what each contributes}.
 
 `[Direct]` is single-source, explicit evidence. `[Supported]` is multiple indirect items converging on a conclusion.
@@ -87,7 +87,7 @@ Skip this section if there's a single clear answer.
 
 ### What We Don't Know
 
-Specific gaps: "We searched the issue tracker for [query1], [query2], [query3] and found no issue discussing the rate-limit threshold", not "We don't know why." Include:
+**Explicit gaps.** Things the user asked that the evidence didn't answer. Sources searched that came up empty. Sources that were not searchable at all because no authorized read-only access was available.
 
 - Questions that went unanswered
 - Searches that returned nothing
@@ -98,13 +98,13 @@ Specific gaps: "We searched the issue tracker for [query1], [query2], [query3] a
 
 What was actually searched, so the user can judge coverage and redirect:
 
-- **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers}, and code comments searched. Or "Not searched. This should not happen because git and `gh` are always expected."
-- **Issue / ticket tracker**: {ticket IDs and keyword searches}. Or "Not searched. No matching MCP available in this environment."
-- **Long-form documents**: {page titles and search queries}. Or "Not searched. No matching MCP available in this environment."
-- **Real-time team chat**: {channels searched, date ranges, queries}. Or "Not searched. No matching MCP available in this environment."
-- **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}. Or "Not searched. No matching MCP available in this environment."
-- **Error / exception tracking**: {issues, events, or releases searched}. Or "Not searched. No matching MCP available in this environment."
-- **Product analytics warehouse**: {fully-qualified tables queried, the time windows, and the numeric summaries (counts, percentiles, first/last-seen timestamps) that bore on the question}. Or "Not searched. No matching MCP available in this environment."
+- **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers} when a remote exists, and code comments searched. Otherwise state the Git or forge access gap.
+- **Issue / ticket tracker**: {ticket IDs and keyword searches}, or "Not searched" with the unavailable source or authorization reason.
+- **Long-form documents**: {page titles and search queries}, or "Not searched" with the unavailable source or authorization reason.
+- **Real-time team chat**: {channels searched, date ranges, queries}, or "Not searched" with the unavailable source or authorization reason.
+- **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}, or "Not searched" with the unavailable source or authorization reason.
+- **Error / exception tracking**: {issues, events, or releases searched}, or "Not searched" with the unavailable source or authorization reason.
+- **Product analytics warehouse**: {fully-qualified tables queried, time windows, numeric summaries}, or "Not searched" with the unavailable source or authorization reason.
 
 ### Confidence Summary
 

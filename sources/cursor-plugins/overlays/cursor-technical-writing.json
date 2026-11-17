@@ -32,9 +32,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
-      "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3"
+      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
+      "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority.",
+      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015"
     },
     "security_review": {
       "scanner_verdict": "safe_docs_only",
@@ -42,7 +42,7 @@
       "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
     }
   },
-  "codex_note": "## Codex adaptation\n\nApply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.\n",
+  "codex_note": "## Codex adaptation\n\nApply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.\n\nPreserve the native proposal step: propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Do not edit that sibling skill.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
   "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
@@ -50,15 +50,10 @@
   "replacements": [
     {
       "file": "SKILL.md",
-      "before": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n",
-      "after": "The codebase is the word list. Write the real symbol, file, flag, or command name, not a synonym or a description of it.\n\nDon't invent jargon. Use the words a developer would say out loud: \"move\", \"delete\", \"a budget that only decreases\", not \"evacuate\", \"ratchet\", or \"endgame\". A named pattern is fine when the doc says what it means the first time. Propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Don't edit that skill.\n\n## Vary the rhythm\n"
-    },
-    {
-      "file": "SKILL.md",
       "before": "## Voice and repo specifics\n\n- Apply the **unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n",
       "after": "## Voice and repo specifics\n\n- Apply the **cursor-unslop** skill to every doc this skill touches. That skill owns the slop-pattern catalog: AI vocabulary, filler, hedging, formatting tells.\n- PR descriptions and commit messages are writing too. Every layer except Diátaxis applies to them. A PR body is a briefing that a reviewer can read in under a minute. Do not paste swarm logs, SHA lists, or metric tables. Link them.\n- Product UI strings are not documentation. Use your product's copy guidelines for those.\n"
     }
   ],
   "source_path": "pstack/skills/technical-writing/SKILL.md",
-  "source_sha256": "61fe9c424a798ebf36ad94941f87be049cb8827bdf86d21474a0dde37b513c43"
+  "source_sha256": "0a620885599cdde5a0a31fa39878144c10f61c894b56bf4a9ff779496e718b14"
 }

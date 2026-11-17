@@ -1,0 +1,573 @@
+{
+  "family": "cursor",
+  "batch": "pstack",
+  "baseline": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
+  "latest": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+  "disposition": "reviewed_native_adaptation_prepared",
+  "candidate_content_promoted": "existing admitted packages refreshed on candidate branch; main acceptance pending coordinator",
+  "raw_scope": {
+    "historical_global_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
+    "pstack_family_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+    "files": 2051,
+    "skill_paths": 173,
+    "source_agent_paths": 16
+  },
+  "changes": [
+    {
+      "status": "M",
+      "path": "pstack/.cursor-plugin/plugin.json"
+    },
+    {
+      "status": "M",
+      "path": "pstack/README.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/agents/comment-sicko.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/agents/poteto-agent.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/automations/benny/FOR_AGENTS.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/automations/benny/skills/setup-benny/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/automations/benny/skills/triage-issue-reports/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/01-setup.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/02-poteto-mode.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/03-understand.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/04-design.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/05-build-and-clean.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/06-verify-and-ship.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/07-overnight.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/09-make-it-yours.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/guide/10-recipes-and-pitfalls.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/docs/harness/claude-code.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/plugin.json"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/architect/SKILL.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/architect/references/design-red-flags.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/architect/references/rationale-template.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/architect/references/runner-prompt.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/arena/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/automate-me/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/benchmark-checklist/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/blast-radius/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/figure-it-out/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/how/SKILL.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/how/references/explainer-prompt.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/how/references/explorer-prompt.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/no-comments/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-help/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/autonomous-run.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/autopilot-full.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/autopilot-stack.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/babysit.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/bug-fix.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/eval.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/feature.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/hillclimb.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/investigation.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/multi-phase-plan.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/opening-a-pr.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/poteto-mode/playbooks/orchestrate.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/perf-issue.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/refactoring.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/runtime-forensics.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/session-pickup.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/shipping.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/trace-forensics.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/playbooks/worktree-cleanup.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/poteto-mode/scripts/check-plan.mjs"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/poteto-mode/scripts/check-plan.test.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/poteto-mode/scripts/package.json"
+    },
+    {
+      "status": "A",
+      "path": "pstack/skills/poteto-mode/worker.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-attack-the-premise/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-boundary-discipline/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-build-the-lever/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-explain-the-number/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-fix-root-causes/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-foundational-thinking/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-make-operations-idempotent/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-minimize-reader-load/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-model-the-domain/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-prove-it-works/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-sequence-verifiable-units/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-test-behavior-not-implementation/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/principle-type-system-discipline/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/recall/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/reflect/SKILL.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/reflect/references/divergent-reviewer.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/reflect/references/judgment-reviewer.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/reflect/references/synthesizer.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/reflect/references/tooling-reviewer.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/setup-pstack/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/sharpen/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/show-me-your-work/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/backends/mermaid.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/run.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/chart.test.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/cli.test.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/corpus.test.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/corpus/Login/chart.mmd"
+    },
+    {
+      "status": "A",
+      "path": "pstack/skills/statechart/scripts/test/drawn.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/labels.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/statechart/scripts/test/render.test.ts"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/swarm/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/teach/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/technical-writing/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/unslop/SKILL.md"
+    },
+    {
+      "status": "M",
+      "path": "pstack/skills/why/SKILL.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/epistemics.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/investigator-prompt.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/source-playbook.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/code-archaeology.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/databricks.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/datadog.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/incident-postmortem.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/linear.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/notion.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/sentry.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/sources/slack.md"
+    },
+    {
+      "status": "D",
+      "path": "pstack/skills/why/references/synthesizer-prompt.md"
+    }
+  ],
+  "retained_native_support": [
+    {
+      "skill": "cursor-architect",
+      "target": "references/design-red-flags.md",
+      "owned_source": "scripts/cursor_pstack_architect_references_design-red-flags.md"
+    },
+    {
+      "skill": "cursor-architect",
+      "target": "references/rationale-template.md",
+      "owned_source": "scripts/cursor_pstack_architect_references_rationale-template.md"
+    },
+    {
+      "skill": "cursor-architect",
+      "target": "references/runner-prompt.md",
+      "owned_source": "scripts/cursor_pstack_architect_references_runner-prompt.md"
+    },
+    {
+      "skill": "cursor-how",
+      "target": "references/explainer-prompt.md",
+      "owned_source": "scripts/cursor_pstack_how_references_explainer-prompt.md"
+    },
+    {
+      "skill": "cursor-how",
+      "target": "references/explorer-prompt.md",
+      "owned_source": "scripts/cursor_pstack_how_references_explorer-prompt.md"
+    },
+    {
+      "skill": "cursor-poteto-mode",
+      "target": "playbooks/orchestrate.md",
+      "owned_source": "scripts/cursor_pstack_poteto-mode_playbooks_orchestrate.md"
+    },
+    {
+      "skill": "cursor-poteto-mode",
+      "target": "scripts/check-plan.mjs",
+      "owned_source": "scripts/cursor_pstack_poteto-mode_scripts_check-plan.mjs"
+    },
+    {
+      "skill": "cursor-reflect",
+      "target": "references/divergent-reviewer.md",
+      "owned_source": "scripts/cursor_pstack_reflect_references_divergent-reviewer.md"
+    },
+    {
+      "skill": "cursor-reflect",
+      "target": "references/judgment-reviewer.md",
+      "owned_source": "scripts/cursor_pstack_reflect_references_judgment-reviewer.md"
+    },
+    {
+      "skill": "cursor-reflect",
+      "target": "references/synthesizer.md",
+      "owned_source": "scripts/cursor_pstack_reflect_references_synthesizer.md"
+    },
+    {
+      "skill": "cursor-reflect",
+      "target": "references/tooling-reviewer.md",
+      "owned_source": "scripts/cursor_pstack_reflect_references_tooling-reviewer.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/epistemics.md",
+      "owned_source": "scripts/cursor_pstack_why_references_epistemics.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/investigator-prompt.md",
+      "owned_source": "scripts/cursor_pstack_why_references_investigator-prompt.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/source-playbook.md",
+      "owned_source": "scripts/cursor_pstack_why_references_source-playbook.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/code-archaeology.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_code-archaeology.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/databricks.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_databricks.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/datadog.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_datadog.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/incident-postmortem.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_incident-postmortem.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/linear.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_linear.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/notion.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_notion.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/sentry.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_sentry.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/sources/slack.md",
+      "owned_source": "scripts/cursor_pstack_why_references_sources_slack.md"
+    },
+    {
+      "skill": "cursor-why",
+      "target": "references/synthesizer-prompt.md",
+      "owned_source": "scripts/cursor_pstack_why_references_synthesizer-prompt.md"
+    }
+  ],
+  "native_profiles": {
+    "poteto-agent": "source pin advanced; model frontmatter excluded; native TOML bytes unchanged",
+    "comment-sicko": "new symbol trace/why sentence explicitly mapped to cursor-how/cursor-why; native TOML remains three binding keys"
+  },
+  "held_adapters": [
+    "cursor-add-dictation",
+    "cursor-add-read-aloud",
+    "cursor-add-voice",
+    "cursor-debug-voice",
+    "cursor-make-bot-ui",
+    "cursor-statechart"
+  ],
+  "unadmitted": "parallel Claude harness reference-only records and private Tailscale pending record preserved at global baseline",
+  "runtime_certification": "not claimed",
+  "installed_homes": "not changed"
+}

@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/principle-build-the-lever/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 3434b0ad0c640c6f1d7960be7a8986c3bcdc14e26060360dec29903df60074ff
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: 753d81cf9ca2a4e9d1f057429f0c63c9c622e6022dd877ec97ec15f442076aac
 Published name: cursor-principle-build-the-lever
 Decision class: adaptação funcional
 Availability: guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

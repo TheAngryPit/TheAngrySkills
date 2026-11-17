@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
+Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
 Physical source path: pstack/skills/how/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
-Source SHA-256: 08a00079bb15b4258874ac3ff62d4ca7e94350ffedb521d0fd296dc9dd21904e
+Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Source SHA-256: 23d5cc79a449b9838242e7af5563aa8a4f0417bab136bbcc054b4bebc7284680
 Published name: cursor-how
 Decision class: adaptação funcional
 Availability: bounded native explorer/explainer role flow observed; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

@@ -396,11 +396,11 @@ class CursorMirrorTests(unittest.TestCase):
 
         poteto = (preview / "cursor-poteto-mode/SKILL.md").read_text()
         plan = (preview / "cursor-poteto-mode/playbooks/multi-phase-plan.md").read_text()
-        self.assertIn('agent_type: "poteto-agent"', poteto)
-        self.assertIn("collaboration.followup_task", poteto)
-        self.assertIn('agent_type: "poteto-agent"', plan)
-        self.assertIn("collaboration.followup_task", plan)
-        self.assertIn("Routed workflow skills keep their own role-specific", poteto)
+        self.assertIn("named native `poteto-agent`", poteto)
+        self.assertIn("native asynchronous delegation", poteto)
+        self.assertIn("The plan is the deliverable. Do not implement.", plan)
+        self.assertIn("operator's explicit go", plan)
+        self.assertIn("routed workflows such as `cursor-swarm` choose their own role", poteto)
 
     def test_thermos_bundles_two_distinct_review_lenses(self):
         preview = self.root / "thermos-preview"

@@ -94,3 +94,14 @@ def test_budget_with_no_supported_lower_effort_reports_choice_gap():
     assert result["status"] == "BLOCKED"
     assert result["mapping"]["arena runners"]["selections"][0]["availability"] == "needs-choice"
     assert not result["configuration_changed"]
+
+
+def test_budget_gap_names_the_role_target_not_the_shared_label():
+    inventory = {model: ("xhigh",) for model in INVENTORY}
+    result = run_pstack_model_mapping_fixture(inventory, choices(), budget="large")
+    assert result["status"] == "BLOCKED"
+    for role in ("arena runners", "swarm workers"):
+        gaps = [reason for reason in result["unavailable"] if reason.startswith(role + "[")]
+        assert gaps and all("at or below 'high'" in reason for reason in gaps)
+    assert not any(reason.startswith("bug-fix[") for reason in result["unavailable"])
+    assert not result["writes_performed"]

@@ -1847,6 +1847,7 @@ def run_pstack_model_mapping_fixture(
             starting_effort = "high" if role in PSTACK_MODEL_PANEL_ROLES or role == "swarm workers" else "xhigh"
             shift = {"large": 0, "medium": 1, "small": 2}[budget]
             target_index = max(0, PSTACK_EFFORT_LADDER.index(starting_effort) - shift)
+            target_effort = PSTACK_EFFORT_LADDER[target_index]
             effective: list[dict[str, object]] = []
             for index, selection in enumerate(normalized_choices[role]):
                 model = selection["model"]
@@ -1886,7 +1887,7 @@ def run_pstack_model_mapping_fixture(
                     budget_issues[(role, index)] = (
                         f"{role}[{index}]: no detected model in family {family!r} "
                         f"supports budget {budget!r} at or below "
-                        f"{budget_spec['target_effort']!r}"
+                        f"{target_effort!r}"
                     )
                     effective.append(dict(selection))
                     continue

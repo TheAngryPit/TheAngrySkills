@@ -62,17 +62,12 @@ def test_same_package_keeps_explicit_invocation_for_claude_and_codex():
             assert 'disable-model-invocation: true' in (target/'SKILL.md').read_text().split('---',2)[1],entry['published_name']
 
 
-def test_all_23_playbooks_are_retained_and_runtime_scoped():
+def test_all_22_current_playbooks_are_adapted_and_runtime_scoped():
     target=ROOT/'skills/mirrors-cursor/cursor-poteto-mode'
     files=list((target/'playbooks').glob('*.md'))
-    assert len(files)==23
+    assert len(files)==22
     for file in files:
         source=BASE/'snapshot/pstack/skills/poteto-mode/playbooks'/file.name
-        if not source.exists():
-            overlay=json.loads((BASE/'overlays/cursor-poteto-mode.json').read_text())
-            bundle=next(item for item in overlay['bundled_native_files']
-                        if item['target_path']=='playbooks/'+file.name)
-            source=ROOT/bundle['source_path']
         original=source.read_text()
         # Existing reviewed overlays remain the source of changes. No step can disappear
         # merely because it mentions a foreign runtime.

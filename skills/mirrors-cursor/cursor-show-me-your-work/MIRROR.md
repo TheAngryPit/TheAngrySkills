@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: ec29326ac20515f2941198205bec615320a55b21659692e19650530dbf217bde
 Published name: cursor-show-me-your-work
 Decision class: adaptação funcional
-Availability: bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

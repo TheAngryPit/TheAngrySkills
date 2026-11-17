@@ -35,9 +35,8 @@
       "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015"
     },
     "security_review": {
-      "scanner_verdict": "safe_docs_only",
-      "status": "retained",
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning."
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     }
   },
   "codex_note": "## Codex adaptation\n\nBuild the smallest rerunnable tool or check before repeating work. Required native capabilities: none; this is instruction-only. No external product dependency is required by the adapted path. No tool is required; a nondeterministic lever is unproven. This candidate is promoted for the bounded path described here; unrelated runtime parity remains unproven. This is a guide-only adaptation.\n",

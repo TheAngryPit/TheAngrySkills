@@ -1,147 +1,79 @@
 <!-- upstream-update:family=cursor:batch=pstack -->
 <!-- codex-handoff:family=cursor:batch=pstack:head=e1cc03121a0e71129a4fb730d7c5528a0a3e43c8 -->
-# Reviewed Cursor / Pstack adaptation refresh
+# Current Pstack methods adapted to native Codex
 
-| Identity | Revision or disposition |
+| Identity | Result |
 | --- | --- |
-| Accepted PR166 baseline | `8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b` |
-| Candidate Pstack family | `e1cc03121a0e71129a4fb730d7c5528a0a3e43c8` |
-| Lifecycle | `family=cursor`, `batch=pstack`, `latest=e1cc03121a0e71129a4fb730d7c5528a0a3e43c8` |
-| Disposition | Existing admitted packages refreshed through explicit native overlays; acceptance into main remains with the coordinator |
-| Raw source | Global tree remains at 8ecfb19; only Pstack advances to e1cc031 |
-| Install surface | 108 published adapters, six held adapters; no new admission |
-| Runtime evidence | Source, deterministic generation and regression fixtures; no new live runtime certification |
+| Accepted global baseline | `8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b` |
+| Reviewed Pstack family | `e1cc03121a0e71129a4fb730d7c5528a0a3e43c8` |
+| Disposition | Current upstream methods adopted; native host translations only |
+| Packages | 108 published, six held; 22 current Poteto playbooks |
+| Retired dependencies | All 23 copied compatibility assets removed; no substitute topology |
+| Runtime proof | Source and fixture evidence; no current live workflow certification |
 
-This replaces the earlier detector-only report. Its old `df581122` baseline and
-`candidate_content_promoted=false` disposition no longer describe this candidate.
-The source comparison is now the accepted PR166 baseline against the pinned
-Pstack update. The complete path inventory and native support provenance are in
-[the review receipt](../pstack-refresh-20261117.json).
+This correction supersedes candidate `7b45389b`, which incorrectly preserved
+removed upstream procedures. That candidate is not the requested outcome.
+The raw global tree remains at 8ecfb19; the Pstack family is pinned at e1cc031.
+[The complete receipt](../pstack-refresh-20261117.json) gives a disposition for
+all 106 changed paths, every changed admitted root and each removed asset.
 
-## Native adaptation decisions
+The source update changes actual methods. Architect sketches two shapes locally
+and invokes Arena only for large or contested designs. How uses one read-only
+explainer. Why reads the record directly. Reflect mines the conversation without
+the old reviewer panel. Poteto uses its current playbooks and worker intent;
+Orchestrate and the plan checker are retired. No templates or helper validators
+replace them.
 
-- Existing full-file overlays preserve accepted Codex methods, routing and permission boundaries while their source anchors and README pins advance.
-- Fourteen principle bodies, technical-writing, unslop, teach and blast-radius receive the compatible upstream changes. No model or provider default is imported from Cursor.
-- Twenty-three support files removed upstream remain reviewed native support through the existing hash-ledgered `bundled_native_files` mechanism. They preserve How, Why, Reflect and Architect prompts, the native Orchestrate playbook and plan checker. Their origin stays pinned to 8ecfb19, distinct from the new raw source.
-- The new `worker.md` receives a native parent/scope/refusal contract. It does not import upstream blanket bans on questions or authorize extra delegation, publishing or deployment.
-- Comment Sicko explicitly maps the changed trace/why sentence. Poteto's new model frontmatter is discarded; its native profile bytes and binding keys remain unchanged. GPT-6.2/Fable routing stays with the existing model-capability-router.
-- All six held adapters remain held, including Statechart. Its updated scripts remain quarantined source; no upstream script was executed. Claude harness records remain reference-only and Tailscale remains pending.
+Native translations preserve actual tool interfaces, namespaced siblings,
+user-owned routing and presets, role bindings, privacy, authority, refusals and
+approved source destinations. Cursor model strings do not establish native
+availability. The three new global budgets are an alternative to an explicitly
+selected native role preset. Existing preset model/effort data stays intact;
+only its eight retired Pstack rows are removed.
 
-## Scope and verification
+The six holds include Statechart. Its updated source stays quarantined. Claude
+harness records remain reference-only and Tailscale remains pending. No upstream
+script, installed home, gateway, schedule, global default or credential changed.
+The coordinator owns exact-head hosted CI, security acceptance and publication.
 
-Full raw Git verification covers 2,051 files, 173 skill paths and 16 source-agent
-paths. These include parallel harness references, not 16 installed roles. The
-native role inventory remains 14. Mirror and adapter checks cover 114 entries,
-108 published packages, six held packages and 1,207 generated output files.
-The coordinator records the final exact-head CI and security comparison before
-publication. No installed home, credentials, schedules or native configuration
-was changed by this refresh.
+## Changed admitted roots
 
-## Upstream Pstack paths reviewed
-
-- `M pstack/.cursor-plugin/plugin.json`
-- `M pstack/README.md`
-- `M pstack/agents/comment-sicko.md`
-- `M pstack/agents/poteto-agent.md`
-- `M pstack/automations/benny/FOR_AGENTS.md`
-- `M pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`
-- `M pstack/automations/benny/skills/setup-benny/SKILL.md`
-- `M pstack/automations/benny/skills/triage-issue-reports/SKILL.md`
-- `M pstack/docs/guide/01-setup.md`
-- `M pstack/docs/guide/02-poteto-mode.md`
-- `M pstack/docs/guide/03-understand.md`
-- `M pstack/docs/guide/04-design.md`
-- `M pstack/docs/guide/05-build-and-clean.md`
-- `M pstack/docs/guide/06-verify-and-ship.md`
-- `M pstack/docs/guide/07-overnight.md`
-- `M pstack/docs/guide/09-make-it-yours.md`
-- `M pstack/docs/guide/10-recipes-and-pitfalls.md`
-- `M pstack/docs/harness/claude-code.md`
-- `M pstack/plugin.json`
-- `M pstack/skills/architect/SKILL.md`
-- `D pstack/skills/architect/references/design-red-flags.md`
-- `D pstack/skills/architect/references/rationale-template.md`
-- `D pstack/skills/architect/references/runner-prompt.md`
-- `M pstack/skills/arena/SKILL.md`
-- `M pstack/skills/automate-me/SKILL.md`
-- `M pstack/skills/benchmark-checklist/SKILL.md`
-- `M pstack/skills/blast-radius/SKILL.md`
-- `M pstack/skills/figure-it-out/SKILL.md`
-- `M pstack/skills/how/SKILL.md`
-- `D pstack/skills/how/references/explainer-prompt.md`
-- `D pstack/skills/how/references/explorer-prompt.md`
-- `M pstack/skills/no-comments/SKILL.md`
-- `M pstack/skills/poteto-help/SKILL.md`
-- `M pstack/skills/poteto-mode/SKILL.md`
-- `M pstack/skills/poteto-mode/playbooks/autonomous-run.md`
-- `M pstack/skills/poteto-mode/playbooks/autopilot-full.md`
-- `M pstack/skills/poteto-mode/playbooks/autopilot-stack.md`
-- `M pstack/skills/poteto-mode/playbooks/babysit.md`
-- `M pstack/skills/poteto-mode/playbooks/bug-fix.md`
-- `M pstack/skills/poteto-mode/playbooks/eval.md`
-- `M pstack/skills/poteto-mode/playbooks/feature.md`
-- `M pstack/skills/poteto-mode/playbooks/hillclimb.md`
-- `M pstack/skills/poteto-mode/playbooks/investigation.md`
-- `M pstack/skills/poteto-mode/playbooks/multi-phase-plan.md`
-- `M pstack/skills/poteto-mode/playbooks/opening-a-pr.md`
-- `D pstack/skills/poteto-mode/playbooks/orchestrate.md`
-- `M pstack/skills/poteto-mode/playbooks/perf-issue.md`
-- `M pstack/skills/poteto-mode/playbooks/refactoring.md`
-- `M pstack/skills/poteto-mode/playbooks/runtime-forensics.md`
-- `M pstack/skills/poteto-mode/playbooks/session-pickup.md`
-- `M pstack/skills/poteto-mode/playbooks/shipping.md`
-- `M pstack/skills/poteto-mode/playbooks/trace-forensics.md`
-- `M pstack/skills/poteto-mode/playbooks/worktree-cleanup.md`
-- `D pstack/skills/poteto-mode/scripts/check-plan.mjs`
-- `D pstack/skills/poteto-mode/scripts/check-plan.test.ts`
-- `M pstack/skills/poteto-mode/scripts/package.json`
-- `A pstack/skills/poteto-mode/worker.md`
-- `M pstack/skills/principle-attack-the-premise/SKILL.md`
-- `M pstack/skills/principle-boundary-discipline/SKILL.md`
-- `M pstack/skills/principle-build-the-lever/SKILL.md`
-- `M pstack/skills/principle-explain-the-number/SKILL.md`
-- `M pstack/skills/principle-fix-root-causes/SKILL.md`
-- `M pstack/skills/principle-foundational-thinking/SKILL.md`
-- `M pstack/skills/principle-make-operations-idempotent/SKILL.md`
-- `M pstack/skills/principle-minimize-reader-load/SKILL.md`
-- `M pstack/skills/principle-model-the-domain/SKILL.md`
-- `M pstack/skills/principle-prove-it-works/SKILL.md`
-- `M pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md`
-- `M pstack/skills/principle-sequence-verifiable-units/SKILL.md`
-- `M pstack/skills/principle-test-behavior-not-implementation/SKILL.md`
-- `M pstack/skills/principle-type-system-discipline/SKILL.md`
-- `M pstack/skills/recall/SKILL.md`
-- `M pstack/skills/reflect/SKILL.md`
-- `D pstack/skills/reflect/references/divergent-reviewer.md`
-- `D pstack/skills/reflect/references/judgment-reviewer.md`
-- `D pstack/skills/reflect/references/synthesizer.md`
-- `D pstack/skills/reflect/references/tooling-reviewer.md`
-- `M pstack/skills/setup-pstack/SKILL.md`
-- `M pstack/skills/sharpen/SKILL.md`
-- `M pstack/skills/show-me-your-work/SKILL.md`
-- `M pstack/skills/statechart/scripts/backends/mermaid.ts`
-- `M pstack/skills/statechart/scripts/run.ts`
-- `M pstack/skills/statechart/scripts/test/chart.test.ts`
-- `M pstack/skills/statechart/scripts/test/cli.test.ts`
-- `M pstack/skills/statechart/scripts/test/corpus.test.ts`
-- `M pstack/skills/statechart/scripts/test/corpus/Login/chart.mmd`
-- `A pstack/skills/statechart/scripts/test/drawn.ts`
-- `M pstack/skills/statechart/scripts/test/labels.ts`
-- `M pstack/skills/statechart/scripts/test/render.test.ts`
-- `M pstack/skills/swarm/SKILL.md`
-- `M pstack/skills/teach/SKILL.md`
-- `M pstack/skills/technical-writing/SKILL.md`
-- `M pstack/skills/unslop/SKILL.md`
-- `M pstack/skills/why/SKILL.md`
-- `D pstack/skills/why/references/epistemics.md`
-- `D pstack/skills/why/references/investigator-prompt.md`
-- `D pstack/skills/why/references/source-playbook.md`
-- `D pstack/skills/why/references/sources/code-archaeology.md`
-- `D pstack/skills/why/references/sources/databricks.md`
-- `D pstack/skills/why/references/sources/datadog.md`
-- `D pstack/skills/why/references/sources/incident-postmortem.md`
-- `D pstack/skills/why/references/sources/linear.md`
-- `D pstack/skills/why/references/sources/notion.md`
-- `D pstack/skills/why/references/sources/sentry.md`
-- `D pstack/skills/why/references/sources/slack.md`
-- `D pstack/skills/why/references/synthesizer-prompt.md`
+| Skill | Current intent adopted |
+| --- | --- |
+| `cursor-reproduce-and-fix-issues` | Trace directly; use Why for regression history. Remove How prerequisite; preserve native Slack/thread/credential boundaries. |
+| `cursor-setup-benny` | Nine shared dependencies after removing How; preserve supported native event/configuration limitations. |
+| `cursor-triage-issue-reports` | Direct cause tracing before routing; use Why when needed. No How prerequisite; preserve native connector and scoped-write boundaries. |
+| `cursor-architect` | Trace touched systems, sketch two ownership shapes locally; use Arena only for large or contested design. |
+| `cursor-arena` | Current candidate flow; different-vendor judge, Fable/Opus same vendor; disclose a skipped judge and continue base selection. |
+| `cursor-automate-me` | Adopt current speed-neutral delegation wording; retain scoped native history, skill-authoring and destination translation. |
+| `cursor-benchmark-checklist` | Adopt current measurement checklist; map only supported host commands and process ownership. |
+| `cursor-blast-radius` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-figure-it-out` | Current scientific-method workflow; Architect does not imply automatic Arena. |
+| `cursor-how` | One read-only explainer explores and explains in one pass, then light presentation edits. |
+| `cursor-no-comments` | Use the named native Comment Sicko role; trace directly or use Why, not a mandatory How workflow. |
+| `cursor-poteto-help` | Explain current simplified methods and 22 playbooks; current upstream guide references, no old implementation or orchestration promises. |
+| `cursor-poteto-mode` | Adopt current triggers, worker brief and 22 current playbooks; delete Orchestrate, plan checker and old ceremony. |
+| `cursor-principle-attack-the-premise` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-boundary-discipline` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-build-the-lever` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-explain-the-number` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-fix-root-causes` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-foundational-thinking` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-make-operations-idempotent` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-minimize-reader-load` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-model-the-domain` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-prove-it-works` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-separate-before-serializing-shared-state` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-sequence-verifiable-units` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-test-behavior-not-implementation` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-principle-type-system-discipline` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-recall` | Scoped history plus direct per-source investigators; no routing through retired Why playbooks. |
+| `cursor-reflect` | Mine this conversation; six-month durability and existing-skill filter; Accepted/Rejected/Backlog; approve before source edits; no PR/push. |
+| `cursor-setup-pstack` | Nine current roles; three relative-effort budgets or the user-selected native preset, never both; retire old proposal rows. |
+| `cursor-sharpen` | Rewrite a deeper prompt asking future execution to prototype testable choices and recommend from observations; do not execute it. |
+| `cursor-show-me-your-work` | Current audit-trail procedure and different-vendor review; disclose unavailable review without inventing a reviewer. |
+| `cursor-swarm` | Current four phases; current worker-role intent through available native delegation. |
+| `cursor-teach` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-technical-writing` | Adopt compact current writing method; remove retired propose-an-Unslope-offender requirement. |
+| `cursor-unslop` | Adopt the compact current source body without retaining removed examples or old method stages. |
+| `cursor-why` | Read commits and PR discussion first; cite authors, distinguish inference, disclose gaps. No mandatory delegates. |

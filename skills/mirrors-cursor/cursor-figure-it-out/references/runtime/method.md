@@ -8,17 +8,13 @@ description: "Design an auditable playbook when no narrower one fits: a large mi
 Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
 
 
-## Codex runtime mapping
-
-Resolve `cursor-poteto-mode`, `cursor-architect`, `cursor-arena` and `cursor-show-me-your-work` by exact installed name. Preserve the falsifiable done predicate, phased experiment loop, evidence and audit trail. The current task’s authority determines whether a human checkpoint or commit is required; do not create an extra approval gate for already authorized reversible work.
-
 # Figure it out
 
 When the task matches no playbook, design one. The deliverable before any code is the workflow itself: a sequence of phases that scales rigor to the task, runs the scientific method, and leaves a decision trail a human can audit after stepping away.
 
 ## Start
 
-Open a todolist whose first item is to read the Principles section of **cursor-poteto-mode**. Then add the phases below as todos.
+Open a todolist whose first item is to read the Principles section of the **cursor-poteto-mode** skill. Then add the phases below as todos.
 
 ## Phase A: Frame
 
@@ -28,15 +24,15 @@ Ground first, then commit. Don't start the run until you can state:
 - Scope, quantified: rough units and effort, plus the blockers grounding surfaced.
 - The rigor level, biased high. One-way doors and high blast radius get more. Reversible low-stakes steps get less. Rigor is gates and artifacts, not "try harder".
 
-Present framing and tradeoffs when they materially affect the approved outcome. Continue already authorized reversible work through the run; ask for a checkpoint only when an unresolved product decision or authority gate changes the result.
+Present the framing and tradeoffs before committing to a long run. Reversible work proceeds (the **never-block-on-the-human** principle skill), but a multi-hour run earns one checkpoint.
 
 ## Phase B: Design the workflow
 
 Decompose into atomic, independently-landable units. Sequence riskiest-unknown-first. Scaffold and verification come before features (the **foundational-thinking** principle skill).
 
 - Build the verification harness before the work, with the baseline captured from the pre-change state, so the check reads as "old value vs new value".
-- For one-way-door design decisions, run **cursor-architect** (which uses **cursor-arena**). Skip it for mechanical work whose shape is already concrete. A second arena over a settled design is over-engineering (the **laziness-protocol** principle skill).
-- Decide what fans out. Parallelize only across seams, and give each worker its own worktree or branch (the **separate-before-serializing-shared-state** principle skill). Don't over-fan.
+- For one-way-door design decisions, run the **cursor-architect** skill (use **cursor-arena** for a large or contested design). Skip it for mechanical work whose shape is already concrete. A second arena over a settled design is over-engineering (the **laziness-protocol** principle skill).
+- Decide what fans out. Parallelize only across seams, and give each worker its own worktree or branch (the **separate-before-serializing-shared-state** principle skill). Don't over-fan. Pick each subagent's reasoning level for the job, per the Subagents section of the **cursor-poteto-mode** skill.
 - Write the designed phase list down. That list is what the human reviews.
 
 Then execute the design. Add its steps to the todolist as concrete items between the Phase C and Phase D entries. Run each under the Phase C loop discipline, and weave the Phase D log through them, a row as each step lands, rather than saving the whole trail for the end.
@@ -51,7 +47,7 @@ Each unit is an experiment. State the hypothesis, make the smallest change, meas
 
 ## Phase D: Keep the audit trail
 
-Log the run via **cursor-show-me-your-work**. figure-it-out's work is usually ambitious enough to commit the trail so the reviewer can read it in the PR. The trail plus the diff is what lets the human come back and trust the work.
+Log the run via the **cursor-show-me-your-work** skill. figure-it-out's work is usually ambitious enough to commit the trail so the reviewer can read it in the PR. The trail plus the diff is what lets the human come back and trust the work.
 
 ## Phase E: Verify and hand back
 

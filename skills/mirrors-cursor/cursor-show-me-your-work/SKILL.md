@@ -10,10 +10,6 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 ## Native Codex branch
 
-## Codex runtime mapping
-
-Keep the canonical TSV and pinned source `scripts/log.sh` intact. The bundled helper requires `--root <task-root>` and a logfile below that root; it rejects path escapes and symlink components or targets while preserving append-only TSV sanitization. Write only inside the authorized workspace or task scratch path, verify evidence links, and use the native task history/rollout for transcript audit. Independent review follows the standing model router and is reported only when performed.
-
 # Show me your work
 
 Keep one canonical log.
@@ -43,9 +39,9 @@ ts	phase	decision	why	evidence	result
 
 ## Logging a row
 
-Write each entry the way you'd tell a teammate what you did. Plain words, concrete actions, no AI speak or abstract jargon (the **unslop** skill applies to log text too).
+Write each entry the way you'd tell a teammate what you did. Plain words, concrete actions, no AI speak or abstract jargon (the **cursor-unslop** skill applies to log text too).
 
-Use the bounded helper `scripts/log.sh --root <task-root> <logfile> <phase> <decision> <why> <evidence> <result>`. It stamps `ts`, writes the header on first use, strips stray tabs/newlines, and prefixes any cell starting with `=`, `+`, `-`, or `@` with a single quote. Use the bounded helper for generated or user-supplied cells. A manual `printf` is only appropriate inside the authorized task root after the same single-line, formula-prefix and secret checks.
+Use the helper `scripts/log.sh --root <task-root> <logfile> <phase> <decision> <why> <evidence> <result>`. It stamps `ts`, writes the header on first use, strips stray tabs/newlines, and prefixes any cell starting with `=`, `+`, `-`, or `@` with a single quote. A bare `printf` appending a row works too, but mind those same bytes if cells come from generated or user-supplied text.
 
 Log decision points and checkpoints, not every action: a fork chosen, a unit completed with its verification result, a pivot or revert with its trigger, a blocker surfaced, a gate fixed. For loop runs, one row per iteration. Skip the trivial and self-evident.
 
@@ -64,7 +60,7 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 
 ## Audit the log against the transcript
 
-At the end of the run, before handing back, check the log told the truth. Read the current Codex task history through the native thread reader or its verified local rollout path when available. Do not glob other projects or rely on a Cursor transcript path; if full tool history is inaccessible, name that audit limit. Walk this run's rows against what actually happened. Each stretch of them begins at one of this run's `start` rows, or at the first row if this run created the log, and ends at the next `start` row of another run:
+At the end of the run, before handing back, check the log told the truth. Read this run's authorized native transcript or supplied export. Do not glob unrelated task history. Walk this run's rows against what actually happened. Each stretch of them begins at one of this run's `start` rows, or at the first row if this run created the log, and ends at the next `start` row of another run:
 
 - Check that every row maps to a real decision or action.
 - Check that each row's evidence resolves and shows what the row claims.
@@ -74,14 +70,14 @@ Correct the log, not the story. The audit never edits or removes a row, even an 
 
 ## Cross-model review of the trail
 
-Before handing back, use an authorized independent Codex reviewer when a different model perspective is available under the standing `model-capability-router` policy. If no reviewer or full transcript access is available, report the evidence limit without inventing cross-model sign-off. The subagent reads the audit trail and the run's transcript, then flags what the user should pay attention to. Not a redo of the work, a scan for what's suboptimal or risky.
+Before handing back, spawn a subagent on another vendor's model than the one that did the work, when authorized and actually available. Self-review is not a substitute. The subagent reads the audit trail and the run's transcript, then flags what the user should pay attention to. Not a redo of the work, a scan for what's suboptimal or risky. Use the operator's native routing policy; if no different-vendor reviewer is available, report that review gap. Fable and Opus are the same vendor.
 
 - Decisions logged with weak or absent evidence.
 - Verification steps skipped or claimed without proof in the transcript.
 - Choices that look risky in hindsight (premature, scope-creeping, papering over a symptom).
 - Gaps the user would otherwise miss on a casual skim.
 
-Every reply for a run that produced a trail ends with an "Attention" section. Name the actual reviewer model when one ran, then list flags tied to rows or moments. If review could not run, label it not assessed; never infer a reviewer from the selected route.
+Every reply for a run that produced a trail ends with an "Attention" section. When a review actually ran, lead with the observed reviewer model on its own line (`reviewed by <model>`). If no different-vendor review ran, write `not assessed: different-vendor review unavailable` instead, then list each flag pointing to specific rows or moments. "No flags" is a valid value. The model name is not.
 
 ## Reviewing the trail
 

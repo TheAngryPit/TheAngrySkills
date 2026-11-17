@@ -55,12 +55,12 @@ After this correction, the local full suite passed 474 tests, with 2 skips and 1
 
 ## Pstack source refresh, 2026-11-17
 
-The global raw baseline remains 8ecfb19 and the Pstack family advances to
- e1cc031. [The review receipt](../reports/upstream-updates/cursor-pstack.md)
-records source identities, compatible changes and the deliberate native methods
-preserved by overlays. Twenty-three removed upstream dependencies become owned
-native support through the existing hash ledger, retaining their old provenance.
-Comment Sicko receives a bounded sentence adaptation; Poteto's upstream model
-frontmatter does not become a native binding. Previous live receipts describe
-their dated packages and do not certify this source refresh. Six excluded
-adapters remain held, including the updated Statechart source.
+The global raw baseline remains 8ecfb19; only the Pstack family advances to
+e1cc031. [The current-method receipt](../reports/upstream-updates/cursor-pstack.md)
+records intent adoption and necessary native host translations across all 106
+changed paths. The rejected compatibility candidate is superseded: its 23 copied
+removed dependencies are gone. Current Architect, How, Why and Reflect flows
+replace the old topology. Poteto has 22 playbooks; Orchestrate and the plan
+checker are retired. Native routing, explicit role bindings, privacy, permissions
+and six package holds remain. Historical live receipts do not certify these new
+methods. No live installation or activation accompanies the source update.

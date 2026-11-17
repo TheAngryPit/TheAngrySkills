@@ -1,17 +1,11 @@
 {
   "source_path": "pstack/skills/sharpen/SKILL.md",
   "source_sha256": "aac4f8e6a1ffd70e3763314db37d3c2eb0cfea08bc63e98907aca6dae0343031",
-  "replacements": [
-    {
-      "file": "SKILL.md",
-      "before": "---\nname: cursor-sharpen\ndescription: \"Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.\"\ndisable-model-invocation: true\n---\n\nI want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nHave the rewritten prompt ask the agent to prototype any choice an experiment can settle and recommend an option based on what it observed. Leave product or preference choices that no experiment can settle for me to make.\n",
-      "after": "---\nname: cursor-sharpen\ndescription: \"Use when explicitly requesting $cursor-sharpen to deepen and rewrite a prompt without executing its task.\"\ndisable-model-invocation: true\n---\n\nI want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nLeave choices that are mine to make open instead of deciding them.\n"
-    }
-  ],
-  "codex_native_body": "Make the task deeper, not bigger. Before rewriting the prompt, state what a top professional would add, the rawest material they would use, the specific methods and tools, and an outside check that would show the result is right. Then return a rewritten prompt asking for exactly that. Leave the user's choices open. Do not execute the task described by the prompt.\n\nPreserve explicit scope, access, cost, privacy, security and requested tools. The outside check is supported evidence, not automatic external contact, new credentials or delegation. Use the standing model-capability-router for any authorized model selection.",
-  "reason": "Reviewed Workbench PR41 source adapted to Codex; explicit-only preserved.",
-  "preserved_requirement": "sharpen explicit user command",
-  "proof": "Exact source SHA, deterministic mirror generation and selected checks; fresh runtime unproven",
+  "replacements": [],
+  "codex_native_body": "I want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nHave the rewritten prompt ask the agent to prototype any choice an experiment can settle and recommend an option based on what it observed. Leave product or preference choices that no experiment can settle for me to make.\nReturn the rewritten prompt; do not execute the task it describes. Preserve the user's scope and tools.\n",
+  "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
+  "preserved_requirement": "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.",
+  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
   "codex_rule": "Preserve native permissions and explicit invocation.",
   "codex_contract": {
     "schema_version": 1,
@@ -21,21 +15,21 @@
       "published_name": "cursor-sharpen",
       "source_path": "pstack/skills/sharpen/SKILL.md"
     },
-    "preserved_semantics": "sharpen explicit user command",
+    "preserved_semantics": "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.",
     "native_mapping": {
-      "availability": "source_validated_runtime_unproven",
+      "availability": "reviewed_current_source_fixture_only",
       "capabilities": [
-        "native explicit skill discovery"
+        "actual native tools required by the current method"
       ],
-      "fallback": "Report unavailable capability rather than inventing execution."
+      "fallback": "Report the exact unavailable capability and proof gap; do not restore retired workflow stages."
     },
     "permission_gates": [
-      "Operator authorization and native refusals remain binding."
+      "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "behavioral_proof": {
-      "positive": "Source and distribution checked; fresh native execution unproven.",
-      "missing_tool_or_input": "Report exact gap.",
-      "error": "Preserve refusal and report unfinished outcome."
+      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
+      "error": "Operator scope, privacy and native refusals remain binding."
     },
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
@@ -43,6 +37,12 @@
       "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
       "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
       "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority."
+    },
+    "promotion_status": "promoted_current_source_fixture_only_explicit",
+    "security_review": {
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     }
-  }
+  },
+  "codex_note": ""
 }

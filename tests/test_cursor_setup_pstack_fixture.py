@@ -1,214 +1,96 @@
-"""Fixture-only proof for the cursor-setup-pstack model mapping boundary."""
+"""Current Pstack roles and relative budgets through the native dry-run boundary."""
 
 import sys
-import tempfile
-import unittest
 from pathlib import Path
 
+import pytest
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 from cursor_functional_adapters import (  # noqa: E402
-    PSTACK_BUDGETS,
-    PSTACK_MODEL_PANEL_ROLES,
-    PSTACK_MODEL_ROLES,
-    run_pstack_model_mapping_fixture,
+    PSTACK_BUDGETS, PSTACK_MODEL_ROLES, run_pstack_model_mapping_fixture,
 )
 
-
 INVENTORY = {
-    "gpt-5.6-sol": ("medium", "high"),
-    "gpt-5.6-luna": ("high", "xhigh"),
-    "gpt-6-astra": ("low", "medium"),
-}
-
-BUDGET_INVENTORY = {
-    "gpt-5.6-sol": ("medium", "high", "xhigh"),
-    "gpt-5.6-luna": ("medium", "high", "xhigh"),
-    "gpt-6-astra": ("low", "medium", "high"),
-    "cursor-grok-4.6-medium-fast": ("medium",),
+    "gpt-6.2-sol": ("low", "medium", "high", "xhigh"),
+    "claude-fable-5-2": ("low", "medium", "high"),
+    "claude-opus-5-5": ("low", "medium", "high", "xhigh"),
 }
 
 
-def choices_for_all_roles():
-    choices = {
-        "feature, refactoring": {"model": "gpt-5.6-sol", "effort": "medium"},
-        "bug-fix": {"model": "gpt-5.6-luna", "effort": "high"},
-        "perf-issue": "gpt-5.6-sol",
-        "hillclimb": {"model": "gpt-6-astra", "effort": "low"},
-        "judgment and prose": {"model": "inherit-parent"},
-        "hardest tasks": {"model": "auto"},
-        "how explorer": {"model": "gpt-5.6-luna", "effort": "xhigh"},
-        "how explainer": {"model": "gpt-6-astra", "effort": "medium"},
-        "why investigators": {"model": "gpt-5.6-sol", "effort": "high"},
-        "why synthesizer": {"model": "gpt-6-astra", "effort": "low"},
-        "reflect tooling": {"model": "gpt-5.6-luna", "effort": "high"},
-        "reflect judgment, divergent, synthesizer": {"model": "auto"},
-        "arena runners": [
-            {"model": "gpt-5.6-luna", "effort": "xhigh"},
-            {"model": "inherit-parent"},
-        ],
-        "arena cross-judge pool": [
-            {"model": "gpt-6-astra", "effort": "low"},
-            {"model": "auto"},
-        ],
-        "swarm workers": {"model": "gpt-5.6-sol", "effort": "medium"},
-        "architect runners": [
-            {"model": "gpt-5.6-luna", "effort": "high"},
-            {"model": "gpt-6-astra", "effort": "medium"},
-        ],
-        "interrogate reviewers": [
-            {"model": "inherit-parent"},
-            {"model": "gpt-5.6-sol", "effort": "high"},
-        ],
+def choices():
+    return {
+        "feature, refactoring": {"model": "gpt-6.2-sol", "effort": "xhigh"},
+        "bug-fix": {"model": "gpt-6.2-sol", "effort": "xhigh"},
+        "perf-issue": {"model": "gpt-6.2-sol", "effort": "xhigh"},
+        "hillclimb": {"model": "gpt-6.2-sol", "effort": "xhigh"},
+        "judgment and prose": "inherit-parent",
+        "arena runners": ["claude-fable-5-2", "claude-opus-5-5"],
+        "arena cross-judge pool": ["claude-opus-5-5", "gpt-6.2-sol"],
+        "swarm workers": "gpt-6.2-sol",
+        "interrogate reviewers": ["auto", "gpt-6.2-sol"],
     }
-    assert set(choices) == set(PSTACK_MODEL_ROLES)
-    return choices
 
 
-class CursorSetupPstackFixtureTests(unittest.TestCase):
-    def test_positive_mapping_covers_every_role_and_preserves_choices(self):
-        choices = choices_for_all_roles()
-        with tempfile.TemporaryDirectory() as temporary:
-            sentinel = Path(temporary) / "config-sentinel"
-            sentinel.write_text("must remain unchanged\n")
-            result = run_pstack_model_mapping_fixture(INVENTORY, choices)
-            self.assertEqual(result["status"], "DRY_RUN")
-            self.assertTrue(result["fixture_only"])
-            self.assertFalse(result["writes_performed"])
-            self.assertFalse(result["configuration_changed"])
-            self.assertEqual(set(result["mapping"]), set(PSTACK_MODEL_ROLES))
-            self.assertEqual(
-                {
-                    role
-                    for role in PSTACK_MODEL_PANEL_ROLES
-                    if result["mapping"][role]["panel"]
-                },
-                set(PSTACK_MODEL_PANEL_ROLES),
-            )
-            for role in PSTACK_MODEL_ROLES:
-                expected = choices[role]
-                expected_items = expected if isinstance(expected, list) else [expected]
-                expected_items = [
-                    item if isinstance(item, dict) else {"model": item}
-                    for item in expected_items
-                ]
-                actual_items = [
-                    item["selection"]
-                    for item in result["mapping"][role]["selections"]
-                ]
-                self.assertEqual(actual_items, expected_items, role)
-            self.assertEqual(result["mapping"]["arena runners"]["count"], 2)
-            self.assertEqual(result["mapping"]["arena cross-judge pool"]["count"], 2)
-            self.assertEqual(result["mapping"]["architect runners"]["count"], 2)
-            self.assertEqual(result["mapping"]["interrogate reviewers"]["count"], 2)
-            for role in PSTACK_MODEL_ROLES:
-                self.assertIn(role, result["dry_run"])
-            self.assertEqual(sentinel.read_text(), "must remain unchanged\n")
-
-    def test_unavailable_model_and_effort_block_without_write(self):
-        choices = choices_for_all_roles()
-        choices["bug-fix"] = {"model": "not-in-channel", "effort": "xhigh"}
-        choices["perf-issue"] = {"model": "gpt-5.6-sol", "effort": "xhigh"}
-        result = run_pstack_model_mapping_fixture(INVENTORY, choices)
-        self.assertEqual(result["status"], "BLOCKED")
-        self.assertFalse(result["writes_performed"])
-        self.assertFalse(result["configuration_changed"])
-        self.assertTrue(any("unavailable model" in item for item in result["unavailable"])
-        )
-        self.assertTrue(any("unavailable effort" in item for item in result["unavailable"])
-        )
-        self.assertIn("configuration unchanged", result["dry_run"])
-        self.assertIn("not-in-channel", result["dry_run"])
-
-    def test_malformed_panel_is_an_explicit_error_without_write(self):
-        choices = choices_for_all_roles()
-        choices["arena runners"] = {"model": "gpt-5.6-sol", "effort": "medium"}
-        result = run_pstack_model_mapping_fixture(INVENTORY, choices)
-        self.assertEqual(result["status"], "ERROR")
-        self.assertFalse(result["writes_performed"])
-        self.assertFalse(result["configuration_changed"])
-        self.assertIn("non-empty model panel list", result["reason"])
-        self.assertIn("ERROR:", result["dry_run"])
-
-    def test_alias_effort_needs_parent_model_before_validation(self):
-        choices = choices_for_all_roles()
-        choices["hardest tasks"] = {"model": "auto", "effort": "xhigh"}
-        result = run_pstack_model_mapping_fixture(INVENTORY, choices)
-        self.assertEqual(result["status"], "ERROR")
-        self.assertFalse(result["writes_performed"])
-        self.assertIn("without the parent model", result["reason"])
-
-    def test_budget_maps_efforts_and_same_family_model_variants_without_write(self):
-        choices = choices_for_all_roles()
-        choices["bug-fix"] = "grok-4.6-fast-xhigh"
-        result = run_pstack_model_mapping_fixture(
-            BUDGET_INVENTORY, choices, budget="small"
-        )
-        self.assertEqual(result["status"], "DRY_RUN")
-        self.assertEqual(result["budget"], "small")
-        self.assertEqual(result["budget_label"], PSTACK_BUDGETS["small"]["label"])
-        self.assertEqual(result["target_effort"], "medium")
-        self.assertFalse(result["writes_performed"])
-        bug_fix = result["mapping"]["bug-fix"]["selections"][0]
-        self.assertEqual(
-            bug_fix["selection"],
-            {"model": "cursor-grok-4.6-medium-fast", "effort": "medium"},
-        )
-        self.assertEqual(
-            bug_fix["requested_selection"], {"model": "grok-4.6-fast-xhigh"}
-        )
-        self.assertEqual(
-            result["mapping"]["feature, refactoring"]["selections"][0]["selection"],
-            {"model": "gpt-5.6-sol", "effort": "medium"},
-        )
-        self.assertEqual(
-            result["mapping"]["judgment and prose"]["selections"][0]["selection"],
-            {"model": "inherit-parent"},
-        )
-        self.assertIn("budget: small — medium reasoning (medium)", result["dry_run"])
-
-        for budget, specification in PSTACK_BUDGETS.items():
-            budget_choices = choices_for_all_roles()
-            if budget != "unlimited":
-                budget_choices["bug-fix"] = "grok-4.6-fast-xhigh"
-            budget_result = run_pstack_model_mapping_fixture(
-                BUDGET_INVENTORY, budget_choices, budget=budget
-            )
-            self.assertEqual(budget_result["status"], "DRY_RUN", budget)
-            self.assertEqual(budget_result["budget_label"], specification["label"])
-            self.assertEqual(
-                budget_result["target_effort"], specification["target_effort"]
-            )
-
-    def test_budget_without_supported_effort_marks_roles_needing_choice(self):
-        choices = choices_for_all_roles()
-        unavailable_inventory = dict(BUDGET_INVENTORY)
-        unavailable_inventory["gpt-5.6-luna"] = ("max",)
-        result = run_pstack_model_mapping_fixture(
-            unavailable_inventory, choices, budget="small"
-        )
-        self.assertEqual(result["status"], "BLOCKED")
-        self.assertFalse(result["writes_performed"])
-        self.assertTrue(
-            any("no detected model in family 'gpt-5.6-luna'" in item for item in result["unavailable"])
-        )
-        self.assertTrue(
-            any(
-                item["availability"] == "needs-choice"
-                for item in result["mapping"]["how explorer"]["selections"]
-            )
-        )
-
-    def test_unknown_budget_is_an_explicit_error_without_write(self):
-        result = run_pstack_model_mapping_fixture(
-            INVENTORY, choices_for_all_roles(), budget="tiny"
-        )
-        self.assertEqual(result["status"], "ERROR")
-        self.assertFalse(result["writes_performed"])
-        self.assertFalse(result["configuration_changed"])
-        self.assertIn("budget must be one of", result["reason"])
+def test_current_role_mapping_is_dry_run_and_preserves_native_choices(tmp_path):
+    sentinel = tmp_path / "config.toml"
+    sentinel.write_text("explicit user binding\n")
+    requested = choices()
+    result = run_pstack_model_mapping_fixture(INVENTORY, requested)
+    assert result["status"] == "DRY_RUN"
+    assert not result["writes_performed"] and not result["configuration_changed"]
+    assert set(result["mapping"]) == set(requested) == set(PSTACK_MODEL_ROLES)
+    for role, row in result["mapping"].items():
+        selections = requested[role] if isinstance(requested[role], list) else [requested[role]]
+        expected = [value if isinstance(value, dict) else {"model": value} for value in selections]
+        assert [value["selection"] for value in row["selections"]] == expected
+    assert sentinel.read_text() == "explicit user binding\n"
 
 
-if __name__ == "__main__":
-    unittest.main()
+@pytest.mark.parametrize("budget,code,panel", [
+    ("large", "xhigh", "high"), ("medium", "high", "medium"), ("small", "medium", "low"),
+])
+def test_budgets_lower_each_roles_starting_effort(budget, code, panel):
+    result = run_pstack_model_mapping_fixture(INVENTORY, choices(), budget=budget)
+    assert result["status"] == "DRY_RUN"
+    assert result["mapping"]["bug-fix"]["selections"][0]["selection"]["effort"] == code
+    assert result["mapping"]["arena runners"]["selections"][0]["selection"]["effort"] == panel
+    assert result["mapping"]["swarm workers"]["selections"][0]["selection"]["effort"] == panel
+    assert result["mapping"]["judgment and prose"]["selections"][0]["selection"] == {"model": "inherit-parent"}
+    assert result["mapping"]["interrogate reviewers"]["selections"][0]["selection"] == {"model": "auto"}
+    assert set(PSTACK_BUDGETS) == {"large", "medium", "small"}
+
+
+def test_retired_rows_and_unlimited_are_not_current_setup_options():
+    requested = choices()
+    requested["how explorer"] = "gpt-6.2-sol"
+    assert run_pstack_model_mapping_fixture(INVENTORY, requested)["status"] == "ERROR"
+    assert run_pstack_model_mapping_fixture(INVENTORY, choices(), budget="unlimited")["status"] == "ERROR"
+
+
+def test_unavailable_native_model_or_effort_never_writes():
+    requested = choices()
+    requested["bug-fix"] = {"model": "unavailable", "effort": "high"}
+    requested["perf-issue"] = {"model": "gpt-6.2-sol", "effort": "max"}
+    result = run_pstack_model_mapping_fixture(INVENTORY, requested)
+    assert result["status"] == "BLOCKED"
+    assert any("unavailable model" in reason for reason in result["unavailable"])
+    assert any("unavailable effort" in reason for reason in result["unavailable"])
+    assert not result["writes_performed"]
+
+
+def test_alias_effort_without_parent_identity_and_malformed_panels_are_errors():
+    requested = choices()
+    requested["judgment and prose"] = {"model": "auto", "effort": "high"}
+    assert "without the parent model" in run_pstack_model_mapping_fixture(INVENTORY, requested)["reason"]
+    requested = choices()
+    requested["arena runners"] = "gpt-6.2-sol"
+    assert "non-empty model panel" in run_pstack_model_mapping_fixture(INVENTORY, requested)["reason"]
+
+
+def test_budget_with_no_supported_lower_effort_reports_choice_gap():
+    inventory = {**INVENTORY, "claude-fable-5-2": ("high",)}
+    result = run_pstack_model_mapping_fixture(inventory, choices(), budget="small")
+    assert result["status"] == "BLOCKED"
+    assert result["mapping"]["arena runners"]["selections"][0]["availability"] == "needs-choice"
+    assert not result["configuration_changed"]

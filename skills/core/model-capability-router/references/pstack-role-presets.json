@@ -54,17 +54,9 @@
     {"label": "perf-issue", "class": "execution", "panel": false},
     {"label": "hillclimb", "class": "execution", "panel": false},
     {"label": "judgment and prose", "class": "judgment_planning", "panel": false},
-    {"label": "hardest tasks", "class": "judgment_planning", "panel": false},
-    {"label": "how explorer", "class": "exploration_tooling", "panel": false},
-    {"label": "how explainer", "class": "judgment_planning", "panel": false},
-    {"label": "why investigators", "class": "exploration_tooling", "panel": false},
-    {"label": "why synthesizer", "class": "judgment_planning", "panel": false},
-    {"label": "reflect tooling", "class": "exploration_tooling", "panel": false},
-    {"label": "reflect judgment, divergent, synthesizer", "class": "judgment_planning", "panel": false},
     {"label": "arena runners", "class": "execution", "panel": true},
     {"label": "arena cross-judge pool", "class": "judgment_planning", "panel": true},
     {"label": "swarm workers", "class": "execution", "panel": false},
-    {"label": "architect runners", "class": "judgment_planning", "panel": true},
     {"label": "interrogate reviewers", "class": "judgment_planning", "panel": true}
   ]
 }

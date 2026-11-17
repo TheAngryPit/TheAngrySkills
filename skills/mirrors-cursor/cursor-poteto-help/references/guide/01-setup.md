@@ -1,62 +1,66 @@
-> Native Codex guide adapted from the pinned pstack source. Skills, named profiles and scheduling capabilities must be verified on the actual host. Source publication is not installation. Upstream artwork is retained as original illustration.
-
 # Set up pstack
 
-This page covers native skill availability, model roles and the first task. Installation remains a separate operator action.
+In this page you install the plugin, pick which models pstack uses, and run your first task. Setup is one command plus a short conversation.
 
-## Verify native availability
+## Install the plugin
 
-Use the operator's approved source and native Codex skill discovery. Installation is a separate operator action; this guide does not install the Cursor plugin. Verify the selected skills and named agent profiles in a fresh session before claiming availability.
+In a Cursor chat, run:
 
-The upstream guide includes a separate [Claude Code setup reference](https://github.com/cursor/plugins/blob/d457567332aa6989e753ea289f30ea2bfbc80bc0/pstack/docs/harness/claude-code.md). Those commands and model settings apply only to Claude Code. They are not Codex installation steps or runtime defaults.
+```text
+/add-plugin pstack
+```
+
+Cursor confirms the plugin is installed.
+
+In Claude Code, run `/plugin marketplace add cursor/plugins`, then `/plugin install pstack@cursor-plugins`. Claude Code prefixes plugin commands, so each command in this guide takes a `pstack:` prefix there, such as `/pstack:setup-pstack`, which writes its model rule to `~/.claude/rules/pstack-models.md`. The [Claude Code adapter](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/docs/harness/claude-code.md) covers the other differences.
 
 ## Pick your models
 
 Run:
 
 ```text
-$cursor-setup-pstack
+/setup-pstack
 ```
 
-[`$cursor-setup-pstack`](../../../cursor-setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. The native adaptation follows `model-capability-router` and available session model/effort metadata; no Cursor rule is written and configured defaults are not runtime proof.
+[`/setup-pstack`](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.cursor/rules/pstack-models.mdc`, a small rule every pstack skill reads.
 
-Use the standing `model-capability-router` and the actual native channel for model and effort selection. Upstream Cursor tier labels are not Codex defaults. Configured roles do not prove the selected runtime, and token savings require measured evidence.
+The defaults are the same as the `large` budget. Code, prose, and judgment run on Opus 5.5 at `xhigh` reasoning, and the review panels and swarm workers run at `high`. No role runs above `xhigh`. Outside a review panel, Fable 5.2 runs only when you name it for a task or after two Opus 5.5 runs of the same brief fail their check. `medium` lowers each role one level and `small` lowers it two, and both spend fewer tokens.
 
-Choose or revise native roles only within the requested setup scope. Do not write or delete Cursor rules, rewrite live Codex defaults implicitly or assume a source update changed an active session.
+You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default, delete that role's line. A rerun of `/setup-pstack` keeps any role whose model differs from the default. When a default changes, a rule written before the change still pins the old default until you run `/setup-pstack` again. That run replaces the old defaults it recognizes, tells you which, and keeps your other choices. To drop a pin it does not recognize, delete that role's line or the file first.
 
-When supported by the native call, omitted model overrides inherit the parent selection. Verify supported models, effort, context inheritance and concurrency on that channel. Preserve independent reviewer roles without inventing Cursor model slugs.
+You might be wondering what happens if you use Auto. Set a role to `inherit-parent` or `auto` and pstack omits the subagent `model` field, so the subagent inherits your parent chat model. Both values mean the same thing, and neither is a model slug. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. Setup also configures `swarm workers`, the default model for every `/swarm` worker unless a race names a model for each arm.
 
 ## Accept the verification offers, or don't
 
-At the end of setup, `$cursor-setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`$cursor-create-verification-skill`](../../../cursor-create-verification-skill/SKILL.md).
+At the end of setup, `/setup-pstack` looks for a way to prove app behavior in your project, either a `verify-*` skill or an existing harness. If it finds neither, it offers once to generate one with [`/create-verification-skill`](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/skills/create-verification-skill/SKILL.md).
 
-Say yes and it writes the authorized source-controlled `verify-<app>/` directory, with installation and native discovery verified separately, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `$cursor-create-verification-skill` yourself any time. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers it in depth.
-
-If there is no formal verification skill and the project has a costly invariant, concurrent path, retry loop, state machine or parser, setup may also offer once to create one with `$cursor-create-formal-verification-skill`. It checks one stated property within explicit model or proof bounds. It does not prove the whole product. See [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill).
+Say yes and it writes `.cursor/skills/verify-<app>/`, a project-local skill that teaches agents to drive your app the way a user does. It proves the skill works once before handing it over. Say no and setup moves on. You can run `/create-verification-skill` yourself any time. [Verify and ship](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/docs/guide/06-verify-and-ship.md#create-a-project-verification-skill) covers it in depth.
 
 If you're new to pstack, say yes. An agent that can check its own work keeps going until the check passes. An agent that can't hands every result back to you to check by hand. Of everything in this guide, the verification skill pays off the most.
 
-Verify installed skill and named-profile discovery in a fresh native session. This guide does not establish installation or a runtime switch.
+Then setup offers once to generate a formal verification skill with [`/create-formal-verification-skill`](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/skills/create-formal-verification-skill/SKILL.md), unless the project already has one. Tests check the cases someone thought to write. A formal verification skill checks one key property of your code, such as "a job never runs twice at once", in every case within a stated scope. Say yes when your code has concurrency, retries, a state machine, or a parser, where a bug is costly and tests rarely reach the case that breaks. Otherwise say no, and run it later if that changes. [Verify and ship](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/docs/guide/06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill) covers it.
+
+After setup, start a new chat. The model rule applies to new sessions.
 
 ## Keep the cost in check
 
 pstack spends extra tokens on subagents and review panels. That's the price of the rigor. To spend fewer:
 
-- Rerun `$cursor-setup-pstack` and pick a smaller reasoning budget or cheaper models. A strong model in the main chat with cheaper, faster models in the code roles is a good split.
+- Rerun `/setup-pstack` and pick a smaller reasoning budget or cheaper models. A strong model in the main chat with cheaper, faster models in the code roles is a good split.
 - Set a role to `auto` or `inherit-parent` so it runs on the chat's own model.
 - Shorten a panel list. Each entry runs one subagent.
-- Save `$cursor-poteto-mode` for work that needs rigor. A small, obvious edit doesn't.
+- Save `/poteto-mode` for work that needs rigor. A small, obvious edit doesn't.
 
 ## Run your first task
 
 Pick something real but small, and describe it the way you'd describe it to a colleague:
 
 ```text
-$cursor-poteto-mode add a --json flag to this command. text output stays byte-identical. verify both.
+/poteto-mode add a --json flag to this command. text output stays byte-identical. verify both.
 ```
 
-Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `$cursor-poteto-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
+Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt.
 
-Continue the explicitly selected workflow through this task and its follow-ups. Codex does not inherit Cursor Custom Modes, Option+Enter/Alt+Enter or sticky per-turn loading; select the skill again for a new task when needed.
+From here you can type normal follow-ups. To keep `/poteto-mode` on for the whole chat, pick it from the `/` menu with Option+Enter (Mac) or Alt+Enter (Windows) instead of Enter. That makes it a [Custom Mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which stays in context on every turn until you exit it. Custom Modes are available in the Agents Window and the CLI. Plain Enter attaches the skill to one message, and it fades as the chat moves on.
 
-Next: [Route work through `$cursor-poteto-mode`](./02-poteto-mode.md).
+Next: [Route work through `/poteto-mode`](https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/docs/guide/02-poteto-mode.md).

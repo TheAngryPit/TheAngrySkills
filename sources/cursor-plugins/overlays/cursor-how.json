@@ -1,10 +1,10 @@
 {
   "codex_contract": {
-    "adapter_mode": "delegated-native",
+    "adapter_mode": "native-guidance",
     "behavioral_proof": {
-      "error": "A shell read of a missing explainer dependency failed and a native agent reported the dependency error without widening the target. Dedicated native Read/Task error handling remains unproven; reports/pstack-how-why-real-20260914.md.",
-      "missing_tool_or_input": "A shell read of a nonexistent module failed and a native agent reported its contents unknown without substituting another source. This is bounded missing-input behavior, not a native Read/Task tool error; reports/pstack-how-why-real-20260914.md.",
-      "positive": "Native read-only explorer and simple-path explainer traced the real held-candidate preview and returned the five pinned sections; reports/pstack-how-why-real-20260914.md."
+      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
+      "error": "Operator scope, privacy and native refusals remain binding."
     },
     "external_dependencies": [
       "native delegated reviewer if exposed"
@@ -15,29 +15,21 @@
       "upstream_skill": "how"
     },
     "native_mapping": {
-      "availability": "bounded_native_role_flow_proven_trigger_unobserved",
+      "availability": "reviewed_current_source_fixture_only",
       "capabilities": [
-        "local repository reader",
-        "bounded explorer/explainer if exposed"
+        "actual native tools required by the current method"
       ],
-      "fallback": "Missing source/delegate yields explicit unknowns, not a guess.",
-      "required_tools": [
-        "local repository reader",
-        "bounded explorer/explainer if exposed"
-      ]
+      "fallback": "Report the exact unavailable capability and proof gap; do not restore retired workflow stages."
     },
     "permission_gates": [
-      "Anchor explanations in real files/symbols; use a sequential read when delegates are absent.",
-      "Missing source/delegate yields explicit unknowns, not a guess.",
-      "Respect the current task scope, selected model/effort, repository ownership, and explicit approval requirements."
+      "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
-    "preserved_semantics": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
-    "promotion_status": "promoted_bounded_native_role_flow_trigger_unobserved",
+    "preserved_semantics": "Use for \\\"how does X work\\\", code walkthroughs before changing something, and placement / ownership / layering questions (\\\"where should this live\\\", \\\"which package owns this\\\", \\\"is this the right layer\\\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
+    "promotion_status": "promoted_current_source_fixture_only_explicit",
     "schema_version": 1,
     "security_review": {
-      "decision": "Keep the source finding and provenance; do not dismiss it because the adapter adds a warning.",
-      "scanner_verdict": "safe_docs_only",
-      "status": "retained"
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     },
     "upstream_readme": {
       "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority.",
@@ -47,28 +39,13 @@
       "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md"
     }
   },
-  "codex_note": "## Codex runtime mapping\n\nUse native read-only subagents only when authorized; the standing `model-capability-router` owns model and effort. Preserve simple versus complex paths, distinct exploration angles, cited synthesis and coordinator verification.\n",
+  "codex_note": "",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
-  "preserved_requirement": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
-  "proof": "Pinned source hash and deterministic build are static provenance only. The Codex contract records positive, unavailable-capability/input, and error cases.",
-  "reason": "Port Cursor-only delegation, model and context storage to native Codex while retaining the upstream workflow and evidence contract.",
-  "replacements": [
-    {
-      "after": "---\nname: cursor-how\ndescription: \"Use for \\\"how does X work\\\", code walkthroughs before changing something, and placement / ownership / layering questions (\\\"where should this live\\\", \\\"which package owns this\\\", \\\"is this the right layer\\\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.\"\ndisable-model-invocation: true\n---\n\n# How\n\nExplore the codebase to answer how a subsystem works. Give a senior engineer enough of a mental model to start changing it without turning the explanation into annotated source.\n\nChoose model and effort through the standing `model-capability-router` and the native Codex inventory. Respect the operator's selection. If a requested model is unavailable, report that exact gap without substituting another model.\n\n## 1. Assess complexity\n\nIf scope is ambiguous, state the interpretation and explore. The user can redirect.\n\n- **Simple:** one module, small utility, or narrow question. Do not spawn explorers. If native delegation is authorized and useful, use one read-only explainer with `references/explainer-prompt.md`; otherwise inspect and explain directly. Then go to step 4.\n- **Complex:** a subsystem spanning files or services, a cross-cutting feature, or a full architecture overview. Continue to step 2.\n\nWhen in doubt, take the simple path.\n\n## 2. Explore complex questions\n\nWhen native delegation is authorized, investigate two to four distinct angles in parallel with read-only delegates. Choose model and effort through `model-capability-router`. Give each delegate a bounded angle and the explorer prompt in `references/explorer-prompt.md`. If delegation is unavailable, investigate the same angles sequentially and keep their evidence separate. Do not ask one explainer to repeat exploration after these findings exist.\n\n## 3. Synthesize complex questions\n\nAfter explorers return, combine their cited findings in the coordinator or one read-only native synthesizer selected through `model-capability-router`. Give it every finding and `references/explainer-prompt.md`. Resolve contradictions by checking the source. The coordinator owns the explanation and verifies its source paths. Simple questions skip this synthesis step because their one explainer already produced the account.\n\n## 4. Present\n\nCheck the cited source paths and explain the result in the requested scope. Correct factual errors before presenting it. Use only the applicable sections from `references/explainer-prompt.md`: Overview, Key Concepts, How It Works, Where Things Live, and Gotchas.",
-      "before": "---\nname: cursor-how\ndescription: \"Use for \\\"how does X work\\\", code walkthroughs before changing something, and placement / ownership / layering questions (\\\"where should this live\\\", \\\"which package owns this\\\", \\\"is this the right layer\\\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.\"\ndisable-model-invocation: true\n---\n\n# How\n\nExplore the codebase to answer \"how does X work?\" questions.\n\nIf the scope is ambiguous, state your interpretation and explore. The user can redirect.\n\n## 1. Explain\n\nSpawn one Task subagent with `subagent_type: generalPurpose` and `readonly: true` that explores and explains in one pass. Give it the user's question and this brief:\n\n> You are writing an architectural explanation for a senior engineer. Explore the codebase and write an explanation that a senior engineer unfamiliar with this area could read and walk away with a solid mental model. They should understand the architecture well enough to start working in it confidently. You have read-only access to the codebase.\n\n## 2. Present\n\nPresent the subagent's output. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.\n",
-      "file": "SKILL.md"
-    }
-  ],
+  "preserved_requirement": "Use for \\\"how does X work\\\", code walkthroughs before changing something, and placement / ownership / layering questions (\\\"where should this live\\\", \\\"which package owns this\\\", \\\"is this the right layer\\\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
+  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
+  "replacements": [],
   "source_path": "pstack/skills/how/SKILL.md",
   "source_sha256": "23d5cc79a449b9838242e7af5563aa8a4f0417bab136bbcc054b4bebc7284680",
-  "bundled_native_files": [
-    {
-      "source_path": "scripts/cursor_pstack_how_references_explainer-prompt.md",
-      "target_path": "references/explainer-prompt.md"
-    },
-    {
-      "source_path": "scripts/cursor_pstack_how_references_explorer-prompt.md",
-      "target_path": "references/explorer-prompt.md"
-    }
-  ]
+  "codex_native_body": "# How\n\nExplore the codebase to answer \"how does X work?\" questions. If scope is ambiguous, state your interpretation and explore; the user can redirect.\n\n## 1. Explain\n\nUse one authorized native read-only delegate that explores and explains in one pass. Give it the user's question and this brief:\n\n> You are writing an architectural explanation for a senior engineer. Explore the codebase and write an explanation that a senior engineer unfamiliar with this area could read and walk away with a solid mental model. They should understand the architecture well enough to start working in it confidently. You have read-only access to the codebase.\n\nUse the actual native delegation interface and the operator's model selection. If read-only delegation is unavailable, report that capability gap; do not replace this with an explorer panel or a separate synthesis stage.\n\n## 2. Present\n\nPresent the delegate's output. Light edits for clarity or context from the conversation are fine. Do not substantially rewrite it.\n"
 }

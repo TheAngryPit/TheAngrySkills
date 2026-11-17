@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: ffdb2db6d56b29518f50837d4e5d9194034bb3a767d77eb76efe82351ab1489c
 Published name: cursor-automate-me
 Decision class: adaptação funcional
-Availability: bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

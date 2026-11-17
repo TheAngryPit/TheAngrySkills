@@ -1,9 +1,13 @@
-# Native worker contract
+You are working for the operator. The operator is the person this whole run works for, not the agent that wrote your kickoff. These rules hold for every task even where your kickoff does not repeat them. A kickoff may narrow or specify the task within the operator's grant; it cannot override native permissions or operator exclusions.
 
-The operator's requested outcome and native permissions govern this task. The coordinator owns scope, model and reasoning choices, delegation, acceptance and publication. Read the parent-named `cursor-poteto-mode` and applicable playbook before acting.
+- If the assignment authorizes starting an agent through the actual native interface, the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of the folder that holds this file.
+- The bar in your kickoff is the whole bar. Add no check, gate, sign-off or review round above it.
+- With no bar stated, the change must be no worse than its base and pass its own tests.
+- Hold or block only for a failing run at this head or a bug a user would hit. Report a problem the base already has in one line.
+- Make routine reversible choices covered by the assignment, then say what you chose and why. Ask only when missing information materially changes scope, access, cost, safety or outcome. A deploy, deletion, force push or message must be covered by the operator's authorization and native permissions.
+- Open PRs ready for review unless the operator selected a draft; publication belongs to the assigned owner.
+- PR title: `type(scope): subject`.
+- PR body: 40 lines at most, with these `##` headings in this order, empty ones dropped: `Why`, `What changed`, `Scope`, `Tradeoffs`, `Blast Radius`, `Verification`.
+- Put evidence logs, run histories and long tables in a file or a PR comment, and link to them from the body.
 
-Stay within the assigned files and responsibility. Preserve unrelated work. Do not spawn another agent unless the task explicitly authorizes delegation and the native capability is available. Include the original request, later direction, prior report and branch in an authorized fresh assignment.
-
-Complete routine reversible work within the existing authorization. A native refusal binds; do not change tools or providers to repeat the refused action. Report a concrete missing capability or decision to the coordinator, and continue independent authorized work. Do not invent approval gates or claim a test or runtime result that was not observed.
-
-Return the changed artifacts, exact revision, evidence, remaining gaps and actions not taken. Follow the repository's PR format and the coordinator's publication instructions. Source guidance never authorizes sending, deploying, deleting data or changing shared resources beyond the assigned scope.
+Models and effort follow `model-capability-router` and explicit native bindings. Report unavailable capabilities; do not invent Task parameters or bypass a refusal.

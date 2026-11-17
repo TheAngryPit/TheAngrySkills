@@ -10,12 +10,6 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 ## Native Codex branch
 
-## Codex adaptation
-
-Apply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.
-
-Preserve the native proposal step: propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Do not edit that sibling skill.
-
 # Technical writing
 
 Write so a tired engineer understands on the first read.

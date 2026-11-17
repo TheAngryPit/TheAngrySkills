@@ -8,12 +8,6 @@ description: "Layered technical-writing standard: Diátaxis structure, Google de
 Shell commands, bare/backticked paths and prose use the original skill root (two directories above this reference). References to the original file mean that root, including sibling skills and playbooks. Markdown link destinations are file-relative and have already been relocated; do not apply the command base to those links.
 
 
-## Codex adaptation
-
-Apply the writing rules without changing symbols, wording, intent, or language. The pinned source requires `cursor-unslop` for every document this skill touches; check that published sibling before use. If it is unavailable, report the dependency and label any prose-only result partial. The `review_prose` harness checks only a bounded rule shape, not the combined workflow.
-
-Preserve the native proposal step: propose a new offender and its replacement as an addition to `cursor-unslop`'s abstract-metaphor rule in your reply, with the diff. Do not edit that sibling skill.
-
 # Technical writing
 
 Write so a tired engineer understands on the first read.

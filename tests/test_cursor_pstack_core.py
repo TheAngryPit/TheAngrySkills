@@ -109,88 +109,6 @@ VERIFICATION_SOURCE_WAVE = {
         "recipe": "Create the note first, then search Release and capture found output.",
     },
 }
-VALID_PLAN = """# Synthetic bug-fix plan
-
-Short fixture plan.
-
-## How to read this
-
-One box is one unit of work
-names the evidence
-Check a box only when its evidence exists
-playbooks/
-Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
-
-## Program checklist
-
-### Arm the program
-
-/goal
-
-### Spawn owners
-
-status message
-
-### PR mechanics
-
-git show origin/main:
-
-### Verdict and merge
-
-hourly audit
-
-### Boot recipe
-
-fixture boot
-
-## Fix synthetic notes app
-
-**Depends on.** local fixture
-
-**Files.**
-- [ ] app.py
-
-**Build.**
-- [ ] Run the fixture app.
-
-**You see.**
-- [ ] Capture the observed output.
-
-**Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
-- [ ] Unit evidence exists.
-
-**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `grok-4.6-fast-xhigh` at the PR head
-- [ ] Lane 1. exercise fixture. Save `lane-1.txt`. Pass when output matches.
-- [ ] Lane 2. exercise fixture. Save `lane-2.txt`. Pass when output matches.
-- [ ] Lane 3. exercise fixture. Save `lane-3.txt`. Pass when output matches.
-- [ ] Lane 4. exercise fixture. Save `lane-4.txt`. Pass when output matches.
-- [ ] Lane 5. exercise fixture. Save `lane-5.txt`. Pass when output matches.
-- [ ] Lane 6. exercise fixture. Save `lane-6.txt`. Pass when output matches.
-- [ ] Lane 7. exercise fixture. Save `lane-7.txt`. Pass when output matches.
-- [ ] Lane 8. exercise fixture. Save `lane-8.txt`. Pass when output matches.
-- [ ] Lane 9. exercise fixture. Save `lane-9.txt`. Pass when output matches.
-- [ ] Lane 10. exercise fixture. Save `lane-10.txt`. Pass when output matches.
-
-**Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
-- [ ] Metric.
-- [ ] Probe.
-- [ ] Baseline.
-- [ ] Rule.
-
-**Review gate.** None.
-
-**Merge.**
-- [ ] Merge only after the fixture evidence is reviewed.
-
-## Close the program
-
-Close after the fixture report is written.
-
-## Appendix Prototype evidence
-
-The synthetic fixture is not a live product proof.
-"""
-
 
 def read_manifest():
     return json.loads(MANIFEST.read_text())
@@ -261,8 +179,8 @@ class CursorPstackCoreTests(unittest.TestCase):
     def test_poteto_renders_all_playbooks_with_native_markdown_boundary(self):
         with tempfile.TemporaryDirectory() as temporary:
             target = self.render_core("cursor-poteto-mode", Path(temporary) / "staging")
-            self.assertEqual(len(list((target / "playbooks").glob("*.md"))), 23)
-            self.assertEqual(len(PSTACK_PLAYBOOK_FILES), 23)
+            self.assertEqual(len(list((target / "playbooks").glob("*.md"))), 22)
+            self.assertEqual(len(PSTACK_PLAYBOOK_FILES), 22)
             self.assertEqual(
                 {path.stem for path in (target / "playbooks").glob("*.md")},
                 set(PSTACK_PLAYBOOK_FILES),
@@ -281,30 +199,19 @@ class CursorPstackCoreTests(unittest.TestCase):
             self.assertIn("cursor-principle-*", native_profile.read_text())
 
             skill_markdown = (target / "SKILL.md").read_text()
-            self.assertIn("per-turn native Codex guidance adapter", skill_markdown)
-            self.assertIn("cursor-deslop", skill_markdown)
-            self.assertIn("cursor-control-cli", skill_markdown)
-            self.assertIn("cursor-control-ui", skill_markdown)
-            self.assertIn("model-capability-router", skill_markdown)
-            self.assertIn('agent_type: "poteto-agent"', skill_markdown)
-            self.assertIn("collaboration.followup_task", skill_markdown)
-            self.assertIn("Cloud-capable task environments", skill_markdown)
-            self.assertIn("do not claim parity", skill_markdown)
-            self.assertIn("published and indexed for explicit invocation", skill_markdown)
-            self.assertIn("cursor-technical-writing", skill_markdown)
-            self.assertIn("cursor-no-comments", skill_markdown)
-            self.assertIn("cursor-architect", skill_markdown)
-            self.assertIn("cursor-arena", skill_markdown)
-            self.assertNotIn("candidate remains unindexed", skill_markdown.lower())
-            self.assertNotIn("do not install globally", skill_markdown.lower())
+            for native in ("cursor-deslop", "cursor-control-cli", "cursor-control-ui", "model-capability-router", "cursor-technical-writing", "cursor-no-comments", "cursor-architect", "cursor-arena"):
+                self.assertIn(native, skill_markdown)
+            self.assertIn("named native `poteto-agent`", skill_markdown)
+            self.assertIn("Read <path>/worker.md before anything else", skill_markdown)
+            self.assertIn("A native refusal binds", skill_markdown)
             opening = (target / "playbooks/opening-a-pr.md").read_text()
-            self.assertIn("cursor-no-comments", opening)
-            self.assertIn("cursor-technical-writing", opening)
-            self.assertIn("cursor-unslop", opening)
-            self.assertIn("cursor-interrogate", opening)
+            self.assertIn("cursor-deslop", opening)
+            self.assertIn("under 40 lines", opening)
+            self.assertIn("Opening a PR does not start a babysit", opening)
             multi_phase = (target / "playbooks/multi-phase-plan.md").read_text()
-            self.assertIn("cursor-no-comments", multi_phase)
-            self.assertIn("cursor-deslop", multi_phase)
+            self.assertIn("one section per PR", multi_phase)
+            self.assertIn("Hand back the plan path and stop", multi_phase)
+            self.assertNotIn("check-plan", multi_phase)
             frontmatter = (target / "SKILL.md").read_text().split("---", 2)[1]
             self.assertIn("name: cursor-poteto-mode", frontmatter)
             self.assertNotIn("mode: true", frontmatter)
@@ -339,11 +246,11 @@ class CursorPstackCoreTests(unittest.TestCase):
             target = self.render_core("cursor-no-comments", Path(temporary) / "staging")
             skill_markdown = (target / "SKILL.md").read_text()
             self.assertIn('agent_type: "comment-sicko"', skill_markdown)
-            self.assertIn("cursor-how", skill_markdown)
+            self.assertNotIn("cursor-how", skill_markdown)
             self.assertIn("cursor-why", skill_markdown)
             self.assertIn("cursor-architect", skill_markdown)
             self.assertNotIn('subagent_type: "Comment Sicko"', skill_markdown)
-            self.assertIn("Only the optional constraint encoding waits", skill_markdown)
+            self.assertIn("Wait for interactive approval", skill_markdown)
 
     def test_poteto_preview_blocks_review_required_without_overclaiming_no_decision(self):
         bun = shutil.which("bun")
@@ -1052,61 +959,6 @@ console.log(JSON.stringify({{
                     ):
                         adapters._run_local_git(root, ("init", "--quiet"))
 
-    def test_check_plan_safe_fixture_valid_and_invalid(self):
-        node = shutil.which("node")
-        if node is None:
-            self.skipTest("node unavailable")
-        script = (
-            REPO
-            / "skills/mirrors-cursor/cursor-poteto-mode/scripts/check-plan.mjs"
-        )
-        self.assertTrue(os.access(script, os.X_OK), "native plan checker lost its executable mode")
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            home = root / "home"
-            home.mkdir()
-            valid = root / "valid.md"
-            invalid = root / "invalid.md"
-            valid.write_text(VALID_PLAN)
-            invalid.write_text(VALID_PLAN.replace("hourly audit", ""))
-            environment = {
-                "PATH": str(Path(node).parent),
-                "HOME": str(home),
-                "LANG": "C",
-            }
-            checked = subprocess.run(
-                [node, str(script), str(valid)],
-                cwd=str(REPO),
-                env=environment,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-                shell=False,
-                timeout=5.0,
-            )
-            self.assertEqual(checked.returncode, 0, checked.stderr)
-            self.assertIn("1 PR sections, 0 problems", checked.stdout)
-
-            rejected = subprocess.run(
-                [node, str(script), str(invalid)],
-                cwd=str(REPO),
-                env=environment,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                check=False,
-                shell=False,
-                timeout=5.0,
-            )
-            self.assertEqual(rejected.returncode, 1)
-            self.assertRegex(
-                rejected.stderr,
-                r'Program checklist lacks "hourly audit"',
-            )
-
     def test_worktree_audit_safe_fixture_uses_only_mocks(self):
         script = (
             REPO
@@ -1182,14 +1034,15 @@ esac
             self.assertIn(str(child), audited.stdout)
             self.assertIn("no-remote", audited.stdout)
 
-    def test_orchestrate_uses_native_coordination_without_removed_cli(self):
+    def test_retired_playbook_and_plan_checker_have_no_native_replacement(self):
         with tempfile.TemporaryDirectory() as temporary:
             target = self.render_core("cursor-poteto-mode", Path(temporary) / "staging")
-            text = (target / "playbooks/orchestrate.md").read_text()
-            self.assertIn("native collaboration and completion notifications", text)
-            self.assertIn("existing authorized project checkpoint", text)
-            self.assertNotIn("scripts/orch/orch.ts", text)
-            self.assertFalse((target / "scripts/orch").exists())
+            self.assertFalse((target / "playbooks/orchestrate.md").exists())
+            self.assertFalse((target / "scripts/check-plan.mjs").exists())
+            plan = (target / "playbooks/multi-phase-plan.md").read_text()
+            self.assertIn("Hand back the plan path and stop", plan)
+            self.assertIn("Execution starts on the operator's explicit go", plan)
+            self.assertNotIn("check-plan", plan)
 
     def test_watch_pr_reader_uses_real_bun_with_mocked_gh_and_git(self):
         bun = shutil.which("bun")

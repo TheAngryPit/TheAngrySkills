@@ -354,9 +354,8 @@ class CursorMirrorTests(unittest.TestCase):
         skill = (
             self.root / "skills/mirrors-cursor/cursor-technical-writing/SKILL.md"
         ).read_text()
-        self.assertIn("requires `cursor-unslop` for every document", skill)
         self.assertIn("Apply the **cursor-unslop** skill to every doc", skill)
-        self.assertIn("`cursor-unslop`'s abstract-metaphor rule", skill)
+        self.assertNotIn("propose a new offender", skill.lower())
         self.assertNotIn("optional unslop/style reference", skill)
         self.assertTrue(
             (self.root / "skills/mirrors-cursor/cursor-unslop/SKILL.md").is_file()
@@ -388,7 +387,8 @@ class CursorMirrorTests(unittest.TestCase):
             self.root
             / "skills/core/model-capability-router/assets/agents/comment-sicko.toml"
         ).read_text()
-        self.assertIn("cursor-how", agent)
+        self.assertIn("trace the named symbol", agent)
+        self.assertNotIn("cursor-how", agent)
         self.assertNotIn("`Task`", skill)
         self.assertIn('agent_type: "comment-sicko"', skill)
         self.assertIn("collaboration.spawn_agent", skill)

@@ -976,7 +976,7 @@
       "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     },
     {
-      "availability": "source_validated_runtime_unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1003,7 +1003,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "source_validated_runtime_unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
@@ -1027,7 +1027,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "source_validated_runtime_unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1052,7 +1052,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "Bounded native local Architect observed with prospective Ground how/why before two distinct sketches, independent judge, base/grafts, and disposable implementation probes; automatic trigger, external connectors and production parity remain unproven. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1075,7 +1075,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "Bounded native local Arena observed: N=2 isolated design candidates, independent cross-judge, base/grafts, runtime verification after a drift correction; automatic trigger, Work cloud and other task shapes remain unproven. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1098,7 +1098,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded project-local draft fixture observed; native history, skill-creator, unslop, and user-preference telemetry remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1121,7 +1121,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1262,7 +1262,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded isolated bug-fix playbook observed; prospective native trigger and production-target parity remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1285,7 +1285,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded native explorer/explainer role flow observed; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1448,7 +1448,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded explicit-only native named comment-sicko reviewer selected from the rendered skill; the reviewer removed one redundant comment, preserved SPDX, changed no application code, and coordinator verification passed; complex finding/rerun branches, fresh top-level loading and automatic selection remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1506,7 +1506,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "Codex adapter renderer, structural-read fixture, and local notes bug-fix fixture with independent process evidence checked; fixture-local portions of source steps 1/4/5 exercised and 2/3/6 partial; correction is prewritten by the fixture caller; selected dependency-free orch/store and watch-pr/github module paths run in scratch with Bun 1.4.2 and mocks; exact-lock dependency install, cache-populated bootstrap install/restart, real CLI smoke, and one bounded read-only GitHub status query for authorized PR #64 are proven in scratch; no real PR mutation, live parity, polling/stack behavior, native session, or cloud task lane demonstrated; install cache run was not network-instrumented, the key does not verify package versions, and Review ✅ is not a review-approval claim Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2131,7 +2131,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded scoped history/shared-record fixture observed; native task-history selection remains unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2154,7 +2154,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "Bounded explicit-only native three-lens review and synthesis on scoped disposable transcript observed; live native transcript selection and effective backend readback unproven. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -2177,7 +2177,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2200,7 +2200,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "source and distribution validated; native runtime unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -2223,7 +2223,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded native local trail, transcript audit and cross-model review observed; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2248,7 +2248,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded native local four-phase N=2 swarm observed; automatic skill selection, Work cloud workers, race and other hosts unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2317,7 +2317,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2387,7 +2387,7 @@
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
     },
     {
-      "availability": "bounded native read-only investigator/synthesizer flow observed; unavailable evidence categories remain explicit; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -3570,236 +3570,6 @@
       "related_skills": [
         "cursor-poteto-mode"
       ]
-    },
-    "scripts/cursor_pstack_architect_references_design-red-flags.md": {
-      "sha256": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce",
-      "related_skills": [
-        "cursor-architect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/architect/references/design-red-flags.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce"
-    },
-    "scripts/cursor_pstack_architect_references_rationale-template.md": {
-      "sha256": "be7ca23396b92002bd9c768cfecf3da1f7b2eb72a0c91d42be8c5eea4905ba47",
-      "related_skills": [
-        "cursor-architect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/architect/references/rationale-template.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "0cedfccdc7b47fc881febd5a8293eecbc542c20f8df825639904a8102d2eb5d3"
-    },
-    "scripts/cursor_pstack_architect_references_runner-prompt.md": {
-      "sha256": "21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e",
-      "related_skills": [
-        "cursor-architect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/architect/references/runner-prompt.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e"
-    },
-    "scripts/cursor_pstack_how_references_explainer-prompt.md": {
-      "sha256": "0c27930b75d5901278a81c887362235be3d43b4df7e66e3cd05c20828511a296",
-      "related_skills": [
-        "cursor-how"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/how/references/explainer-prompt.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "ddb89cebefc24e2b54517a331aedfe045b6971e101f45c71b8cef4cccff45bff"
-    },
-    "scripts/cursor_pstack_how_references_explorer-prompt.md": {
-      "sha256": "5e9198b7962446e0d603d793f3367f8fcdbf847aa06223360a6eccabc8fc1d7a",
-      "related_skills": [
-        "cursor-how"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/how/references/explorer-prompt.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "6300128385ee940fd42ecb84b0e623435440a2dc283eae54ee4a52ba56947ba1"
-    },
-    "scripts/cursor_pstack_poteto-mode_playbooks_orchestrate.md": {
-      "sha256": "bccc4ae7c3f2bd1f6a9792ef6527166c07281af07e1578fd8c75a201d1f53384",
-      "related_skills": [
-        "cursor-poteto-mode"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/poteto-mode/playbooks/orchestrate.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "dfd7e53e7ef844ae11394672b2f8e22ced47b977ff6e947fef837953cc95bb86"
-    },
-    "scripts/cursor_pstack_poteto-mode_scripts_check-plan.mjs": {
-      "sha256": "8d0c3696736d0a579095eb416d93035f28da2389922078bf9547a83b0e134560",
-      "related_skills": [
-        "cursor-poteto-mode"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/poteto-mode/scripts/check-plan.mjs",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "e3d4e9ca638c6fb4a2b52c434c17c7af30da4fdd44605ccfe9906f82fe37b555"
-    },
-    "scripts/cursor_pstack_reflect_references_divergent-reviewer.md": {
-      "sha256": "9b1b10f8fdfa2d247e2e0ba653a8da98b47ec505843ccf2f5c64cb8974c8c957",
-      "related_skills": [
-        "cursor-reflect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/reflect/references/divergent-reviewer.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "f6030d88e20e906ef5e2d9ba44cb013ce610c49c2fe2ef74c377d32e0dc9e939"
-    },
-    "scripts/cursor_pstack_reflect_references_judgment-reviewer.md": {
-      "sha256": "f215c311d707e9b93d35ba33653253463439ce785621f837376220f8e7c48e02",
-      "related_skills": [
-        "cursor-reflect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/reflect/references/judgment-reviewer.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "38f917619fbf346062d643e0ad6b12fc952d58678dfcbbf42ffcf6d8b9c08307"
-    },
-    "scripts/cursor_pstack_reflect_references_synthesizer.md": {
-      "sha256": "226ce21f69fe7e7eaae5417be7cff0b96847c5b7b0c197fdafb5f8445c7007ed",
-      "related_skills": [
-        "cursor-reflect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/reflect/references/synthesizer.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "6af816963de74d1a1aef4070273c1ff533d2072732e488e159ddc0b299fec3cd"
-    },
-    "scripts/cursor_pstack_reflect_references_tooling-reviewer.md": {
-      "sha256": "a9473ab7fe5e72366caf8ef347412b4acbc10882ff91f474deca27768290eb72",
-      "related_skills": [
-        "cursor-reflect"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/reflect/references/tooling-reviewer.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "f81b8697e7366fbbc18feba52c6e3253a101f751091364ebc4396a1d9b5753b4"
-    },
-    "scripts/cursor_pstack_why_references_epistemics.md": {
-      "sha256": "d54a2361b2d5973bc3fe2edf62f446d87935974d4b40d47f23b9529f956ca758",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/epistemics.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "d54a2361b2d5973bc3fe2edf62f446d87935974d4b40d47f23b9529f956ca758"
-    },
-    "scripts/cursor_pstack_why_references_investigator-prompt.md": {
-      "sha256": "c44afba186f899094f3694e6c9d6de5d14ff7c4ce28b787a9f50fc789c9a7fc3",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/investigator-prompt.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "c44afba186f899094f3694e6c9d6de5d14ff7c4ce28b787a9f50fc789c9a7fc3"
-    },
-    "scripts/cursor_pstack_why_references_source-playbook.md": {
-      "sha256": "d297dddf01af6f53088117ec5eab97392e0bd0050c7471b709697285fb44fd54",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/source-playbook.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "9ae9dcb9d09111c9facc68510331c5aba4aed9b1b057314ff1fc0e166ad3993a"
-    },
-    "scripts/cursor_pstack_why_references_sources_code-archaeology.md": {
-      "sha256": "a4a3970e9db448054aed676f3f7feeee667b4b69f0bd57c8fd72b751be687cc7",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/code-archaeology.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "a4a3970e9db448054aed676f3f7feeee667b4b69f0bd57c8fd72b751be687cc7"
-    },
-    "scripts/cursor_pstack_why_references_sources_databricks.md": {
-      "sha256": "236ede7aab6454662a992db088a5393537a5233a4c26719c93188f9e174488f6",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/databricks.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "236ede7aab6454662a992db088a5393537a5233a4c26719c93188f9e174488f6"
-    },
-    "scripts/cursor_pstack_why_references_sources_datadog.md": {
-      "sha256": "b139faac5dc11b8f26c8255dce6033c1a6ac143b038d3dd103f2034c5dbec9cd",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/datadog.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "b139faac5dc11b8f26c8255dce6033c1a6ac143b038d3dd103f2034c5dbec9cd"
-    },
-    "scripts/cursor_pstack_why_references_sources_incident-postmortem.md": {
-      "sha256": "bf2661f1a81c37700884a45b77d6289be0c802b065febced31990e6564510839",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/incident-postmortem.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "bf2661f1a81c37700884a45b77d6289be0c802b065febced31990e6564510839"
-    },
-    "scripts/cursor_pstack_why_references_sources_linear.md": {
-      "sha256": "01304e7f1badfcfb78babbb0edcadeb3cc8dd3f713793420cdff24ba190f907c",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/linear.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "01304e7f1badfcfb78babbb0edcadeb3cc8dd3f713793420cdff24ba190f907c"
-    },
-    "scripts/cursor_pstack_why_references_sources_notion.md": {
-      "sha256": "3bcfa695c49dfad4ac036d5d7181c12585f55ac04f1936198d16ab75a2788997",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/notion.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "3bcfa695c49dfad4ac036d5d7181c12585f55ac04f1936198d16ab75a2788997"
-    },
-    "scripts/cursor_pstack_why_references_sources_sentry.md": {
-      "sha256": "2d4f83048eac1df530b399e2aed75dd7c9c18577b7665420aaeb96d0ceb0b702",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/sentry.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "2d4f83048eac1df530b399e2aed75dd7c9c18577b7665420aaeb96d0ceb0b702"
-    },
-    "scripts/cursor_pstack_why_references_sources_slack.md": {
-      "sha256": "3bc6309f5c7b26ace3b919dbd7f7b048861dd2020f910fe24f656cc74b3b661c",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/sources/slack.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "3bc6309f5c7b26ace3b919dbd7f7b048861dd2020f910fe24f656cc74b3b661c"
-    },
-    "scripts/cursor_pstack_why_references_synthesizer-prompt.md": {
-      "sha256": "89e0140ffd22912cb62367e9e07081b13ec3a14f4957b6326227ab19d5b4953d",
-      "related_skills": [
-        "cursor-why"
-      ],
-      "relationship": "Reviewed native support retained after upstream removal; not current upstream source",
-      "upstream_source_path": "pstack/skills/why/references/synthesizer-prompt.md",
-      "upstream_source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-      "upstream_source_sha256": "11c62671aa7b7a6e3d36929ffe2b59bf95e6ca664eee4d93e6ee527dd3390ddb"
     }
   },
   "documentation_files": {

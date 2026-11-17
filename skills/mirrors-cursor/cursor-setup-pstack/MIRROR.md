@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: 54ff000a23b5c7e2277be11a0ee1d6a2049a64fb1f59027288cf87ffc8759415
 Published name: cursor-setup-pstack
 Decision class: adaptação funcional
-Availability: bounded dry-run budget mapping and native inventory observed; persistent role dispatch remains unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

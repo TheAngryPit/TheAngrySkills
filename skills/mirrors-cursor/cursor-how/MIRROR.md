@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: 23d5cc79a449b9838242e7af5563aa8a4f0417bab136bbcc054b4bebc7284680
 Published name: cursor-how
 Decision class: adaptação funcional
-Availability: bounded native explorer/explainer role flow observed; automatic skill selection unobserved Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

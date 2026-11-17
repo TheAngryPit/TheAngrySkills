@@ -84,7 +84,7 @@ class NativeAgentProfileTests(unittest.TestCase):
 
     def test_assets_are_native_toml_and_source_grounded(self):
         anchors = {
-            "comment-sicko": ("I hate comments.", "MUST KILL", "cursor-how", "cursor-why"),
+            "comment-sicko": ("I hate comments.", "MUST KILL", "trace the named symbol", "cursor-why"),
             "poteto-agent": (
                 "cursor-poteto-mode",
                 "cursor-principle-",

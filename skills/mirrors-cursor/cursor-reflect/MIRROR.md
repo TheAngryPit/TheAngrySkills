@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: 6f6952f91514dc86257830da93a446c732a1af906f6acd5e5783dc587a29031e
 Published name: cursor-reflect
 Decision class: adaptação funcional
-Availability: Bounded explicit-only native three-lens review and synthesis on scoped disposable transcript observed; live native transcript selection and effective backend readback unproven. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

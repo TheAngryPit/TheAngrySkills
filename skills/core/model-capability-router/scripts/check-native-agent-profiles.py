@@ -28,7 +28,6 @@ PROFILES = {
             "I hate comments.",
             "MUST KILL",
             "Report only.",
-            "cursor-how",
             "cursor-why",
             "required adapted skill",
         ),
@@ -67,7 +66,7 @@ def adapted_body(name: str, source_text: str) -> str:
         )
         body = body.replace(
             "I trace the named symbol or call, run `/why` from the **why** skill on it, or both",
-            "I trace the named symbol or call with `cursor-how`, run `cursor-why` from the adapted **cursor-why** skill on it, or both",
+            "I trace the named symbol or call, run `cursor-why` from the adapted **cursor-why** skill on it, or both",
         )
         return body + "\nIf a required adapted skill is unavailable, report the exact missing dependency to the coordinator; do not silently substitute a different workflow.\n"
     body = body.replace("The chat that receives `/poteto-mode` owns the playbook, the todo list, and every Task spawn.",

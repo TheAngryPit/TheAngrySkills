@@ -95,7 +95,7 @@
       "source_sha256": "0fb37221ab2a9159714d38f1528898e82b9758b5750f244bbe2e575bb593a1de",
       "native_name": "comment-sicko",
       "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
-      "asset_sha256": "73ee7c36b23e87ca86afa4bec3f5023d3cf895ae37c622c82cfb4db9f7b0be22",
+      "asset_sha256": "907499d1ce7be9dd8986a99148c37039b3bf96c8bca6dc260e86015eab652915",
       "distribution": "source profile; installation separate",
       "runtime": "not exercised in this source-only update",
       "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
@@ -131,7 +131,7 @@
       "source_sha256": "3e239e40b7b4b9beb2cf7f3ccc57f2388eb8b69bd1ba8ae888ef87ef6e0e2116",
       "native_name": "comment-sicko",
       "asset_path": "skills/core/model-capability-router/assets/agents/comment-sicko.toml",
-      "asset_sha256": "73ee7c36b23e87ca86afa4bec3f5023d3cf895ae37c622c82cfb4db9f7b0be22",
+      "asset_sha256": "907499d1ce7be9dd8986a99148c37039b3bf96c8bca6dc260e86015eab652915",
       "distribution": "parallel Claude harness reference; reuse existing role mapping, not an additional native profile",
       "runtime": "not exercised; no cross-harness parity claim",
       "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",

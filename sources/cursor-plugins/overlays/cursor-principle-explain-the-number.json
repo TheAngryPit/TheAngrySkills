@@ -4,7 +4,7 @@
   "reason": "Reviewed pstack addition in the existing Codex parity mirror.",
   "codex_rule": "Preserve native Codex permissions, selected models and tools; no automatic execution or installation.",
   "codex_note": "",
-  "preserved_requirement": "Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
+  "preserved_requirement": "Apply before you measure, and before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
   "proof": "Pinned source and deterministic renderer/catalog checks; live execution remains unproven.",
   "replacements": [],
   "codex_contract": {
@@ -15,7 +15,7 @@
       "published_name": "cursor-principle-explain-the-number",
       "source_path": "pstack/skills/principle-explain-the-number/SKILL.md"
     },
-    "preserved_semantics": "Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
+    "preserved_semantics": "Apply before you measure, and before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
     "native_mapping": {
       "availability": "source_validated_runtime_unproven",
       "capabilities": [
@@ -39,6 +39,10 @@
       "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
       "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
       "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority."
+    },
+    "security_review": {
+      "status": "current_source_scanner_comparison_required",
+      "decision": "Review the generated current method and remaining active helpers. Historical findings about deleted references and helpers do not describe this package."
     }
   }
 }

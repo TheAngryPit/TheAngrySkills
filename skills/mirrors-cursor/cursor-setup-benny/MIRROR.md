@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129
 Source SHA-256: 1b1298536804eef289718f497a42f48aec135c8f4175b03e5ecfa11075758c59
 Published name: cursor-setup-benny
 Decision class: adaptação nominal
-Availability: source_validated_runtime_unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

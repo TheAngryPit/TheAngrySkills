@@ -423,14 +423,15 @@ jobs:
         run: |
           set -euo pipefail
           gate_url=""
-          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${final_head}/statuses?per_page=100" \
             > "$RUNNER_TEMP/final-review-gate.json"
           gate_state="$(python - "$RUNNER_TEMP/final-review-gate.json" <<'PY'
           import json
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
           print((gate or {}).get("state") or "")
           PY
@@ -440,7 +441,8 @@ jobs:
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
           print((gate or {}).get("target_url") or "")
           PY
@@ -452,14 +454,15 @@ jobs:
             -f "inputs[pr_number]=$PR_NUMBER" \
             -f "inputs[expected_head_sha]=$final_head"
           for _ in $(seq 1 40); do
-            gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+            gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${final_head}/statuses?per_page=100" \
               > "$RUNNER_TEMP/final-review-gate.json"
             result="$(python - "$RUNNER_TEMP/final-review-gate.json" "$require_new" "$previous_gate_url" "$final_head" <<'PY'
           import json
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           gate = next((item for item in statuses if item.get("context") == "Codex review gate"), None)
           is_new = sys.argv[2] != "true" or (gate or {}).get("target_url") != sys.argv[3]
           creator = (gate or {}).get("creator") or {}
@@ -538,14 +541,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+          gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${final_head}/statuses?per_page=100" \
             > "$RUNNER_TEMP/trusted-ci-status.json"
           ci_state="$(python - "$RUNNER_TEMP/trusted-ci-status.json" <<'PY'
           import json
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
           print((item or {}).get("state") or "")
           PY
@@ -555,7 +559,8 @@ jobs:
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
           print((item or {}).get("target_url") or "")
           PY
@@ -567,14 +572,15 @@ jobs:
             -f "inputs[target_sha]=$final_head"
           ci_url=""
           for _ in $(seq 1 40); do
-            gh api "repos/${GITHUB_REPOSITORY}/commits/${final_head}/status" \
+            gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/commits/${final_head}/statuses?per_page=100" \
               > "$RUNNER_TEMP/trusted-ci-status.json"
             result="$(python - "$RUNNER_TEMP/trusted-ci-status.json" "$final_head" "$require_new" "$previous_ci_url" <<'PY'
           import json
           import pathlib
           import sys
 
-          statuses = json.loads(pathlib.Path(sys.argv[1]).read_text()).get("statuses") or []
+          pages = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          statuses = (status for page in pages for status in page)
           item = next((value for value in statuses if value.get("context") == "Skill stack CI (trusted main)"), None)
           is_new = sys.argv[3] != "true" or (item or {}).get("target_url") != sys.argv[4]
           creator = (item or {}).get("creator") or {}

@@ -910,9 +910,10 @@
       "playbooks/shipping.md",
       "playbooks/eval.md",
       "playbooks/session-pickup.md",
-      "playbooks/autonomous-run.md"
+      "playbooks/autonomous-run.md",
+      "SKILL.md: native planning/checkpoint surface"
     ],
-    "verification": "37 runtime/contract tests passed; authoring/shipping regression fails on the prior generated package and passes after correction; source review has no findings",
+    "verification": "38 focused runtime/contract tests passed; existing deterministic source/render/profile checks pass; no live workflow certification",
     "runtime_proof": "not claimed"
   }
 }

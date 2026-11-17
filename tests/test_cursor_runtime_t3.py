@@ -96,3 +96,10 @@ def test_native_history_playbooks_use_verified_host_session_locations():
         assert "verified session metadata" in text
         assert "the system prompt names" not in text
         assert "private chats" in text
+
+
+def test_native_playbook_planning_does_not_require_a_cursor_todo_tool():
+    text = (ROOT / "skills/mirrors-cursor/cursor-poteto-mode/SKILL.md").read_text()
+    assert "native planning surface" in text
+    assert "existing task checkpoint" in text
+    assert "todolist tool" not in text

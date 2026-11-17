@@ -901,5 +901,6 @@
       "intent_adoption": "Read commits and PR discussion first; cite authors, distinguish inference, disclose gaps. No mandatory delegates.",
       "native_translation": "Native names, routing, actual capabilities, authority/privacy or approved source destination only."
     }
-  ]
+  ],
+  "worker_authority_boundary": "The kickoff narrows work within the operator grant. Native permissions, operator exclusions, higher-priority instructions and required host/project checks remain binding; no discretionary review layers are added."
 }

@@ -3511,7 +3511,7 @@
         "comment-sicko",
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "a043409dcf9ba20a18605334b817ec15834d023d3619bbd31ec2e3dc23438371"
+      "reviewed_workflow_sha256": "c320f98607eb4a8284af9fa250680b48c6d47d70caa2375e72d94e1563c03f3d"
     },
     "cursor-principle-attack-the-premise": {
       "source_path": "pstack/skills/principle-attack-the-premise/SKILL.md",

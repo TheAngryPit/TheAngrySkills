@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: teaching/skills/create-learning-path/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/teaching/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/teaching/README.md
 Source SHA-256: 3d247cc4d5baf6fb397a398f6957ab7427c7852d613a42bb057fa93ca20fcc63
 Published name: cursor-create-learning-path
 Decision class: adaptação nominal

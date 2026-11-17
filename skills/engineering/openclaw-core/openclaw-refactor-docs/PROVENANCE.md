@@ -11,3 +11,7 @@ The operator's native boundaries govern publication, landing, dependency install
 Verification receipts are maintained at the pack source and task delivery; package checks/discovery do not prove Gateway runtime repair or a fresh model's invocation behavior.
 
 The bundled dotskills-derived technical-documentation dependency carries its own `references/technical-documentation/LICENSE`: MIT, Copyright (c) 2026 Vincent Koc. Its source license blob is `a7cb85a0d651801a2d601d0b31cbbc8b417dff76`; the public source archive also includes this notice.
+
+## Source refresh — 2026-11-06
+
+Compared original upstream files at the prior recorded commit with 39d85007e9ba04ca502bf06da2ed51d35cbad491. Incorporated only genuine upstream deltas; preserved the Codex root, permissions, companions and safety adaptations. Rebuilt resource hashes and pinned links. Link-rewritten reference bytes were not treated as upstream source changes.

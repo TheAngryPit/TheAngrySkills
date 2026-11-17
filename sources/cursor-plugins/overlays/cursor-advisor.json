@@ -40,8 +40,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "advisor/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/advisor/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/advisor/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
+      "sha256": "dfc6626c184c3e02aa01d4323349c0aa71ef21ed983969d764a6b539fff5f1f6"
     },
     "security_review": {
       "scanner_verdict": "safe_docs_only",

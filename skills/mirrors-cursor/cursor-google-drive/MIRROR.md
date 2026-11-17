@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: third_party/google-drive/skills/google-drive/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/third_party/google-drive/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/third_party/google-drive/README.md
 Source SHA-256: f34e2877924e63e1c7231a697c7e703d3f427f9ffaa7653ea1778e3875a914e7
 Published name: cursor-google-drive
 Decision class: native guidance adaptation; runtime unproven

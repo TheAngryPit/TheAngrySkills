@@ -1,18 +1,12 @@
 {
   "schema_version": 1,
-  "baseline_commit": "df581122cde17e6e27686b5a448bde23e4ad4318",
+  "baseline_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
   "files": {
     "third_party/x/skills/x-api-mcp-guide/SKILL.md": {
       "mode": "100644",
-      "git_blob": "a8625aaee04f8386824c7234244a158af6987f98",
-      "sha256": "004a5713fce8efa8efb14e1faaf8a4c167de69a11b0f682f0a4e6e41ea767bf6",
-      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
-    },
-    "third_party/x/skills/x-api-mcp-guide/references/pricing.md": {
-      "mode": "100644",
-      "git_blob": "5c813bea0db1772e11b65ae92cb4520736482cb1",
-      "sha256": "ec9a7c798ca5195b73f09ed9e0478ac89cd8fb6645cd30b21ecb225f8a8cd068",
-      "source_commit": "d457567332aa6989e753ea289f30ea2bfbc80bc0"
+      "git_blob": "5930489e8ebd66ad0fa25de1201036e3c7a917a2",
+      "sha256": "195c60e9c772f9ca6c91e1e0a8dee61f522928c6878181c41ffc53cd5f33ff48",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     }
   }
 }

@@ -45,6 +45,16 @@ If the scan reports `needs_human_review`, the PR may still be reviewed, but it
 is not automatically safe. The reviewer must inspect the affected skill,
 script, workflow, MCP/plugin surface, or install path before merging.
 
+## Owner-authored PR approval exception
+
+For this personal repository, `TheAngryPit` may use the existing native owner
+exception to the second-human approval requirement for their own PRs, after
+explicit merge authorization and all other acceptance checks. Follow
+[Owner-authored pull requests](owner-pr-merges.md) for identity, exact-head and
+verification requirements. This does not waive CI, security admission or
+required automated-review evidence, and does not extend to other authors.
+Repository settings and automated-mirror finalization remain unchanged.
+
 ## What Blocks A PR
 
 A PR should not merge when it introduces:

@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: third_party/google-sheets/skills/google-sheets/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/third_party/google-sheets/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/third_party/google-sheets/README.md
 Source SHA-256: 33d3072cdead2348af7b4e60cdcd9a494cc7c4e2b6ea0f66016065f5dc84a33a
 Published name: cursor-google-sheets
 Decision class: native guidance adaptation; runtime unproven

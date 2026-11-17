@@ -46,7 +46,7 @@
       "path": "pstack/README.md",
       "sha256": "7209937a990b0fee0c16702b8f9e8d75737627f99611cc04ac3a27408f6a23d3",
       "status": "verified_in_supplied_upstream_clone",
-      "url": "https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md"
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md"
     }
   },
   "codex_note": "## Codex adaptation\n\nOpen a visible four-phase todolist or Markdown checklist before launch: Frame, Fan out, Aggregate, Report. State the done predicate and output; choose partition, race, or mixed shape; declare the selection rule for a race; set total N, worker models, and separate writable outputs. Launch all N bounded native workers in parallel. Default to Work cloud only when its native worker route is available and the operator has authorized that destination. Use local workers when they need access to the user's computer. Otherwise report cloud unavailable without substituting local work. Each brief stands alone and requires PASS, ISSUES, or BLOCKED with evidence. Drain terminal results and return one compact aggregate with every required slice, issues, and explicit gaps or dropouts. A sequential fallback is not fan-out proof. The read-only two-slice local case and prior blocked worker outcome are in reports/pstack-swarm-four-phase-20260914.md and reports/pstack-thermos-swarm-real-20260914.md. Automatic selection and Work cloud parity remain unobserved.\n",

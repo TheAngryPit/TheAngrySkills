@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   cpSync,
   existsSync,
+  lstatSync,
+  realpathSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -200,13 +203,35 @@ function mirrorNote(source, item, sourceCommit) {
     `Commit: ${sourceCommit}\n\n` +
     `This skill is vendored from upstream with a \`${source.prefix}\` prefix to avoid ` +
     `global skill-name collisions. ${adaptation} upstream scripts, assets, ` +
-    `instructions, licensing, and workflow logic otherwise remain upstream material.\n`;
+    `instructions, licensing, and workflow logic otherwise remain upstream material.\n` +
+    (source.reviewed_patches ?? []).filter(patch => patch.path.startsWith(`${item.directory}/`))
+      .map(patch => `\nReviewed local correction (${patch.path}): ${patch.reason}\n`).join("");
 }
 
 function rootLicense(checkout) {
   return ["LICENSE", "LICENSE.md", "LICENSE.txt"]
     .map((name) => path.join(checkout, name))
     .find(existsSync);
+}
+
+function applyReviewedPatches(destination, source, item) {
+  for (const patch of source.reviewed_patches ?? []) {
+    const [directory, ...parts] = patch.path.split("/");
+    if (directory !== item.directory) continue;
+    const file = path.resolve(destination, ...parts);
+    if (!file.startsWith(`${path.resolve(destination)}${path.sep}`) || lstatSync(file).isSymbolicLink()
+        || !realpathSync(file).startsWith(`${realpathSync(destination)}${path.sep}`)) {
+      throw new Error(`${source.id}: unsafe reviewed patch path`);
+    }
+    const text = readFileSync(file, "utf8");
+    const digest = value => createHash("sha256").update(value).digest("hex");
+    if (digest(text) !== patch.source_sha256 || !patch.before || text.split(patch.before).length !== 2) {
+      throw new Error(`${source.id}: reviewed patch source drift: ${patch.path}`);
+    }
+    const updated = text.replace(patch.before, patch.after);
+    if (digest(updated) !== patch.patched_sha256) throw new Error(`${source.id}: reviewed patch result drift`);
+    writeFileSync(file, updated);
+  }
 }
 
 function materialize(source, checkout, sourceCommit) {
@@ -225,6 +250,7 @@ function materialize(source, checkout, sourceCommit) {
     for (const item of entries) {
       const destination = path.join(stagingRoot, item.destinationName);
       cpSync(item.root, destination, { recursive: true, dereference: false });
+      applyReviewedPatches(destination, source, item);
       rewriteTree(destination, item, mappings, {
         rewriteNamedReferences: source.rewrite_named_references === true,
       });
@@ -275,6 +301,14 @@ function validateFamily(source) {
       const note = readFileSync(mirrorFile, "utf8");
       if (!note.includes(`Published skill: ${directory}`)) failures.push(`${source.id}/${directory}: bad provenance`);
       if (!note.match(/^Commit: [0-9a-f]{40}$/m)) failures.push(`${source.id}/${directory}: invalid commit pin`);
+    }
+  }
+
+  for (const patch of source.reviewed_patches ?? []) {
+    const [directory, ...parts] = patch.path.split("/");
+    const file = path.join(destinationRoot, `${source.prefix}${directory}`, ...parts);
+    if (!existsSync(file) || createHash("sha256").update(readFileSync(file)).digest("hex") !== patch.patched_sha256) {
+      failures.push(`${source.id}: reviewed patch missing or modified: ${patch.path}`);
     }
   }
 

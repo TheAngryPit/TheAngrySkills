@@ -3415,7 +3415,7 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "d8ae5989559459b6e188b5d86c508b0b345b92f530e9a7096661286b486f9ab5",
+      "reviewed_workflow_sha256": "478e0973e26b7a1c4f7e80c9ee611a4c87daa22251ca2755122ee1fee4b5ee47",
       "profiles": [
         "comment-sicko",
         "poteto-agent"
@@ -6307,7 +6307,137 @@
           "schedule": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "ec44eabde40056958a1d09ce8dc15ca3d980706ed1cf394cbce7364af5474257"
+      "reviewed_workflow_sha256": "a9106a428fe20cf9fcf796273e475fe5a6a2ef51975d4cb275df05aa22e01e99"
+    },
+    "cursor-statechart": {
+      "source_path": "pstack/skills/statechart/SKILL.md",
+      "native-codex": {
+        "status": "partial",
+        "evidence": "source-only",
+        "reason": "New bounded adaptation; source/distribution validation, live target execution unproven",
+        "operations": {
+          "method": "partial"
+        }
+      },
+      "t3": {
+        "status": "partial",
+        "evidence": "source-only",
+        "reason": "New bounded adaptation; source/distribution validation, live target execution unproven",
+        "operations": {
+          "method": "partial"
+        }
+      },
+      "hermes": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-subagent": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-codex": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-acp": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "reviewed_workflow_sha256": "c5bd727e3fd84a5dd115d4b5949649708b8405edcc96a42d1d55dff0ab927b08",
+      "profiles": []
+    },
+    "cursor-ketchup-video": {
+      "source_path": "pstack/skills/ketchup-video/SKILL.md",
+      "native-codex": {
+        "status": "partial",
+        "evidence": "source-only",
+        "reason": "New bounded adaptation; source/distribution validation, live target execution unproven",
+        "operations": {
+          "method": "partial"
+        }
+      },
+      "t3": {
+        "status": "partial",
+        "evidence": "source-only",
+        "reason": "New bounded adaptation; source/distribution validation, live target execution unproven",
+        "operations": {
+          "method": "partial"
+        }
+      },
+      "hermes": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-subagent": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-codex": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "openclaw-acp": {
+        "status": "deferred",
+        "evidence": "none",
+        "reason": "Future adapter; unavailable until separately implemented and verified",
+        "operations": {
+          "method": "deferred",
+          "delegate": "deferred",
+          "link-pr": "deferred",
+          "watch-pr": "deferred"
+        }
+      },
+      "reviewed_workflow_sha256": "b13b697b0f4463dc6b915a5a3b483944242a71187f64a81010e09bea490f142c",
+      "profiles": []
     }
   },
   "profiles": {

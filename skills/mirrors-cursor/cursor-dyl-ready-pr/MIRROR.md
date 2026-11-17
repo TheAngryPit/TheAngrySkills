@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: dyl-stack/skills/dyl-ready-pr/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a/dyl-stack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/dyl-stack/README.md
 Source SHA-256: c7f15ebe3be64e58ef09668ccb84ebe339109a7cd5f832346295a91169244ab7
 Published name: cursor-dyl-ready-pr
 Decision class: native guidance adaptation; runtime unproven

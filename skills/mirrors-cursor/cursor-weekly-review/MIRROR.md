@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: c1c0a32802223f4be824112dd83d33ad29a8b26c
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: cursor-team-kit/skills/weekly-review/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/cursor-team-kit/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/cursor-team-kit/README.md
 Source SHA-256: b56a2c283916b4551aeb322398ab99a19b4b5d7678ffd7f9c9f3df9fa05f4712
 Published name: cursor-weekly-review
 Decision class: intacta

@@ -13,3 +13,7 @@ Verification receipts are maintained at the pack source and task delivery; packa
 ## Source refresh — 2026-10-31
 
 Reviewed `references/interaction-performance.md` at `447e14d02460342af4fe2c98dbd5475b15b938d2`; updated the original source archive and packaged reference, preserving the Codex root, invocation policy, companions and existing link pins. New links bind this revision. Resource hashes were regenerated. Original integration remains in Git history.
+
+## Source refresh — 2026-11-06
+
+Compared original upstream files at the prior recorded commit with 39d85007e9ba04ca502bf06da2ed51d35cbad491. Incorporated only genuine upstream deltas; preserved the Codex root, permissions, companions and safety adaptations. Rebuilt resource hashes and pinned links. Link-rewritten reference bytes were not treated as upstream source changes.

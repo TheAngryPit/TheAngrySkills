@@ -1447,7 +1447,7 @@ async function cmdReviews(name, opts) {
 
 // npm caps one range request at 18 months, so the window is split into chunks of at most 365 days.
 export function npmRanges(months, now = new Date()) {
-  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - months, 1));
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (months - 1), 1));
   const end = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1));
   const out = [];
   for (let from = start; from <= end;) {

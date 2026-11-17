@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: 4dd1d05818d19792e7cd6e818f1667f95f7e1dbe
+Commit: 8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b
 Physical source path: pstack/skills/principle-laziness-protocol/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/README.md
 Source SHA-256: 1be6e7a435f26a75a76eb848b9c3d611b9977d0f5822361753244da25ca3ca45
 Published name: cursor-principle-laziness-protocol
 Decision class: adaptação funcional

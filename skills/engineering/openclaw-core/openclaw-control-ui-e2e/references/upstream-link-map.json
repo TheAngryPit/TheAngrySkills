@@ -1,13 +1,13 @@
 {
   "checkout_required": true,
-  "source_commit": "aea75db8e4cf3397749cc51011dea696777de02d",
+  "source_commit": "39d85007e9ba04ca502bf06da2ed51d35cbad491",
   "links": [
     {
       "source_file": "references/upstream/SKILL.source.md",
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "../openclaw-testing/SKILL.md",
       "repository_path": ".agents/skills/openclaw-testing/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-testing/SKILL.md",
       "bundled_target": null
     },
     {
@@ -15,7 +15,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "references/visual-proof.md#ui-stress-test",
       "repository_path": ".agents/skills/control-ui-e2e/references/visual-proof.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/references/visual-proof.md#ui-stress-test",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/references/visual-proof.md#ui-stress-test",
       "bundled_target": "references/upstream/references/visual-proof.md"
     },
     {
@@ -23,7 +23,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "references/visual-proof.md",
       "repository_path": ".agents/skills/control-ui-e2e/references/visual-proof.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/references/visual-proof.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/references/visual-proof.md",
       "bundled_target": "references/upstream/references/visual-proof.md"
     },
     {
@@ -31,7 +31,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "references/interaction-performance.md",
       "repository_path": ".agents/skills/control-ui-e2e/references/interaction-performance.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/references/interaction-performance.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/references/interaction-performance.md",
       "bundled_target": "references/upstream/references/interaction-performance.md"
     },
     {
@@ -39,7 +39,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "references/run-inspector.md",
       "repository_path": ".agents/skills/control-ui-e2e/references/run-inspector.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/references/run-inspector.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/references/run-inspector.md",
       "bundled_target": "references/upstream/references/run-inspector.md"
     },
     {
@@ -47,7 +47,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/SKILL.md",
       "original": "../openclaw-testing/SKILL.md",
       "repository_path": ".agents/skills/openclaw-testing/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-testing/SKILL.md",
       "bundled_target": null
     },
     {
@@ -55,7 +55,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/references/visual-proof.md",
       "original": "../SKILL.md#artifacts",
       "repository_path": ".agents/skills/control-ui-e2e/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/control-ui-e2e/SKILL.md#artifacts",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/control-ui-e2e/SKILL.md#artifacts",
       "bundled_target": "references/upstream/SKILL.source.md"
     },
     {
@@ -63,7 +63,7 @@
       "source_repository_file": ".agents/skills/control-ui-e2e/references/visual-proof.md",
       "original": "../../proof-video/SKILL.md",
       "repository_path": ".agents/skills/proof-video/SKILL.md",
-      "pinned_url": "https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/proof-video/SKILL.md",
+      "pinned_url": "https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/proof-video/SKILL.md",
       "bundled_target": null
     }
   ]

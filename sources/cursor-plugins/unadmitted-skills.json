@@ -1,15 +1,300 @@
 {
   "schema_version": 1,
   "skills": {
-    "pstack/skills/ketchup-video/SKILL.md": {
-      "state": "pending_review",
-      "sha256": "027aed9a01adf208aeac3a134f47d12f7c1e42d6fea03095aedc2bae58cdcfd1",
-      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
+    "harness/pstack/claude-code/skills/architect/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "dc74c4810a53a4ee25812278280f2580c00fb06408890e993be0623722a07aaa",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     },
-    "pstack/skills/statechart/SKILL.md": {
-      "state": "pending_review",
+    "harness/pstack/claude-code/skills/arena/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "a70df68e26420f783b09ac10b1ce6951b1438fa2233d5a0a5ad789720ba9c7b5",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/automate-me/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "0849f9835a8a66bb4e1ef510eabe480562319f94bd89264d67dcf20133f4c73d",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/benchmark-checklist/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "ba109e96c8f6c1c391baccf19e5d11e14370df7b3f2605e1572cd565a6c0fca0",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/blast-radius/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "2e10745b97f5862323dcda3b29ca60d56b5c3c98e37020085d26b48efbe0a436",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/bro/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "aa329d0ceeeecb6822a7174ad76bb07a7826a3c52ceb6a588dec4138815084bb",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/correct/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "e347045d00c967a0b831ef883cc6ac79d21329aa10b5968637df95de7febf0ba",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/create-formal-verification-skill/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "78efd7c0e472f11d25399cd337fb3036b48411da75f426c22c363fe1048cd8bb",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/create-verification-skill/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "b63d3cfb6d41725bd187d1df6085ba54a88391d5c25ca51fca8f2625a2de2288",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/figure-it-out/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "1c0167ba3c88aef79118e90357e465960fea09af291a3c815abfd2dfe6c75126",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/how/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "f2aad836aa83cac7385e734ab888d573e1736def5b061aa8a72b1717f085606c",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/in-your-own-words/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "fa8ba74e27d7be371dc270ec78bbf816411477d0dfab185356c861ac8dd413ad",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/interrogate/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "41358b680e1d585ee35f2b58d93e11eda8c02e3f1c5f5b50c565a173d8e37eed",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/ketchup-video/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "027aed9a01adf208aeac3a134f47d12f7c1e42d6fea03095aedc2bae58cdcfd1",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/ketchup/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "f2923ffd14f6fc778f75a47aaed1f317fb5fd00b5701ca769d6446c74106dead",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/maintain-formal-verification-skill/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "adea4eb5afe20fd07bb90e675ab6c0c6232e5447e29faa3ebf58049c57cdc060",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/maintain-verification-skill/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "8eb22afe29058a689ab542dbd729b953cb1fe0d21f0214e54270477a1751b032",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/make-bot-ui/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "160a4847d7666130507fa8591feab07b684974fc07ebd0b79a33f70d5deef7ff",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/no-comments/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "52e05eb2578f7316421be8174430c1fd2c17bf5d6ac57d9e6a1c452b98d3a570",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/poteto-help/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "8ebc580b6970b7baac8da07fb03e1fe201a50d519cd3004073e73ff49f189352",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/poteto-mode/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "9e9e77f996512b0309a6d2d136f20dd20e394739c3bfe3a9e473003a95c4a3b2",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-attack-the-premise/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "6a932884daad4aa189e9b5d1665226bbc75621d4d2a398fd4003bebd382f4599",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-boundary-discipline/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "62ac2862c2caa22dd14531f51c9c6bb445ceb198ca98a687e25b4d47c1f10a28",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-build-the-lever/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "3434b0ad0c640c6f1d7960be7a8986c3bcdc14e26060360dec29903df60074ff",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-encode-lessons-in-structure/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "228963799189f481827d6f28065f278bc2008ffa37030b1234cbd5814d36b9e9",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-exhaust-the-design-space/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "2de83d99f93f60ec6313455b0bc9aa9f0bfb93dd59f414f403691322db00d4db",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-experience-first/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "58903529d733b1c1a7c9ccf127d45ef3c7d0d9f0b81164a4dc6b80efe6f2912b",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-explain-the-number/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "3c84fbf9a7d9842abcfcd134010782b32092ac3d3fb4aaf9ed5732dca83aa58c",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-fix-root-causes/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "8df3c8c3fe57eb0055a5c8efab8ab144557fdf301da70b1cdc77a3a3ef3f3052",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-foundational-thinking/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "864b827e8199d946ce58beca0f89c4ed4099ed6e426fb698a3aaa45de2a9eea2",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-guard-the-context-window/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "af0b9dd70b43628ce4a59a4d332e9d9ad055084e460f430e7a757495c627e81a",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-laziness-protocol/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "1be6e7a435f26a75a76eb848b9c3d611b9977d0f5822361753244da25ca3ca45",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-make-operations-idempotent/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "7aa9327cf1f1aa057e95d47a0a78bd88a8f9d556b608866fee939d455a53a019",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "580ad9bb1a0994ecb924321ba49efc38a2f85c64e22c76fb133f57a78272a2e6",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-minimize-reader-load/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "1ea2b7fef2391cae5844c4efdbd59031f775e8a52d06b7495d707229a200dcca",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-model-the-domain/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "52c0d85e0c3827c41c18299b642657d7b47eaf77b7b31609e42e0df42b84c75f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-never-block-on-the-human/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "05030a7a083c337676f793881b4e93cd218e8f1dd676529f56e6ac1d3efb8d1f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-outcome-oriented-execution/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "10eb91633aa570355ba4bb37088fcade2b22e498df7a58edc749e65bc5a78e2d",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-prove-it-works/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "d3912cce868a276ce611eb08178311958e5df929b0a4e5340f1afa4774be81f2",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-redesign-from-first-principles/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "170e0a658783e43fee8ec5a8c2422a4abb8f69cef621dd1819a95910b8207034",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-separate-before-serializing-shared-state/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "05294b40448e927c5da1c7b6f5c6b9fed3744637e3833d2d948b9154a9dd00bb",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-sequence-verifiable-units/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "2ccbbacc56ace5afdfb8670cef19d7bd009fb2a0033b9a741cbdf2b6baf72187",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-subtract-before-you-add/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "8c93bb9d1a7f38e2ef37655d93f0e790fa59903105af3d500cc8a663ebe45f3f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-test-behavior-not-implementation/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "f7223698623b6a26fea49c751e466b38e6691b1f32ce841d3983e7ffbe2b74a6",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/principle-type-system-discipline/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "5cdaf79785e3c12b2592b9469ee8c272143eb86ab7a18d8382197cea5fd30106",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/recall/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "5b8fa47d6929c60e0db6de9d4ce78f4d9c02b93f4242219eb0a60a052801d22e",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/reflect/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "03d12ba1c5f9d85946aa6ce2ccf5de7acc9506657370300c5c6251f654501482",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/setup-pstack/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "97e90db5a6ab33cc609bd0f2f05e2a2707ea8d337d1375935fd2c8da21f8b4d4",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/sharpen/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "563dfc460c605d311e650726288e2f1cbd61eab817db178d6e7e29643e07e7a2",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/show-me-your-work/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "4936325425064cbbbd1e82a7813cef5593ed8a273671d43ac5b1360de93f880a",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/statechart/SKILL.md": {
+      "state": "parallel_harness_reference_only",
       "sha256": "010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d",
-      "source_commit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe"
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/swarm/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "34fb1420f1a0ad343bcf3c3e531db67b0ed43ba09c421e97936ce11200c43546",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/tdd/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "eeb868e2dfebee528d730a67d7b17498fac4bb85dec2e38bc5c5176aca4d5d2f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/teach/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "7f759a4ab2d8206d75f8c9984a113249135c45b1af95a5c2907681d56c76489f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/technical-writing/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "f52de47ccac67a713d5cb5d8bd5dc525ee8f624507d31a804e37efa339038430",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/typescript-best-practices/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "ec1dac086d3708e5940d45d250c30a37dd953b4e3cb2ca0692f5851d7a039e27",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/unslop/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "ccab208e315ce05e2fab8eeee2f7879f1289b5c6844840b2d307adf31c79144f",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "harness/pstack/claude-code/skills/why/SKILL.md": {
+      "state": "parallel_harness_reference_only",
+      "sha256": "09405adc5afda90841f16318e471f25329d17da908956d79973edb34cdccb188",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+    },
+    "third_party/tailscale/skills/tailscale-setup/SKILL.md": {
+      "state": "pending_review",
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
+      "sha256": "7a89f702d44ac7a8ad2785f0ee43d60e45ff0c3f9a73343deadfb75ce0222aa5"
     }
   }
 }

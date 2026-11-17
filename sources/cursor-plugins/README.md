@@ -1,3 +1,7 @@
+## Reconciliation — 17 November 2026
+
+The reviewed snapshot has 114 native adaptations: 108 published and six held. `cursor-ketchup-video` is admitted as explicit-only. `cursor-statechart` remains fully preserved under `adapted-held/` until its new quarantine signals and Java/TLC bootstrap behavior clear admission; it is not installed or published. The five existing operator exclusions remain unchanged. Later `main` Marketing/Hyperframes updates and the GPT-6.2/Fable routing edition are preserved. The older inventories below are historical evidence.
+
 ## Pstack 0.15.28 source refresh, 19 October 2026
 
 The pstack family is pinned to `d457567332aa6989e753ea289f30ea2bfbc80bc0`.

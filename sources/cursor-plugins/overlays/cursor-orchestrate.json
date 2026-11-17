@@ -48,8 +48,9 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "orchestrate/README.md",
-      "url": "https://github.com/cursor/plugins/blob/c1c0a32802223f4be824112dd83d33ad29a8b26c/orchestrate/README.md",
-      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot."
+      "url": "https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/orchestrate/README.md",
+      "note": "Verified in the pinned upstream clone; the README is referenced for provenance and is not vendored in this skills-only snapshot.",
+      "sha256": "a4fb4c1ada13790b5e71da52c2f1b5e31c5b2c1d6404a75707b55ca9e1832d2b"
     },
     "security_review": {
       "scanner_verdict": "blocked_malicious",

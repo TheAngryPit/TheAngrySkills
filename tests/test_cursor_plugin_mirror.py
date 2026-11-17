@@ -392,7 +392,7 @@ class CursorMirrorTests(unittest.TestCase):
         self.assertNotIn("`Task`", skill)
         self.assertIn('agent_type: "comment-sicko"', skill)
         self.assertIn("collaboration.spawn_agent", skill)
-        self.assertIn("coordinator inspects the reviewer diff", skill)
+        self.assertIn("Inspect its report and diff.", skill)
 
         poteto = (preview / "cursor-poteto-mode/SKILL.md").read_text()
         plan = (preview / "cursor-poteto-mode/playbooks/multi-phase-plan.md").read_text()

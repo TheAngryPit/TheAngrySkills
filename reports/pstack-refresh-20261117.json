@@ -902,5 +902,17 @@
       "native_translation": "Native names, routing, actual capabilities, authority/privacy or approved source destination only."
     }
   ],
-  "worker_authority_boundary": "The kickoff narrows work within the operator grant. Native permissions, operator exclusions, higher-priority instructions and required host/project checks remain binding; no discretionary review layers are added."
+  "worker_authority_boundary": "The kickoff narrows work within the operator grant. Native permissions, operator exclusions, higher-priority instructions and required host/project checks remain binding; no discretionary review layers are added.",
+  "native_host_followup": {
+    "reason": "Replace unavailable Cursor builtins and transcript locations with actual native host surfaces; no restoration of retired procedures",
+    "paths": [
+      "playbooks/authoring-a-skill.md",
+      "playbooks/shipping.md",
+      "playbooks/eval.md",
+      "playbooks/session-pickup.md",
+      "playbooks/autonomous-run.md"
+    ],
+    "verification": "37 runtime/contract tests passed; authoring/shipping regression fails on the prior generated package and passes after correction; source review has no findings",
+    "runtime_proof": "not claimed"
+  }
 }

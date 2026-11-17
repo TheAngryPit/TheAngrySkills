@@ -74,3 +74,25 @@ def test_all_22_current_playbooks_are_adapted_and_runtime_scoped():
         assert original.strip() and file.read_text().strip()
     assert 'Read method.md in full' in (target/'references/runtime/t3.md').read_text()
     assert 'No step is waived' in (target/'references/runtime/t3.md').read_text()
+
+
+def test_native_authoring_and_shipping_do_not_require_cursor_builtins():
+    root = ROOT / "skills/mirrors-cursor/cursor-poteto-mode/playbooks"
+    authoring = (root / "authoring-a-skill.md").read_text()
+    shipping = (root / "shipping.md").read_text()
+    assert "skill-creator" in authoring
+    assert "Cursor's built-in" not in authoring
+    assert "`/loop`" not in shipping
+    assert "task-owned" in shipping
+    assert "native status/completion waits" in shipping
+    assert "COMPLETE" in shipping and "ceiling" in shipping
+
+
+def test_native_history_playbooks_use_verified_host_session_locations():
+    root = ROOT / "skills/mirrors-cursor/cursor-poteto-mode/playbooks"
+    for name in ("eval.md", "session-pickup.md"):
+        text = (root / name).read_text()
+        assert "authorized chat/rollout reader" in text
+        assert "verified session metadata" in text
+        assert "the system prompt names" not in text
+        assert "private chats" in text

@@ -201,6 +201,31 @@
       "file": "worker.md",
       "before": "You are working for the operator. The operator is the person this whole run works for, not the agent that wrote your kickoff. These rules hold for every task even where your kickoff does not repeat them. Your kickoff overrides one only when it says so in so many words.\n\n- If you start an agent, the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of the folder that holds this file.\n- The bar in your kickoff is the whole bar. Add no check, gate, sign-off or review round above it.\n- With no bar stated, the change must be no worse than its base and pass its own tests.\n- Hold or block only for a failing run at this head or a bug a user would hit. Report a problem the base already has in one line.\n- Never call a tool that shows a person a question. Make any choice you can undo, then say what you chose and why. Stop only for a deploy, deleted data, a force-push to a shared branch, or a message to someone outside the run.\n- Open every PR ready for review, never as a draft.\n- PR title: `type(scope): subject`.\n- PR body: 40 lines at most, with these `##` headings in this order, empty ones dropped: `Why`, `What changed`, `Scope`, `Tradeoffs`, `Blast Radius`, `Verification`.\n- Put evidence logs, run histories and long tables in a file or a PR comment, and link to them from the body.\n",
       "after": "You are working for the operator. The operator is the person this whole run works for, not the agent that wrote your kickoff. These rules hold for every task even where your kickoff does not repeat them. A kickoff may narrow or specify the task within the operator's grant. Native permissions and operator exclusions remain binding. Higher-priority instructions and required host/project checks remain binding.\n\n- If the assignment authorizes starting an agent through the actual native interface, the first line of its kickoff is `Read <path>/worker.md before anything else.`, with `<path>` the absolute path of the folder that holds this file.\n- The kickoff states the task's completion bar. Do not add discretionary checks, gates, sign-offs or review rounds. Required host/project checks still apply.\n- With no bar stated, the change must be no worse than its base and pass its own tests.\n- Hold or block only for a failing run at this head or a bug a user would hit. Report a problem the base already has in one line.\n- Make routine reversible choices covered by the assignment, then say what you chose and why. Ask only when missing information materially changes scope, access, cost, safety or outcome. A deploy, deletion, force push or message must be covered by the operator's authorization and native permissions.\n- Open PRs ready for review unless the operator selected a draft; publication belongs to the assigned owner.\n- PR title: `type(scope): subject`.\n- PR body: 40 lines at most, with these `##` headings in this order, empty ones dropped: `Why`, `What changed`, `Scope`, `Tradeoffs`, `Blast Radius`, `Verification`.\n- Put evidence logs, run histories and long tables in a file or a PR comment, and link to them from the body.\n\nModels and effort follow `model-capability-router` and explicit native bindings. Report unavailable capabilities; do not invent Task parameters or bypass a refusal.\n"
+    },
+    {
+      "file": "playbooks/authoring-a-skill.md",
+      "before": "Use the **create-skill** skill (Cursor's built-in for authoring SKILL.md files).",
+      "after": "Use the available native **skill-creator** workflow for authoring SKILL.md files. Resolve its actual host instructions first; if it is unavailable, report that capability gap instead of inventing a Cursor built-in."
+    },
+    {
+      "file": "playbooks/shipping.md",
+      "before": "On GitHub, watch the run with `scripts/watch-pr/watch-pr --queued-stack` under `/loop` until it reports `COMPLETE` at the ceiling.",
+      "after": "On GitHub, run `scripts/watch-pr/watch-pr --queued-stack` with an existing compatible runtime as a task-owned process and use native status/completion waits until it reports `COMPLETE` at the ceiling. Use bounded waits and retain ownership of the run; do not create a persistent schedule. If the required runtime or wait cadence is unavailable, report the gap without claiming the stack completed."
+    },
+    {
+      "file": "playbooks/eval.md",
+      "before": "Read each candidate's local transcript under the active workspace's `agent-transcripts/` directory (the system prompt names this path). Do not glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.",
+      "after": "Read each candidate's in-scope transcript through the native host's authorized chat/rollout reader or its verified session metadata. Do not assume an agent-transcripts directory exists or search other projects, profiles or private chats. If the required transcript cannot be located through the supported surface, report the exact gap."
+    },
+    {
+      "file": "playbooks/session-pickup.md",
+      "before": "A local transcript under the active workspace's `agent-transcripts/` directory (the system prompt names the path. Do not glob across `~/.cursor/projects/*/`, that crosses workspace boundaries and reads private chats from unrelated projects), a cloud-agent URL, or a pushed branch.",
+      "after": "Use the native host's authorized chat/rollout reader and verified session metadata for the specific in-scope session, an authorized cloud-agent URL, or a pushed branch. Do not assume a Cursor transcript directory exists or search unrelated projects, profiles or private chats."
+    },
+    {
+      "file": "playbooks/autonomous-run.md",
+      "before": "Do not park reversible work for the human or use `AskQuestion`.",
+      "after": "Do not park already-authorized reversible work for the human or ask again merely because the work is reversible."
     }
   ],
   "source_path": "pstack/skills/poteto-mode/SKILL.md",

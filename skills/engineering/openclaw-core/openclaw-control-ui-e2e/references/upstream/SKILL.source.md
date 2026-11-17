@@ -15,7 +15,7 @@ description: Control UI browser tests, visual reviews and recordings, interactio
    Gateway data. Extend its typed scenario options for missing responses. Use the
    existing dependency installation; preserve installs used by other jobs.
    Real Gateway/provider credentials require explicit live-proof authorization.
-   Follow [testing policy](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/SKILL.md) for execution placement.
+   Follow [testing policy](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-testing/SKILL.md) for execution placement.
    **Done:** the target flow runs against the intended source or production build
    and each required fixture response is defined.
 3. **Exercise behavior.** Install the mock before navigation. Act through visible
@@ -67,7 +67,7 @@ For run/execution/decision evidence, read
 ## Running a focused test
 
 Use the current scripts in `package.json` and
-[testing policy](https://github.com/openclaw/openclaw/blob/aea75db8e4cf3397749cc51011dea696777de02d/.agents/skills/openclaw-testing/SKILL.md). For a worktree's focused browser test:
+[testing policy](https://github.com/openclaw/openclaw/blob/39d85007e9ba04ca502bf06da2ed51d35cbad491/.agents/skills/openclaw-testing/SKILL.md). For a worktree's focused browser test:
 
 ```bash
 node scripts/run-vitest.mjs run --config test/vitest/vitest.ui-e2e.config.ts --configLoader runner ui/src/e2e/chat-flow.messaging.e2e.test.ts

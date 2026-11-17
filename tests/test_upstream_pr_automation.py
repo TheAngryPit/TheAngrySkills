@@ -1108,6 +1108,41 @@ def test_codex_review_gate_requires_authenticated_clean_exact_head_evidence():
     assert stale["state"] == "pending"
 
 
+
+@pytest.mark.parametrize("prefix", ["", "<!-- codex-review-receipt:v1 -->\n\n"])
+def test_codex_clean_receipt_formats_keep_identity_and_head_binding(prefix):
+    head = "b" * 40
+    pr = readiness_pr("cursor", "pstack", head)
+    clean = clean_codex_result(head)
+    clean["body"] = prefix + clean["body"]
+    assert lifecycle.codex_review_gate(
+        pr, [codex_summary(head), clean], [], [], empty_threads(), repository="owner/repo"
+    )["state"] == "success"
+    spoof = json.loads(json.dumps(clean))
+    spoof["performed_via_github_app"]["id"] = 999
+    stale = clean_codex_result("c" * 40)
+    stale["body"] = prefix + stale["body"]
+    for invalid in (spoof, stale):
+        assert lifecycle.codex_review_gate(
+            pr, [codex_summary(head), invalid], [], [], empty_threads(), repository="owner/repo"
+        )["state"] == "pending"
+
+
+@pytest.mark.parametrize("prefix", [
+    "<!-- unrelated -->\n", "Quoted result:\n",
+    "<!-- codex-review-receipt:v2 -->\n\n",
+    "<!-- codex-review-receipt:v1 -->\n",
+    "<!-- codex-review-receipt:v1 -->\n\n" * 2,
+])
+def test_codex_clean_receipt_does_not_accept_arbitrary_preambles(prefix):
+    head = "b" * 40
+    clean = clean_codex_result(head)
+    clean["body"] = prefix + clean["body"]
+    assert lifecycle.codex_review_gate(
+        readiness_pr("cursor", "pstack", head), [codex_summary(head), clean],
+        [], [], empty_threads(), repository="owner/repo"
+    )["state"] == "pending"
+
 def test_codex_findings_need_resolved_thread_and_grounded_human_disposition():
     head = "b" * 40
     pr = readiness_pr("cursor", "pstack", head)
@@ -1663,3 +1698,21 @@ def test_orphan_recovery_requires_exact_unpublished_bot_report(tmp_path, monkeyp
         with pytest.raises(ValueError):
             lifecycle.assess_orphan_proposal('matt', 'adapted', branch, closed, expected)
     assert git(repo, 'rev-parse', 'refs/remotes/origin/' + branch) == tip
+
+
+def test_prefixed_clean_receipt_carries_only_verified_readiness_parent():
+    parent, _, _, attestation, bot_commit, pr = finalization_fixture()
+    clean = clean_codex_result(parent)
+    clean["body"] = "<!-- codex-review-receipt:v1 -->\n\n" + clean["body"]
+    result = lifecycle.codex_review_gate(
+        pr, [codex_summary(parent), clean], [], [], empty_threads(),
+        repository="owner/repo", current_commit=bot_commit, readiness=attestation,
+    )
+    assert result["state"] == "success" and result["carry_forward"]
+    assert result["reviewed_head"] == parent
+    bot_commit["author"]["id"] = 999
+    rejected = lifecycle.codex_review_gate(
+        pr, [codex_summary(parent), clean], [], [], empty_threads(),
+        repository="owner/repo", current_commit=bot_commit, readiness=attestation,
+    )
+    assert rejected["state"] == "pending" and not rejected["carry_forward"]

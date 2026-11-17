@@ -174,7 +174,7 @@ class CursorMirrorTests(unittest.TestCase):
         manifest = json.loads(manifest_path.read_text())
         excluded_names = {
             "cursor-make-bot-ui", "cursor-add-dictation", "cursor-add-read-aloud",
-            "cursor-add-voice", "cursor-debug-voice",
+            "cursor-add-voice", "cursor-debug-voice", "cursor-statechart",
         }
         excluded = [e for e in manifest["skills"] if e.get("excluded_from_mirror")]
         self.assertEqual({e["published_name"] for e in excluded}, excluded_names)
@@ -183,7 +183,7 @@ class CursorMirrorTests(unittest.TestCase):
             self.assertTrue((self.root / "sources/cursor-plugins/snapshot" / entry["path"]).is_file())
         state = json.loads((self.root / "reports/cursor-plugin-skills-state.json").read_text())
         self.assertEqual(state["candidate_not_published"], 0)
-        self.assertEqual(state["operator_excluded_skills"], 5)
+        self.assertEqual(state["operator_excluded_skills"], 6)
         preview = self.root / "native-preview"
         result = self.run_build("--preview-candidates", str(preview))
         self.assertEqual(result.returncode, 0, result.stderr)

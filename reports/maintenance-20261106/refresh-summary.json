@@ -64,5 +64,12 @@
       "change": "Start at current month minus months - 1; retain a reviewed hash-checked source patch through mirror regeneration.",
       "proof": "UTC month/year/leap boundaries, empty first-day data, lost-patch rejection, and original RED/corrected GREEN demonstrated."
     }
-  ]
+  ],
+  "reconciliation_20261117": {
+    "published": 108,
+    "held": 6,
+    "statechart": "preserved as adapted-held; new quarantine admission unresolved; not published or installed",
+    "main_updates": "Latest Marketing/Hyperframes and GPT-6.2/Fable routing retained",
+    "npm_fix": "Reviewed source hash remains current; correction preserved"
+  }
 }

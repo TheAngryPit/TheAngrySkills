@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/8ecfb19f844b67a4b
 Source SHA-256: 010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d
 Published name: cursor-statechart
 Decision class: adaptação nominal
-Availability: source and distribution validated; native execution and provider availability require target proof
+Availability: Native adapter preserved for review; not admitted to the public catalog.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

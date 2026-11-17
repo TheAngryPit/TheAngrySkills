@@ -2758,7 +2758,7 @@
       "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     },
     {
-      "availability": "source and distribution validated; native execution and provider availability require target proof",
+      "availability": "Native adapter preserved for review; not admitted to the public catalog.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -3179,12 +3179,14 @@
       "path": "pstack/skills/statechart/SKILL.md",
       "planned_adaptation": "Copiar conteúdo para o overlay Codex, preservar referências relativas e ajustar metadata/trigger; provar seleção e conclusão.",
       "promotion_reason": "Operator authorized missing adaptation closure on 2026-11-06",
-      "publish": true,
+      "publish": false,
       "published_name": "cursor-statechart",
       "upstream_purpose": "Check an explicit bounded TLA+ model and explain its statechart and shortest invariant counterexamples.",
       "upstream_skill": "statechart",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
+      "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
+      "excluded_from_mirror": true,
+      "exclusion_reason": "Held on 2026-11-17: new quarantine signals in bundled statechart fixtures need admission resolution; preserve complete source and native adapter without publishing or installing it."
     }
   ],
   "snapshot_scope": "114 reviewed source adapters: 109 published, five held; 59 additional physical paths remain reference-only or pending review, including private-only tailscale-setup. Full raw source inventory is pinned separately. Source distribution does not activate runtimes.",

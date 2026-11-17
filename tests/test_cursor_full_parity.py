@@ -24,7 +24,7 @@ def test_every_upstream_file_skill_and_agent_is_preserved():
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
     assert tree['family_updates'] == {'pstack': '8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b'}
     result = load('check-cursor-adaptations').verify()
-    assert result == dict(skills=114, published=109, held_adapted=5, agents_mapped=16,
+    assert result == dict(skills=114, published=108, held_adapted=6, agents_mapped=16,
                           unresolved_links=0, runtime_proof='not claimed')
 
 
@@ -80,10 +80,10 @@ def test_detector_notices_new_non_pstack_plugin_and_dormant_pack_change(tmp_path
 
 def test_new_admissions_are_pinned_and_explicit():
     check = load('check-cursor-adaptations')
-    assert check.verify()['published'] == 109
+    assert check.verify()['published'] == 108
     manifest = json.loads((ROOT / 'sources/cursor-plugins/manifest.json').read_text())
     full = json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())
-    for name in ['in-your-own-words', 'ketchup', 'sharpen', 'ketchup-video', 'statechart']:
+    for name in ['in-your-own-words', 'ketchup', 'sharpen', 'ketchup-video']:
         entry = next(item for item in manifest['skills'] if item['published_name'] == f'cursor-{name}')
         assert full['files'][entry['path']]['sha256'] == entry['files']['SKILL.md']
         skill = ROOT / f'skills/mirrors-cursor/cursor-{name}'

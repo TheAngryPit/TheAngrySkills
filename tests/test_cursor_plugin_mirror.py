@@ -604,3 +604,17 @@ class CursorMirrorTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_quarantined_statechart_is_preserved_but_not_published():
+    manifest = json.loads((REPO / "sources/cursor-plugins/manifest.json").read_text())
+    entry = next(item for item in manifest["skills"] if item["published_name"] == "cursor-statechart")
+    assert entry["excluded_from_mirror"] is True
+    assert entry["publish"] is False
+    assert "quarantine" in entry["exclusion_reason"]
+    assert (REPO / "sources/cursor-plugins/adapted-held/cursor-statechart/SKILL.md").is_file()
+    assert not (REPO / "skills/mirrors-cursor/cursor-statechart").exists()
+    marketplace = json.loads((REPO / ".claude-plugin/marketplace.json").read_text())
+    assert "./skills/mirrors-cursor/cursor-statechart" not in {
+        skill for plugin in marketplace["plugins"] for skill in plugin.get("skills", [])
+    }

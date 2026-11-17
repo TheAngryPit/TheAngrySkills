@@ -12,7 +12,7 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 # Arena
 
-Open a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.
+Record one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) in the native planning surface when available, otherwise in the existing task checkpoint, before launching anything.
 
 ## Phase A: Frame
 

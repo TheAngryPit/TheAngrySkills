@@ -12,7 +12,7 @@ Shell commands, bare/backticked paths and prose use the original skill root (two
 
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Record one entry per phase in the native planning surface when available, otherwise in the existing task checkpoint, before launching anything.
 
 1. Frame
 2. Fan out

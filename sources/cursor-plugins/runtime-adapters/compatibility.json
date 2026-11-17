@@ -2436,7 +2436,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "4a72d0f987b7a18c3033f098da4a6210879677c4023281e50a41917aff98ed7f"
+      "reviewed_workflow_sha256": "c2b6857bd955aa8616f6840d20ca923e8a2e4f102e49f7ffeb6594d69c3ab185"
     },
     "cursor-automate-me": {
       "source_path": "pstack/skills/automate-me/SKILL.md",
@@ -2906,7 +2906,7 @@
           "worktree": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "2c4b65f588244634c5b4ff3ab03bc9d63fbc3ffea1c7929b59ad592d73e6ae22"
+      "reviewed_workflow_sha256": "5edd119e830391a71ae57e5e5399c8077b5937e9227c9149a073a2eb7375705b"
     },
     "cursor-how": {
       "source_path": "pstack/skills/how/SKILL.md",
@@ -5167,7 +5167,7 @@
       "profiles": [
         "poteto-agent"
       ],
-      "reviewed_workflow_sha256": "813e02e8f03405f5c03060578361006e908a71fdd53435a46b4e0730c250218d"
+      "reviewed_workflow_sha256": "b45dfaa775d0ed7dba983b38b8fca7fd579b4946fa36ee780b3825ed231e339a"
     },
     "cursor-tdd": {
       "source_path": "pstack/skills/tdd/SKILL.md",

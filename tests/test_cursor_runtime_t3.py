@@ -103,3 +103,12 @@ def test_native_playbook_planning_does_not_require_a_cursor_todo_tool():
     assert "native planning surface" in text
     assert "existing task checkpoint" in text
     assert "todolist tool" not in text
+
+
+def test_native_phase_workflows_do_not_require_cursor_todolist():
+    for name in ("cursor-swarm", "cursor-arena", "cursor-figure-it-out"):
+        text = (ROOT / "skills/mirrors-cursor" / name / "SKILL.md").read_text()
+        assert "native planning surface" in text, name
+        assert "existing task checkpoint" in text, name
+        assert "Open a todolist" not in text, name
+        assert "to the todolist" not in text, name

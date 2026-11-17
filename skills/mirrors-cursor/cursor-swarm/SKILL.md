@@ -14,7 +14,7 @@ Before runtime-dependent work, read [execution selection](references/runtime/sel
 
 ## Start
 
-Open a todolist with one entry per phase before launching anything.
+Record one entry per phase in the native planning surface when available, otherwise in the existing task checkpoint, before launching anything.
 
 1. Frame
 2. Fan out

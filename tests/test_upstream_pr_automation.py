@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import os
+import textwrap
 import pytest
 from pathlib import Path
 import subprocess
@@ -985,9 +987,6 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     assert 'git config user.name "github-actions[bot]"' in workflow
     assert "immutable github-actions bot identity" in workflow
     assert "actions/workflows/skill-stack-ci.yml/dispatches" in workflow
-    assert 'run.get("event") == "workflow_dispatch"' in workflow
-    assert "candidate-review-gate-run.json" in workflow
-    assert "Codex gate lacks a trusted workflow-dispatch run URL" in workflow
     assert '-f ref=main' in workflow
     assert 'inputs[target_sha]=$final_head' in workflow
     assert 'gh pr merge "$PR_NUMBER"' in workflow
@@ -1027,6 +1026,83 @@ def test_finalizer_uses_read_only_validation_then_bot_push_explicit_ci_and_auto_
     ci = (ROOT / ".github/workflows/skill-stack-ci.yml").read_text()
     assert "workflow_dispatch:" in ci
     assert '${TARGET_SHA}: trusted main workflow' in ci
+
+
+@pytest.mark.parametrize("step, context, workflow_name, receipt", [
+    ("Carry the reviewed parent", "Codex review gate",
+     "codex-review-gate.yml", "final_review_gate_url"),
+    ("Dispatch CI explicitly", "Skill stack CI (trusted main)",
+     "skill-stack-ci.yml", "final_ci_url"),
+])
+@pytest.mark.parametrize("scenario", [
+    "trusted", "wrong_creator", "wrong_event", "wrong_workflow", "wrong_head", "stale_url",
+])
+def test_finalizer_only_exports_receipt_for_fresh_trusted_status(
+    tmp_path, step, context, workflow_name, receipt, scenario,
+):
+    workflow = (ROOT / ".github/workflows/finalize-matt-cursor-upstream.yml").read_text()
+    section = next(part for part in workflow.split("      - name: ") if part.startswith(step))
+    script = textwrap.dedent(section.split("        run: |\n", 1)[1])
+    head = "b" * 40
+    run_url = "https://github.example/owner/repo/actions/runs/42"
+    old_url = "https://github.example/owner/repo/actions/runs/41"
+    status = {
+        "context": context, "state": "success",
+        "description": f"{'c' * 40 if scenario == 'wrong_head' else head}: passed",
+        "target_url": old_url if scenario == "stale_url" else run_url,
+        "creator": {"login": "github-actions[bot]", "id": 123 if scenario == "wrong_creator" else 41898282},
+    }
+    old = {**status, "description": f"{head}: passed", "target_url": old_url,
+           "creator": {"login": "github-actions[bot]", "id": 41898282}}
+    write(tmp_path / "before.json", json.dumps([[{**old, "state": "pending"}]]))
+    write(tmp_path / "after.json", json.dumps([[{"context": "unrelated"}], [status, old]]))
+    write(tmp_path / "run.json", json.dumps({
+        "event": "pull_request" if scenario == "wrong_event" else "workflow_dispatch",
+        "head_branch": "main", "status": "completed", "conclusion": "success",
+        "path": ".github/workflows/unrelated.yml" if scenario == "wrong_workflow"
+        else f".github/workflows/{workflow_name}",
+    }))
+    fake_gh = tmp_path / "gh"
+    write(fake_gh, f"#!{sys.executable}\n" + """import json, os, sys
+from pathlib import Path
+
+state = Path(os.environ["RUNNER_TEMP"])
+args = sys.argv[1:]
+if any(arg.endswith("/dispatches") for arg in args):
+    (state / "dispatched").touch()
+elif any(arg.endswith(("/status", "/statuses?per_page=100")) for arg in args):
+    pages = json.loads((state / ("after.json" if (state / "dispatched").exists() else "before.json")).read_text())
+    if any(arg.endswith("/status") for arg in args):
+        print(json.dumps({"statuses": [
+            {key: value for key, value in item.items() if key != "creator"}
+            for page in pages for item in page
+        ]}))
+    else:
+        print(json.dumps(pages))
+elif any(arg.endswith(("/actions/runs/41", "/actions/runs/42")) for arg in args):
+    print((state / "run.json").read_text())
+else:
+    raise SystemExit(f"Unexpected gh request: {args}")
+""")
+    fake_gh.chmod(0o755)
+    (tmp_path / "python").symlink_to(sys.executable)
+    receipt_file = tmp_path / "env"
+    env = {**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"],
+           "RUNNER_TEMP": str(tmp_path), "GITHUB_ENV": str(receipt_file),
+           "GITHUB_REPOSITORY": "owner/repo", "final_head": head, "PR_NUMBER": "168"}
+    result = subprocess.run(
+        ["bash", "-c", "sleep() { :; }; seq() { echo 1; }\n" + script],
+        env=env, text=True, capture_output=True, timeout=10,
+    )
+    assert (tmp_path / "dispatched").exists()
+    if scenario == "trusted":
+        assert result.returncode == 0, result.stderr
+        assert receipt_file.read_text() == f"{receipt}={run_url}\n"
+    else:
+        assert result.returncode != 0
+        reason = "trusted main workflow" if scenario in {"wrong_event", "wrong_workflow"} else "timed out"
+        assert reason in result.stderr
+        assert not receipt_file.exists()
 
 
 def official_codex_comment(body):

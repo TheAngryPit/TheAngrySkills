@@ -78,7 +78,7 @@ jobs:
           python scripts/sync-matt-adaptations.py --check
 
       - name: Run tests
-        run: python -m pytest -q tests
+        run: python -m pytest -q tests skills/engineering/video-frame-review/tests/test_sampling.py
 
       - name: Validate shared skill catalog
         run: scripts/theangry-skills.mjs check --root skills --profile shared

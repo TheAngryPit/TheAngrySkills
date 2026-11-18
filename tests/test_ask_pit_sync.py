@@ -53,6 +53,27 @@ def test_missing_route_preserves_previous_package(tmp_path):
     assert {p.name: p.read_bytes() for p in dest.rglob('*') if p.is_file()} == before
 
 
+def test_failed_install_restores_previous_package(tmp_path, monkeypatch):
+    checkout, root = source(tmp_path)
+    dest = tmp_path / 'ask-pit'
+    sync.refresh(checkout, dest)
+    before = {p.relative_to(dest): p.read_bytes() for p in dest.rglob('*') if p.is_file()}
+    (root / 'support.md').write_text('Replacement support.\n')
+    rename = Path.rename
+
+    def fail_install(path, target):
+        if target == dest and path.name == 'skill':
+            assert not dest.exists()
+            raise OSError('fixture: staged install failed')
+        return rename(path, target)
+
+    monkeypatch.setattr(Path, 'rename', fail_install)
+    with pytest.raises(OSError, match='fixture: staged install failed'):
+        sync.refresh(checkout, dest)
+    assert {p.relative_to(dest): p.read_bytes() for p in dest.rglob('*') if p.is_file()} == before
+    sync.validate(dest)
+
+
 def test_local_unapproved_edit_is_detected(tmp_path):
     checkout, _ = source(tmp_path)
     dest = tmp_path / 'ask-pit'

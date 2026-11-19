@@ -1,145 +1,73 @@
 ---
-type: Continuity Handoff
-title: "<human task title>: compact continuation"
-description: Continue accepted work without inheriting the legacy transcript.
-tags: [continuity, handoff]
-status: active
-generated:
-  by: "<agent or operator>"
-  at: "<ISO-8601 timestamp>"
-sources:
-  - id: source-task
-    resource: "urn:codex:thread:<thread-id>"
-    title: "<human source title>"
-  - id: decision-anchor
-    resource: "<commit, issue, URL, or document title>"
-    title: "<human anchor title>"
-continuity:
-  schema_version: "0.3"
-  source_mode: legacy-task
-  destination_mode: fresh-native-task
-  transcript_inherited: false
-  acknowledgement_required: true
-  historical_recall: bounded-read-only-question-driven
+type: continuity-handoff
+schema_version: "1.0"
+work: "<portable human-readable identity>"
+work_slug: "<stable-lowercase-slug>"
+source_runtime: "OpenClaw"
+source_agent: "<agent id or unknown>"
+source_session: "<session key/id if exposed, otherwise unknown>"
+source_gateway_device: "<gateway/device if known, otherwise unknown>"
+target_runtime: "<OpenClaw, Codex, other, or undecided>"
+transcript_inherited: false
+implementation_started: false
 ---
 
 # Mission
 
-<One paragraph describing the current outcome, not the whole project history.>
+<One paragraph stating the outcome that must continue.>
 
-# Work
-
-- Work: <portable human-readable work identity>.
-- Work slug: `<stable-lowercase-slug>`.
-
-# Current Goal And Resume Checkpoint
+# Current goal and checkpoint
 
 - Active goal: <goal or explicitly none>.
-- Completed checkpoint: <last proven checkpoint>.
-- Resume point: <one exact next action>.
-- Authorization boundary: <what this packet does and does not authorize>.
-- Inherited goal lineage: <source goal ID/state/usage, or explicitly none>.
+- Last completed checkpoint: <strongest verified point>.
+- Exact next action: <one bounded action>.
+- Work state: <implemented, code-proven, test-proven, runtime-proven, or end-to-end-proven; specify evidence>.
 
-# Source Thread And Portable Identity
+# Project and runtime binding
 
-- Thread ID: `<source-thread-id>`.
-- Human title: <source title>.
-- Profile: <source profile name>.
-- Profile Placement: <primary, secondary, or another explicit placement>.
-- Device: <stable device name>.
-- Project Binding: <portable project identity>.
-- Repository: <portable owner/name>.
-- Branch: `<branch>`.
-- HEAD: `<commit>`.
-- This is semantic continuation, not transcript migration.
+- Project: <portable identity, not a machine path>.
+- Repository: <owner/name or local-only>.
+- Branch and commit: <observed values, or unknown>.
+- Working tree: <clean/dirty and relevant files, or not inspected>.
+- OpenClaw agent / source session: <only what the source runtime exposed>.
+- Gateway / execution device: <observed, reported, or unknown>.
+- Target workspace and identity: <how the target will find the work; or unresolved>.
 
-# Device Observations
+# Accepted decisions
 
-These paths are local observations for the recorded Device. They are not
-canonical Work identity and must not be guessed on another Device.
+- <Decision and reason.>
 
-- Binding Model: `<single-root or project-root-with-nested-repo>`.
-- Codex Project Root: `<outer directory saved by the Codex project>`.
-- Canonical Repo Root: `<directory containing .git and AGENTS.md>`.
-- Operational CWD: `<working directory inside the canonical repo>`.
-- CODEX_HOME: `<exact source profile CODEX_HOME>`.
-- rollout_path: `<exact resolved source rollout path>`.
+# Proven results and evidence
 
-# Accepted Decisions
+- <Claim; proof level; exact file, command, test, issue, or timestamp.>
+- <Link to compact source evidence. Do not paste complete logs or transcripts.>
 
-- <Decision and rationale.>
+# Failures and do-not-repeat
 
-# Failures And Do Not Repeat
+- <Attempt, observed failure, and invariant it establishes.>
 
-- <Rejected action, measured consequence, and required invariant.>
+# Dependencies and owners
 
-# Ledger Snapshot And Canonical References
+- <Service/tool/access dependency; current owner; availability condition.>
 
-- <Reference authoritative files, commits, issues, tests, and ledgers.>
-- <Include only the current checkpoint and strongest proof.>
-- Live repository and runtime truth override stale references.
+# Protected state and authorization
 
-# Protected State
+- <Exact data, sessions, identities, accounts, jobs, or resources that must not be changed.>
+- <Actions authorized, actions not authorized, and any approval still required.>
 
-- <Exact source task and unrelated user-owned state that must remain untouched.>
+# Open questions and known gaps
 
-# Historical Recall Handle
+- <Only decisions or proof gaps that can change the next action. Unknown is not false.>
 
-```yaml
-work: "<portable work identity>"
-title: "<human source title>"
-thread_id: "<source task id>"
-profile: "<profile>"
-profile_placement: "<primary or secondary>"
-device: "<device>"
-project_binding: "<portable project identity>"
-device_observation:
-  binding_model: "<single-root or project-root-with-nested-repo>"
-  codex_project_root: "<saved Codex project root>"
-  canonical_repo_root: "<Git root containing .git>"
-  operational_cwd: "<working directory inside canonical repo>"
-  codex_home: "<source CODEX_HOME>"
-  rollout_path: "<verified rollout path>"
-access_policy: "bounded-read-only-question-driven"
-```
+# Evidence lineage
 
-# Inherited Usage And Evidence Lineage
+- Source runtime observation: <date/time and source session locator if available>.
+- Target runtime counters: <separate; record only after target execution>.
+- Omitted history: <what was not transferred or verified>.
 
-- Source usage observation: <exact source usage evidence or unavailable>.
-- Target native counters: separate; record only after Target creation.
-- Evidence Lineage: <source goal, proof, timestamps, and retrieval locators>.
-- Do not add Source usage to Target native counters.
+# Required acknowledgement before implementation
 
-# Known Historical Gaps
-
-- <Facts deliberately omitted or not verified.>
-- Absence from this packet means unknown, not false.
-
-# Independent Review Before Implementation
-
-Read repo instructions and verify branch, HEAD, dirty state, cited canon, and
-the smallest relevant implementation surface. Stop on contradiction.
-
-# Validation
-
-- Target Thread ID: `<assigned only after fresh native creation>`.
-- Target ID differs from Source ID: <pending/pass>.
-- Required acknowledgement: <pending/pass>.
-- Exact-source bounded Recall: <pending/pass and evidence locator>.
-- Project Binding validation: <pending/pass; include model and all three roots>.
-- Source unchanged proof: <pending/pass and before/after evidence>.
-- The handoff is not accepted while any item is pending.
-
-# Suggested Skills
-
-- <Only capabilities relevant to the next bounded action.>
-
-# Required Acknowledgement
-
-Reply first with:
-
-1. mission and resume checkpoint;
-2. accepted versus unverified facts;
-3. exact next read-only action;
-4. protected state;
-5. confirmation that implementation has not started.
+The receiving agent replies with the mission and resume point, verified versus
+unverified facts, the next read-only check, protected state and authorization,
+and whether implementation has started. It then verifies current project state
+before acting.

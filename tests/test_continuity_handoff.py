@@ -14,6 +14,8 @@ SCRIPT = ROOT / "skills/engineering/continuity-handoff/scripts/recall-codex-hist
 WRITER = ROOT / "skills/engineering/continuity-handoff/scripts/write-continuity-packet.mjs"
 VALIDATOR = ROOT / "skills/engineering/continuity-handoff/scripts/validate-handoff-acceptance.mjs"
 SKILL = ROOT / "skills/engineering/continuity-handoff/SKILL.md"
+PACKET_TEMPLATE = ROOT / "skills/engineering/continuity-handoff/references/packet-template.md"
+CODEX_LEGACY = ROOT / "skills/engineering/continuity-handoff/references/codex-legacy-workflow.md"
 
 
 def run_git(repo, *args):
@@ -847,8 +849,43 @@ class ContinuityHandoffTests(unittest.TestCase):
             self.assertIn("recall_source_unavailable", completed.stderr)
             self.assertIn("Recorded rollout mismatch", completed.stderr)
 
-    def test_cross_profile_acceptance_requires_new_target_identity_and_source_proof(self):
+    def test_openclaw_handoff_uses_native_sessions_and_portable_packet(self):
         contract = " ".join(SKILL.read_text().split())
+        packet = PACKET_TEMPLATE.read_text()
+        required_fragments = [
+            "Use `/compact`",
+            "Use `/new`",
+            "Use `/reset`",
+            "Use `/fork` only when the user explicitly wants",
+            "Do not invent Codex Thread IDs",
+            "references/packet-template.md",
+            "OpenClaw's live context",
+            "Do not archive, reset, fork, message another agent, or create a session",
+            "references/codex-legacy-workflow.md",
+        ]
+        for fragment in required_fragments:
+            self.assertIn(fragment, contract)
+        for fragment in (
+            'source_runtime: "OpenClaw"',
+            "Exact next action",
+            "Protected state and authorization",
+            "Evidence lineage",
+            "Target workspace and identity",
+        ):
+            self.assertIn(fragment, packet)
+        self.assertNotIn("CODEX_HOME", packet)
+
+    def test_codex_archive_recall_remains_an_optional_legacy_workflow(self):
+        contract = " ".join(SKILL.read_text().split())
+        legacy = " ".join(CODEX_LEGACY.read_text().split())
+        self.assertIn("For a Codex source only", contract)
+        self.assertIn("Codex-specific and must never inspect OpenClaw session storage", contract)
+        self.assertIn("one real bounded Recall query succeeds", legacy)
+        self.assertIn("Never archive, delete, commit, rename, or otherwise mutate the Source Thread", legacy)
+
+    def test_legacy_cross_profile_acceptance_requires_new_target_identity_and_source_proof(self):
+        contract = " ".join(SKILL.read_text().split())
+        contract += " " + " ".join(CODEX_LEGACY.read_text().split())
         required_fragments = [
             "Target Thread with a new Thread ID",
             "Target Thread ID is present and differs from the Source Thread ID",

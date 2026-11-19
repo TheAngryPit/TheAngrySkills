@@ -124,6 +124,16 @@ class DocsSkillBuilderSecurityTests(unittest.TestCase):
         self.assertIn(tool_name, json.loads(description.removeprefix('description: ')))
         self.assertEqual((skill / 'references' / doc.name).read_bytes(), doc.read_bytes())
 
+    def test_scaffold_documents_native_openclaw_install_and_discovery(self):
+        self.scaffold(['README.md'])
+        readme = (self.output / 'README.md').read_text(encoding='utf-8')
+        self.assertIn('openclaw skills install "$SKILL_DIR" --agent main', readme)
+        self.assertIn('openclaw skills install "$SKILL_DIR" --global', readme)
+        self.assertIn('openclaw skills list --agent main', readme)
+        self.assertIn('openclaw skills check --agent main', readme)
+        self.assertIn('Install in Codex', readme)
+        self.assertIn('CODEX_HOME/skills/fixture-docs', readme)
+
 
 if __name__ == '__main__':
     unittest.main()

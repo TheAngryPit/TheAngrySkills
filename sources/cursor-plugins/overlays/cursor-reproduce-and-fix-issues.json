@@ -46,8 +46,8 @@
     "upstream_readme": {
       "status": "verified_in_pinned_upstream_clone",
       "path": "pstack/README.md",
-      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md",
-      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
+      "url": "https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md",
+      "sha256": "c14d76d2ac9cb9bc9bf86f6523198324df85ab52a605a11891d2a5ba3145fa21",
       "note": "Verified in pinned upstream clone; upstream documentation is reference material, not native runtime authority."
     },
     "security_review": {

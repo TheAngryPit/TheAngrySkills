@@ -18,11 +18,22 @@ def load(name):
     return module
 
 
+def test_pstack_readme_provenance_matches_the_pinned_snapshot():
+    source = ROOT / "sources/cursor-plugins"
+    pin = json.loads((source / "family-refresh.json").read_text())["source_commit"]
+    expected = hashlib.sha256((source / "upstream-tree/pstack/README.md").read_bytes()).hexdigest()
+    for overlay in (source / "overlays").glob("*.json"):
+        readme = json.loads(overlay.read_text()).get("codex_contract", {}).get("upstream_readme", {})
+        if readme.get("path") == "pstack/README.md":
+            assert readme["url"] == f"https://github.com/cursor/plugins/blob/{pin}/pstack/README.md", overlay
+            assert readme["sha256"] == expected, overlay
+
+
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
-    assert tree['files'] == 2051
+    assert tree['files'] == 2053
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
-    assert tree['family_updates'] == {'pstack': 'e1cc03121a0e71129a4fb730d7c5528a0a3e43c8'}
+    assert tree['family_updates'] == {'pstack': '792440e8a560a4a3f63748cdee70491ecd412982'}
     result = load('check-cursor-adaptations').verify()
     assert result == dict(skills=114, published=108, held_adapted=6, agents_mapped=16,
                           unresolved_links=0, runtime_proof='not claimed')

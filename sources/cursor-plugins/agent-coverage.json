@@ -98,7 +98,7 @@
       "asset_sha256": "907499d1ce7be9dd8986a99148c37039b3bf96c8bca6dc260e86015eab652915",
       "distribution": "source profile; installation separate",
       "runtime": "not exercised in this source-only update",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/agents/poteto-agent.md": {
       "source_sha256": "369065b46c217a5898cb1a400652c3399449252f4d5dbf8937eb8d4922d3cf6b",
@@ -107,7 +107,7 @@
       "asset_sha256": "e3cefb24151506dafdc90db6e7d3c0984061049986a1d84bc33f36929d4afb55",
       "distribution": "source profile; installation separate",
       "runtime": "not exercised in this source-only update",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "thermos/agents/thermo-nuclear-code-quality-review-subagent.md": {
       "source_sha256": "636800f1e5acf501f339779a8867b95d633396930b3356a2b0c9a0018343f02d",

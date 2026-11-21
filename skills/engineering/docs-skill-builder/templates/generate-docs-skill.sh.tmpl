@@ -58,6 +58,10 @@ web_base_url() {
 
 web_doc_url() {
     local rel="$1"
+    if [[ "$SOURCE_URL" == web+https://learn.microsoft.com/* && "$rel" == *.md ]]; then
+        printf '%s/%s?accept=text/markdown\n' "$(web_base_url | sed 's#/$##')" "${rel%.md}"
+        return
+    fi
     case "$rel" in
         https://*|http://*) printf '%s\n' "$rel" ;;
         *) printf '%s/%s\n' "$(web_base_url | sed 's#/$##')" "$rel" ;;

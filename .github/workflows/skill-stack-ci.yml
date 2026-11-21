@@ -57,6 +57,9 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install mirror validator dependencies
+        run: npm ci --prefix scripts/hyperframes-validator --ignore-scripts --no-audit --no-fund
+
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -69,6 +72,7 @@ jobs:
         run: |
           node --check scripts/theangry-skills.mjs
           node --check scripts/sync-curated-mirrors.mjs
+          node --test scripts/hyperframes-validator/imports.test.mjs
           node --check scripts/sync-hyperframes-mirror.mjs
 
       - name: Validate mirror invariants

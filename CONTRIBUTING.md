@@ -81,6 +81,8 @@ scripts/theangry-skills.mjs security scan <skill-path> --json
 
 Use `scan-root` for release-style review, but do not assume every finding is malicious. Generated documentation skills can contain dangerous upstream text as inert reference material. Classify the finding instead of hiding it.
 
+For HyperFrames validation, run `npm ci --prefix scripts/hyperframes-validator --ignore-scripts` before `node scripts/sync-hyperframes-mirror.mjs --check`.
+
 ## Pull request standard
 
 Every pull request should explain:

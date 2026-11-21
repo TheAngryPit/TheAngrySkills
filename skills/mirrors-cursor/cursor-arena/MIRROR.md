@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
+Commit: 792440e8a560a4a3f63748cdee70491ecd412982
 Physical source path: pstack/skills/arena/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
-Source SHA-256: 04f79ee8239251bc0c8a9e92f895ebe7bff42e785a5f6ef8ed2dc34dae18e85d
+Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md
+Source SHA-256: 24366948a9546dcb7dfc15a5cf7a4571edd917a8c1efef060b458a0fad608053
 Published name: cursor-arena
 Decision class: adaptação funcional
-Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

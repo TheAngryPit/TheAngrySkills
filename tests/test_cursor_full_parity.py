@@ -20,9 +20,9 @@ def load(name):
 
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
-    assert tree['files'] == 2051
+    assert tree['files'] == 2053
     assert tree['commit'] == json.loads((ROOT / 'sources/cursor-plugins/full-tree.json').read_text())['commit']
-    assert tree['family_updates'] == {'pstack': 'e1cc03121a0e71129a4fb730d7c5528a0a3e43c8'}
+    assert tree['family_updates'] == {'pstack': '792440e8a560a4a3f63748cdee70491ecd412982'}
     result = load('check-cursor-adaptations').verify()
     assert result == dict(skills=114, published=108, held_adapted=6, agents_mapped=16,
                           unresolved_links=0, runtime_proof='not claimed')

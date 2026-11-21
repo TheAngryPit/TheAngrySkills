@@ -1,10 +1,10 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
+Commit: 792440e8a560a4a3f63748cdee70491ecd412982
 Physical source path: pstack/skills/statechart/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
-Source SHA-256: 010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d
+Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md
+Source SHA-256: ca7b3e43b1ddc4fb2425a33960f9390357323a869e1d921b6e2aff4f3004d55e
 Published name: cursor-statechart
 Decision class: adaptação nominal
 Availability: Native adapter preserved for review; not admitted to the public catalog. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.

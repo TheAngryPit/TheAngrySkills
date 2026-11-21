@@ -45,7 +45,7 @@
       "path": "pstack/README.md",
       "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
       "status": "verified_in_supplied_upstream_clone",
-      "url": "https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md"
+      "url": "https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md"
     }
   },
   "codex_note": "## Codex runtime mapping\n\nThis published workflow is explicit-only through `agents/openai.yaml`. Use the native Codex subagent capability for independent read-only reviewers only when delegation is authorized. Require one immutable scope and rubric, at least two distinct model requests accepted by native spawn, separate read-only outputs, and a coordinator lead judgment before claiming a bounded review. If a configured reviewer is missing or fails, mark the aggregate PARTIAL and name the slot; never fabricate multi-model consensus or a complete configured run. Follow the standing `model-capability-router` and the operator-selected model/effort; do not force the Cursor default model table. Record requested reviewer profiles and unavailable slots, and mark effective model/effort readback unavailable unless the native surface supplies it. Keep the source rubric, lead judgment, and no-auto-apply contract.\n",

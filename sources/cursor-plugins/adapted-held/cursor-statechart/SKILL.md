@@ -21,7 +21,7 @@ Work in a scratch folder outside the repo. Write a TLA+ spec and its config. The
 <skill dir>/scripts/statechart SPEC.tla [--config FILE] [--view FILE] [--out DIR]
 ```
 
-`scripts/statechart.ts` is TypeScript, so run it with a runtime that can execute TypeScript.
+`scripts/statechart.ts` is TypeScript, so run it with a runtime that can execute TypeScript. `scripts/statechart` is a POSIX shell script that picks one. On native Windows, run `node --disable-warning=ExperimentalWarning <skill dir>/scripts/statechart.ts` with Node 22.18 to 22.x, or Node 23.6 or later.
 
 Use existing reviewed Java and TLC through JAVA and TLA2TOOLS. Automatic mise installation is a separate environment change requiring authorization; do not run that bootstrap merely because this skill was invoked.
 

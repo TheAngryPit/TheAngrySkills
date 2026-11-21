@@ -1,15 +1,15 @@
 <!-- upstream-update:family=cursor:batch=pstack -->
 # Upstream update proposal: cursor / pstack
 
-This is a detector report for a reviewable proposal. It does not promote upstream content.
+This report records the upstream changes detected and the subset adapted on this PR branch.
 
 - Repository: `https://github.com/cursor/plugins.git`
 - Reviewed baseline: `8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b`
 - Baseline mode: `single-family-pin`
 - Reviewed baseline commits: `8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b`
 - Observed upstream HEAD: `792440e8a560a4a3f63748cdee70491ecd412982`
-- Candidate content promoted: `false`
-- Existing pins, hashes, provenance, patches, exclusions, global installs and homes: unchanged
+- Candidate branch: the pstack family pin, snapshot, overlay provenance and generated adapters were refreshed to the observed upstream HEAD.
+- Publication to main: pending review and merge. The global baseline, held skills and installed homes are preserved.
 
 ## Changed skills
 

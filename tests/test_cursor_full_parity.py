@@ -18,6 +18,17 @@ def load(name):
     return module
 
 
+def test_pstack_readme_provenance_matches_the_pinned_snapshot():
+    source = ROOT / "sources/cursor-plugins"
+    pin = json.loads((source / "family-refresh.json").read_text())["source_commit"]
+    expected = hashlib.sha256((source / "upstream-tree/pstack/README.md").read_bytes()).hexdigest()
+    for overlay in (source / "overlays").glob("*.json"):
+        readme = json.loads(overlay.read_text()).get("codex_contract", {}).get("upstream_readme", {})
+        if readme.get("path") == "pstack/README.md":
+            assert readme["url"] == f"https://github.com/cursor/plugins/blob/{pin}/pstack/README.md", overlay
+            assert readme["sha256"] == expected, overlay
+
+
 def test_every_upstream_file_skill_and_agent_is_preserved():
     tree = load('check-cursor-full-tree').verify()
     assert tree['files'] == 2053

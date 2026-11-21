@@ -1,13 +1,13 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
+Commit: 792440e8a560a4a3f63748cdee70491ecd412982
 Physical source path: pstack/skills/technical-writing/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md
 Source SHA-256: 0a620885599cdde5a0a31fa39878144c10f61c894b56bf4a9ff779496e718b14
 Published name: cursor-technical-writing
 Decision class: adaptação funcional
-Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow
+Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

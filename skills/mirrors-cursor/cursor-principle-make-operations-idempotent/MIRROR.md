@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
+Commit: 792440e8a560a4a3f63748cdee70491ecd412982
 Physical source path: pstack/skills/principle-make-operations-idempotent/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md
 Source SHA-256: 76ad0a99b6ff2a05a159accfeee48412d62f62774eb8d05bbff26a1f3aa3eab5
 Published name: cursor-principle-make-operations-idempotent
 Decision class: intacta

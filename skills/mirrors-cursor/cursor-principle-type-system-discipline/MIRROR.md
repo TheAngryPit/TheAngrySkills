@@ -1,9 +1,9 @@
 # Cursor skill mirror
 
 Source: https://github.com/cursor/plugins.git
-Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8
+Commit: 792440e8a560a4a3f63748cdee70491ecd412982
 Physical source path: pstack/skills/principle-type-system-discipline/SKILL.md
-Upstream family README: https://github.com/cursor/plugins/blob/e1cc03121a0e71129a4fb730d7c5528a0a3e43c8/pstack/README.md
+Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f63748cdee70491ecd412982/pstack/README.md
 Source SHA-256: 9cd1ce345bc9d666c73c64c89c89164217b659aa4c4dde5600cbbe6f6e775461
 Published name: cursor-principle-type-system-discipline
 Decision class: intacta

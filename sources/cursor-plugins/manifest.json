@@ -976,7 +976,7 @@
       "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1000,10 +1000,10 @@
       "upstream_skill": "reproduce-and-fix-issues",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
       "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
@@ -1024,10 +1024,10 @@
       "upstream_skill": "setup-benny",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar",
       "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1049,10 +1049,10 @@
       "upstream_skill": "triage-issue-reports",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
       "historical_exclusion_reason": "Vítor explicitly excluded this Benny automation source from the Codex mirror on 2026-09-14; retain pinned upstream provenance only and never render or publish it during refresh.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1072,10 +1072,10 @@
       "upstream_purpose": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
       "upstream_skill": "architect",
       "validation_requirement": "frontmatter and references; explicit-only invocation policy; Ground how/why before Sketch; two distinct candidates, independent judge, synthesis and verified disposable local result; separate automatic trigger and production gaps",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1083,7 +1083,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "04f79ee8239251bc0c8a9e92f895ebe7bff42e785a5f6ef8ed2dc34dae18e85d"
+        "SKILL.md": "24366948a9546dcb7dfc15a5cf7a4571edd917a8c1efef060b458a0fad608053"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -1095,10 +1095,10 @@
       "upstream_purpose": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
       "upstream_skill": "arena",
       "validation_requirement": "frontmatter and links; explicit-only native invocation policy; isolated candidates, cross-judge, base/graft and verified local result; separately label cloud and automatic trigger gaps",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1118,10 +1118,10 @@
       "upstream_purpose": "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
       "upstream_skill": "automate-me",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1141,7 +1141,7 @@
       "upstream_purpose": "Vet a perf measurement (limiter, tuning, limits, errors, repeatability, relevance, and whether the work happened) before you report or act on it. Use when you run a benchmark or report a speedup or regression you measured.",
       "upstream_skill": "benchmark-checklist",
       "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "external connector or routing not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1164,7 +1164,7 @@
       "upstream_purpose": "Find what a change could break somewhere else before it ships, beyond the diff, and prove the one fact it's safe because of by running real code instead of writing it up. Use for 'blast radius of X', 'what could this break', or reviewing a small diff you don't trust.",
       "upstream_skill": "blast-radius",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "external connector or routing not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1187,7 +1187,7 @@
       "upstream_purpose": "Restate the last message in plain human language, with no jargon.",
       "upstream_skill": "bro",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1210,7 +1210,7 @@
       "upstream_purpose": "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. Repeat this each time the operator corrects you. Use for /correct.",
       "upstream_skill": "correct",
       "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "Explicit-only guidance; source and packaging validation only. No real-project formal-verification workflow or generated-proof result claimed.",
@@ -1233,7 +1233,7 @@
       "upstream_purpose": "Generate a project-local skill that formally verifies the code where a bug costs the most and tests reach the least, in any language, with whichever verification tool fits. Use for /create-formal-verification-skill, \\\"model-check this race\\\", \\\"prove this invariant\\\", or when concurrency, retries, state machines, parsers, or unsafe code need more than tests.",
       "upstream_skill": "create-formal-verification-skill",
       "validation_requirement": "Deterministic renderer, explicit-only native metadata, source provenance, sibling links and security admission.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "bounded explicit-only native adapter proven by an isolated CLI verification fixture and a disposable web target driven through the native in-app browser; project-local .agents/skills/verify-<app>/ generation, Doctor, feature drives, evidence preservation, cleanup ownership, controlled drift and second-run readback are observed; production target parity, reusable host activation and action-time reset remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1259,10 +1259,10 @@
       "upstream_purpose": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
       "upstream_skill": "create-verification-skill",
       "validation_requirement": "frontmatter e referências relativas; renderer de staging; CLI fixture real em subprocesso para criar .agents/skills/verify-<app>/ com SKILL.md, feature-map README, required feature headings, captured stdout/stderr/exit evidence, explicit cleanup path, doctor minimum, controlled drift, maintenance reconciliation, persisted before/after evidence, and second execution; unsafe names and pre-existing cleanup state blocked; live target/harness, syntax/version doctor, and native host activation remain unproven; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1282,10 +1282,10 @@
       "upstream_purpose": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions via show-me-your-work. Use for /figure-it-out, 'figure it out', a large migration, or when no narrower playbook applies.",
       "upstream_skill": "figure-it-out",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1305,7 +1305,7 @@
       "upstream_purpose": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
       "upstream_skill": "how",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e ficheiros de apoio verificados; seleção automática da skill continua por observar",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "source and distribution validated; native runtime unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1328,7 +1328,7 @@
       "upstream_purpose": "in-your-own-words explicit user command",
       "upstream_skill": "in-your-own-words",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "Bounded native same-scope two-reviewer review and separate PR #66 case observed; requested model selections accepted, effective backend model readback and automatic trigger unproven. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1351,7 +1351,7 @@
       "upstream_purpose": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Multiple LLM reviewers challenge changes from independent angles.",
       "upstream_skill": "interrogate",
       "validation_requirement": "frontmatter and relative references; explicit-only policy; at least two distinct requested native reviewers on same scope/rubric, separate reports, lead judgment, no auto-apply; PARTIAL on missing configured reviewer; effective model readback gap labeled",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "source and distribution validated; native runtime unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1374,7 +1374,7 @@
       "upstream_purpose": "ketchup explicit user command",
       "upstream_skill": "ketchup",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "Explicit-only guidance; source and packaging validation only. No real-project formal-verification workflow or generated-proof result claimed.",
@@ -1397,7 +1397,7 @@
       "upstream_purpose": "Bring a project's formal verification back in line with the code after the code changes: find the commits that touched verified code, update the model, harness, or properties to describe the code as it is now, rerun, and say whether each failure is drift in the verification or a bug in the code. Use for /maintain-formal-verification-skill, \\\"is the model still true to the code\\\", or after merges and refactors that touched verified code without rechecking it.",
       "upstream_skill": "maintain-formal-verification-skill",
       "validation_requirement": "Deterministic renderer, explicit-only native metadata, source provenance, sibling links and security admission.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "bounded explicit-only native maintenance adapter proven by CLI Doctor/feature drives and a disposable web target with two read-only source-wave receipts and clean re-drives; project-local feature-map reconciliation, persisted before/after evidence, cleanup ownership and second execution are observed; production target parity, reusable host activation and action-time reset remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1420,7 +1420,7 @@
       "upstream_purpose": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
       "upstream_skill": "maintain-verification-skill",
       "validation_requirement": "frontmatter e referências relativas; renderer de staging; fixture de path-state; real disposable CLI subprocess fixture with project-local .agents/skills/verify-* creation, explicit cleanup ownership, drift reconciliation, persisted maintenance-before/after evidence, and clean second execution; doctor remains minimum existence check; source-wave delegation, live target, native runner, failed-doctor handling, PR/merge, and host activation remain unproven; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "safe local mock webhook adapter proves server-side key redaction, required headers, one-attempt timeout/error handling, and local payload validation; external connector, sender-key retrieval, routine wake, Tailscale state, and privileged install path remain unproven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1445,10 +1445,10 @@
       "upstream_purpose": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
       "upstream_skill": "Make Bot UI",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; revisão de segurança dos findings desta skill antes de disponibilizar",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1475,10 +1475,10 @@
           "pinned_source_path": "pstack/agents/comment-sicko.md",
           "pinned_source_sha256": "0fb37221ab2a9159714d38f1528898e82b9758b5750f244bbe2e575bb593a1de",
           "loading": "explicit profile installation; fresh-session selection not proven",
-          "pinned_source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+          "pinned_source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
         }
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1503,10 +1503,10 @@
       "upstream_purpose": "Answer explicit questions about pstack skills, playbooks and principles without starting the proposed work.",
       "upstream_skill": "poteto-help",
       "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -1514,7 +1514,7 @@
       "dependencies_or_limitations": "supporting files in this skill: playbooks/authoring-a-skill.md, playbooks/autonomous-run.md, playbooks/autopilot-full.md, playbooks/autopilot-stack.md, playbooks/babysit.md, playbooks/bug-fix.md, playbooks/eval.md, playbooks/feature.md, playbooks/hillclimb.md, playbooks/investigation.md (+34); concrete mirror dependencies `cursor-deslop`, `cursor-control-cli`, and `cursor-control-ui` are conditional and require availability checks; cloud-capable task execution is conditional; bundled scripts/playbooks are part of the skill's behavior and require separate code/security validation",
       "family": "pstack",
       "files": {
-        "SKILL.md": "67fd2c54fd25ebfae1e46db62c4b2e54f806a7ea9dfb6c83922de37e9b9635ea",
+        "SKILL.md": "7aa026dc1fad7db0ea1ff39171e6b768ee99d03a7f46d0b9cd38973511251d81",
         "playbooks/authoring-a-skill.md": "f6a13a445c360b48d6cd72780ac01955f45b82826476efe0e67c7559329407aa",
         "playbooks/autonomous-run.md": "613c7b3079779ecfa27e1fb41a082711b5a1207e720b87f75c3aaa9b25aac480",
         "playbooks/autopilot-full.md": "2a8856b7e11590f6faba87c11520e0a20f46c78dbfdaac5eceab48ea308bf787",
@@ -1573,10 +1573,10 @@
           "pinned_source_path": "pstack/agents/poteto-agent.md",
           "pinned_source_sha256": "369065b46c217a5898cb1a400652c3399449252f4d5dbf8937eb8d4922d3cf6b",
           "loading": "explicit profile installation; fresh-session selection not proven",
-          "pinned_source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+          "pinned_source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
         }
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1599,7 +1599,7 @@
       "upstream_purpose": "Apply when two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it.",
       "upstream_skill": "principle-attack-the-premise",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1622,7 +1622,7 @@
       "upstream_purpose": "Apply when wiring validation, error handling, or framework adapters. Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions.",
       "upstream_skill": "principle-boundary-discipline",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1645,7 +1645,7 @@
       "upstream_purpose": "Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun.",
       "upstream_skill": "principle-build-the-lever",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1668,7 +1668,7 @@
       "upstream_purpose": "Apply when you catch yourself writing the same instruction a second time, or notice a recurring correction. Encode the rule as a lint, metadata flag, runtime check, or script instead of more text.",
       "upstream_skill": "principle-encode-lessons-in-structure",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1691,7 +1691,7 @@
       "upstream_purpose": "Apply when facing a novel UI interaction or architectural decision with no precedent in the codebase. Build 2-3 competing prototypes and compare side by side before committing.",
       "upstream_skill": "principle-exhaust-the-design-space",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1714,7 +1714,7 @@
       "upstream_purpose": "Apply when product, UX, or feature-scope tradeoffs come up. Choose user delight over implementation convenience; ship fewer polished features over more rough ones.",
       "upstream_skill": "principle-experience-first",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "explicit-only Codex guidance; source, deterministic rendering and catalog validation checked; live agent application not proven Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1737,7 +1737,7 @@
       "upstream_purpose": "Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
       "upstream_skill": "principle-explain-the-number",
       "validation_requirement": "Deterministic renderer, explicit-only metadata, sibling links, catalog and security checks.",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1760,7 +1760,7 @@
       "upstream_purpose": "Apply when debugging. Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes.",
       "upstream_skill": "principle-fix-root-causes",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1783,7 +1783,7 @@
       "upstream_purpose": "Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious.",
       "upstream_skill": "principle-foundational-thinking",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1806,7 +1806,7 @@
       "upstream_purpose": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
       "upstream_skill": "principle-guard-the-context-window",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1829,7 +1829,7 @@
       "upstream_purpose": "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem.",
       "upstream_skill": "principle-laziness-protocol",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1852,7 +1852,7 @@
       "upstream_purpose": "Apply when designing commands, lifecycle steps, or processing loops that run amid crashes, restarts, and retries. Converge to the same end state regardless of partial prior runs.",
       "upstream_skill": "principle-make-operations-idempotent",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1875,7 +1875,7 @@
       "upstream_purpose": "Apply when introducing a new internal API while old callers still exist. Migrate callers and delete the old API in the same wave instead of preserving compatibility layers.",
       "upstream_skill": "principle-migrate-callers-then-delete-legacy-apis",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1898,7 +1898,7 @@
       "upstream_purpose": "Apply when reviewing or shaping code that's hard to trace. Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope.",
       "upstream_skill": "principle-minimize-reader-load",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1921,7 +1921,7 @@
       "upstream_purpose": "Apply when writing stateful logic, or when code branches a lot or repeats a shape assumption across files. Encode the domain in a structure instead of scattered conditionals.",
       "upstream_skill": "principle-model-the-domain",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1944,7 +1944,7 @@
       "upstream_purpose": "Apply when tempted to ask 'should I do X?' on reversible work. Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions.",
       "upstream_skill": "principle-never-block-on-the-human",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1967,7 +1967,7 @@
       "upstream_purpose": "Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code.",
       "upstream_skill": "principle-outcome-oriented-execution",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "guide-only content proven; native runtime not claimed Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -1990,7 +1990,7 @@
       "upstream_purpose": "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'",
       "upstream_skill": "principle-prove-it-works",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2013,7 +2013,7 @@
       "upstream_purpose": "Apply when integrating a new requirement into an existing design. Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on.",
       "upstream_skill": "principle-redesign-from-first-principles",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2036,7 +2036,7 @@
       "upstream_purpose": "Apply when concurrent actors might write to the same file, branch, key, or state object. Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant.",
       "upstream_skill": "principle-separate-before-serializing-shared-state",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2059,7 +2059,7 @@
       "upstream_purpose": "Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer.",
       "upstream_skill": "principle-sequence-verifiable-units",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2082,7 +2082,7 @@
       "upstream_purpose": "Apply when sequencing an addition, refactor, or rewrite. Remove dead code, redundant validators, and stub references first, then build on the simpler base.",
       "upstream_skill": "principle-subtract-before-you-add",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2105,7 +2105,7 @@
       "upstream_purpose": "Apply when you write, change, or keep a test. Call the code the way its users do and assert the result they observe against a literal expected value. If the test would still pass when every imported function returns undefined, rewrite the assertion or delete the test.",
       "upstream_skill": "principle-test-behavior-not-implementation",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2128,10 +2128,10 @@
       "upstream_purpose": "Apply when designing types, reviewing a function signature, or writing code in any statically-typed language. Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, refuse to lie to the compiler, exhaust variants, derive from authoritative schemas.",
       "upstream_skill": "principle-type-system-discipline",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2151,10 +2151,10 @@
       "upstream_purpose": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
       "upstream_skill": "recall",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -2174,10 +2174,10 @@
       "upstream_purpose": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
       "upstream_skill": "reflect",
       "validation_requirement": "frontmatter/relative refs, explicit-only policy, three distinct lenses plus synthesis on one scoped transcript, adversarial prompt-isolation proof, source findings retained, no auto-edit, generated security scan",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2185,7 +2185,7 @@
       "dependencies_or_limitations": "Nenhuma dependência de apoio específica demonstrada; validar trigger, referências e conclusão.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "54ff000a23b5c7e2277be11a0ee1d6a2049a64fb1f59027288cf87ffc8759415"
+        "SKILL.md": "9347e6a17d41c92fd9d57e689c63d81defbd63df18dbcd5e9858ab03de5994ea"
       },
       "license_path": "pstack/LICENSE",
       "license_sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
@@ -2197,10 +2197,10 @@
       "upstream_purpose": "Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", \"pstack budget\", or changing pstack's model choices.",
       "upstream_skill": "setup-pstack",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger, budget e fallback de família; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -2220,10 +2220,10 @@
       "upstream_purpose": "sharpen explicit user command",
       "upstream_skill": "sharpen",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2245,10 +2245,10 @@
       "upstream_purpose": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
       "upstream_skill": "show-me-your-work",
       "validation_requirement": "frontmatter e referências relativas; writer bounded, trail e auditoria cross-model observados; seleção automática e outros hosts por verificar",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2268,7 +2268,7 @@
       "upstream_purpose": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
       "upstream_skill": "swarm",
       "validation_requirement": "frontmatter e referências relativas; native local four-phase fanout/drain/aggregate observado; Work cloud default, race, dropout, seleção automática e outros hosts por verificar",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "external connector or routing not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2291,7 +2291,7 @@
       "upstream_purpose": "Use only when the user explicitly asks for TDD, a failing test, or a regression test, OR when the bug has an obvious cheap local test target. Skip when the test path is unclear, expensive, integration-heavy, or not requested.",
       "upstream_skill": "tdd",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "external connector or routing not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2314,10 +2314,10 @@
       "upstream_purpose": "Explain a body of work plainly so a person actually understands it. Runs the `how` and `why` skills and weaves what they find into one clear explanation. Use for 'teach me this', 'help me really understand X', 'explain this change or subsystem to me'.",
       "upstream_skill": "teach",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2337,7 +2337,7 @@
       "upstream_purpose": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
       "upstream_skill": "technical-writing",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "content available; live selection not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2361,7 +2361,7 @@
       "upstream_purpose": "TypeScript best practices. Use when reading or editing any .ts or .tsx file.",
       "upstream_skill": "typescript-best-practices",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex; integridade/execução controlada dos ficheiros de apoio",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "external connector or routing not demonstrated Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2384,10 +2384,10 @@
       "upstream_purpose": "Cut AI tells from any writing. Must always apply.",
       "upstream_skill": "unslop",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow",
+      "availability": "source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2407,7 +2407,7 @@
       "upstream_purpose": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "upstream_skill": "why",
       "validation_requirement": "frontmatter e referências relativas; fluxo nativo delimitado e revisão contextual de segurança documentados; seleção automática da skill continua por observar",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "bounded native Codex adaptation demonstrated with explicit limits",
@@ -2732,7 +2732,7 @@
       "upstream_purpose": "Catch up on verified work with a short inspected subtitled video; retain all pending decisions as text.",
       "upstream_skill": "ketchup-video",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
       "availability": "Native adapter preserved for review; not admitted to the public catalog. Reviewed source refresh; prior runtime and fixture evidence predates this refresh.",
@@ -2743,14 +2743,14 @@
       "dependencies_or_limitations": "Retain bundled support; native tools, authentication and external runtimes are conditional, not supplied by discovery.",
       "family": "pstack",
       "files": {
-        "SKILL.md": "010b7b4532406739b1c3a426d1a45f02bb618a42561fc96b3976e064a7f8384d",
+        "SKILL.md": "ca7b3e43b1ddc4fb2425a33960f9390357323a869e1d921b6e2aff4f3004d55e",
         "references/render.md": "8cca446eb0c8f87f2ef7b97c4b149f59aacdc153134b4217c4bcde09b10ac3c4",
         "scripts/backends/cfg.ts": "aea4d8766d214e7fa08f4881f1037319655e75eb56652e1b6d5d4f13a162e3e1",
         "scripts/backends/mermaid.ts": "ce293d34ce3928d93329bd6d1a889d5722620008dae4339add79ef226c3f9b88",
         "scripts/backends/plain-text.ts": "e2bedb855eb3806ec3fe7a7bfa49baa309fb4cf0da425b5fe1e0686268ce255a",
         "scripts/backends/report.ts": "730b4048578ab0468e1581f16fec60b246e321161effb68e481efb373f0f2501",
         "scripts/frontends/config.ts": "5eeab1e755f20a2c83b408c6503fdc9c6b10c971d8dedad3f912bd15f9763daf",
-        "scripts/frontends/dot.ts": "4eef9ec848557dcd01ca8dbbec75b71c0653c1b73583108bafbb6f559f6d677b",
+        "scripts/frontends/dot.ts": "cd2e681ff58c759ddeaa17c2f3d4af1f0c3e71273566be555187b5d0e7767dac",
         "scripts/frontends/marks.ts": "eb0120e61a4004a435c7b7c46916da9dc8b2fa8696ed0d3eb64dc953fed3ab11",
         "scripts/frontends/messages.ts": "36bfc6fb3ffa86897661efb2aa67bd95b55a4da9a3e952831f6e0668826b4b92",
         "scripts/frontends/spec.ts": "450cdfc8d0577a96818ca3697efebbbf70b530a4ba7e3eee03cf1ba8d3f1a0fd",
@@ -2759,6 +2759,8 @@
         "scripts/frontends/verdict.ts": "0d0a9d6b6d6da5a7c48851b86d9d041f22982404dda6288795a1715138d7008b",
         "scripts/frontends/view.ts": "2c0af8939321c5aaed4b6ecac8ce6a98d0e6774d8bd15d4b02fe4f406b8c9620",
         "scripts/ir.ts": "5602beca4e4ac08421cfa07e4da989f0e75439f1d136cc923226909e771dc7ff",
+        "scripts/janitor.ts": "defac41e4cbfca3044c5078c544a0667f857a610c500c5ec96cb3bfaeec7120b",
+        "scripts/kill.ts": "058df69d1184029e55d7e81b4fd37a6dc8557c9208979fb7032482d5ab0db448",
         "scripts/package.json": "2c36842f391275b0f343a38947560adee155fab4a744eacef1e595e9f07c4e3d",
         "scripts/passes/annotate.ts": "dc8eeee09c3a9a0c060f32fb1d554e01bd80e5265751cdeb041ef3e19561b92a",
         "scripts/passes/label.ts": "b5ef402369c5e7846be1fd39165e95cbfe715fc36eb9331a0401b26523c539c9",
@@ -2769,15 +2771,15 @@
         "scripts/passes/region-check.ts": "8a6e0618740a14bb7048f6563b4324958177f4685d4d6d90364cc6245b1498b4",
         "scripts/passes/regions.ts": "d740ebfdbb5ec7b4984412a635a596b43af7a77b8bcb49a1463c8afa75299f72",
         "scripts/pipeline.ts": "8aa8d9295ab6762f7f2ffae91a0aee98b1a1314747c875edba4598fdab8ed543",
-        "scripts/run.ts": "751d97cfde3c241bfeed8913fc74a7a7cbc6acd3829e37a441016af3eb78f0e0",
+        "scripts/run.ts": "fb6ec4a1835a15e6e72df28bb932b8df5a4c04c5de6f9c270fd63ff5cd148dc7",
         "scripts/statechart": "aeffb7077850fd4c225e3d18049ca6ed7b988cf48e88cd8463526a7feaa74d13",
-        "scripts/statechart.ts": "1c653f05d0cd0f3298455701f36e3d7d1f837f93e6e642f7c20afb5d613c2d12",
+        "scripts/statechart.ts": "5d5feff7d78204c828a8e30d531d23419234a81a7149dc3e48efb08dd770d6c1",
         "scripts/test/ConfigOracle.java": "4f3367314f0fc34e39777d40dd31f96451985b77834fd0e925716aa3b169a021",
         "scripts/test/chart.test.ts": "e5c4bb0dcb9bcb570066d427ee768b2eb01aea87aa3bd9136c8e92459f513ae4",
         "scripts/test/charts/Braces.mmd": "dad412ccff506f4ace1b40617bcc2f103ad0372ddc0135ab26535fc488fef8d3",
         "scripts/test/charts/Escapes.mmd": "211adde39edbb349e2d8acc2f95762bfb7da1fb030e5dc815a8982775e1cd372",
         "scripts/test/charts/Phases.mmd": "bf6062f6a0ee7b8d487882a1810d17951606fd536b2ee370aecc3d3914da0339",
-        "scripts/test/cli.test.ts": "fdd3154882a0c4505868973a9de133b3f5d2140f0ca9e0a9dcfd7b2cc55871df",
+        "scripts/test/cli.test.ts": "7201a0eece44078a27f85880e2118c69bbfa072fbb9770af1db64442f03970a7",
         "scripts/test/config-fuzz.test.ts": "a258744d47529418d32de0fd47aa2d013298581b73064f7ba4d628e4d5471321",
         "scripts/test/corpus/Counter/ChartRun.out": "05cf40936af6590878a1bbe8290b9fdebe7d33503331105be352b1901584200e",
         "scripts/test/corpus/Counter/Counter.cfg": "ee4c110b174a3bd2cc54226420ba2c979682be57c7964273b8a30d6395dc2c3f",
@@ -3143,7 +3145,7 @@
         "scripts/test/grid/sany.out": "e42a575f90275de315767d9f46ab0881349ebc53206e191aee57501494a5aba9",
         "scripts/test/java.ts": "4fef906fe1dcfdb98dafbd3ecdae1e82589908529ffc11b6bbdcfb8aef505932",
         "scripts/test/labels.ts": "12c8403517b423ea7af0ed5c5d788ff872f9ba127ca11555ae128076a27a83ca",
-        "scripts/test/messages.test.ts": "e7ca0ea446907074452df5388719598bb297d7f8ee50145b8b8f2a41c0c4c92f",
+        "scripts/test/messages.test.ts": "70dc23d0a9c76e9949f052c8f426d35463a1416aca2457d09de544654d0f5721",
         "scripts/test/pipeline.test.ts": "0f091c3e6e104fd545e113ad437df8d4856618a775073a37d41050ebf663e479",
         "scripts/test/plain-tlc.test.ts": "f6b042300e66840809e26ba8fef0c7e2bc8bb6b59f3b910ea65dea176e97bf1c",
         "scripts/test/render.test.ts": "717d36625f0ed5edb5086b9bf1993b79801700f9889b58aa7faa38e3fa0d50a2",
@@ -3162,14 +3164,14 @@
       "upstream_purpose": "Check an explicit bounded TLA+ model and explain its statechart and shortest invariant counterexamples.",
       "upstream_skill": "statechart",
       "validation_requirement": "frontmatter e referências relativas; fixture de trigger; teste de comportamento no host Codex",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "excluded_from_mirror": true,
       "exclusion_reason": "Held on 2026-11-17: new quarantine signals in bundled statechart fixtures need admission resolution; preserve complete source and native adapter without publishing or installing it."
     }
   ],
   "snapshot_scope": "114 reviewed source adapters: 109 published, five held; 59 additional physical paths remain reference-only or pending review, including private-only tailscale-setup. Full raw source inventory is pinned separately. Source distribution does not activate runtimes.",
   "upstream_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b",
-  "pstack_upstream_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+  "pstack_upstream_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
   "upstream_repository": "https://github.com/cursor/plugins.git",
   "support_files": {
     "advisor/agents/advisor-subagent.md": {
@@ -3373,7 +3375,7 @@
         "cursor-no-comments"
       ],
       "relationship": "named agent dependency",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/agents/poteto-agent.md": {
       "sha256": "369065b46c217a5898cb1a400652c3399449252f4d5dbf8937eb8d4922d3cf6b",
@@ -3381,7 +3383,7 @@
         "cursor-poteto-mode"
       ],
       "relationship": "named agent dependency",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "ralph-loop/hooks/capture-response.sh": {
       "sha256": "1ed2e9be8dfad78d1391ef635610b9202e3a9715074c1c23058b0d11dcdb9b1f",
@@ -3439,84 +3441,84 @@
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/README.md": {
       "sha256": "ca3c42cbb7f0bf7068f7407eb355815e6c234d5c2786942f3cbe751a3690024b",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md": {
       "sha256": "809659da0bbd0303d2a42dbe380dd117ae06b6fa3e19e4a31832a2756ae841fe",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/reproduce-and-fix-issues/references/control-adapter.md": {
       "sha256": "58b0615d2fca895f9a20df83266e280042b0d585b5f2fd324e2094a682fd846b",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/reproduce-and-fix-issues/references/feature-map.example.md": {
       "sha256": "1e5c7c8522daec3e43fcc2e73ceb97289ded65b552949ce65a11cc8eb3d2b6ee",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/reproduce-and-fix-issues/references/verify-existing-fix.md": {
       "sha256": "c90eae00abcdec71a58fa8d60f2c495b082a526ad50b8e8e494837609129bf29",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/setup-benny/SKILL.md": {
       "sha256": "1b1298536804eef289718f497a42f48aec135c8f4175b03e5ecfa11075758c59",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/triage-issue-reports/SKILL.md": {
       "sha256": "e88bb1ccc619f93d4b787bd9156fba5159f061c653fca00b6f08c65b6c77701a",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/skills/triage-issue-reports/references/routing.example.md": {
       "sha256": "e5e53013692568cf69da8e8b302fff929fe2fbc9aec1a4651fd7997e2c7a4025",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/templates/configuration.example.yaml": {
       "sha256": "13e24b4ce9b9a0913916e85fe3b080b88d45f8e55dccfe8ae38e0751a997b6f5",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/templates/reproduce-automation-prompt.md": {
       "sha256": "71ec574f1844e379394ae4ef14c48d7df10afbaa319d395c788d7f856f0e6899",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     "pstack/automations/benny/templates/triage-automation-prompt.md": {
       "sha256": "e0bba594547834f013ec805915610eb597e7929efe3ffbe85ae00339ee16d474",
       "related_skills": [
         "cursor-setup-benny"
       ],
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     }
   },
   "native_support_files": {
@@ -3574,13 +3576,13 @@
   },
   "documentation_files": {
     "pstack/README.md": {
-      "sha256": "cbe5a826afedbd396d9ee5845d850ccbd0f7f801fca728129fc90153ea70a015",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "sha256": "c14d76d2ac9cb9bc9bf86f6523198324df85ab52a605a11891d2a5ba3145fa21",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions"
     },
     "pstack/docs/guide/01-setup.md": {
       "sha256": "86f1343beb84df874b9f31b9ad53dc85852a68b004cd974fb37ee130f252de0c",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3588,7 +3590,7 @@
     },
     "pstack/docs/guide/02-poteto-mode.md": {
       "sha256": "4fd0f84bd539283d6d6973fd231c4b2f155128aa3c83ab62be457cc02ac2bc3b",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3596,7 +3598,7 @@
     },
     "pstack/docs/guide/03-understand.md": {
       "sha256": "4486cf55f20b1a351b25a06b2a19f6a7081d6af4748a4178946907c2b7861392",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3604,7 +3606,7 @@
     },
     "pstack/docs/guide/04-design.md": {
       "sha256": "e41952810df24c07a21ad10ebc2674a3350a03d4961a273fb6f681de87150a13",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3612,7 +3614,7 @@
     },
     "pstack/docs/guide/05-build-and-clean.md": {
       "sha256": "4a0538dc0e52632a8871be9957e8177adaca6f5fa254f0bbb31d30b921d0cd1c",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3620,7 +3622,7 @@
     },
     "pstack/docs/guide/06-verify-and-ship.md": {
       "sha256": "31ab46936950c78989a51cffaebf2e321858580d286a83d92a504528fce24d2d",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3628,7 +3630,7 @@
     },
     "pstack/docs/guide/07-overnight.md": {
       "sha256": "5bd1a4336b09947832d3b58afb22bcdfbe698ff76c1bdaab23af545f04cf8e60",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3636,7 +3638,7 @@
     },
     "pstack/docs/guide/08-principles.md": {
       "sha256": "0b26b85292f0c09768abe727c9e92987dbf81f5b439a4871034c2fd1c4cb1723",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3644,7 +3646,7 @@
     },
     "pstack/docs/guide/09-make-it-yours.md": {
       "sha256": "4df83ef7dc44364921a9663c7d426a1b4d0acab6a0490ef1769257b51b74e65a",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3652,7 +3654,7 @@
     },
     "pstack/docs/guide/10-recipes-and-pitfalls.md": {
       "sha256": "287815da2cbebe9b867d4da7d0a3632f069a32b6481815be9d6cad43b12b5fbf",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3660,7 +3662,7 @@
     },
     "pstack/docs/guide/README.md": {
       "sha256": "5c888d034d38f380789fad57c2c6fa7307ace803a0622cdde9e57fa2afe182de",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3668,7 +3670,7 @@
     },
     "pstack/docs/guide/images/design.jpg": {
       "sha256": "b8ed07427f6a0c37dd8ba97961fc0eb5071efeee6c4a230648bdb7547f6f2a8f",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3676,7 +3678,7 @@
     },
     "pstack/docs/guide/images/overnight.jpg": {
       "sha256": "4b4405e4df8925c5b3abbe702f681af0f3b1f5f32271b599f95717f578f1a0c8",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3684,7 +3686,7 @@
     },
     "pstack/docs/guide/images/recipes.jpg": {
       "sha256": "9fa2d51b476635712737795ddef81806efaa0086bb3bfa9f9f45695d9ab0f8e8",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3692,7 +3694,7 @@
     },
     "pstack/docs/guide/images/router.jpg": {
       "sha256": "525843055a4efd2b10acc50a8652fd02b0834ea733a8a2f895c1eb89036017da",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3700,7 +3702,7 @@
     },
     "pstack/docs/guide/images/understanding.jpg": {
       "sha256": "b60587e9a9bbe2550e93be9819cf0cd4acf77d90fac769a0c43d82bd8e34e279",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
@@ -3708,15 +3710,15 @@
     },
     "pstack/docs/guide/images/verification.jpg": {
       "sha256": "2a76b52007a1cd2866ba67fd47d7d9ef3e1118bb5a09c4665eee8c3f161bd09a",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions",
       "related_skills": [
         "cursor-poteto-help"
       ]
     },
     "pstack/docs/harness/claude-code.md": {
-      "sha256": "5f859ef4fa39664b1ccdff521bcb15854f8805394191da509e68ce625b97cba6",
-      "source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+      "sha256": "289a9127a3597d7b3fbbe10c40aea4aea3f15cd5361a75be43806a07b96f634f",
+      "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982",
       "relationship": "upstream Pstack reference; not native runtime instructions"
     }
   }

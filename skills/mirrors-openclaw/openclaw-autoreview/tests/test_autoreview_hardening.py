@@ -1504,7 +1504,7 @@ class AutoreviewBinaryDeletionTests(unittest.TestCase):
                         self.helper["local_bundle"](repo, ref)
                 git(repo, "commit", "-qm", "binary content change")
                 for target in ("branch", "commit"):
-                    with self.assertRaisesRegex(SystemExit, "refusing (binary changes|unsupported or malformed image)"):
+                    with self.assertRaisesRegex(SystemExit, "refusing (binary changes|unsupported binary)"):
                         self.helper["build_bundle"](repo, target, base, "HEAD")
 
     def test_worktree_deletion_cannot_hide_staged_binary_change(self):
@@ -5304,7 +5304,8 @@ time.sleep(60)
         paths = ("docs/flows/credential-source-egress/guide.md",
                  "docs/reference/repository-credentials/guide.md",
                  "docs/reference/credential-sources/guide.md",
-                 "specs/rfcs/0023-egress-proxy-credential-lifecycle/guide.md")
+                 "specs/rfcs/0023-egress-proxy-credential-lifecycle/guide.md",
+                 "specs/rfcs/0042-credential-lifecycle/contracts.md")
         url = "https://example.invalid/private-flow-repository.git"
         for path, (old_mode, new_mode, allowed) in itertools.product(paths, (
             ("160000", "160000", False), ("120000", "120000", False),
@@ -5436,6 +5437,51 @@ time.sleep(60)
         ):
             with self.subTest(rel=rel):
                 self.assertIsNone(self.helper["tracked_sensitive_repo_path_risk"](rel))
+
+    def test_tracked_rfc_companions_are_source_not_credential_stores(self) -> None:
+        for root in ("specs/rfcs", "docs/rfcs"):
+            for name in ("README.md", "index.md", "contracts.md", "design.md", "security.md"):
+                rel = f"{root}/0042-credential-lifecycle/{name}"
+                with self.subTest(rel=rel):
+                    self.assertIsNone(self.helper["tracked_sensitive_repo_path_risk"](rel))
+                    # This exception does not admit untracked files or evidence.
+                    self.assertIsNotNone(self.helper["sensitive_repo_path_risk"](rel))
+
+    def test_rfc_companion_exception_requires_regular_files(self) -> None:
+        for root in ("specs/rfcs", "docs/rfcs"):
+            rel = f"{root}/0042-credential-lifecycle/contracts.md"
+            with self.subTest(rel=rel):
+                self.assertIsNotNone(
+                    self.helper["tracked_sensitive_repo_path_risk"](rel, regular_file=False)
+                )
+
+    def test_rfc_shaped_credential_storage_remains_sensitive(self) -> None:
+        for rel in (
+            "credentials/contracts.md",
+            "specs/credentials/contracts.md",
+            "rfcs/0042-credential-lifecycle/contracts.md",
+            "vendor/specs/rfcs/0042-credential-lifecycle/contracts.md",
+            "specs/rfcs/credential-lifecycle/contracts.md",
+            "specs/rfcs/0042-credential-lifecycle/notes.md",
+            "specs/rfcs/0042-credential-lifecycle/credentials.md",
+            "specs/rfcs/0042-credential-lifecycle/token.md",
+            "specs/rfcs/0042-credential-lifecycle/secret.md",
+            "specs/rfcs/0042-credential-lifecycle/config.md",
+            "specs/rfcs/0042-credential-lifecycle/contracts.json",
+            "specs/rfcs/0042-credential-lifecycle/contracts.pem",
+            "specs/rfcs/0042-credential-lifecycle/.env",
+            "specs/rfcs/0042-credential-lifecycle/.ssh/contracts.md",
+            "specs/rfcs/0042-credential-lifecycle/.aws/contracts.md",
+            "specs/rfcs/0042-credential-lifecycle/credentials/contracts.md",
+            "specs/rfcs/0042-credential-lifecycle/appendix/contracts.md",
+            "specs/rfcs/0042-credential-lifecycle/contracts.md.backup",
+            "specs/rfcs/0042-credential-lifecycle/contracts.MD",
+            "specs/rfcs/0042-secret-credential-store/contracts.md",
+            "docs/rfcs/0042-credential-token-store/index.md",
+        ):
+            with self.subTest(rel=rel):
+                self.assertIsNotNone(self.helper["tracked_sensitive_repo_path_risk"](rel))
+                self.assertIsNotNone(self.helper["sensitive_repo_path_risk"](rel))
 
     def test_untracked_token_source_paths_remain_reviewable(self) -> None:
         for rel in (
@@ -7581,6 +7627,37 @@ else:
                 with self.assertRaisesRegex(SystemExit, "invalid file path"):
                     self.helper["validate_report"](outside, repo, {"escape/outside.ts"}, [])
 
+    def test_nonmixed_attribution_is_dropped_instead_of_rejecting_the_finding(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = Path(tempdir)
+            report = {
+                "findings": [{
+                    "title": "Synthetic claim",
+                    "body": "A concrete defect.",
+                    "priority": "P2",
+                    "confidence": 0.8,
+                    "category": "bug",
+                    "code_location": {"file_path": "calc.py", "line": 2},
+                    "source_attribution": {
+                        "target": "working_tree",
+                        "record_id": "not-a-mixed-record",
+                        "source_id": "not-mixed-either",
+                        "side": "present",
+                        "column": 1,
+                        "excerpt": "return a - b",
+                    },
+                }],
+                "overall_correctness": "patch is incorrect",
+                "overall_explanation": "The synthetic defect is real.",
+                "overall_confidence": 0.8,
+            }
+
+            self.helper["validate_report"](report, repo, {"calc.py"}, [], ())
+
+            self.assertEqual(len(report["findings"]), 1)
+            self.assertIsNone(report["findings"][0]["source_attribution"])
+            self.assertNotIn("attribution_rejected_findings", report)
+
     def test_validate_report_normalizes_relative_finding_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
             repo = init_repo(Path(tempdir))
@@ -8335,10 +8412,11 @@ os.execv(target, [str(target), *sys.argv[1:]])
                 json.loads(line)
                 for line in invocations.read_text(encoding="utf-8").splitlines()
             ]
-            self.assertEqual(
-                [entry["argv"] for entry in probe_invocations],
-                [["--version"]],
-            )
+            self.assertEqual(probe_invocations[0]["argv"], ["--version"])
+            self.assertEqual(len(probe_invocations), 2 if sys.platform == "linux" else 1)
+            if sys.platform == "linux":
+                self.assertEqual(probe_invocations[1]["argv"][0], "sandbox")
+                self.assertEqual(probe_invocations[1]["argv"][-3:], ["--", str(direct_bin), "--version"])
 
             invocations.unlink()
             review = subprocess.run(
@@ -8364,9 +8442,9 @@ os.execv(target, [str(target), *sys.argv[1:]])
                 json.loads(line)
                 for line in invocations.read_text(encoding="utf-8").splitlines()
             ]
-            self.assertEqual(len(run_invocations), 2)
+            self.assertEqual(len(run_invocations), len(probe_invocations) + 1)
             self.assertEqual(run_invocations[0]["argv"], ["--version"])
-            self.assertIn("exec", run_invocations[1]["argv"])
+            self.assertIn("exec", run_invocations[-1]["argv"])
 
             def normalized_runtime_env(invocation: dict[str, object]) -> dict[str, str]:
                 selected = invocation["env"]
@@ -8388,14 +8466,11 @@ os.execv(target, [str(target), *sys.argv[1:]])
                 normalized["PATH"] = str(selected["PATH"])
                 return normalized
 
-            self.assertEqual(
-                normalized_runtime_env(probe_invocations[0]),
-                normalized_runtime_env(run_invocations[0]),
-            )
-            self.assertEqual(
-                normalized_runtime_env(run_invocations[0]),
-                normalized_runtime_env(run_invocations[1]),
-            )
+            for invocation in [*probe_invocations, *run_invocations]:
+                self.assertEqual(
+                    normalized_runtime_env(probe_invocations[0]),
+                    normalized_runtime_env(invocation),
+                )
 
     @unittest.skipIf(os.name == "nt", "the fake executable is POSIX-only")
     def test_dry_run_flag_exits_zero_when_bundle_and_engine_resolve(self) -> None:

@@ -11,6 +11,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
+import { relativeImports as findRelativeImports } from "./hyperframes-validator/imports.mjs";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
@@ -261,11 +262,10 @@ function validateRuntimeFiles() {
           run(process.execPath, ["--check", file]);
           syntaxChecks += 1;
           const text = readFileSync(file, "utf8");
-          const importPattern = /(?:from\s+|import\s*\(|require\s*\()\s*["'](\.{1,2}\/[^"']+)["']/g;
-          for (const match of text.matchAll(importPattern)) {
+          for (const specifier of findRelativeImports(text)) {
             relativeImports += 1;
-            if (!resolvesRelativeImport(file, match[1])) {
-              failures.push(`${path.relative(REPO_ROOT, file)}: unresolved import ${match[1]}`);
+            if (!resolvesRelativeImport(file, specifier)) {
+              failures.push(`${path.relative(REPO_ROOT, file)}: unresolved import ${specifier}`);
             }
           }
         } else if (/\.py$/.test(file)) {

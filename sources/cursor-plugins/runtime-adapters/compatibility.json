@@ -4978,7 +4978,7 @@
           "history": "deferred"
         }
       },
-      "reviewed_workflow_sha256": "a79e1957a012e05ef1141e8df6f78ae835bcc6fcfe08731a5cd49c1f7d1a8b4c"
+      "reviewed_workflow_sha256": "99d7b59ad6a897a5a629d4fc9116ee3d7bd0cda4932b467a29edd5ebce7692cd"
     },
     "cursor-sharpen": {
       "source_path": "pstack/skills/sharpen/SKILL.md",

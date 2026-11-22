@@ -2,7 +2,7 @@
   "codex_contract": {
     "adapter_mode": "native-guidance",
     "behavioral_proof": {
-      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "positive": "Pinned upstream method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
       "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
       "error": "Operator scope, privacy and native refusals remain binding."
     },
@@ -40,7 +40,7 @@
   "codex_note": "",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
-  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "proof": "Pinned upstream source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
   "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
   "replacements": [],
   "source_path": "pstack/skills/architect/SKILL.md",

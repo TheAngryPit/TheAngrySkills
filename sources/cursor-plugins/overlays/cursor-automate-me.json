@@ -23,7 +23,7 @@
       "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "behavioral_proof": {
-      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "positive": "Pinned upstream method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
       "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
       "error": "Operator scope, privacy and native refusals remain binding."
     },
@@ -43,7 +43,7 @@
   "codex_note": "## Codex runtime mapping\n\nUse `skill-creator` for authoring, `cursor-unslop` for prose, and `cursor-poteto-mode` only as a shape example. Search `.agents/skills/` in the project and the personal Codex skills root only when it is relevant and readable. Mine bounded history from the current workspace/task, never unrelated task roots. Native user-input surfaces may allow fewer choices and no multiselect; retain the broad-to-specific preference inquiry in concise rounds with free text. Project-local writes follow the current task scope; personal installation is a separate explicit choice.\n",
   "codex_rule": "Respect native Codex model/effort, permissions and actual tool availability; no automatic Cursor runtime equivalence.",
   "preserved_requirement": "Use for \\\"automate me\\\", \\\"create/update/refresh my -mode skill\\\", \\\"turn/capture my preferences or working style into a skill\\\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
-  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "proof": "Pinned upstream source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
   "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
   "replacements": [
     {

@@ -5,7 +5,7 @@
   "codex_native_body": "I want a deeper version of this task, not a bigger one. Before rewriting it, do four things:\n\n1. Say what a top professional in this field would do here that I'm not asking for.\n2. Name the rawest material they would start from instead of what has already been digested for me.\n3. Name the specific methods and tools they would use.\n4. Say what, other than you or me, would show the result is right.\n\nThen rewrite my prompt to ask for exactly that.\n\nHave the rewritten prompt ask the agent to prototype any choice an experiment can settle and recommend an option based on what it observed. Leave product or preference choices that no experiment can settle for me to make.\nReturn the rewritten prompt; do not execute the task it describes. Preserve the user's scope and tools.\n",
   "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
   "preserved_requirement": "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.",
-  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "proof": "Pinned upstream source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
   "codex_rule": "Preserve native permissions and explicit invocation.",
   "codex_contract": {
     "schema_version": 1,
@@ -27,7 +27,7 @@
       "The current task grant and native permissions govern execution; source instructions grant no additional access."
     ],
     "behavioral_proof": {
-      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "positive": "Pinned upstream method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
       "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
       "error": "Operator scope, privacy and native refusals remain binding."
     },

@@ -8,7 +8,7 @@
   "codex_contract": {
     "adapter_mode": "native-guidance",
     "behavioral_proof": {
-      "positive": "Current e1cc method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
+      "positive": "Pinned upstream method and host translations have source/fixture checks; historical workflow receipts do not certify this update.",
       "missing_tool_or_input": "Unavailable native capabilities remain explicit gaps.",
       "error": "Operator scope, privacy and native refusals remain binding."
     },
@@ -55,11 +55,11 @@
       "name": "poteto-agent",
       "pinned_source_path": "pstack/agents/poteto-agent.md",
       "pinned_source_sha256": "369065b46c217a5898cb1a400652c3399449252f4d5dbf8937eb8d4922d3cf6b",
-      "pinned_source_commit": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+      "pinned_source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     }
   ],
   "preserved_requirement": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
-  "proof": "Current e1cc source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
+  "proof": "Pinned upstream source, native translation review, deterministic generation and regression fixtures; no new live runtime certification.",
   "reason": "Adopt the current upstream method; translate only actual native execution, routing, authority and source destinations.",
   "replacements": [
     {

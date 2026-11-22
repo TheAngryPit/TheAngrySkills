@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f
 Source SHA-256: 8558089df5320e4ddf61126ca3d638404341584c8307dd6d20f8984e5ae3bbd1
 Published name: cursor-swarm
 Decision class: adaptação funcional
-Availability: source_validated_runtime_unproven; current e1cc method adapted to the native host; historical receipts predate this workflow Reviewed source refresh; prior runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

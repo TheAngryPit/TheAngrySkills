@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f
 Source SHA-256: 809659da0bbd0303d2a42dbe380dd117ae06b6fa3e19e4a31832a2756ae841fe
 Published name: cursor-reproduce-and-fix-issues
 Decision class: adaptação nominal
-Availability: source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

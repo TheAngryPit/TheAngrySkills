@@ -976,7 +976,7 @@
       "source_commit": "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1003,7 +1003,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação nominal",
@@ -1027,7 +1027,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -1052,7 +1052,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1075,7 +1075,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1098,7 +1098,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1121,7 +1121,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "intacta (conteúdo presente; comportamento ainda não provado)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1262,7 +1262,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1285,7 +1285,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1448,7 +1448,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -1506,7 +1506,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2131,7 +2131,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2154,7 +2154,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "blocked_malicious",
       "decision_classification": "adaptação funcional",
@@ -2177,7 +2177,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2200,7 +2200,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação nominal (metadata/referências; proof ausente)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação nominal",
@@ -2223,7 +2223,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",
@@ -2248,7 +2248,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2317,7 +2317,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "safe_docs_only",
       "decision_classification": "adaptação funcional",
@@ -2387,7 +2387,7 @@
       "source_commit": "792440e8a560a4a3f63748cdee70491ecd412982"
     },
     {
-      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.",
+      "availability": "source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.",
       "baseline_classification": "adaptação funcional (runtime/fluxo precisa de mapeamento)",
       "baseline_security_verdict": "needs_human_review",
       "decision_classification": "adaptação funcional",

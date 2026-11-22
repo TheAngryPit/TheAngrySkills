@@ -7,7 +7,7 @@ Upstream family README: https://github.com/cursor/plugins/blob/792440e8a560a4a3f
 Source SHA-256: aac4f8e6a1ffd70e3763314db37d3c2eb0cfea08bc63e98907aca6dae0343031
 Published name: cursor-sharpen
 Decision class: adaptação nominal
-Availability: source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. Existing runtime and fixture evidence predates this refresh.
+Availability: source_validated_runtime_unproven; the native adaptation was reviewed against the source_commit recorded here. The historical receipts predate this workflow.
 License evidence: pstack/LICENSE
 
 The raw source is in `sources/cursor-plugins/snapshot/`. This directory is

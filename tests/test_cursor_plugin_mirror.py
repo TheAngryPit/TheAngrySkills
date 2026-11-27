@@ -83,7 +83,7 @@ class CursorMirrorTests(unittest.TestCase):
         state = json.loads((REPO / "reports/cursor-plugin-skills-state.json").read_text())
         pin = "8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b"
         self.assertEqual(manifest["upstream_commit"], pin)
-        pstack_pin = "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8"
+        pstack_pin = "792440e8a560a4a3f63748cdee70491ecd412982"
         self.assertEqual(manifest["pstack_upstream_commit"], pstack_pin)
         self.assertEqual(state["source_commit_overrides"], {
             entry["published_name"]: pstack_pin for entry in manifest["skills"]
@@ -222,7 +222,7 @@ class CursorMirrorTests(unittest.TestCase):
                          (self.root / "sources/cursor-plugins/snapshot/pstack/LICENSE").read_bytes())
         provenance = (project / "MIRROR.md").read_text()
         self.assertIn("https://github.com/cursor/plugins.git", provenance)
-        self.assertIn("Commit: e1cc03121a0e71129a4fb730d7c5528a0a3e43c8", provenance)
+        self.assertIn("Commit: 792440e8a560a4a3f63748cdee70491ecd412982", provenance)
         # The installed pack, detached from the source checkout, owns its complete links.
         for file in project.rglob("*.md"):
             for target in re.findall(r"\]\(([^)]+)\)", file.read_text()):

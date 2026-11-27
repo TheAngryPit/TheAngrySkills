@@ -2,6 +2,16 @@
 
 This is the existing reviewed Cursor mirror with an additional conditional T3 execution contract. Published names and native execution boundaries are preserved. Pstack source refreshes are recorded separately from runtime evidence. It is not a live workflow certificate for every provider or playbook.
 
+## Choosing the pstack package
+
+| Host | Package | Example |
+| --- | --- | --- |
+| Codex | Reviewed Cursor adaptations in this repository | Invoke `cursor-poteto-mode` and choose the Bug fix playbook. Its parent selects native Codex delegates and checks their work. |
+| Claude Code and Grok | The native pstack plugin selected for that host | Use its Poteto workflow and host-specific model settings. |
+| OpenClaw | Fuller Stack’s OpenClaw pstack plus the optional Pstack Extras add-on | Use the base package for Bug fix, Arena and Swarm. Use Extras for its additional workflows. |
+
+Use the same task, acceptance criteria and proof when comparing hosts. A cross-vendor Arena judge requires an available second vendor. If a host cannot supply one, record that in the result. Keep its selected model and account.
+
 ## Execution
 
 Each skill selects its host through `references/runtime/selection.md`. Native Codex continues to use its inline native branch; an exact original is retained as `original-codex.txt`. In a verified T3 host the agent reads `t3.md` and the full method reference, translating runtime operations through that explicit contract. Relative links in relocated Markdown references preserve their original destinations. A permission refusal binds every branch.
